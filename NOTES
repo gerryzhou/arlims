@@ -1,0 +1,26 @@
+Questions
+---------
+
+
+Schema/Entities 
+---------------
+For each boolean choice, form should include a yes/no or pos/neg radio group with same form field name and values 'Y'/'N' or '+'/-'.
+  Hopefully this will map naturally to the json field value of null/'+'/'-' etc.
+
+
+Hardware
+--------
+  laptops
+  batching barcode scanners.
+    https://www.zebra.com/us/en/support-downloads/mobile-computers/handheld/mc9090-wm.html
+
+
+Functionality
+-------------
+Samples List
+  No current user, instead each signoff action requires authentication.
+  Typeahead/live search filtering.
+  User selection for filtering by sample assignments.
+
+Allow entering/editing equipment, associating with analysts.
+

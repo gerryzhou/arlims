@@ -1,0 +1,30 @@
+Centos/RH
+---------
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7#create-a-new-role
+
+sudo yum -y install postgresql-server postgresql-contrib
+sudo postgresql-setup initdb
+
+# sudo vim /var/lib/pgsql/data/pg_hba.conf
+# Put a copy the local line above it and in the copy, change the user to postgres, so
+# user postgres uses peer identification. Change all others below it to user md5 in place
+# of peer:
+local   all             postgres                                peer
+local   all             all                                     md5
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Create the oralims user and database.
+sudo -i -u postgres psql <<EOF
+create user oralims with password 'X';
+create database oralims owner oralims;
+EOF
+
+
+# Try connecting as oralims:
+psql -U oralims
