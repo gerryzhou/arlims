@@ -101,6 +101,7 @@ create table reserve_sample_disposition (
   text varchar(200) not null
 );
 
+
 create table imp_sal_test (
   sample_id int,
   pack_id varchar(20),

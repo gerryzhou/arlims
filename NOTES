@@ -4,8 +4,11 @@ Questions
 
 Schema/Entities 
 ---------------
-For each boolean choice, form should include a yes/no or pos/neg radio group with same form field name and values 'Y'/'N' or '+'/-'.
-  Hopefully this will map naturally to the json field value of null/'+'/'-' etc.
+Code generation strategy
+  Just define dto types in java to match desired results, generate typescript defs from these.
+  Queries are custom sql yielding json.
+  For dto's transferred from client to server, use bean validation annotations.
+    Generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
 
 
 Hardware
@@ -23,4 +26,8 @@ Samples List
   User selection for filtering by sample assignments.
 
 Allow entering/editing equipment, associating with analysts.
+
+  Forms
+    For each boolean choice, form should include a yes/no or pos/neg radio group with same form field name and values 'Y'/'N' or '+'/-'.
+      Hopefully this will map naturally to the json field value of null/'+'/'-' etc.
 
