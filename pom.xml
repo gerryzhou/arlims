@@ -22,6 +22,24 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
       <java.version>1.8</java.version>
+      <nodejs.version>v8.11.1</nodejs.version>
+      <!-- prod.context.name:
+       Provides the final war file name, and the context name (initial component of the resource part of the app's url)
+       under which the client produced here will expect application services to be mounted. The client is configured via
+       this param to use this prefix both in index.html and when building application urls for services. Normally
+       when just deploying the produced war to an external Tomcat instance without specially configuring a context
+       name, this will have the context name (derived from the war name) match what the client side expects and
+       no other configuration is necessary.
+
+       When running an embedded container on the other hand, for example via "mvn spring-boot:run" or via "java -jar",
+       this parameter does not determine the context name of the app's services in the embedded server, but is still
+       used by the client. Instead in these cases the context for the services in the embedded container should be set
+       via "server.servlet.contextPath" property specified in the application properties file. So don't run via
+       "java -jar" or "mvn spring-boot:run" with a non-default context unless you also specify that context for property
+       server.servlet.contextPath, or else the client will not be configured properly for the server.
+       -->
+      <prod.context.name>ARLIMS</prod.context.name>
+      <filtering.output.message>THIS FILE WAS PRODUCED FROM A TEMPLATE, DO NOT EDIT.</filtering.output.message>
    </properties>
 
    <dependencies>
@@ -29,7 +47,10 @@
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-web</artifactId>
       </dependency>
-
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-json</artifactId>
+      </dependency>
       <dependency>
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -40,15 +61,204 @@
          <artifactId>spring-boot-starter-test</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-configuration-processor</artifactId>
+         <optional>true</optional>
+      </dependency>
+      <dependency>
+         <groupId>javax.inject</groupId>
+         <artifactId>javax.inject</artifactId>
+         <version>1</version>
+      </dependency>
+      <dependency>
+         <groupId>gov.fda.nctr</groupId>
+         <artifactId>nctr-util</artifactId>
+         <version>1.1.1</version>
+      </dependency>
+
+
+      <!--
+         Oracle driver may need to be downloaded and manually installed in the maven repo:
+            mvn install:install-file -Dfile=ojdbc8.jar -Dpackaging=jar -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=12.2.0.1
+      -->
+      <dependency>
+         <groupId>com.oracle</groupId>
+         <artifactId>ojdbc8</artifactId>
+         <version>12.2.0.1</version>
+         <type>jar</type>
+         <scope>test</scope>
+      </dependency>
+
    </dependencies>
 
    <build>
+      <finalName>${prod.context.name}</finalName>
+
       <plugins>
          <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+               <profiles>
+                  <profile>dev</profile> <!-- Set spring boot profile "dev" for spring-boot:run -->
+               </profiles>
+            </configuration>
          </plugin>
+
+         <!-- Java compiler -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.7.0</version>
+            <configuration>
+               <source>1.8</source>
+               <target>1.8</target>
+               <testSource>1.8</testSource>
+               <testTarget>1.8</testTarget>
+               <compilerArgs>
+                  <arg>-parameters</arg>
+               </compilerArgs>
+            </configuration>
+         </plugin>
+
+         <!-- Generate client-side type definitions (Typescript) from web services dto classes (Java).
+              https://github.com/vojtechhabarta/typescript-generator -->
+         <plugin>
+            <groupId>cz.habarta.typescript-generator</groupId>
+            <artifactId>typescript-generator-maven-plugin</artifactId>
+            <version>2.1.406</version>
+            <executions>
+               <execution>
+                  <id>generate</id>
+                  <goals>
+                     <goal>generate</goal>
+                  </goals>
+                  <phase>process-classes</phase>
+               </execution>
+            </executions>
+            <configuration>
+               <jsonLibrary>jackson2</jsonLibrary>
+               <classPatterns>
+                  <classPattern>gov.fda.nctr.arlims.models.dto.*</classPattern>
+               </classPatterns>
+               <excludeClassPatterns>
+                  <excludeClassPattern>**.*Exception</excludeClassPattern>
+               </excludeClassPatterns>
+               <outputKind>module</outputKind>
+               <outputFileType>implementationFile</outputFileType>
+               <outputFile>client/src/generated/dto.ts</outputFile>
+            </configuration>
+         </plugin>
+
+         <!-- Write the client's environment file(s), to set the base href based on prod.context.name,
+              for the client router configuration. -->
+         <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.0.2</version>
+            <executions>
+               <execution>
+                  <id>copy-resources</id>
+                  <phase>prepare-package</phase>
+                  <goals>
+                     <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>${basedir}/client/src/environments</outputDirectory>
+                     <resources>
+                        <resource>
+                           <directory>src/templates/environments</directory>
+                           <filtering>true</filtering>
+                        </resource>
+                     </resources>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <!-- frontend build tools: https://github.com/eirslett/frontend-maven-plugin -->
+         <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>1.4</version>
+            <configuration>
+               <workingDirectory>client</workingDirectory>
+               <installDirectory>.mvn-node</installDirectory>
+            </configuration>
+            <executions>
+               <!-- Install node and npm for usage by maven. -->
+               <execution>
+                  <id>install node and npm locally for maven</id>
+                  <goals><goal>install-node-and-npm</goal></goals>
+                  <configuration>
+                     <nodeVersion>${nodejs.version}</nodeVersion>
+                  </configuration>
+                  <phase>prepare-package</phase>
+               </execution>
+               <!-- Install modules for maven's local node/npm. -->
+               <execution>
+                  <id>npm install</id>
+                  <goals><goal>npm</goal></goals>
+                  <configuration>
+                     <arguments>install --no-optional</arguments>
+                  </configuration>
+                  <phase>prepare-package</phase>
+               </execution>
+
+               <!-- Build the client. -->
+               <execution>
+                  <id>npm run build</id>
+                  <goals><goal>npm</goal></goals>
+                  <configuration>
+                     <arguments>run build -- --base-href=/${prod.context.name}/</arguments>
+                  </configuration>
+                  <phase>prepare-package</phase>
+               </execution>
+            </executions>
+         </plugin>
+
+         <!-- Include client artifacts in the produced war file. -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+               <webResources>
+                  <resource>
+                     <directory>client/dist</directory>
+                  </resource>
+               </webResources>
+            </configuration>
+         </plugin>
+
+
+         <!--A "clean" should remove contents from the client's build directory also. -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>2.4.1</version>
+            <configuration>
+               <filesets>
+                  <fileset>
+                     <directory>client/build</directory>
+                     <includes>
+                        <include>**</include>
+                     </includes>
+                     <followSymlinks>false</followSymlinks>
+                  </fileset>
+               </filesets>
+            </configuration>
+         </plugin>
+
+         <!--integration test support via failsafe plugin-->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.21.0</version>
+         </plugin>
+
       </plugins>
+
    </build>
 
 

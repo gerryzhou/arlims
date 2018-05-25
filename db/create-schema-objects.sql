@@ -101,7 +101,31 @@ create table reserve_sample_disposition (
   text varchar(200) not null
 );
 
+--drop table lab_test_type;
+create table lab_test_type (
+  code varchar(20) constraint pk_labtesttype primary key,
+  name varchar(50)
+)
+;
 
+--drop table lab_test_form;
+create table lab_test (
+  id int constraint pk_labtest primary key,
+  sample_id int,
+  pack_id varchar(20),
+  type_code varchar(20) references lab_test_type,
+  note varchar(100),
+  begin_date date not null,
+  last_changed date not null,
+  test_data_json blob not null constraint ck_labtest_testjson_isjson check (test_data_json is json format json strict)
+)
+;
+
+
+/*
+drop table imp_sal_test cascade constraints;
+drop table imp_sal_test_collector_control;
+drop table imp_sal_test_utensil_control;
 create table imp_sal_test (
   sample_id int,
   pack_id varchar(20),
@@ -419,5 +443,5 @@ create table imp_sal_test_collector_control (
   constraint pk_impsaltestcctl primary key (sample_id, pack_id, collector_id),
   constraint fk_impsaltestcctl_impsaltest foreign key (sample_id, pack_id) references imp_sal_test on delete cascade
 );
-
+*/
 

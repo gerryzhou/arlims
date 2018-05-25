@@ -47,3 +47,6 @@ insert into reserve_sample_disposition (code, text) values
 insert into reserve_sample_disposition (code, text) values
   ('OTHER', 'Other');
 
+insert into lab_test_type (code, name)
+  values('IMP-SAL-VIDAS', 'Imported Salmonella - Vidas');
+
