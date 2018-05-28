@@ -2,8 +2,25 @@
 select 'drop table ' || table_name || ' cascade constraints;' drop_command
 from user_tables
 ;
-
 */
+
+create table labs_facility (
+  name varchar(20) not null contraint pk_labsfacility primary key,
+  description varchar(100)
+);
+
+create table analyst (
+  id varchar(10) constraint pk_analyst primary key,
+  name varchar(60) not null,
+  email varchar(150)
+);
+
+create table facility_analyst (
+  facility_name varchar(20),
+  analyst_id varchar(10),
+  constraint pk_facanalyst primary key(facility_name, analyst_id)
+);
+create index ix_facanalyst_analyst on facility_analyst(analyst_id);
 
 create table sample_pack (
   facts_sample_id int,
@@ -15,112 +32,74 @@ create table sample_pack (
   constraint pk_sample primary key (facts_sample_id, facts_pack_id)
 );
 
-create table sampling_test_units (
-  id int generated always as identity constraint pk_samplingtestunits primary key,
-  description varchar(200) not null,
-  standard_priority int -- standard choice iff priority is non-null
-);
-
-create table medium_type (
-  code varchar(20) constraint pk_medtype primary key,
-  description varchar(200) not null
-);
-
-create table medium_batch (
-  id varchar(20) constraint pk_medbatch primary key,
-  med_type varchar(20) not null constraint fk_medbatch_medtype references medium_type,
-  expiration_date date not null
-);
-
-create table incubator (
-  id varchar(20) constraint pk_incubator primary key,
-  description varchar(50)
-);
-
-create table water_bath (
-  id varchar(20) constraint pk_waterbath primary key,
-  description varchar(50)
-);
-
-create table balance (
-  id varchar(20) constraint pk_balance primary key,
-  description varchar(50)
-);
-
-create table jar (
-  id varchar(20) constraint pk_jar primary key,
-  description varchar(50)
-);
-
-create table bag (
-  id varchar(20) constraint pk_bag primary key,
-  description varchar(50)
-);
-
-create table system_utensil (
-  id varchar(20) constraint pk_utensil primary key,
-  description varchar(50)
-);
-
-create table collector (
-  id varchar(20) constraint pk_collector primary key,
-  description varchar(50)
-);
-
-create table vidas (
-  id varchar(20) constraint pk_vidas primary key,
-  description varchar(50)
-);
-
-create table vidas_kit (
-  id varchar(20) constraint pk_vidaskit primary key,
-  description varchar(50)
-);
-
-create table analyst (
-  id varchar(10) constraint pk_analyst primary key,
-  name varchar(60) not null,
-  email varchar(150)
-);
-
 create table sample_pack_assignment (
   sample_id int,
   pack_id varchar(20),
-  analyst_id varchar(10) constraint fk_sampleassignment_analyst references analyst,
-  constraint pk_sampleassignment primary key(sample_id, pack_id, analyst_id),
-  constraint fk_sampleassignment_samplepack foreign key (sample_id, pack_id) references sample_pack
+  analyst_id varchar(10) constraint fk_smpass_analyst references analyst,
+  constraint pk_smpass primary key(sample_id, pack_id, analyst_id),
+  constraint fk_smpass_samplepack foreign key (sample_id, pack_id) references sample_pack
+);
+create index ix_smpass_analyst on sample_pack_assignment(analyst_id);
+
+create table sampling_method (
+  id int generated always as identity constraint pk_samplingmethod primary key,
+  description varchar(200) not null,
+  num_test_units int not null,
+  target_subs_per_test_unit int not null, -- one iff testing subs directly without compositing
+  standard_priority int -- standard choice iff priority is non-null
 );
 
-create table labeling_attachment_type (
-  code varchar(5) constraint pk_samplelabelingatt primary key,
-  text varchar(30) not null
+create table lab_resource_class (
+  name varchar(20) constraint pk_rscclass primary key,
+  description varchar(200)
 );
 
-create table reserve_sample_disposition (
-  code varchar(10) constraint pk_reservesampledisp primary key,
-  text varchar(200) not null
+create table lab_resource_type (
+  name varchar(20) constraint pk_rsctype primary key,
+  class_name varchar(20) not null
+    constraint fk_labrsctype_labrscclass references lab_resource_class,
+  description varchar(200)
 );
+create index ix_labrscclass_labrscclass on lab_resource_type(class_name);
 
---drop table lab_test_type;
+create table lab_resource (
+  id varchar(20) constraint pk_labrsc primary key,
+  name varchar(50) not null,
+  description varchar(200),
+  type_name varchar(20) not null
+    constraint fk_labrsc_labrsctype references lab_resource_type,
+  facility_name varchar(20) not null
+    constraint fk_labrsc_labfac references labs_facility
+);
+create index ix_labrsc_labrsctype on lab_resource(type_name);
+create index ix_labrsc_labfac on lab_resource(facility_name);
+
 create table lab_test_type (
-  code varchar(20) constraint pk_labtesttype primary key,
-  name varchar(50)
-)
-;
+  name varchar(20) constraint pk_labtesttype primary key,
+  version number not null,
+  description varchar(200)
+);
 
---drop table lab_test_form;
 create table lab_test (
   id int constraint pk_labtest primary key,
   sample_id int,
   pack_id varchar(20),
-  type_code varchar(20) references lab_test_type,
+  type_name varchar(20) not null references lab_test_type,
   note varchar(100),
   begin_date date not null,
   last_changed date not null,
-  test_data_json blob not null constraint ck_labtest_testjson_isjson check (test_data_json is json format json strict)
-)
-;
+  test_data_json blob not null constraint ck_labtest_testjson_isjson check (test_data_json is json format json strict),
+  reviewed_signed date not null,
+  reviewed_signed_by varchar(10)
+    constraint fk_labtest_analyst references analyst,
 
+  constraint fk_labtest_samplepack foreign key (sample_id, pack_id) references sample_pack,
+  constraint ck_labtest_revsgndiffdated
+    check ( nvl2(reviewed_signed,1,0) = nvl2(reviewed_signed_by,1,0) )
+);
+create index ix_labtst_smppack on lab_test(sample_id, pack_id);
+create index ix_labtst_labtsttype on lab_test(type_name);
+create index ix_labtst_analyst on lab_test(reviewed_signed_by);
 
 /*
 drop table imp_sal_test cascade constraints;
