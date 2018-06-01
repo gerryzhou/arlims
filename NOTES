@@ -1,22 +1,146 @@
+Vidas Data Retrieval
+--------------------
+QR Codes
+  https://davidshimjs.github.io/qrcodejs/
+    Standalone, lightweight, not sure about QR code sizes supported.
+  https://demos.shieldui.com/web/qrcode/basic-usage
+    Depends on jquery and shieldui, supports all sizes of QR codes.
+    http://demos.shieldui.com/web/qrcode/api
+  Version 40 bar code with 1276 bytes of data:
+    https://softwareengineering.stackexchange.com/questions/251062/how-many-bytes-can-i-fit-into-a-qr-code-with-low-error-correction
+
+Make a grid of QR codes for input text data.
+  Try inline block layout for the qr codes.
+  Divide data into fixed size chunks, encode each.
+
+
+Schema/Entities
+---------------
+
+
+FACTS Data
+----------
+FACTS_WORK_REQUESTS
+  RQST_DATE
+  STATUS_CODE
+  PRSN_ID
+FACTS_WORK
+  ASSGNR_PRSN_ID
+  ESTMTD_START_DATE
+  RQSTR_TRGT_CMPLTN_DATE
+  STATUS_CODE
+  SMPL_TRCKNG_NUM
+  PRSN_ID
+|
+-< FACTS_WORK_PACS
+     PAC_CODE
+
+FACTS_SAMPLE_TRACKING_NUMBERS
+  SMPL_TRCKNG_NUM
+  PRSN_ID
+
+FACTS_SAMPLES
+  SMPL_TRCKNG_NUM
+
+FACTS_SAMP_PROD_PACS
+  SAMP_PROD_ID
+  SMPL_TRCKNG_NUM (num) [not required]
+  PAC_CODE (alpha) [not required]
+
+FACTS_SAMPLE_ANALYSES
+  SMPL_ANLYS_ID
+  SMPL_TRCKNG_NUM
+  SMPL_TRCKNG_SUB_NUM
+  PAC_CODE
+
+FACTS_AS_MICROBIOLOGY
+  ANLYS_MIC_ID
+  SMPL_ANLYS_ID
+  PRBLM_CODE
+  MTHD_CODE
+  MTHD_SRC_CODE
+  SUBS_EXMND_NUM
+  SUBS_USED_CMPST_NUM
+  CMPSTS_EXMND_NUM
+  SUBS_DTCT_FND_NUM
+|
+-< FACTS_AS_MIC_LMT_SAMP_PREP
+ |
+ -< FACTS_AS_LMT_FINDS
+ |
+ -< FACTS_AS_LMT_ADD_PREP
+|
+-< FACTS_AS_MIC_FINDS
+ |
+ -< FACTS_AS_MIC_IDS
+|
+-< FACTS_AS_MIC_KIT_TESTS
+|
+-< FACTS_AS_MIC_PRSV_CATEGORIES
+ |
+ -< FACTS_AS_MIC_PRSV_PREPS
+  |
+  -< FACTS_AS_MIC_PRSV_FINDS
+   |
+   -< FACTS_AS_MIC_PRSV_OBSRVTNS
+
+
+FACTS_ANALYSIS_GRP1
+  ANLYS_GRP1_ID
+  SMPL_ANLYS_ID
+  MTHD_CODE
+  INSTRMT_CODE
+  SUBS_EXMND_NUM
+  SUBS_PSTV_NUM
+  TEST_KIT_RSLT_CODE
+FACTS_ANALYSIS_GRP1_FINDINGS
+  ANLYS_GRP1_FNDNG_ID
+  SUB_NUM_CODE
+  ANLYS_GRP1_ID
+  AMT_FND_NUM
+  AMT_UNIT_CODE
+  SPIKE_MTRL_CODE
+  SPIKE_LVL_NUM
+  SPIKE_UNIT_CODE
+
+
+
+
+Questions
+---------
+Are jars and bags disposable or to be entered into database for display in dropdown lists?
+
+For John:
+  Is subs per comp always num comps / num subs (each sub assigned into exactly one composite)?
+    extracted_grams_per_sub, num_subs, num_comps, comp_grams, num_subs_per_comp
+    Need to capture deviations via note? Or capture count of subs within each component?
+  Is it necessary to carry around pack code with the sample id everywhere?
+    I've designed this way, but want to check that this is really necessary.
+
+
+
 Client/Server Project Skeletons
 -------------------------------
+Add lab_group or domain (MBIO|CHEM) to test type table and maybe other tables.
+Make Java model classes.
+Code generation strategy
+  Just define dto types in java to match desired results, generate typescript defs from these.
+  Maybe generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
+Make sure mvn package creates proper typescript dto interfaces.
+Create schema objects in Oracle.
+Decide jdbi vs Spring jdbc.
+Write service to fetch sample assignments for all users of a given facility, optionally limited to those for a given user and date range.
+Write service to fetch form data for a given test type and sample, pack.
+  Return as lab_test struct.
+  If no existing record is found, create a new one with empty test as json. Null last_saved/by fields will indicate that it's new.
+Write service to store form data for a given test type and sample, pack, and user (for last_saved_by).
+
 
 Create client app.
 Setup context path sync.
 Setup code gen.
 
 
-Questions
----------
-
-
-Schema/Entities 
----------------
-Code generation strategy
-  Just define dto types in java to match desired results, generate typescript defs from these.
-  Queries are custom sql yielding json.
-  For dto's transferred from client to server, use bean validation annotations.
-    Generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
 
 
 Hardware
@@ -32,6 +156,9 @@ Samples List
   No current user, instead each signoff action requires authentication.
   Typeahead/live search filtering.
   User selection for filtering by sample assignments.
+
+Waterbath whiteboard
+    Add general screen to query for samples for a given test type and/or time period, and attach timestamped notes easily.
 
 Allow entering/editing equipment, associating with analysts.
 

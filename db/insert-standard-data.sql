@@ -1,52 +1,70 @@
+insert into lab_group (name, address_street, address_buildings_and_rooms, address_city, address_state, address_zip, description)
+  values ('ARL-MICRO', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
 
-insert into sampling_test_units(description, standard_priority) values
-  ('25 grams from each of 15 subs tested as one 375g composite, 3375mls of pre-enriched broth added', 1);
-insert into sampling_test_units(description, standard_priority) values
-  ('25 grams from each of 30 subs tested as two 375g composites, 3375mls of pre-enriched broth/composite', 2);
+insert into employee (short_name, lab_group_name, email, last_name, first_name, middle_name_or_initial)
+  values ('AA', 'ARL-MICRO', 'ashfaqe.ahmed@fda.hhs.gov','Ahmed', 'Ashfaqe', null);
+insert into employee (short_name, lab_group_name, email, last_name, first_name, middle_name_or_initial)
+  values ('JM', 'ARL-MICRO', 'joseph.mendoza@fda.hhs.gov', 'Mendoza', 'Joseph', null);
 
-insert into medium_type(code, description) values
-  ('LAC', 'Lactose');
-insert into medium_type(code, description) values
-  ('TSB', 'TSB');
-insert into medium_type(code, description) values
-  ('RV',  'RV');
-insert into medium_type(code, description) values
-  ('TT',  'TT');
-insert into medium_type(code, description) values
-  ('MBR',  'M Broth');
+insert into resource_type (name)
+  values('waterbath');
+insert into resource_type (name)
+  values('incubator');
+insert into resource_type (name)
+  values('balance');
+insert into resource_type (name)
+  values('Vidas');
 
-insert into analyst(id, name, email) values
-  ('AA', 'Ashfaqe Ahmed',  'Ashfaqe.Ahmed@fda.hhs.gov');
-insert into analyst(id, name, email) values
-  ('JM', 'Joseph Mendoza', 'Joseph.Mendoza@fda.hhs.gov');
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('ARL00424', 'balance', 'ARL-MICRO', null);
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('RT10971', 'waterbath', 'ARL-MICRO', null);
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('ARL00190', 'waterbath', 'ARL-MICRO', null);
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('ARL00232', 'waterbath', 'ARL-MICRO', null);
 
-insert into labeling_attachment_type (code, text) values
-  ('NONE',  'None');
-insert into labeling_attachment_type (code, text) values
-  ('ORIG',  'Attached original');
-insert into labeling_attachment_type (code, text) values
-  ('COPY',  'Attached copy');
-insert into labeling_attachment_type (code, text) values
-  ('ALONE', 'Submitted alone');
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('V1-5089993', 'Vidas', 'ARL-MICRO', null);
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('V2-5099353', 'Vidas', 'ARL-MICRO', null);
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('V3-5122706', 'Vidas', 'ARL-MICRO', null);
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('V4-5122707', 'Vidas', 'ARL-MICRO', null);
+insert into lab_resource(id, type_name, lab_group_name, description)
+  values('V5-5099389', 'Vidas', 'ARL-MICRO', null);
 
-insert into system_utensil(id, description) values
-  ('knf', 'knife');
-insert into system_utensil(id, description) values
-  ('spn', 'spoon');
-insert into system_utensil(id, description) values
-  ('spt', 'spatula');
+insert into resource_maintenance_type (name)
+  values('calibration');
 
--- TODO: Insert collectors.
-
-insert into reserve_sample_disposition (code, text) values
-  ('NONE',  'No reserve sample.');
-insert into reserve_sample_disposition (code, text) values
-  ('DISC',  'Sample discarded after analysis.');
-insert into reserve_sample_disposition (code, text) values
-  ('SENT',  'Isolates sent.');
-insert into reserve_sample_disposition (code, text) values
-  ('OTHER', 'Other');
-
-insert into lab_test_type (code, name)
+insert into test_type(name, description)
   values('IMP-SAL-VIDAS', 'Imported Salmonella - Vidas');
+
+insert into testtype_form_name(test_type_name, form_name)
+  values('IMP-SAL-VIDAS', 'ARL-SAL.7');
+
+insert into labgroup_testtype (lab_group_name, test_type_name)
+  values('ARL-MICRO', 'IMP-SAL-VIDAS');
+
+
+insert into sampling_method
+  (name, description, extracted_grams_per_sub, num_subs, num_comps, comp_grams, num_subs_per_comp)
+  values (
+    '25gx15S-1C-3375mlB',
+    '25 grams from each of 15 subs tested as one 375g composite, 3375mls of pre-enriched broth added',
+    25, 15, 1, 375, 15
+  );
+insert into sampling_method
+  (name, description, extracted_grams_per_sub, num_subs, num_comps, comp_grams, num_subs_per_comp)
+  values (
+    '25gx30S-2C-3375mlB',
+    '25 grams from each of 30 subs tested as two 375g composites, 3375mls of pre-enriched broth/composite',
+    25, 30, 2, 375, 15
+  );
+
+insert into labgrp_testtype_samplingmethod (lab_group_name, test_type_name, sampling_method_name, priority)
+  values('ARL-MICRO', 'IMP-SAL-VIDAS', '25gx15S-1C-3375mlB', 1);
+insert into labgrp_testtype_samplingmethod (lab_group_name, test_type_name, sampling_method_name, priority)
+  values('ARL-MICRO', 'IMP-SAL-VIDAS', '25gx30S-2C-3375mlB', 2);
 

@@ -5,18 +5,9 @@ import java.util.List;
 
 public class ImportedSalmonellaTest implements SubsCompositesDetections
 {
-    public ImportedSalmonellaTest
-    (
-        long sampleId,
-        String packId
-    )
-    {
-        this.sampleId = sampleId;
-        this.packId = packId;
-    }
+    public ImportedSalmonellaTest() { }
 
-    private Long sampleId;
-    private String packId;
+    private Long factsSampleNum;
 
     private Boolean descriptionMatchesCR;
 
@@ -36,9 +27,8 @@ public class ImportedSalmonellaTest implements SubsCompositesDetections
     private String blenderJarId;
     private String bagId;
 
-    private Boolean spikeAnalyzed;
-    private Integer spikePosPlateCount;
-    private Integer spikeNegPlateCount;
+    private Boolean sampleSpike;
+    private Integer spikePlateCount;
 
     private String    preenrichMediumBatchId;
     private String    preenrichIncubatorId;
@@ -48,9 +38,8 @@ public class ImportedSalmonellaTest implements SubsCompositesDetections
 
     private String rvBatchId;
     private String ttBatchId;
-    private String ttBg;   // TODO: What is this? (Determine if more structure is needed for these.)
-    private String ttL2Ki; //       "
-
+    private String bgBatchId;
+    private String l2KiBatchId;
     private String    rvttWaterBathId;
     private Signature rvttSignature;
 
@@ -70,9 +59,9 @@ public class ImportedSalmonellaTest implements SubsCompositesDetections
     private Boolean   systemMediumPositiveControlGrowth;
     private Signature systemControlsSignature;
 
-    private Boolean   collectiveControlsPositveControlGrowth;
-    private Boolean   collectiveControlsMediumControlGrowth;
-    private Signature collectiveControlsSignature;
+    private Boolean   collectorControlsPositveControlGrowth;
+    private Boolean   collectorControlsMediumControlGrowth;
+    private Signature collectorControlsSignature;
 
     private Boolean   bacterialControlsUsed;
     private Signature bacterialControlsSignature;
@@ -86,5 +75,5 @@ public class ImportedSalmonellaTest implements SubsCompositesDetections
 
     private Signature allCompletedSignature;
 
-    // TODO: Make getters and setters.
+
 }

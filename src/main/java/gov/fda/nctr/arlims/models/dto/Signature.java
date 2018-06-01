@@ -5,15 +5,15 @@ import java.time.Instant;
 public class Signature
 {
     private Instant signed;
-    private String signerId;
+    private Analyst signer;
 
     public Signature
     (
         Instant signed,
-        String signerId
+        Analyst signer
     )
     {
         this.signed = signed;
-        this.signerId = signerId;
+        this.signer = signer;
     }
 }
