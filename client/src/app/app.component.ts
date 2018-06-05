@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ApiUrlsService} from "./shared/services/api-urls.service";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app';
+
+  title: string
+
+  constructor(apiUrlsSvc: ApiUrlsService) {
+     this.title = `Example API URL: ${apiUrlsSvc.authenticateUrl()}`;
+  }
 }
