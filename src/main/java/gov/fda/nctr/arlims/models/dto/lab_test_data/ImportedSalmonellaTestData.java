@@ -1,9 +1,11 @@
-package gov.fda.nctr.arlims.models.dto;
+package gov.fda.nctr.arlims.models.dto.lab_test_data;
+
+import gov.fda.nctr.arlims.models.dto.*;
 
 import java.util.List;
 
 
-public class ImportedSalmonellaTestData implements SubsCompositesDetections
+public class ImportedSalmonellaTestData
 {
     public ImportedSalmonellaTestData() { }
 

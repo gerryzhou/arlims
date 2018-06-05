@@ -15,4 +15,14 @@ public class Signature
         this.employeeFactsId = employeeFactsId;
         this.signedEpochTimeMillis = signedEpochTimeMillis;
     }
+
+    public long getEmployeeFactsId()
+    {
+        return employeeFactsId;
+    }
+
+    public long getSignedEpochTimeMillis()
+    {
+        return signedEpochTimeMillis;
+    }
 }

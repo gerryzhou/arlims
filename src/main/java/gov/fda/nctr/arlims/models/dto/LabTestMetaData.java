@@ -1,27 +1,27 @@
 package gov.fda.nctr.arlims.models.dto;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
 
-
+// TODO: If the LocalDate/Instant fields cause serialization problems, try setting mapDate param to asNumber or asString in maven typescript generator config.
 public class LabTestMetaData
 {
     private long testId;
     private long sampleNum;
     private String pacCode;
     private String testTypeName;
-    private Date beginDate;
+    private LocalDate beginDate;
 
     private String note;
 
-    private Timestamp saved;
+    private Instant saved;
     private Long savedByEmployeeId;
 
-    private Timestamp reviewed;
+    private Instant reviewed;
     private Long reviewedByEmployeeId;
 
-    public LabTestMetaData(long testId, long sampleNum, String pacCode, String testTypeName, Date beginDate, String note,
-                           Timestamp saved, Long savedByEmployeeId, Timestamp reviewed, Long reviewedByEmployeeId)
+    public LabTestMetaData(long testId, long sampleNum, String pacCode, String testTypeName, LocalDate beginDate, String note,
+                           Instant saved, Long savedByEmployeeId, Instant reviewed, Long reviewedByEmployeeId)
     {
         this.testId = testId;
         this.sampleNum = sampleNum;
@@ -55,7 +55,7 @@ public class LabTestMetaData
         return testTypeName;
     }
 
-    public Date getBeginDate()
+    public LocalDate getBeginDate()
     {
         return beginDate;
     }
@@ -65,7 +65,7 @@ public class LabTestMetaData
         return note;
     }
 
-    public Timestamp getSaved()
+    public Instant getSaved()
     {
         return saved;
     }
@@ -75,7 +75,7 @@ public class LabTestMetaData
         return savedByEmployeeId;
     }
 
-    public Timestamp getReviewed()
+    public Instant getReviewed()
     {
         return reviewed;
     }
