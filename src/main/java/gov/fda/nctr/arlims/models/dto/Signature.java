@@ -1,19 +1,18 @@
 package gov.fda.nctr.arlims.models.dto;
 
-import java.time.Instant;
 
 public class Signature
 {
-    private Instant signed;
-    private Analyst signer;
+    private long employeeFactsId;
+    private long signedEpochTimeMillis;
 
     public Signature
     (
-        Instant signed,
-        Analyst signer
+        long employeeFactsId,
+        long signedEpochTimeMillis
     )
     {
-        this.signed = signed;
-        this.signer = signer;
+        this.employeeFactsId = employeeFactsId;
+        this.signedEpochTimeMillis = signedEpochTimeMillis;
     }
 }

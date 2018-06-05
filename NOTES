@@ -1,3 +1,65 @@
+App Pages
+---------
+  Login
+    On successful authentication:
+        Retrieve lab group and other users in the same lab group, set these in user context service.
+        Redirect to home.
+  Home
+    Search box for tests/samples.
+    Show tests in progress for the current user or all users in the lab group, or by test type.
+    Show current sample assignments for the user or all users in the lab group.
+      Show attached list of available tests registered for the lab group to allow starting a test for this sample.
+    Show general list of tests for the lab group for starting a new test with manually entered sample info.
+
+
+
+Query Rick about Sample/PAC combinations, work requests etc.
+  Q: What is PAC code?
+  Q: How are samples assigned to employees? (PAC specified?)
+  Q: Should we have an employee id separate from the FACTS employee id?
+
+Client/Server Project Skeletons
+-------------------------------
+Finishing making Java model classes.
+
+Adjust polyfills
+  browserlist  - add IE 11 and Edge support
+  polyfills.ts   "
+
+Install angular material.
+  Install Roboto font(s) and icons locally as was done for REMS.
+
+Configure router with a couple of client components to test routing.
+  Pages
+    Login
+      After successful authentication, set the current employee and lab group as global state via service.
+      Load list of Employee for the lab group, so employee id's appearing in forms can be interpreted.
+    Home
+      Requires login.
+        Logged in employee determines the lab group.
+      Choice of tests.
+      List of recent activity.
+    Imported Salmonella Vidas test view.
+  Lazy load the individual test pages.
+
+Decide jdbi vs Spring jdbc.
+
+Write service to fetch sample assignments for all users of a given facility, optionally limited to those for a given user and date range.
+Write service to fetch form data for a given test type and sample, pack.
+  Return as lab_test struct.
+  If no existing record is found, create a new one with empty test as json. Null last_saved/by fields will indicate that it's new.
+Write service to store form data for a given test type and sample, pack, and user (for last_saved_by).
+
+
+Angular Services
+----------------
+[Current]EmployeeService
+  State:
+    Employee record for logged in employee.
+    Lab group name.
+    Employee records for all employees in the lab group.
+
+
 Vidas Data Retrieval
 --------------------
 QR Codes
@@ -119,29 +181,6 @@ For John:
 
 
 
-Client/Server Project Skeletons
--------------------------------
-Add lab_group or domain (MBIO|CHEM) to test type table and maybe other tables.
-Make Java model classes.
-Code generation strategy
-  Just define dto types in java to match desired results, generate typescript defs from these.
-  Maybe generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
-Make sure mvn package creates proper typescript dto interfaces.
-Create schema objects in Oracle.
-Decide jdbi vs Spring jdbc.
-Write service to fetch sample assignments for all users of a given facility, optionally limited to those for a given user and date range.
-Write service to fetch form data for a given test type and sample, pack.
-  Return as lab_test struct.
-  If no existing record is found, create a new one with empty test as json. Null last_saved/by fields will indicate that it's new.
-Write service to store form data for a given test type and sample, pack, and user (for last_saved_by).
-
-
-Create client app.
-Setup context path sync.
-Setup code gen.
-
-
-
 
 Hardware
 --------
@@ -165,4 +204,9 @@ Allow entering/editing equipment, associating with analysts.
   Forms
     For each boolean choice, form should include a yes/no or pos/neg radio group with same form field name and values 'Y'/'N' or '+'/-'.
       Hopefully this will map naturally to the json field value of null/'+'/'-' etc.
+
+
+API Doc
+-------
+Maybe generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
 
