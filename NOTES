@@ -1,7 +1,11 @@
 Client/Server Project Skeletons
 -------------------------------
-  Pages
+
+
+
+Pages
     Login
+      * Holdoff on this, may just use SSO instead.
       After successful authentication, set the current employee and lab group as global state via service.
       Load list of Employee for the lab group, so employee id's appearing in forms can be interpreted.
     Home

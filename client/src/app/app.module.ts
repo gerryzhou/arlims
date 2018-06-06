@@ -29,11 +29,13 @@ import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {LoadingIndicatorService} from "./shared/services/loading-indicator/loading-indicator-service";
 import {LoadingIndicatorInterceptor} from "./shared/services/loading-indicator/loading-indicator-interceptor";
+import { AlertMessageComponent } from './alerts/alert-message.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    AlertMessageComponent
   ],
   imports: [
     BrowserModule,
