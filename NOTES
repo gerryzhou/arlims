@@ -1,20 +1,63 @@
 Client/Server Project Skeletons
 -------------------------------
+Force remove db connect info from vc.
+Add dev properties file for dev db connection info, do not add to version control.
 
 
+Setup JDBI for Spring Boot.
+  https://github.com/oldpatricka/spring-boot-jdbi/blob/master/src/main/java/hellojdbi/Application.java
+  In application class:
+      @Autowired
+      @Bean
+      public DBI dbi(DataSource dataSource) {
+          synchronized (DBI.class) {
+              return new DBI(dataSource);
+          }
+      }
 
-Pages
-    Login
-      * Holdoff on this, may just use SSO instead.
-      After successful authentication, set the current employee and lab group as global state via service.
-      Load list of Employee for the lab group, so employee id's appearing in forms can be interpreted.
-    Home
-      Requires login.
-        Logged in employee determines the lab group for the app globally.
-      Choice of tests determined from the lab group.
-      List of recent test activity for the user/lab group.
-    Imported Salmonella Vidas test view.
+      @Autowired
+      @Bean
+      public DBIFactoryBean dbiFactory(DataSource dataSource) {
+          DBIFactoryBean dbiFactoryBean = new DBIFactoryBean();
+          dbiFactoryBean.setDataSource(dataSource);
+          return dbiFactoryBean;
+      }
 
+
+  http://jdbi.org/#_spring
+
+Create authentication-related dto types
+    +AuthenticationResult
+      Optional<AuthenticatedUser> authenticatedUser;
+    +AuthenticatedUser
+      User user;
+      String authenticationToken;
+      Instant authenticationInstant;
+
+    +AuthenticationController
+      authenticate(username, password)
+        Lookup username in db (short_name).
+        Hash posted password, compare with password from db.
+        Return auth result structure.
+
+
+Login Page
+  Create Angular authentication service.
+    + authenticate
+    Post user (short) name and password to web service, emit authentication result event.
+    Either store authentication result in the controller or to local storage.
+  Create login form component, with auth service injected.
+    Subscribe to auth events.
+    If successful, route to home, else show an alert that authentication failed.
+
+Home
+  Requires login.
+    Logged in employee determines the lab group for the app globally.
+  Choice of tests determined from the lab group.
+  List of recent test activity for the user/lab group.
+
+Imported Salmonella Vidas test view.
+  Create form via css grid.
 
 Decide jdbi vs Spring jdbc.
 
@@ -206,3 +249,14 @@ API Doc
 -------
 Maybe generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
 
+
+Tomcat/Centos Setup
+-------------------
+Need to control Tomcat's temp directory location, e.g. for file uploads and temp work files.
+  Setup:
+      CATALINA_TMPDIR="/u01/lims-api/tmp"
+      sudo mkdir "$CATALINA_TMPDIR"
+      sudo chown tomcat.tomcat "$CATALINA_TMPDIR"
+      sudo chmod 755 "$CATALINA_TMPDIR"
+      In /etc/tomcat/tomcat.conf, edit CATALINA_TMPDIR line to be:
+        CATALINA_TMPDIR="/u01/lims-api/tmp"

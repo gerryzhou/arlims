@@ -30,12 +30,14 @@ import {LoginComponent} from './login/login.component';
 import {LoadingIndicatorService} from "./shared/services/loading-indicator/loading-indicator-service";
 import {LoadingIndicatorInterceptor} from "./shared/services/loading-indicator/loading-indicator-interceptor";
 import { AlertMessageComponent } from './alerts/alert-message.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    AlertMessageComponent
+    AlertMessageComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

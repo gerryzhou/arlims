@@ -12,13 +12,16 @@ import {AlertMessageService, AlertMessage} from "../shared/services/alert-messag
 export class AlertMessageComponent implements OnInit, OnDestroy {
 
    private messagesSubscription: Subscription;
-   private message: AlertMessage;
+
+   private _message: AlertMessage;
 
    constructor(private alertMessageService: AlertMessageService) { }
 
+   get message(): AlertMessage { return this._message; }
+
    ngOnInit() {
       this.messagesSubscription = this.alertMessageService.messages().subscribe(msg => {
-         this.message = msg;
+         this._message = msg;
       });
    }
 

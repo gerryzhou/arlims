@@ -42,6 +42,20 @@
       <filtering.output.message>THIS FILE WAS PRODUCED FROM A TEMPLATE, DO NOT EDIT.</filtering.output.message>
    </properties>
 
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-bom</artifactId>
+            <type>pom</type>
+            <version>3.2.0</version>
+            <scope>import</scope>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+
+
    <dependencies>
       <dependency>
          <groupId>org.springframework.boot</groupId>
@@ -66,12 +80,29 @@
          <artifactId>javax.inject</artifactId>
          <version>1</version>
       </dependency>
+
+      <dependency>
+         <groupId>org.jdbi</groupId>
+         <artifactId>jdbi3-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jdbi</groupId>
+         <artifactId>jdbi3-sqlobject</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jdbi</groupId>
+         <artifactId>jdbi3-spring4</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jdbi</groupId>
+         <artifactId>jdbi3-oracle12</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>gov.fda.nctr</groupId>
          <artifactId>nctr-util</artifactId>
          <version>1.1.1</version>
       </dependency>
-
 
       <!--
          Oracle driver may need to be downloaded and manually installed in the maven repo:
@@ -135,7 +166,7 @@
             <configuration>
                <jsonLibrary>jackson2</jsonLibrary>
                <classPatterns>
-                  <classPattern>gov.fda.nctr.arlims.models.dto.*</classPattern>
+                  <classPattern>gov.fda.nctr.arlims.models.dto.**</classPattern>
                </classPatterns>
                <excludeClassPatterns>
                   <excludeClassPattern>**.*Exception</excludeClassPattern>
@@ -212,7 +243,7 @@
             </executions>
          </plugin>
 
-         <!-- Include client artifacts in the produced war file. -->
+         <!-- Include client artifacts in the war file produced in the packaging stage. -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
