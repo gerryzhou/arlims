@@ -2,7 +2,7 @@ package gov.fda.nctr.arlims.models.dto;
 
 import java.util.Objects;
 
-public class Employee
+public class User
 {
     long factsId;
     String shortName;
@@ -10,7 +10,7 @@ public class Employee
     String lastName;
     String firstName;
 
-    public Employee(long factsId, String shortName, String labGroupName, String lastName, String firstName)
+    public User(long factsId, String shortName, String labGroupName, String lastName, String firstName)
     {
         Objects.requireNonNull(shortName, "employee short name is required");
         Objects.requireNonNull(shortName, "employee lab group name is required");
