@@ -6,80 +6,79 @@ import java.util.Optional;
 import gov.fda.nctr.arlims.models.dto.*;
 
 
-public class ImportedSalmonellaTestData
+/// Represents possibly incomplete form data for the imported Salmonella test, based on form ARL-SAL.7.
+public class ImportedSalmonellaTestFormData
 {
-    public ImportedSalmonellaTestData() { }
+    private Optional<Long> factsSampleNum = Optional.empty();
+    private Optional<String> productName = Optional.empty();
+    private Optional<String> sampleReceived = Optional.empty();
+    private Optional<String> sampleReceivedFrom = Optional.empty();
 
-    private Optional<Long> factsSampleNum;
-    private Optional<String> productName;
-    private Optional<String> sampleReceived;
-    private Optional<String> sampleReceivedFrom;
+    private Optional<Boolean> descriptionMatchesCR = Optional.empty();
 
-    private Optional<Boolean> descriptionMatchesCR;
+    private Optional<LabelAttachmentType> labelAttachmentType = Optional.empty();
 
-    private Optional<LabelAttachmentType> labelAttachmentType;
+    private Optional<Boolean> containerMatchesCR = Optional.empty();
+    private Optional<Signature> containerMatchesCRSignature = Optional.empty();
 
-    private Optional<Boolean> containerMatchesCR;
-    private Optional<Signature> containerMatchesCRSignature;
+    private Optional<Boolean> codeMatchesCR = Optional.empty();
+    private Optional<String> codeMatchesCRNotes = Optional.empty();
+    private Optional<Signature> codeMatchesCRSignature = Optional.empty();
 
-    private Optional<Boolean> codeMatchesCR;
-    private Optional<String> codeMatchesCRNotes;
-    private Optional<Signature> codeMatchesCRSignature;
+    private Optional<SamplingMethod> samplingMethod = Optional.empty();
+    private Optional<String> samplingMethodExceptionNotes = Optional.empty();
 
-    private Optional<SamplingMethod> samplingMethod;
-    private Optional<String> samplingMethodExceptionNotes;
+    private Optional<String> balanceId = Optional.empty();
+    private Optional<String> blenderJarId = Optional.empty();
+    private Optional<String> bagId = Optional.empty();
 
-    private Optional<String> balanceId;
-    private Optional<String> blenderJarId;
-    private Optional<String> bagId;
+    private Optional<Boolean> sampleSpike = Optional.empty();
+    private Optional<Integer> spikePlateCount = Optional.empty();
 
-    private Optional<Boolean> sampleSpike;
-    private Optional<Integer> spikePlateCount;
+    private Optional<String> preenrichMediumBatchId = Optional.empty();
+    private Optional<String> preenrichIncubatorId = Optional.empty();
+    private Optional<Boolean> preenrichPositiveControlGrowth = Optional.empty();
+    private Optional<Boolean> preenrichMediumControlGrowth = Optional.empty();
+    private Optional<Signature> preenrichSignature = Optional.empty();
 
-    private Optional<String> preenrichMediumBatchId;
-    private Optional<String> preenrichIncubatorId;
-    private Optional<Boolean> preenrichPositiveControlGrowth;
-    private Optional<Boolean> preenrichMediumControlGrowth;
-    private Optional<Signature> preenrichSignature;
+    private Optional<String> rvBatchId = Optional.empty();
+    private Optional<String> ttBatchId = Optional.empty();
+    private Optional<String> bgBatchId = Optional.empty();
+    private Optional<String> l2KiBatchId = Optional.empty();
+    private Optional<String> rvttWaterBathId = Optional.empty();
+    private Optional<Signature> rvttSignature = Optional.empty();
 
-    private Optional<String> rvBatchId;
-    private Optional<String> ttBatchId;
-    private Optional<String> bgBatchId;
-    private Optional<String> l2KiBatchId;
-    private Optional<String> rvttWaterBathId;
-    private Optional<Signature> rvttSignature;
+    private Optional<String> mBrothBatchId = Optional.empty();
+    private Optional<String> mBrothWaterBathId = Optional.empty();
+    private Optional<Signature> mBrothSignature = Optional.empty();
 
-    private Optional<String> mBrothBatchId;
-    private Optional<String> mBrothWaterBathId;
-    private Optional<Signature> mBrothSignature;
+    private Optional<String> vidasInstrumentId = Optional.empty();
+    private Optional<List<String>> vidasKitIds = Optional.empty();
+    private Optional<List<Boolean>> vidasCompositesDetections = Optional.empty();
+    private Optional<Boolean> vidasPositiveControlDetection = Optional.empty();
+    private Optional<Boolean> vidasMediumControlDetection = Optional.empty();
+    private Optional<Boolean> vidasSpikeDetection = Optional.empty();
+    private Optional<Signature> vidasSignature = Optional.empty();
 
-    private Optional<String> vidasInstrumentId;
-    private Optional<List<String>> vidasKitIds;
-    private Optional<List<Boolean>> vidasCompositesDetections;
-    private Optional<Boolean> vidasPositiveControlDetection;
-    private Optional<Boolean> vidasMediumControlDetection;
-    private Optional<Boolean> vidasSpikeDetection;
-    private Optional<Signature> vidasSignature;
+    private Optional<Boolean> systemControlsPositiveControlGrowth = Optional.empty();
+    private Optional<Boolean> systemMediumPositiveControlGrowth = Optional.empty();
+    private Optional<Signature> systemControlsSignature = Optional.empty();
 
-    private Optional<Boolean> systemControlsPositiveControlGrowth;
-    private Optional<Boolean> systemMediumPositiveControlGrowth;
-    private Optional<Signature> systemControlsSignature;
+    private Optional<Boolean> collectorControlsPositveControlGrowth = Optional.empty();
+    private Optional<Boolean> collectorControlsMediumControlGrowth = Optional.empty();
+    private Optional<Signature> collectorControlsSignature = Optional.empty();
 
-    private Optional<Boolean> collectorControlsPositveControlGrowth;
-    private Optional<Boolean> collectorControlsMediumControlGrowth;
-    private Optional<Signature> collectorControlsSignature;
+    private Optional<Boolean> bacterialControlsUsed = Optional.empty();
+    private Optional<Signature> bacterialControlsSignature = Optional.empty();
 
-    private Optional<Boolean> bacterialControlsUsed;
-    private Optional<Signature> bacterialControlsSignature;
+    private Optional<Integer> resultPositiveComponentsCount = Optional.empty();
+    private Optional<Signature> resultSignature = Optional.empty();
 
-    private Optional<Integer> resultPositiveComponentsCount;
-    private Optional<Signature> resultSignature;
+    private Optional<ReserveSampleDisposition> reserveReserveSampleDisposition = Optional.empty();
+    private Optional<List<String>> reserveSampleDestinations = Optional.empty();
+    private Optional<String> reserveSampleNote = Optional.empty();
 
-    private Optional<ReserveSampleDisposition> reserveReserveSampleDisposition;
-    private Optional<List<String>> reserveSampleDestinations;
-    private Optional<String> reserveSampleNote;
-
-    private Optional<Signature> allCompletedSignature;
+    private Optional<Signature> allCompletedSignature = Optional.empty();
 
     public Optional<Long> getFactsSampleNum()
     {

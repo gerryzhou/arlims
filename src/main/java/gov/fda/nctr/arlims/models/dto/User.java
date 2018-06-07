@@ -1,19 +1,21 @@
 package gov.fda.nctr.arlims.models.dto;
 
 import java.util.Objects;
+import java.util.Optional;
+
 
 public class User
 {
     long factsId;
     String shortName;
     String labGroupName;
-    String lastName;
-    String firstName;
+    Optional<String> lastName;
+    Optional<String> firstName;
 
-    public User(long factsId, String shortName, String labGroupName, String lastName, String firstName)
+    public User(long factsId, String shortName, String labGroupName, Optional<String> lastName, Optional<String> firstName)
     {
         Objects.requireNonNull(shortName, "employee short name is required");
-        Objects.requireNonNull(shortName, "employee lab group name is required");
+        Objects.requireNonNull(labGroupName, "employee lab group name is required");
 
         this.factsId = factsId;
         this.shortName = shortName;
@@ -37,12 +39,12 @@ public class User
         return labGroupName;
     }
 
-    public String getLastName()
+    public Optional<String> getLastName()
     {
         return lastName;
     }
 
-    public String getFirstName()
+    public Optional<String> getFirstName()
     {
         return firstName;
     }
