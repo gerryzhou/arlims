@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims.models.dto;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Optional;
 
 // TODO: If the LocalDate/Instant fields cause serialization problems, try setting mapDate param to asNumber or asString in maven typescript generator config.
 public class LabTestMetaData
@@ -10,18 +11,26 @@ public class LabTestMetaData
     private long sampleNum;
     private String pacCode;
     private String testTypeName;
-    private LocalDate beginDate;
+    private Optional<LocalDate> beginDate;
+    private Optional<String> note;
+    private Instant lastModified;
+    private Long lastModifiedByEmpId;
+    private Optional<Instant> reviewed;
+    private Optional<Long> reviewedByEmpId;
 
-    private String note;
-
-    private Instant saved;
-    private Long savedByEmployeeId;
-
-    private Instant reviewed;
-    private Long reviewedByEmployeeId;
-
-    public LabTestMetaData(long testId, long sampleNum, String pacCode, String testTypeName, LocalDate beginDate, String note,
-                           Instant saved, Long savedByEmployeeId, Instant reviewed, Long reviewedByEmployeeId)
+    public LabTestMetaData
+    (
+        long testId,
+        long sampleNum,
+        String pacCode,
+        String testTypeName,
+        Optional<LocalDate> beginDate,
+        Optional<String> note,
+        Instant lastModified,
+        Long lastModifiedByEmpId,
+        Optional<Instant> reviewed,
+        Optional<Long> reviewedByEmpId
+    )
     {
         this.testId = testId;
         this.sampleNum = sampleNum;
@@ -29,10 +38,10 @@ public class LabTestMetaData
         this.testTypeName = testTypeName;
         this.beginDate = beginDate;
         this.note = note;
-        this.saved = saved;
-        this.savedByEmployeeId = savedByEmployeeId;
+        this.lastModified = lastModified;
+        this.lastModifiedByEmpId = lastModifiedByEmpId;
         this.reviewed = reviewed;
-        this.reviewedByEmployeeId = reviewedByEmployeeId;
+        this.reviewedByEmpId = reviewedByEmpId;
     }
 
     public long getTestId()
@@ -55,33 +64,33 @@ public class LabTestMetaData
         return testTypeName;
     }
 
-    public LocalDate getBeginDate()
+    public Optional<LocalDate> getBeginDate()
     {
         return beginDate;
     }
 
-    public String getNote()
+    public Optional<String> getNote()
     {
         return note;
     }
 
-    public Instant getSaved()
+    public Instant getLastModified()
     {
-        return saved;
+        return lastModified;
     }
 
-    public Long getSavedByEmployeeId()
+    public Long getLastModifiedByEmployeeId()
     {
-        return savedByEmployeeId;
+        return lastModifiedByEmpId;
     }
 
-    public Instant getReviewed()
+    public Optional<Instant> getReviewed()
     {
         return reviewed;
     }
 
-    public Long getReviewedByEmployeeId()
+    public Optional<Long> getReviewedByEmployeeId()
     {
-        return reviewedByEmployeeId;
+        return reviewedByEmpId;
     }
 }

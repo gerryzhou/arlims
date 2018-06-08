@@ -4,34 +4,34 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class User
+public class Employee
 {
-    long factsId;
-    String shortName;
+    long empId;
+    String username;
     String labGroupName;
     Optional<String> lastName;
     Optional<String> firstName;
 
-    public User(long factsId, String shortName, String labGroupName, Optional<String> lastName, Optional<String> firstName)
+    public Employee(long empId, String username, String labGroupName, Optional<String> lastName, Optional<String> firstName)
     {
-        Objects.requireNonNull(shortName, "employee short name is required");
+        Objects.requireNonNull(username, "employee username is required");
         Objects.requireNonNull(labGroupName, "employee lab group name is required");
 
-        this.factsId = factsId;
-        this.shortName = shortName;
+        this.empId = empId;
+        this.username = username;
         this.labGroupName = labGroupName;
         this.lastName = lastName;
         this.firstName = firstName;
     }
 
-    public long getFactsId()
+    public long getId()
     {
-        return factsId;
+        return empId;
     }
 
-    public String getShortName()
+    public String getUsername()
     {
-        return shortName;
+        return username;
     }
 
     public String getLabGroupName()

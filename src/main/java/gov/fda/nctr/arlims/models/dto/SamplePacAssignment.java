@@ -6,14 +6,14 @@ public class SamplePacAssignment
     long sampleNum;
     String pacCode;
     String productName;
-    long employeeFactsId;
+    long empId;
 
-    public SamplePacAssignment(long sampleNum, String pacCode, String productName, long empFactsId)
+    public SamplePacAssignment(long sampleNum, String pacCode, String productName, long empId)
     {
         this.sampleNum = sampleNum;
         this.pacCode = pacCode;
         this.productName = productName;
-        this.employeeFactsId = empFactsId;
+        this.empId = empId;
     }
 
     public long getSampleNumber()
@@ -31,8 +31,8 @@ public class SamplePacAssignment
         return productName;
     }
 
-    public long getEmployeeFactsId()
+    public long getEmployeeId()
     {
-        return employeeFactsId;
+        return empId;
     }
 }

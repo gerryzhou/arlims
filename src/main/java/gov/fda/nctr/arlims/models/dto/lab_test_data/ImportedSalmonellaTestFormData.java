@@ -9,7 +9,7 @@ import gov.fda.nctr.arlims.models.dto.*;
 /// Represents possibly incomplete form data for the imported Salmonella test, based on form ARL-SAL.7.
 public class ImportedSalmonellaTestFormData
 {
-    private Optional<Long> factsSampleNum = Optional.empty();
+    private Optional<Long> sampleNum = Optional.empty();
     private Optional<String> productName = Optional.empty();
     private Optional<String> sampleReceived = Optional.empty();
     private Optional<String> sampleReceivedFrom = Optional.empty();
@@ -80,9 +80,9 @@ public class ImportedSalmonellaTestFormData
 
     private Optional<Signature> allCompletedSignature = Optional.empty();
 
-    public Optional<Long> getFactsSampleNum()
+    public Optional<Long> getSampleNum()
     {
-        return factsSampleNum;
+        return sampleNum;
     }
 
     public Optional<String> getProductName()
@@ -115,9 +115,9 @@ public class ImportedSalmonellaTestFormData
         this.sampleReceivedFrom = sampleReceivedFrom;
     }
 
-    public void setFactsSampleNum(Optional<Long> factsSampleNum)
+    public void setSampleNum(Optional<Long> sampleNum)
     {
-        this.factsSampleNum = factsSampleNum;
+        this.sampleNum = sampleNum;
     }
 
     public Optional<Boolean> getDescriptionMatchesCR()

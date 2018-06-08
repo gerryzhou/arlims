@@ -17,7 +17,7 @@ public class DevDatabaseConfig
     @Value("${arlims-dev.db.primary.driverClassName}")
     private String driverClassName;
 
-    @Value("${arlims-dev.db.primary.url}")
+    @Value("${arlims-dev.db.primary.jdbcUrl}")
     private String url;
 
     @Value("${arlims-dev.db.primary.username}")

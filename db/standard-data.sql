@@ -1,10 +1,12 @@
 insert into lab_group (name, address_street, address_buildings_and_rooms, address_city, address_state, address_zip, description)
   values ('ARL-MICRO', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
 
--- insert into employee (facts_id, short_name, lab_group_name, email, last_name, first_name, middle_name_or_initial)
---   values (???, 'AA', 'ARL-MICRO', 'ashfaqe.ahmed@fda.hhs.gov','Ahmed', 'Ashfaqe', null);
--- insert into employee (short_name, lab_group_name, email, last_name, first_name, middle_name_or_initial)
---   values (???, 'JM', 'ARL-MICRO', 'joseph.mendoza@fda.hhs.gov', 'Mendoza', 'Joseph', null);
+insert into employee (facts_id, username, lab_group_name, email, last_name, first_name, middle_name_or_initial)
+  values (1111, 'SCH', 'ARL-MICRO', 'stephen.harris@fda.hhs.gov','Harris', 'Stephen', 'C');
+insert into employee (facts_id, username, lab_group_name, email, last_name, first_name, middle_name_or_initial)
+  values (2111, 'AA', 'ARL-MICRO', 'ashfaqe.ahmed@fda.hhs.gov','Ahmed', 'Ashfaqe', null);
+insert into employee (facts_id, username, lab_group_name, email, last_name, first_name, middle_name_or_initial)
+  values (3111, 'JM', 'ARL-MICRO', 'joseph.mendoza@fda.hhs.gov', 'Mendoza', 'Joseph', null);
 
 
 insert into lab_resource(id, type_name, lab_group_name, description)

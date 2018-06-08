@@ -3,22 +3,22 @@ package gov.fda.nctr.arlims.models.dto;
 
 public class Signature
 {
-    private long employeeFactsId;
+    private long empId;
     private long signedEpochTimeMillis;
 
     public Signature
     (
-        long employeeFactsId,
+        long empId,
         long signedEpochTimeMillis
     )
     {
-        this.employeeFactsId = employeeFactsId;
+        this.empId = empId;
         this.signedEpochTimeMillis = signedEpochTimeMillis;
     }
 
-    public long getEmployeeFactsId()
+    public long getEmployeeId()
     {
-        return employeeFactsId;
+        return empId;
     }
 
     public long getSignedEpochTimeMillis()

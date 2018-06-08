@@ -18,18 +18,19 @@ create table lab_group (
 
 create table employee (
   facts_id int constraint pk_emp primary key,
-  short_name varchar(20) not null,
+  username varchar(20) not null,
   lab_group_name varchar(20) not null
     constraint fk_emp_labgrp references lab_group,
-  password varchar(32),
+  password varchar(60),
   email varchar(150) not null,
   last_name varchar(60) not null,
   first_name varchar(60) not null,
   middle_name_or_initial varchar(60),
 
-  constraint un_emp_shortnmlabgrp unique (short_name, lab_group_name)
+  constraint un_emp_shortnmlabgrp unique (username, lab_group_name)
 );
 create index ix_emp_labgrp on employee(lab_group_name);
+create index ix_emp_passwd on employee(password);
 
 
 create table sample_pac (

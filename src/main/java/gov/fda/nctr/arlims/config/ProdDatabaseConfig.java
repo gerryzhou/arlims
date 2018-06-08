@@ -17,11 +17,10 @@ public class ProdDatabaseConfig
     @Value("${db.primary.jndi-name}")
     private String primaryJndiName;
 
-    private JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-
     @Bean @Primary
     public DataSource primaryDataSource()
     {
+        JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
         return dsLookup.getDataSource(primaryJndiName);
     }
 }
