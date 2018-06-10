@@ -30,7 +30,6 @@ create table employee (
   constraint un_emp_shortnmlabgrp unique (username, lab_group_name)
 );
 create index ix_emp_labgrp on employee(lab_group_name);
-create index ix_emp_passwd on employee(password);
 
 
 create table sample_pac (
@@ -39,7 +38,7 @@ create table sample_pac (
   product_name varchar(50) not null,
   received date,
   received_by varchar(100),
-  is_imported char(1) not null constraint ck_sampk_isimported_yn check(is_imported in ('Y','N')),
+--   is_imported char(1) not null constraint ck_sampk_isimported_yn check(is_imported in ('Y','N')),
   constraint pk_sampk primary key (sample_num, pac_code)
 );
 
@@ -106,8 +105,7 @@ create table lab_test (
   lab_group_name varchar(20) not null,
   test_type_name varchar(20) not null,
   begin_date date not null,
-  data blob not null
-    constraint ck_labtest_testdata_isjson check (data is json format json strict),
+  data blob not null,
   note varchar(100),
   saved timestamp with time zone not null,
   saved_by_employee_id int

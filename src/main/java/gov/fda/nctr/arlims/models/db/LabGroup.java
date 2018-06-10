@@ -1,0 +1,120 @@
+package gov.fda.nctr.arlims.models.db;
+
+import java.util.List;
+import java.util.ArrayList;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+
+@Entity
+public class LabGroup
+{
+    @Id @Size(max = 20)
+    String name;
+
+    @Size(max = 200)
+    String addressStreet;
+
+    @Size(max = 200)
+    String addressBuildingsAndRooms;
+
+    @Size(max = 200)
+    String addressCity;
+
+    @Size(max = 2)
+    String addressState;
+
+    @Size(max = 11)
+    String addressZip;
+
+    @Size(max = 100)
+    String description;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
+    private List<Employee> employees = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
+    private List<LabResource> resources = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "LAB_GROUP_LAB_TEST_TYPE",
+        joinColumns = @JoinColumn(name = "LAB_GROUP_NAME"),
+        inverseJoinColumns = @JoinColumn(name = "LAB_TEST_TYPE_NAME")
+    )
+    private List<LabTestType> testTypes = new ArrayList<>();
+
+    protected LabGroup() {}
+
+    public LabGroup
+        (
+            @Size(max = 20) @NotBlank String name,
+            @Size(max = 200) String addressStreet,
+            @Size(max = 200) String addressBuildingsAndRooms,
+            @Size(max = 200) String addressCity,
+            @Size(max = 2) String addressState,
+            @Size(max = 11) String addressZip,
+            @Size(max = 100) String description,
+            @NotNull List<Employee> employees,
+            @NotNull List<LabResource> resources,
+            @NotNull List<LabTestType> testTypes
+        )
+    {
+        this.name = name;
+        this.addressStreet = addressStreet;
+        this.addressBuildingsAndRooms = addressBuildingsAndRooms;
+        this.addressCity = addressCity;
+        this.addressState = addressState;
+        this.addressZip = addressZip;
+        this.description = description;
+        this.employees = employees;
+        this.resources = resources;
+        this.testTypes = testTypes;
+    }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getAddressStreet() { return addressStreet; }
+
+    public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }
+
+    public String getAddressBuildingsAndRooms() { return addressBuildingsAndRooms; }
+
+    public void setAddressBuildingsAndRooms(String addressBuildingsAndRooms)
+    {
+        this.addressBuildingsAndRooms = addressBuildingsAndRooms;
+    }
+
+    public String getAddressCity() { return addressCity; }
+
+    public void setAddressCity(String addressCity) { this.addressCity = addressCity; }
+
+    public String getAddressState() { return addressState; }
+
+    public void setAddressState(String addressState) { this.addressState = addressState; }
+
+    public String getAddressZip() { return addressZip; }
+
+    public void setAddressZip(String addressZip) { this.addressZip = addressZip; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public List<Employee> getEmployees() { return employees; }
+
+    public void setEmployees(List<Employee> employees) { this.employees = employees; }
+
+    public List<LabResource> getResources() { return resources; }
+
+    public void setResources(List<LabResource> resources) { this.resources = resources; }
+
+    public List<LabTestType> getTestTypes() { return testTypes; }
+
+    public void setTestTypes(List<LabTestType> testTypes) { this.testTypes = testTypes; }
+}
+

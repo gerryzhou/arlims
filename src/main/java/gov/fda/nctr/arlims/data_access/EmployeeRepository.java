@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import gov.fda.nctr.arlims.data_access.entities.EmployeeRecord;
+import gov.fda.nctr.arlims.models.db.Employee;
 
 
-public interface EmployeeRepository extends CrudRepository<EmployeeRecord, Long>
+public interface EmployeeRepository extends CrudRepository<Employee, Long>
 {
-    List<EmployeeRecord> findByUsername(String username);
+    List<Employee> findByUsername(String username);
 }

@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims.config;
 
 import javax.inject.Inject;
 
+/*
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,3 +61,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and().exceptionHandling().accessDeniedPage("/Access_Denied");
     }
 }
+*/
