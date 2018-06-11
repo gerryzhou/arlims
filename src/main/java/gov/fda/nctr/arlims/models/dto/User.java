@@ -4,9 +4,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class Employee
+public class User
 {
-    long id;
+    long employeeId;
     Optional<Long> factsPersonId;
     String username;
     String shortName;
@@ -14,9 +14,9 @@ public class Employee
     String lastName;
     String firstName;
 
-    public Employee
+    public User
         (
-            long id,
+            long employeeId,
             Optional<Long> factsPersonId,
             String username,
             String shortName,
@@ -31,7 +31,7 @@ public class Employee
         Objects.requireNonNull(lastName, "employee last name is required");
         Objects.requireNonNull(firstName, "employee first name is required");
 
-        this.id = id;
+        this.employeeId = employeeId;
         this.factsPersonId = factsPersonId;
         this.username = username;
         this.shortName = shortName;
@@ -40,7 +40,7 @@ public class Employee
         this.firstName = firstName;
     }
 
-    public long getId() { return id; }
+    public long getEmployeeId() { return employeeId; }
 
     public Optional<Long> getFactsPersonId() { return factsPersonId; }
 

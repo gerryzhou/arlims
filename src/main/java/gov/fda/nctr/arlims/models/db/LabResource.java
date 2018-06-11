@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import gov.fda.nctr.arlims.models.dto.LabResourceType;
+import gov.fda.nctr.arlims.models.dto.LabResourceTypeName;
 
 
 @Entity
@@ -14,7 +14,7 @@ public class LabResource
     private String code;
 
     @Enumerated(EnumType.STRING) @Column(length = 60) @NotNull
-    private LabResourceType resourceType;
+    private LabResourceTypeName resourceType;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME", foreignKey = @ForeignKey(name="FK_LABRSC_LABGROUP")) @NotNull
     private LabGroup labGroup;
@@ -27,7 +27,7 @@ public class LabResource
     public LabResource
         (
             @NotNull String code,
-            @NotNull LabResourceType resourceType,
+            @NotNull LabResourceTypeName resourceType,
             @NotNull LabGroup labGroup,
             String description
         )

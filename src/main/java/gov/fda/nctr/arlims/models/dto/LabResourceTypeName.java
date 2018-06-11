@@ -1,6 +1,6 @@
 package gov.fda.nctr.arlims.models.dto;
 
-public enum LabResourceType
+public enum LabResourceTypeName
 {
     BALANCE,
     WATERBATH,

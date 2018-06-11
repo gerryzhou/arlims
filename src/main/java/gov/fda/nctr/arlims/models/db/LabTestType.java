@@ -3,16 +3,17 @@ package gov.fda.nctr.arlims.models.db;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import gov.fda.nctr.arlims.models.dto.LabTestTypeName;
 
 
 @Entity
 public class LabTestType
 {
-    @Id @Size(max = 20) @Column(length = 20)
-    private String name;
+    @Id @Enumerated(EnumType.STRING) @Column(length = 20)
+    private LabTestTypeName typeName;
 
     @Size(max = 200)
     private String description;
@@ -33,19 +34,19 @@ public class LabTestType
 
     public LabTestType
         (
-            @Size(max = 20) @NotBlank String name,
+            LabTestTypeName typeName,
             @Size(max = 200) String description,
             @NotNull List<SamplingMethod> samplingMethods
         )
     {
-        this.name = name;
+        this.typeName = typeName;
         this.description = description;
         this.samplingMethods = samplingMethods;
     }
 
-    public String getName() { return name; }
+    public LabTestTypeName getName() { return typeName; }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(LabTestTypeName name) { this.typeName = name; }
 
     public String getDescription() { return description; }
 

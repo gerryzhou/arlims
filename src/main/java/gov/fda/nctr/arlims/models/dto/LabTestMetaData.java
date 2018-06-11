@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 
-// TODO: If the LocalDate/Instant fields cause serialization problems, try setting mapDate param to asNumber or asString in maven typescript generator config.
+
 public class LabTestMetaData
 {
     private long testId;

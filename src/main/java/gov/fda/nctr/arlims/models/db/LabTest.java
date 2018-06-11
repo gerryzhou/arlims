@@ -80,7 +80,7 @@ public class LabTest
         this.labGroup = labGroup;
         this.labGroupName = labGroup.getName();
         this.testType = labTestType;
-        this.testTypeName = testType.getName();
+        this.testTypeName = testType.getName().toString();
         this.beginDate = beginDate;
         this.testDataJson = testDataJson;
         this.note = note;

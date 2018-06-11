@@ -1,7 +1,9 @@
 package gov.fda.nctr.arlims.models.db;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -51,7 +53,7 @@ public class Employee
     private String firstName;
 
     @Size(max = 60)
-    private String middleNameOrInitial;
+    private String middleName;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -63,7 +65,20 @@ public class Employee
             @Index(name = "IX_SMPGRPAST_SAMPUNITID", columnList = "SAMPLE_UNIT_ID"),
         }
     )
-    private List<SampleUnit> assignedSampleUnits = new ArrayList<>();
+    private List<SampleUnit> assignedSamples = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "EMPLOYEE_ROLE",
+        joinColumns = @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_EMPROLE_EMP")),
+        inverseJoinColumns = @JoinColumn(name = "ROLE_NAME", foreignKey = @ForeignKey(name="FK_EMPROLE_ROLE")),
+        indexes = {
+            @Index(name = "IX_EMPROLE_EMPID", columnList = "EMPLOYEE_ID"),
+            @Index(name = "IX_EMPROLE_ROLENAME", columnList = "ROLE_NAME"),
+        }
+    )
+    private Set<Role> roles = new HashSet<>();
+
 
     protected Employee() {}
 
@@ -77,8 +92,8 @@ public class Employee
             @Size(max = 150) @NotBlank @Email String email,
             @Size(max = 60) @NotBlank String lastName,
             @Size(max = 60) @NotBlank String firstName,
-            @Size(max = 60) String middleNameOrInitial,
-            @NotNull List<SampleUnit> assignedSampleUnits
+            @Size(max = 60) String middleName,
+            @NotNull Set<Role> roles
         )
     {
         this.factsPersonId = factsPersonId;
@@ -90,8 +105,8 @@ public class Employee
         this.email = email;
         this.lastName = lastName;
         this.firstName = firstName;
-        this.middleNameOrInitial = middleNameOrInitial;
-        this.assignedSampleUnits = assignedSampleUnits;
+        this.middleName = middleName;
+        this.roles = roles;
     }
 
     public Long getId() { return id; }
@@ -132,19 +147,18 @@ public class Employee
 
     public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    public String getMiddleNameOrInitial() { return middleNameOrInitial; }
+    public String getMiddleName() { return middleName; }
 
-    public void setMiddleNameOrInitial(String middleNameOrInitial)
-    {
-        this.middleNameOrInitial = middleNameOrInitial;
-    }
+    public void setMiddleName(String middleName) { this.middleName = middleName; }
 
-    public List<SampleUnit> getAssignedSampleUnits() { return assignedSampleUnits; }
+    public List<SampleUnit> getAssignedSamples() { return assignedSamples; }
 
-    public void setAssignedSampleUnits(List<SampleUnit> assignedSampleUnits)
-    {
-        this.assignedSampleUnits = assignedSampleUnits;
-    }
+    public void setAssignedSamples(List<SampleUnit> assignedSamples) { this.assignedSamples = assignedSamples; }
+
+    public Set<Role> getRoles() { return roles; }
+
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
+
 
     @Override
     public String toString() { return "Employee[" + factsPersonId + ", " + username + ",...]"; }

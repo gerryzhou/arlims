@@ -1,18 +1,18 @@
 package gov.fda.nctr.arlims.models.dto;
 
-
 import java.util.Optional;
+
 
 public class LabResource
 {
     private String code;
-    private LabResourceType resourceType;
+    private LabResourceTypeName typeName;
     private Optional<String> description;
 
-    public LabResource(String code, LabResourceType resourceType, Optional<String> description)
+    public LabResource(String code, LabResourceTypeName typeName, Optional<String> description)
     {
         this.code = code;
-        this.resourceType = resourceType;
+        this.typeName = typeName;
         this.description = description;
     }
 
@@ -21,9 +21,9 @@ public class LabResource
         return code;
     }
 
-    public LabResourceType getResourceType()
+    public LabResourceTypeName getResourceType()
     {
-        return resourceType;
+        return typeName;
     }
 
     public Optional<String> getDescription()
