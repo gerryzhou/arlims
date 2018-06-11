@@ -1,8 +1,5 @@
 Client/Server Project Skeletons
 -------------------------------
-Try generating Oracle schema from JPA entity classes.
-  Check that field sizes match pk field sizes for generated fk columns (they don't for H2 db).
-
 Configure Spring security for password authentication.
     https://www.callicoder.com/spring-boot-spring-security-jwt-mysql-react-app-part-1/
     or
@@ -193,8 +190,6 @@ FACTS_ANALYSIS_GRP1_FINDINGS
   SPIKE_UNIT_CODE
 
 
-
-
 Questions
 ---------
 Are jars and bags disposable or to be entered into database for display in dropdown lists?
@@ -236,4 +231,9 @@ Allow entering/editing equipment, associating with analysts.
 API Doc
 -------
 Maybe generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
+
+
+EPLC
+----
+Security doc required: System Security Plan (SSP), Risk Assessment, and Authorization to Operate (ATO)
 

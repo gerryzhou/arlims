@@ -9,24 +9,24 @@ insert into employee (facts_id, username, lab_group_name, email, last_name, firs
   values (3111, 'JM', 'ARL-MICRO', 'joseph.mendoza@fda.hhs.gov', 'Mendoza', 'Joseph', null);
 
 
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('ARL00424', 'BALANCE', 'ARL-MICRO', null);
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('RT10971', 'WATERBATH', 'ARL-MICRO', null);
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('ARL00190', 'WATERBATH', 'ARL-MICRO', null);
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('ARL00232', 'WATERBATH', 'ARL-MICRO', null);
 
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('V1-5089993', 'VIDAS', 'ARL-MICRO', null);
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('V2-5099353', 'VIDAS', 'ARL-MICRO', null);
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('V3-5122706', 'VIDAS', 'ARL-MICRO', null);
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('V4-5122707', 'VIDAS', 'ARL-MICRO', null);
-insert into lab_resource(id, type_name, lab_group_name, description)
+insert into lab_resource(code, type_name, lab_group_name, description)
   values('V5-5099389', 'VIDAS', 'ARL-MICRO', null);
 
 insert into test_type(name, description)

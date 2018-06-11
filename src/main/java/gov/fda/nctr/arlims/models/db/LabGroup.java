@@ -11,26 +11,26 @@ import javax.validation.constraints.Size;
 @Entity
 public class LabGroup
 {
-    @Id @Size(max = 20)
-    String name;
+    @Id @Size(max = 20) @Column(length = 20)
+    private String name;
 
     @Size(max = 200)
-    String addressStreet;
+    private String addressStreet;
 
     @Size(max = 200)
-    String addressBuildingsAndRooms;
+    private String addressBuildingsAndRooms;
 
     @Size(max = 200)
-    String addressCity;
+    private String addressCity;
 
     @Size(max = 2)
-    String addressState;
+    private String addressState;
 
     @Size(max = 11)
-    String addressZip;
+    private String addressZip;
 
     @Size(max = 100)
-    String description;
+    private String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
     private List<Employee> employees = new ArrayList<>();
@@ -41,8 +41,8 @@ public class LabGroup
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "LAB_GROUP_LAB_TEST_TYPE",
-        joinColumns = @JoinColumn(name = "LAB_GROUP_NAME"),
-        inverseJoinColumns = @JoinColumn(name = "LAB_TEST_TYPE_NAME")
+        joinColumns = @JoinColumn(name = "LAB_GROUP_NAME", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LGRP")),
+        inverseJoinColumns = @JoinColumn(name = "LAB_TEST_TYPE_NAME", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LTSTT"))
     )
     private List<LabTestType> testTypes = new ArrayList<>();
 

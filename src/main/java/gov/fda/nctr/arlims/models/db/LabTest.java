@@ -22,19 +22,19 @@ public class LabTest
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "SAMPLE_UNIT_ID") @NotNull
+    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "SAMPLE_UNIT_ID", foreignKey = @ForeignKey(name="FK_LABTST_SAMPLEUNIT")) @NotNull
     private SampleUnit sampleUnit;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME", foreignKey = @ForeignKey(name="FK_LABTST_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "LAB_GROUP_NAME", insertable = false, updatable = false)
+    @Column(name = "LAB_GROUP_NAME", insertable = false, updatable = false, nullable = false)
     private String labGroupName;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEST_TYPE_NAME")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEST_TYPE_NAME", foreignKey = @ForeignKey(name="FK_LABTST_LABTESTTYPE")) @NotNull
     private LabTestType testType;
 
-    @Column(name = "TEST_TYPE_NAME", insertable = false, updatable = false)
+    @Column(name = "TEST_TYPE_NAME", insertable = false, updatable = false, nullable = false)
     private String testTypeName;
 
     private LocalDate beginDate;
@@ -45,17 +45,18 @@ public class LabTest
     @Size(max = 200)
     private String note;
 
+    @NotNull
     private Instant saved;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "SAVED_BY_EMPLOYEE_ID")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "SAVED_BY_EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_LABTST_EMP_SAVEDBY")) @NotNull
     private Employee savedBy;
 
-    @Column(name = "SAVED_BY_EMPLOYEE_ID", insertable = false, updatable = false)
+    @Column(name = "SAVED_BY_EMPLOYEE_ID", insertable = false, updatable = false, nullable = false)
     private Long savedByEmployeeId;
 
     private Instant reviewed;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "REVIEWED_BY_EMPLOYEE_ID")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "REVIEWED_BY_EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_LABTST_EMP_REVBY"))
     private Employee reviewedBy;
 
     @Column(name = "REVIEWED_BY_EMPLOYEE_ID", insertable = false, updatable = false)

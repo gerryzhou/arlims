@@ -12,7 +12,8 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(
     uniqueConstraints = {
-        @UniqueConstraint(name="UN_EMP_USERNAMELABGRP", columnNames = {"USERNAME", "LAB_GROUP_NAME"})
+        @UniqueConstraint(name="UN_EMP_USERNAME", columnNames = {"USERNAME"}),
+        @UniqueConstraint(name="UN_EMP_SHORTNAMELABGRP", columnNames = {"SHORT_NAME", "LAB_GROUP_NAME"})
     },
     indexes = {
         @Index(name = "IX_EMP_LABGROUPNAME", columnList = "LAB_GROUP_NAME")
@@ -25,25 +26,28 @@ public class Employee
 
     private Long factsPersonId;
 
-    @Size(max = 20) @NotBlank
+    @Size(max = 30) @NotNull @NotBlank
     private String username;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME")
+    @Column(name = "SHORT_NAME") @Size(max = 10) @NotNull @NotBlank
+    private String shortName;
+
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "LAB_GROUP_NAME", insertable = false, updatable = false)
+    @Column(name = "LAB_GROUP_NAME", insertable = false, updatable = false, nullable = false)
     private String labGroupName;
 
     @Size(max = 200)
     private String password;
 
-    @Size(max = 150) @NotBlank @Email
+    @Size(max = 150) @NotNull @NotBlank @Email
     private String email;
 
-    @Size(max = 60) @NotBlank
+    @Size(max = 60) @NotNull @NotBlank
     private String lastName;
 
-    @Size(max = 60) @NotBlank
+    @Size(max = 60) @NotNull @NotBlank
     private String firstName;
 
     @Size(max = 60)
@@ -52,8 +56,8 @@ public class Employee
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "SAMPLE_UNIT_ASSIGNMENT",
-        joinColumns = @JoinColumn(name = "EMPLOYEE_ID"),
-        inverseJoinColumns = @JoinColumn(name = "SAMPLE_UNIT_ID"),
+        joinColumns = @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_SMPUNITAST_EMP")),
+        inverseJoinColumns = @JoinColumn(name = "SAMPLE_UNIT_ID", foreignKey = @ForeignKey(name="FK_SMPUNITAST_SAMPLEUNIT")),
         indexes = {
             @Index(name = "IX_SMPGRPAST_EMPID", columnList = "EMPLOYEE_ID"),
             @Index(name = "IX_SMPGRPAST_SAMPUNITID", columnList = "SAMPLE_UNIT_ID"),
@@ -67,6 +71,7 @@ public class Employee
         (
             Long factsPersonId,
             @Size(max = 20) @NotBlank String username,
+            @Size(max = 10) @NotBlank String shortName,
             @NotNull LabGroup labGroup,
             @Size(max = 200) String password,
             @Size(max = 150) @NotBlank @Email String email,
@@ -78,6 +83,7 @@ public class Employee
     {
         this.factsPersonId = factsPersonId;
         this.username = username;
+        this.shortName = shortName;
         this.labGroup = labGroup;
         this.labGroupName = labGroup.getName();
         this.password = password;
@@ -99,6 +105,10 @@ public class Employee
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username; }
+
+    public String getShortName() { return shortName; }
+
+    public void setShortName(String shortName) { this.shortName = shortName; }
 
     public LabGroup getLabGroup() { return labGroup; }
 

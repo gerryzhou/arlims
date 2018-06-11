@@ -6,124 +6,184 @@ from user_tables
 purge recyclebin;
 */
 
-create table lab_group (
-  name varchar(20) not null constraint pk_labgrp primary key,
-  address_street varchar(200),
-  address_buildings_and_rooms varchar(200),
-  address_city varchar(200),
-  address_state varchar(2),
-  address_zip varchar(11),
-  description varchar(100)
-);
+create table LAB_GROUP
+(
+  NAME                        VARCHAR2(20 char) not null
+    primary key,
+  ADDRESS_BUILDINGS_AND_ROOMS VARCHAR2(200 char),
+  ADDRESS_CITY                VARCHAR2(200 char),
+  ADDRESS_STATE               VARCHAR2(2 char),
+  ADDRESS_STREET              VARCHAR2(200 char),
+  ADDRESS_ZIP                 VARCHAR2(11 char),
+  DESCRIPTION                 VARCHAR2(100 char)
+)
+/
 
-create table employee (
-  facts_id int constraint pk_emp primary key,
-  username varchar(20) not null,
-  lab_group_name varchar(20) not null
-    constraint fk_emp_labgrp references lab_group,
-  password varchar(60),
-  email varchar(150) not null,
-  last_name varchar(60) not null,
-  first_name varchar(60) not null,
-  middle_name_or_initial varchar(60),
+create table EMPLOYEE
+(
+  ID                     NUMBER(19) generated as identity
+    primary key,
+  EMAIL                  VARCHAR2(150 char) not null,
+  FACTS_PERSON_ID        NUMBER(19),
+  FIRST_NAME             VARCHAR2(60 char)  not null,
+  LAB_GROUP_NAME         VARCHAR2(255 char) not null
+    constraint FK_EMP_LABGROUP
+    references LAB_GROUP,
+  LAST_NAME              VARCHAR2(60 char)  not null,
+  MIDDLE_NAME_OR_INITIAL VARCHAR2(60 char),
+  PASSWORD               VARCHAR2(200 char),
+  SHORT_NAME             VARCHAR2(10 char)  not null,
+  USERNAME               VARCHAR2(30 char)  not null
+    constraint UN_EMP_USERNAME
+    unique,
+  constraint UN_EMP_SHORTNAMELABGRP
+  unique (SHORT_NAME, LAB_GROUP_NAME)
+)
+/
 
-  constraint un_emp_shortnmlabgrp unique (username, lab_group_name)
-);
-create index ix_emp_labgrp on employee(lab_group_name);
+create index IX_EMP_LABGROUPNAME
+  on EMPLOYEE (LAB_GROUP_NAME)
+/
 
+create table LAB_RESOURCE
+(
+  CODE           VARCHAR2(20 char)  not null
+    primary key,
+  DESCRIPTION    VARCHAR2(255 char),
+  LAB_GROUP_NAME VARCHAR2(255 char) not null
+    constraint FK_LABRSC_LABGROUP
+    references LAB_GROUP,
+  RESOURCE_TYPE  VARCHAR2(60 char)  not null
+)
+/
 
-create table sample_pac (
-  sample_num int,
-  pac_code varchar(20),
-  product_name varchar(50) not null,
-  received date,
-  received_by varchar(100),
---   is_imported char(1) not null constraint ck_sampk_isimported_yn check(is_imported in ('Y','N')),
-  constraint pk_sampk primary key (sample_num, pac_code)
-);
+create table LAB_TEST_TYPE
+(
+  NAME        VARCHAR2(20 char) not null
+    primary key,
+  DESCRIPTION VARCHAR2(200 char)
+)
+/
 
-create table sample_pac_assignment (
-  sample_num int,
-  pac_code varchar(20),
-  employee_id int
-    constraint fk_sampkass_emp references employee,
-  constraint pk_sampkass primary key(sample_num, pac_code, employee_id),
-  constraint fk_sampkass_sampk foreign key (sample_num, pac_code) references sample_pac
-);
-create index ix_sampkass_employeeid on sample_pac_assignment (employee_id);
+create table LAB_GROUP_LAB_TEST_TYPE
+(
+  LAB_GROUP_NAME     VARCHAR2(20 char) not null
+    constraint FK_LGRPLTSTT_LGRP
+    references LAB_GROUP,
+  LAB_TEST_TYPE_NAME VARCHAR2(20 char) not null
+    constraint FK_LGRPLTSTT_LTSTT
+    references LAB_TEST_TYPE
+)
+/
 
-create table lab_resource (
-  id varchar(20) constraint pk_labrsc primary key,
-  type_name varchar(20) not null, -- controlled by enum
-  lab_group_name varchar(20) not null
-    constraint fk_labrsc_labgrp references lab_group,
-  description varchar(200)
-);
-create index ix_labrsc_labgrpnm on lab_resource(lab_group_name);
+create table SAMPLE_UNIT
+(
+  ID           NUMBER(19) generated as identity
+    primary key,
+  PAC_CODE     VARCHAR2(20 char) not null,
+  PRODUCT_NAME VARCHAR2(100 char),
+  RECEIVED     DATE,
+  RECEIVED_BY  VARCHAR2(100 char),
+  SAMPLE_NUM   NUMBER(19)        not null,
+  constraint UN_SMPUNIT_SMPNUMPAC
+  unique (SAMPLE_NUM, PAC_CODE)
+)
+/
 
+create table LAB_TEST
+(
+  ID                      NUMBER(19) generated as identity
+    primary key,
+  BEGIN_DATE              DATE,
+  LAB_GROUP_NAME          VARCHAR2(255 char) not null
+    constraint FK_LABTST_LABGROUP
+    references LAB_GROUP,
+  NOTE                    VARCHAR2(200 char),
+  REVIEWED                TIMESTAMP(6),
+  REVIEWED_BY_EMPLOYEE_ID NUMBER(19)
+    constraint FK_LABTST_EMP_REVBY
+    references EMPLOYEE,
+  SAVED                   TIMESTAMP(6)       not null,
+  SAVED_BY_EMPLOYEE_ID    NUMBER(19)         not null
+    constraint FK_LABTST_EMP_SAVEDBY
+    references EMPLOYEE,
+  TEST_DATA_JSON          CLOB,
+  TEST_TYPE_NAME          VARCHAR2(255 char) not null
+    constraint FK_LABTST_LABTESTTYPE
+    references LAB_TEST_TYPE,
+  SAMPLE_UNIT_ID          NUMBER(19)         not null
+    constraint FK_LABTST_SAMPLEUNIT
+    references SAMPLE_UNIT
+)
+/
 
-create table test_type (
-  name varchar(20) constraint pk_testtyp primary key,
-  description varchar(200)
-);
+create index IX_LABTST_SAMPLEUNIT
+  on LAB_TEST (SAMPLE_UNIT_ID)
+/
 
-create table labgroup_testtype (
-  lab_group_name varchar(20) not null
-    constraint fk_labgrptesttyp_labgrp references lab_group,
-  test_type_name varchar(20) not null
-    constraint fk_labgrptesttyp_testtyp references test_type,
+create index IX_LABTST_LABGROUP
+  on LAB_TEST (LAB_GROUP_NAME)
+/
 
-  constraint pk_labgrptesttyp primary key (lab_group_name, test_type_name)
-);
+create index IX_LABTST_TESTTYPE
+  on LAB_TEST (TEST_TYPE_NAME)
+/
 
-create table sampling_method (
-  name varchar(50) constraint pk_sampmeth primary key,
-  description varchar(200),
-  extracted_grams_per_sub int not null,
-  num_subs int not null,
-  num_comps int not null,
-  comp_grams int,
-  num_subs_per_comp int not null
-);
+create index IX_LABTST_SAVEDBYEMP
+  on LAB_TEST (SAVED_BY_EMPLOYEE_ID)
+/
 
-create table labgrp_testtype_samplingmethod (
-  lab_group_name varchar(20) not null
-    constraint fk_labgrptesttsmpmeth_labgrp references lab_group,
-  test_type_name varchar(20) not null
-    constraint fk_labgrptesttsmpmeth_testtyp references test_type,
-  sampling_method_name varchar(50) not null
-    constraint fk_labgrptesttsmpmeth_smpmeth references sampling_method,
-  priority int,
+create index IX_LABTST_REVIEWEDBYEMP
+  on LAB_TEST (REVIEWED_BY_EMPLOYEE_ID)
+/
 
-  constraint pk_labgrptesttsmpmeth primary key (lab_group_name, test_type_name, sampling_method_name)
-);
+create table SAMPLE_UNIT_ASSIGNMENT
+(
+  EMPLOYEE_ID    NUMBER(19) not null
+    constraint FK_SMPUNITAST_EMP
+    references EMPLOYEE,
+  SAMPLE_UNIT_ID NUMBER(19) not null
+    constraint FK_SMPUNITAST_SAMPLEUNIT
+    references SAMPLE_UNIT
+)
+/
 
-create table lab_test (
-  id int constraint pk_labtest primary key,
-  sample_num int,
-  pac_code varchar(20),
-  lab_group_name varchar(20) not null,
-  test_type_name varchar(20) not null,
-  begin_date date not null,
-  data blob not null,
-  note varchar(100),
-  saved timestamp with time zone not null,
-  saved_by_employee_id int
-    constraint fk_labtest_emp_savedby references employee,
-  reviewed timestamp with time zone not null,
-  reviewed_by_employee_id int
-    constraint fk_labtest_employee references employee,
+create index IX_SMPGRPAST_EMPID
+  on SAMPLE_UNIT_ASSIGNMENT (EMPLOYEE_ID)
+/
 
-  constraint fk_labtest_sampk
-    foreign key (sample_num, pac_code) references sample_pac,
-  constraint fk_labtest_labgrptesttyp
-    foreign key (lab_group_name, test_type_name) references labgroup_testtype,
-  constraint ck_labtest_savediffsavedby
-    check ( nvl2(saved,1,0) = nvl2(saved_by_employee_id,1,0) ),
-  constraint ck_labtest_revsgndiffdated
-    check ( nvl2(reviewed,1,0) = nvl2(reviewed_by_employee_id,1,0) )
-);
-create index ix_labtest_smppac on lab_test(sample_num, pac_code);
-create index ix_labtest_employee on lab_test(reviewed_by_employee_id);
-create index ix_labtest_labgrptesttyp on lab_test(lab_group_name, test_type_name);
+create index IX_SMPGRPAST_SAMPUNITID
+  on SAMPLE_UNIT_ASSIGNMENT (SAMPLE_UNIT_ID)
+/
 
+create table SAMPLING_METHOD
+(
+  NAME          VARCHAR2(50 char)  not null
+    primary key,
+  COMP_GRAMS    NUMBER(10)         not null,
+  DESCRIPTION   VARCHAR2(200 char) not null,
+  NUM_COMPS     NUMBER(10)         not null,
+  NUM_SUBS      NUMBER(10)         not null,
+  SUB_GRAMS     NUMBER(10)         not null,
+  SUBS_PER_COMP NUMBER(10)         not null
+)
+/
+
+create table LAB_TEST_TYPE_SAMPLING_METHOD
+(
+  LAB_TEST_TYPE_NAME   VARCHAR2(20 char) not null
+    constraint FK_LTSTTSMPMTH_LBTSTT
+    references LAB_TEST_TYPE,
+  SAMPLING_METHOD_NAME VARCHAR2(50 char) not null
+    constraint FK_LTSTTSMPMTH_SMPMTH
+    references SAMPLING_METHOD
+)
+/
+
+create index IX_LTSTTSMPMTH_LTSTTNM
+  on LAB_TEST_TYPE_SAMPLING_METHOD (LAB_TEST_TYPE_NAME)
+/
+
+create index IX_LTSTTSMPMTH_SMPMTHNM
+  on LAB_TEST_TYPE_SAMPLING_METHOD (SAMPLING_METHOD_NAME)
+/

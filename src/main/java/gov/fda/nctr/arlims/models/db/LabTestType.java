@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Entity
 public class LabTestType
 {
-    @Id @Size(max = 20)
+    @Id @Size(max = 20) @Column(length = 20)
     private String name;
 
     @Size(max = 200)
@@ -20,8 +20,8 @@ public class LabTestType
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "LAB_TEST_TYPE_SAMPLING_METHOD",
-        joinColumns = @JoinColumn(name = "LAB_TEST_TYPE_NAME"),
-        inverseJoinColumns = @JoinColumn(name = "SAMPLING_METHOD_NAME"),
+        joinColumns = @JoinColumn(name = "LAB_TEST_TYPE_NAME", foreignKey = @ForeignKey(name="FK_LTSTTSMPMTH_LBTSTT")),
+        inverseJoinColumns = @JoinColumn(name = "SAMPLING_METHOD_NAME", foreignKey = @ForeignKey(name="FK_LTSTTSMPMTH_SMPMTH")),
         indexes = {
             @Index(name = "IX_LTSTTSMPMTH_LTSTTNM", columnList = "LAB_TEST_TYPE_NAME"),
             @Index(name = "IX_LTSTTSMPMTH_SMPMTHNM", columnList = "SAMPLING_METHOD_NAME"),

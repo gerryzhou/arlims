@@ -8,20 +8,20 @@ import javax.validation.constraints.Size;
 
 
 @Entity
-//@Table(
-//    uniqueConstraints = {
-//        @UniqueConstraint(name="UN_SMPUNIT_SMPNUMPAC", columnNames = {"SAMPLE_NUM", "PAC_CODE"})
-//    }
-//)
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(name="UN_SMPUNIT_SMPNUMPAC", columnNames = {"SAMPLE_NUM", "PAC_CODE"})
+    }
+)
 public class SampleUnit
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(name="SAMPLE_NUM") @NotNull                 // (Explicit column name seems to be required here else unique constraint above fails.)
     private Long sampleNum;
 
-    @Size(max = 20) @NotBlank
+    @Column(name="PAC_CODE", nullable = false) @Size(max = 20) @NotBlank  // "
     private String pacCode;
 
     @Size(max = 100)

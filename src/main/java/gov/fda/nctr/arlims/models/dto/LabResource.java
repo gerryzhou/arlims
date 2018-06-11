@@ -5,20 +5,20 @@ import java.util.Optional;
 
 public class LabResource
 {
-    private String id;
+    private String code;
     private LabResourceType resourceType;
     private Optional<String> description;
 
-    public LabResource(String id, LabResourceType resourceType, Optional<String> description)
+    public LabResource(String code, LabResourceType resourceType, Optional<String> description)
     {
-        this.id = id;
+        this.code = code;
         this.resourceType = resourceType;
         this.description = description;
     }
 
-    public String getId()
+    public String getCode()
     {
-        return id;
+        return code;
     }
 
     public LabResourceType getResourceType()

@@ -1,5 +1,5 @@
 package gov.fda.nctr.arlims.config;
-
+/*
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -18,3 +18,4 @@ public class AuthenticationConfig
         this.reportUserNotFoundSpecifically = reportUserNotFoundSpecifically;
     }
 }
+*/

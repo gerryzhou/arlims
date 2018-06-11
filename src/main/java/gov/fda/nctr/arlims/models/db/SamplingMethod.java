@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.models.db;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
@@ -10,10 +11,10 @@ import javax.validation.constraints.Size;
 @Entity
 public class SamplingMethod
 {
-    @Id @Size(max=50)
+    @Id @Size(max = 50) @Column(length = 50)
     private String name;
 
-    @NotBlank @Size(max=200)
+    @NotNull @NotBlank @Size(max = 200)
     private String description;
 
     @NotNull

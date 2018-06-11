@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims.models.db;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import gov.fda.nctr.arlims.models.dto.LabResourceType;
 
@@ -9,18 +10,16 @@ import gov.fda.nctr.arlims.models.dto.LabResourceType;
 @Entity
 public class LabResource
 {
-    @Id
+    @Id @Size(max = 20) @Column(length = 20)
     private String code;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(length = 60)
+    @Enumerated(EnumType.STRING) @Column(length = 60) @NotNull
     private LabResourceType resourceType;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME", foreignKey = @ForeignKey(name="FK_LABRSC_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "LAB_GROUP_NAME", insertable = false, updatable = false)
+    @Column(name = "LAB_GROUP_NAME", insertable = false, updatable = false, nullable = false)
     private String labGroupName;
 
     private String description;
