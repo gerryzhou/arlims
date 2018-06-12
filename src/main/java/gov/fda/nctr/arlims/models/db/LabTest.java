@@ -10,11 +10,11 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(
     indexes = {
-        @Index(name = "IX_LABTST_SAMPLEUNIT", columnList = "SAMPLE_UNIT_ID"),
-        @Index(name = "IX_LABTST_LABGROUP", columnList = "LAB_GROUP_NAME"),
-        @Index(name = "IX_LABTST_TESTTYPE", columnList = "TEST_TYPE_NAME"),
-        @Index(name = "IX_LABTST_SAVEDBYEMP", columnList = "SAVED_BY_EMPLOYEE_ID"),
-        @Index(name = "IX_LABTST_REVIEWEDBYEMP", columnList = "REVIEWED_BY_EMPLOYEE_ID"),
+        @Index(name = "IX_LABTST_SMPUNTID", columnList = "SAMPLE_UNIT_ID"),
+        @Index(name = "IX_LABTST_LABGRPID", columnList = "LAB_GROUP_ID"),
+        @Index(name = "IX_LABTST_TESTTYPEID", columnList = "TEST_TYPE_ID"),
+        @Index(name = "IX_LABTST_SAVEDBYEMPID", columnList = "SAVED_BY_EMPLOYEE_ID"),
+        @Index(name = "IX_LABTST_REVIEWEDBYEMPID", columnList = "REVIEWED_BY_EMPLOYEE_ID"),
     }
 )
 public class LabTest
@@ -25,17 +25,11 @@ public class LabTest
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "SAMPLE_UNIT_ID", foreignKey = @ForeignKey(name="FK_LABTST_SAMPLEUNIT")) @NotNull
     private SampleUnit sampleUnit;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_NAME", foreignKey = @ForeignKey(name="FK_LABTST_LABGROUP")) @NotNull
-    private LabGroup labGroup;
-
-    @Column(name = "LAB_GROUP_NAME", insertable = false, updatable = false, nullable = false)
-    private String labGroupName;
-
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEST_TYPE_NAME", foreignKey = @ForeignKey(name="FK_LABTST_LABTESTTYPE")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LABTST_LABTESTTYPE")) @NotNull
     private LabTestType testType;
 
-    @Column(name = "TEST_TYPE_NAME", insertable = false, updatable = false, nullable = false)
-    private String testTypeName;
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LABTST_LABGROUP")) @NotNull
+    private LabGroup labGroup;
 
     private LocalDate beginDate;
 
@@ -65,22 +59,20 @@ public class LabTest
     public LabTest
         (
             @NotNull SampleUnit sampleUnit,
+            @NotNull LabTestType testType,
             @NotNull LabGroup labGroup,
-            @NotNull LabTestType labTestType,
             LocalDate beginDate,
             String testDataJson,
             @Size(max = 200) String note,
-            Instant saved,
-            Employee savedBy,
+            @NotNull Instant saved,
+            @NotNull Employee savedBy,
             Instant reviewed,
             Employee reviewedBy
         )
     {
         this.sampleUnit = sampleUnit;
+        this.testType = testType;
         this.labGroup = labGroup;
-        this.labGroupName = labGroup.getName();
-        this.testType = labTestType;
-        this.testTypeName = testType.getName().toString();
         this.beginDate = beginDate;
         this.testDataJson = testDataJson;
         this.note = note;
@@ -91,53 +83,38 @@ public class LabTest
     }
 
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public SampleUnit getSampleUnit() { return sampleUnit; }
-
     public void setSampleUnit(SampleUnit sampleUnit) { this.sampleUnit = sampleUnit; }
 
-    public LabGroup getLabGroup() { return labGroup; }
-
-    public void setLabGroup(LabGroup labGroup) { this.labGroup = labGroup; }
-
-    public String getLabGroupName() { return labGroupName; }
-
     public LabTestType getTestType() { return testType; }
-
     public void setTestType(LabTestType testType) { this.testType = testType; }
 
-    public String getTestTypeName() { return testTypeName; }
+    public LabGroup getLabGroup() { return labGroup; }
+    public void setLabGroup(LabGroup labGroup) { this.labGroup = labGroup; }
 
     public LocalDate getBeginDate() { return beginDate; }
-
     public void setBeginDate(LocalDate beginDate) { this.beginDate = beginDate; }
 
     public String getTestDataJson() { return testDataJson; }
-
     public void setTestDataJson(String testDataJson) { this.testDataJson = testDataJson; }
 
     public String getNote() { return note; }
-
     public void setNote(String note) { this.note = note; }
 
     public Instant getSaved() { return saved; }
-
     public void setSaved(Instant saved) { this.saved = saved; }
 
     public Employee getSavedBy() { return savedBy; }
-
     public void setSavedBy(Employee savedBy) { this.savedBy = savedBy; }
 
     public Long getSavedByEmployeeId() { return savedByEmployeeId; }
 
     public Instant getReviewed() { return reviewed; }
-
     public void setReviewed(Instant reviewed) { this.reviewed = reviewed; }
 
     public Employee getReviewedBy() { return reviewedBy; }
-
     public void setReviewedBy(Employee reviewedBy) { this.reviewedBy = reviewedBy; }
 
     public Long getReviewedByEmployeeId() { return reviewedByEmployeeId; }

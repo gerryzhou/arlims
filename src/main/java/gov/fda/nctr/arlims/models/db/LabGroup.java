@@ -4,21 +4,28 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
 @Entity
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(name="UN_LABGRP_NAME", columnNames = {"NAME"}),
+    }
+)
 public class LabGroup
 {
-    @Id @Size(max = 20) @Column(length = 20)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false) @Size(max = 20) @NotBlank
     private String name;
 
     @Size(max = 200)
     private String addressStreet;
 
     @Size(max = 200)
-    private String addressBuildingsAndRooms;
+    private String buildingsAndRooms;
 
     @Size(max = 200)
     private String addressCity;
@@ -41,8 +48,12 @@ public class LabGroup
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "LAB_GROUP_LAB_TEST_TYPE",
-        joinColumns = @JoinColumn(name = "LAB_GROUP_NAME", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LGRP")),
-        inverseJoinColumns = @JoinColumn(name = "LAB_TEST_TYPE_NAME", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LTSTT"))
+        joinColumns = @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LABGRP")),
+        inverseJoinColumns = @JoinColumn(name = "LAB_TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LABTSTT")),
+        indexes = {
+            @Index(name = "IX_LGRPLTSTT_LABGRPID", columnList = "LAB_GROUP_ID"),
+            @Index(name = "IX_LGRPLTSTT_LABTSTTID", columnList = "LAB_TEST_TYPE_ID"),
+        }
     )
     private List<LabTestType> testTypes = new ArrayList<>();
 
@@ -52,69 +63,53 @@ public class LabGroup
         (
             @Size(max = 20) @NotBlank String name,
             @Size(max = 200) String addressStreet,
-            @Size(max = 200) String addressBuildingsAndRooms,
+            @Size(max = 200) String buildingsAndRooms,
             @Size(max = 200) String addressCity,
             @Size(max = 2) String addressState,
             @Size(max = 11) String addressZip,
-            @Size(max = 100) String description,
-            @NotNull List<Employee> employees,
-            @NotNull List<LabResource> resources,
-            @NotNull List<LabTestType> testTypes
+            @Size(max = 100) String description
         )
     {
         this.name = name;
         this.addressStreet = addressStreet;
-        this.addressBuildingsAndRooms = addressBuildingsAndRooms;
+        this.buildingsAndRooms = buildingsAndRooms;
         this.addressCity = addressCity;
         this.addressState = addressState;
         this.addressZip = addressZip;
         this.description = description;
-        this.employees = employees;
-        this.resources = resources;
-        this.testTypes = testTypes;
     }
 
-    public String getName() { return name; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
+    public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
     public String getAddressStreet() { return addressStreet; }
-
     public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }
 
-    public String getAddressBuildingsAndRooms() { return addressBuildingsAndRooms; }
-
-    public void setAddressBuildingsAndRooms(String addressBuildingsAndRooms)
-    {
-        this.addressBuildingsAndRooms = addressBuildingsAndRooms;
-    }
+    public String getBuildingsAndRooms() { return buildingsAndRooms; }
+    public void setBuildingsAndRooms(String bldgsRms) { this.buildingsAndRooms = bldgsRms; }
 
     public String getAddressCity() { return addressCity; }
-
     public void setAddressCity(String addressCity) { this.addressCity = addressCity; }
 
     public String getAddressState() { return addressState; }
-
     public void setAddressState(String addressState) { this.addressState = addressState; }
 
     public String getAddressZip() { return addressZip; }
-
     public void setAddressZip(String addressZip) { this.addressZip = addressZip; }
 
     public String getDescription() { return description; }
-
     public void setDescription(String description) { this.description = description; }
 
     public List<Employee> getEmployees() { return employees; }
-
     public void setEmployees(List<Employee> employees) { this.employees = employees; }
 
     public List<LabResource> getResources() { return resources; }
-
     public void setResources(List<LabResource> resources) { this.resources = resources; }
 
     public List<LabTestType> getTestTypes() { return testTypes; }
-
     public void setTestTypes(List<LabTestType> testTypes) { this.testTypes = testTypes; }
 }
 

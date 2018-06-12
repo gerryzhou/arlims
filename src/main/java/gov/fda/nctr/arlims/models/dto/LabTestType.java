@@ -5,16 +5,16 @@ import java.util.Optional;
 
 public class LabTestType
 {
-    private LabTestTypeName typeName;
+    private LabTestTypeCode typeCode;
     private Optional<String> description;
 
-    public LabTestType(LabTestTypeName typeName, Optional<String> description)
+    public LabTestType(LabTestTypeCode typeCode, Optional<String> description)
     {
-        this.typeName = typeName;
+        this.typeCode = typeCode;
         this.description = description;
     }
 
-    public LabTestTypeName getName() { return typeName; }
+    public LabTestTypeCode getCode() { return typeCode; }
 
     public Optional<String> getDescription() { return description; }
 }

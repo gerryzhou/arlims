@@ -6,10 +6,10 @@ import java.util.Optional;
 public class LabResource
 {
     private String code;
-    private LabResourceTypeName typeName;
+    private LabResourceType typeName;
     private Optional<String> description;
 
-    public LabResource(String code, LabResourceTypeName typeName, Optional<String> description)
+    public LabResource(String code, LabResourceType typeName, Optional<String> description)
     {
         this.code = code;
         this.typeName = typeName;
@@ -21,7 +21,7 @@ public class LabResource
         return code;
     }
 
-    public LabResourceTypeName getResourceType()
+    public LabResourceType getResourceType()
     {
         return typeName;
     }

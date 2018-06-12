@@ -6,14 +6,22 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import gov.fda.nctr.arlims.models.dto.LabTestTypeName;
+import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
 
 
 @Entity
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(name="UN_LABTSTT_CODE", columnNames = {"CODE"}),
+    }
+)
 public class LabTestType
 {
-    @Id @Enumerated(EnumType.STRING) @Column(length = 20)
-    private LabTestTypeName typeName;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING) @Column(length = 50) @NotNull
+    private LabTestTypeCode code;
 
     @Size(max = 200)
     private String description;
@@ -21,11 +29,11 @@ public class LabTestType
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "LAB_TEST_TYPE_SAMPLING_METHOD",
-        joinColumns = @JoinColumn(name = "LAB_TEST_TYPE_NAME", foreignKey = @ForeignKey(name="FK_LTSTTSMPMTH_LBTSTT")),
-        inverseJoinColumns = @JoinColumn(name = "SAMPLING_METHOD_NAME", foreignKey = @ForeignKey(name="FK_LTSTTSMPMTH_SMPMTH")),
+        joinColumns = @JoinColumn(name = "LAB_TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LTSTTSMPMTH_LABTSTT")),
+        inverseJoinColumns = @JoinColumn(name = "SAMPLING_METHOD_ID", foreignKey = @ForeignKey(name="FK_LTSTTSMPMTH_SMPMTH")),
         indexes = {
-            @Index(name = "IX_LTSTTSMPMTH_LTSTTNM", columnList = "LAB_TEST_TYPE_NAME"),
-            @Index(name = "IX_LTSTTSMPMTH_SMPMTHNM", columnList = "SAMPLING_METHOD_NAME"),
+            @Index(name = "IX_LTSTTSMPMTH_LABTSTTID", columnList = "LAB_TEST_TYPE_ID"),
+            @Index(name = "IX_LTSTTSMPMTH_SMPMTHID", columnList = "SAMPLING_METHOD_ID"),
         }
     )
     private List<SamplingMethod> samplingMethods = new ArrayList<>();
@@ -34,28 +42,25 @@ public class LabTestType
 
     public LabTestType
         (
-            LabTestTypeName typeName,
+            @NotNull LabTestTypeCode code,
             @Size(max = 200) String description,
             @NotNull List<SamplingMethod> samplingMethods
         )
     {
-        this.typeName = typeName;
+        this.code = code;
         this.description = description;
         this.samplingMethods = samplingMethods;
     }
 
-    public LabTestTypeName getName() { return typeName; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setName(LabTestTypeName name) { this.typeName = name; }
+    public LabTestTypeCode getCode() { return code; }
+    public void setCode(LabTestTypeCode code) { this.code = code; }
 
     public String getDescription() { return description; }
-
     public void setDescription(String description) { this.description = description; }
 
     public List<SamplingMethod> getSamplingMethods() { return samplingMethods; }
-
-    public void setSamplingMethods(List<SamplingMethod> samplingMethods)
-    {
-        this.samplingMethods = samplingMethods;
-    }
+    public void setSamplingMethods(List<SamplingMethod> samplingMethods) { this.samplingMethods = samplingMethods; }
 }
