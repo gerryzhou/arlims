@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.config;
+package gov.fda.nctr.arlims.data_access.config;
 
 import javax.sql.DataSource;
 
