@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
         @Index(name = "IX_LABTST_TESTTYPEID", columnList = "TEST_TYPE_ID"),
         @Index(name = "IX_LABTST_SAVEDBYEMPID", columnList = "SAVED_BY_EMPLOYEE_ID"),
         @Index(name = "IX_LABTST_REVIEWEDBYEMPID", columnList = "REVIEWED_BY_EMPLOYEE_ID"),
+        @Index(name = "IX_LABTST_SAVEDTOFACTS", columnList = "SAVED_TO_FACTS"),
     }
 )
 public class LabTest
@@ -56,6 +57,9 @@ public class LabTest
     @Column(name = "REVIEWED_BY_EMPLOYEE_ID", insertable = false, updatable = false)
     private Long reviewedByEmployeeId;
 
+    @Column(name = "SAVED_TO_FACTS")
+    private Instant savedToFacts;
+
     public LabTest
         (
             @NotNull SampleUnit sampleUnit,
@@ -80,6 +84,7 @@ public class LabTest
         this.savedBy = savedBy;
         this.reviewed = reviewed;
         this.reviewedBy = reviewedBy;
+        this.savedToFacts = null;
     }
 
     public Long getId() { return id; }
@@ -118,5 +123,8 @@ public class LabTest
     public void setReviewedBy(Employee reviewedBy) { this.reviewedBy = reviewedBy; }
 
     public Long getReviewedByEmployeeId() { return reviewedByEmployeeId; }
+
+    public Instant getSavedToFacts() { return savedToFacts; }
+    public void setSavedToFacts(Instant savedToFacts) { this.savedToFacts = savedToFacts; }
 }
 

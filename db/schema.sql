@@ -6,6 +6,7 @@ from user_tables
 purge recyclebin;
 */
 
+
 create table LAB_GROUP
 (
   ID                  NUMBER(19) generated as identity
@@ -79,23 +80,24 @@ create table LAB_TEST_TYPE
 )
 /
 
-create table LAB_GROUP_LAB_TEST_TYPE
+create table LAB_GROUP_TEST_TYPE
 (
-  LAB_GROUP_ID     NUMBER(19) not null
-    constraint FK_LGRPLTSTT_LABGRP
+  ID                NUMBER(19) generated as identity
+    primary key,
+  TEST_OPTIONS_JSON CLOB,
+  LAB_GROUP_ID      NUMBER(19) not null
+    constraint FK_LGRPTSTT_LABGROUP
     references LAB_GROUP,
-  LAB_TEST_TYPE_ID NUMBER(19) not null
-    constraint FK_LGRPLTSTT_LABTSTT
-    references LAB_TEST_TYPE
+  TEST_TYPE_ID      NUMBER(19) not null
+    constraint FK_LGRPTSTT_LABTESTTYPE
+    references LAB_TEST_TYPE,
+  constraint UN_LGRPTSTT_LGRPIDTSTTID
+  unique (TEST_TYPE_ID, LAB_GROUP_ID)
 )
 /
 
-create index IX_LGRPLTSTT_LABGRPID
-  on LAB_GROUP_LAB_TEST_TYPE (LAB_GROUP_ID)
-/
-
-create index IX_LGRPLTSTT_LABTSTTID
-  on LAB_GROUP_LAB_TEST_TYPE (LAB_TEST_TYPE_ID)
+create index IX_LGRPTSTT_LGRPID
+  on LAB_GROUP_TEST_TYPE (LAB_GROUP_ID)
 /
 
 create table ROLE
@@ -157,6 +159,7 @@ create table LAB_TEST
   SAVED_BY_EMPLOYEE_ID    NUMBER(19)   not null
     constraint FK_LABTST_EMP_SAVEDBY
     references EMPLOYEE,
+  SAVED_TO_FACTS          TIMESTAMP(6),
   TEST_DATA_JSON          CLOB,
   LAB_GROUP_ID            NUMBER(19)   not null
     constraint FK_LABTST_LABGROUP
@@ -190,6 +193,10 @@ create index IX_LABTST_REVIEWEDBYEMPID
   on LAB_TEST (REVIEWED_BY_EMPLOYEE_ID)
 /
 
+create index IX_LABTST_SAVEDTOFACTS
+  on LAB_TEST (SAVED_TO_FACTS)
+/
+
 create table SAMPLE_UNIT_ASSIGNMENT
 (
   EMPLOYEE_ID    NUMBER(19) not null
@@ -197,7 +204,8 @@ create table SAMPLE_UNIT_ASSIGNMENT
     references EMPLOYEE,
   SAMPLE_UNIT_ID NUMBER(19) not null
     constraint FK_SMPUNTAST_SMPUNT
-    references SAMPLE_UNIT
+    references SAMPLE_UNIT,
+  primary key (EMPLOYEE_ID, SAMPLE_UNIT_ID)
 )
 /
 
@@ -208,40 +216,4 @@ create index IX_SMPUNTAST_EMPID
 create index IX_SMPUNTAST_SMPUNTID
   on SAMPLE_UNIT_ASSIGNMENT (SAMPLE_UNIT_ID)
 /
-
-create table SAMPLING_METHOD
-(
-  ID            NUMBER(19) generated as identity
-    primary key,
-  COMP_GRAMS    NUMBER(10)        not null,
-  DESCRIPTION   VARCHAR2(200 char),
-  NAME          VARCHAR2(50 char) not null
-    constraint UN_SMPMTH_NAME
-    unique,
-  NUM_COMPS     NUMBER(10)        not null,
-  NUM_SUBS      NUMBER(10)        not null,
-  SUB_GRAMS     NUMBER(10)        not null,
-  SUBS_PER_COMP NUMBER(10)        not null
-)
-/
-
-create table LAB_TEST_TYPE_SAMPLING_METHOD
-(
-  LAB_TEST_TYPE_ID   NUMBER(19) not null
-    constraint FK_LTSTTSMPMTH_LABTSTT
-    references LAB_TEST_TYPE,
-  SAMPLING_METHOD_ID NUMBER(19) not null
-    constraint FK_LTSTTSMPMTH_SMPMTH
-    references SAMPLING_METHOD
-)
-/
-
-create index IX_LTSTTSMPMTH_LABTSTTID
-  on LAB_TEST_TYPE_SAMPLING_METHOD (LAB_TEST_TYPE_ID)
-/
-
-create index IX_LTSTTSMPMTH_SMPMTHID
-  on LAB_TEST_TYPE_SAMPLING_METHOD (SAMPLING_METHOD_ID)
-/
-
 

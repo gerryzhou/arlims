@@ -1,8 +1,6 @@
 package gov.fda.nctr.arlims.models.db;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -64,7 +62,7 @@ public class Employee
             @Index(name = "IX_SMPUNTAST_SMPUNTID", columnList = "SAMPLE_UNIT_ID"),
         }
     )
-    private List<SampleUnit> assignedSamples = new ArrayList<>();
+    private Set<SampleUnit> assignedSamples = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -140,8 +138,8 @@ public class Employee
     public String getMiddleName() { return middleName; }
     public void setMiddleName(String middleName) { this.middleName = middleName; }
 
-    public List<SampleUnit> getAssignedSamples() { return assignedSamples; }
-    public void setAssignedSamples(List<SampleUnit> assignedSamples) { this.assignedSamples = assignedSamples; }
+    public Set<SampleUnit> getAssignedSamples() { return assignedSamples; }
+    public void setAssignedSamples(Set<SampleUnit> assignedSamples) { this.assignedSamples = assignedSamples; }
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }

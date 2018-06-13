@@ -45,17 +45,8 @@ public class LabGroup
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
     private List<LabResource> resources = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "LAB_GROUP_LAB_TEST_TYPE",
-        joinColumns = @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LABGRP")),
-        inverseJoinColumns = @JoinColumn(name = "LAB_TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LGRPLTSTT_LABTSTT")),
-        indexes = {
-            @Index(name = "IX_LGRPLTSTT_LABGRPID", columnList = "LAB_GROUP_ID"),
-            @Index(name = "IX_LGRPLTSTT_LABTSTTID", columnList = "LAB_TEST_TYPE_ID"),
-        }
-    )
-    private List<LabTestType> testTypes = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
+    private List<LabGroupTestType> testTypes = new ArrayList<>();
 
     protected LabGroup() {}
 
@@ -109,7 +100,7 @@ public class LabGroup
     public List<LabResource> getResources() { return resources; }
     public void setResources(List<LabResource> resources) { this.resources = resources; }
 
-    public List<LabTestType> getTestTypes() { return testTypes; }
-    public void setTestTypes(List<LabTestType> testTypes) { this.testTypes = testTypes; }
+    public List<LabGroupTestType> getTestTypes() { return testTypes; }
+    public void setTestTypes(List<LabGroupTestType> testTypes) { this.testTypes = testTypes; }
 }
 
