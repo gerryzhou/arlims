@@ -6,13 +6,13 @@ import java.util.Optional;
 
 public class User
 {
-    long employeeId;
-    Optional<Long> factsPersonId;
-    String username;
-    String shortName;
-    String labGroupName;
-    String lastName;
-    String firstName;
+    private long employeeId;
+    private Optional<Long> factsPersonId;
+    private String username;
+    private String shortName;
+    private String labGroupName;
+    private String lastName;
+    private String firstName;
 
     public User
         (
