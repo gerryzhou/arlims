@@ -1,19 +1,8 @@
-
-
 Multiple association of media lot #'s with samples via bar code scanning
 ------------------------------------------------------------------------
-  Scan one type (media or sample), then scan one or more of the other (sample or media) to associate them.
-    App may need to print or display the bar codes for the samples to be scanned for this.
-
-    active_sample_managed_resource
-      act_sample_id
-      resource_code -- fk to lab_resource
-
-    active_sample (replaces sample_unit_assignment)
-      ...
-      [unmanaged resources child list]
-      [managed resources child list]
-
+  Allow user to scan media or sample, then scan one or more of the other to associate them.
+  App should load these via ActiveSampleUnmanagedResourceUsage's.
+  App may need to print or display the bar codes for the samples to be scanned for this.
 
 
 
