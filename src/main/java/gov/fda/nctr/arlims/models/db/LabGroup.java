@@ -48,6 +48,9 @@ public class LabGroup
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
     private List<LabGroupTestType> testTypes = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
+    private List<ActiveSample> activeSamples = new ArrayList<>();
+
     protected LabGroup() {}
 
     public LabGroup
@@ -102,5 +105,8 @@ public class LabGroup
 
     public List<LabGroupTestType> getTestTypes() { return testTypes; }
     public void setTestTypes(List<LabGroupTestType> testTypes) { this.testTypes = testTypes; }
+
+    public List<ActiveSample> getActiveSamples() { return activeSamples; }
+    public void setActiveSamples(List<ActiveSample> activeSamples) { this.activeSamples = activeSamples; }
 }
 

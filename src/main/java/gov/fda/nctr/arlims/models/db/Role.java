@@ -18,7 +18,7 @@ public class Role
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING) @Column(length = 20) @NotNull
+    @Column(length = 20) @Enumerated(EnumType.STRING) @NotNull
     private RoleName name;
 
     @Size(max = 200)

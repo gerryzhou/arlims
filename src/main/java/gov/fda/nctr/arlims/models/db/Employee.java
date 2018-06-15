@@ -1,6 +1,8 @@
 package gov.fda.nctr.arlims.models.db;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -52,17 +54,8 @@ public class Employee
     @Size(max = 60)
     private String middleName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "SAMPLE_UNIT_ASSIGNMENT",
-        joinColumns = @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_SMPUNTAST_EMP")),
-        inverseJoinColumns = @JoinColumn(name = "SAMPLE_UNIT_ID", foreignKey = @ForeignKey(name="FK_SMPUNTAST_SMPUNT")),
-        indexes = {
-            @Index(name = "IX_SMPUNTAST_EMPID", columnList = "EMPLOYEE_ID"),
-            @Index(name = "IX_SMPUNTAST_SMPUNTID", columnList = "SAMPLE_UNIT_ID"),
-        }
-    )
-    private Set<SampleUnit> assignedSamples = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
+    private List<ActiveSample> activeSamples = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -138,8 +131,8 @@ public class Employee
     public String getMiddleName() { return middleName; }
     public void setMiddleName(String middleName) { this.middleName = middleName; }
 
-    public Set<SampleUnit> getAssignedSamples() { return assignedSamples; }
-    public void setAssignedSamples(Set<SampleUnit> assignedSamples) { this.assignedSamples = assignedSamples; }
+    public List<ActiveSample> getActiveSamples() { return activeSamples; }
+    public void setActiveSamples(List<ActiveSample> activeSamples) { this.activeSamples = activeSamples; }
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
