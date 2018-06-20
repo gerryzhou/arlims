@@ -3,6 +3,7 @@ package gov.fda.nctr.arlims.models.db;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 import gov.fda.nctr.arlims.models.dto.LabResourceType;
@@ -30,10 +31,10 @@ public class LabResource
 
     public LabResource
         (
-            @Size(max = 50) @NotBlank String code,
+            @NotBlank @Size(max = 50) String code,
             @NotNull LabResourceType resourceType,
             @NotNull LabGroup labGroup,
-            @Size(max = 100) String description
+            @Null @Size(max = 100) String description
         )
     {
         this.code = code;
@@ -45,11 +46,10 @@ public class LabResource
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
 
-    public LabResourceType getResourceType() { return resourceType; }
-    public void setResourceType(LabResourceType resourceType) { this.resourceType = resourceType; }
+    public LabResourceType getLabResourceType() { return resourceType; }
+    public void setLabResourceType(LabResourceType resourceType) { this.resourceType = resourceType; }
 
-    public LabGroup getLabGroup() { return labGroup; }
-    public void setLabGroup(LabGroup labGroup) { this.labGroup = labGroup; }
+    // (LabGroup accessors omitted)
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

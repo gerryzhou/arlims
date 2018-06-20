@@ -10,10 +10,10 @@ import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
 @Entity
 @Table(
     uniqueConstraints = {
-        @UniqueConstraint(name="UN_LABTSTT_CODE", columnNames = {"CODE"}),
+        @UniqueConstraint(name="UN_TSTT_CODE", columnNames = {"CODE"}),
     }
 )
-public class LabTestType
+public class TestType
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +24,9 @@ public class LabTestType
     @Size(max = 200)
     private String description;
 
-    protected LabTestType() {}
+    protected TestType() {}
 
-    public LabTestType
+    public TestType
         (
             @NotNull LabTestTypeCode code,
             @Size(max = 200) String description

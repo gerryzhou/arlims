@@ -1,9 +1,10 @@
 package gov.fda.nctr.arlims.models.db;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 
@@ -40,28 +41,25 @@ public class LabGroup
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
-    private List<Employee> employees = new ArrayList<>();
+    private Set<Employee> employees = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
-    private List<LabResource> resources = new ArrayList<>();
+    private Set<LabResource> managedLabResources = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
-    private List<LabGroupTestType> testTypes = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
-    private List<ActiveSample> activeSamples = new ArrayList<>();
+    private Set<LabGroupTestType> testTypes = new HashSet<>();
 
     protected LabGroup() {}
 
     public LabGroup
         (
-            @Size(max = 20) @NotBlank String name,
-            @Size(max = 200) String addressStreet,
-            @Size(max = 200) String buildingsAndRooms,
-            @Size(max = 200) String addressCity,
-            @Size(max = 2) String addressState,
-            @Size(max = 11) String addressZip,
-            @Size(max = 100) String description
+            @Size(max = 20)  @NotBlank String name,
+            @Size(max = 200) @Null String addressStreet,
+            @Size(max = 200) @Null String buildingsAndRooms,
+            @Size(max = 200) @Null String addressCity,
+            @Size(max = 2)   @Null String addressState,
+            @Size(max = 11)  @Null String addressZip,
+            @Size(max = 100) @Null String description
         )
     {
         this.name = name;
@@ -97,16 +95,13 @@ public class LabGroup
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public List<Employee> getEmployees() { return employees; }
-    public void setEmployees(List<Employee> employees) { this.employees = employees; }
+    public Set<Employee> getEmployees() { return employees; }
+    public void setEmployees(Set<Employee> employees) { this.employees = employees; }
 
-    public List<LabResource> getResources() { return resources; }
-    public void setResources(List<LabResource> resources) { this.resources = resources; }
+    public Set<LabResource> getManagedLabResources() { return managedLabResources; }
+    public void setManagedLabResources(Set<LabResource> managedLabResources) { this.managedLabResources = managedLabResources; }
 
-    public List<LabGroupTestType> getTestTypes() { return testTypes; }
-    public void setTestTypes(List<LabGroupTestType> testTypes) { this.testTypes = testTypes; }
-
-    public List<ActiveSample> getActiveSamples() { return activeSamples; }
-    public void setActiveSamples(List<ActiveSample> activeSamples) { this.activeSamples = activeSamples; }
+    public Set<LabGroupTestType> getTestTypes() { return testTypes; }
+    public void setTestTypes(Set<LabGroupTestType> testTypes) { this.testTypes = testTypes; }
 }
 

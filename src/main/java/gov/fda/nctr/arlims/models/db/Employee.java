@@ -1,14 +1,9 @@
 package gov.fda.nctr.arlims.models.db;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 
 @Entity
@@ -19,7 +14,8 @@ import javax.validation.constraints.Size;
     },
     indexes = {
         @Index(name = "IX_EMP_LABGROUPID", columnList = "LAB_GROUP_ID"),
-        @Index(name = "IX_EMP_FACTSPERSONID", columnList = "FACTS_PERSON_ID")
+        @Index(name = "IX_EMP_FACTSPERSONID", columnList = "FACTS_PERSON_ID"),
+        @Index(name = "IX_EMP_EMAIL", columnList = "EMAIL")
     }
 )
 public class Employee
@@ -30,19 +26,19 @@ public class Employee
     @Size(max = 30) @NotNull @NotBlank
     private String username;
 
-    @Column(name = "SHORT_NAME") @Size(max = 10) @NotNull @NotBlank
+    @Column(name = "SHORT_NAME", nullable = false) @Size(max = 10) @NotBlank
     private String shortName;
 
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "FACTS_PERSON_ID")
+    @Column(name = "FACTS_PERSON_ID") @Null
     private Long factsPersonId;
 
-    @Size(max = 200)
+    @Size(max = 200) @Null
     private String password;
 
-    @Size(max = 150) @NotNull @NotBlank @Email
+    @Column(name = "EMAIL", nullable = false) @Size(max = 150) @NotBlank @Email
     private String email;
 
     @Size(max = 60) @NotNull @NotBlank
@@ -51,19 +47,16 @@ public class Employee
     @Size(max = 60) @NotNull @NotBlank
     private String firstName;
 
-    @Size(max = 60)
+    @Size(max = 60) @Null
     private String middleName;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
-    private List<ActiveSample> activeSamples = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "EMPLOYEE_ROLE",
-        joinColumns = @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_EMPROLE_EMP")),
+        joinColumns = @JoinColumn(name = "EMP_ID", foreignKey = @ForeignKey(name="FK_EMPROLE_EMP")),
         inverseJoinColumns = @JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name="FK_EMPROLE_ROLE")),
         indexes = {
-            @Index(name = "IX_EMPROLE_EMPID", columnList = "EMPLOYEE_ID"),
+            @Index(name = "IX_EMPROLE_EMPID", columnList = "EMP_ID"),
             @Index(name = "IX_EMPROLE_ROLEID", columnList = "ROLE_ID"),
         }
     )
@@ -80,19 +73,19 @@ public class Employee
             @Size(max = 30) @NotBlank String username,
             @Size(max = 10) @NotBlank String shortName,
             @NotNull LabGroup labGroup,
-            Long factsPersonId,
-            @Size(max = 200) String password,
+            @Null Long factsPersonId,
+            @Size(max = 200) @Null String password,
             @Size(max = 150) @NotBlank @Email String email,
             @Size(max = 60) @NotBlank String lastName,
             @Size(max = 60) @NotBlank String firstName,
-            @Size(max = 60) String middleName,
+            @Size(max = 60) @Null String middleName,
             @NotNull Set<Role> roles
         )
     {
-        this.factsPersonId = factsPersonId;
         this.username = username;
         this.shortName = shortName;
         this.labGroup = labGroup;
+        this.factsPersonId = factsPersonId;
         this.password = password;
         this.email = email;
         this.lastName = lastName;
@@ -130,9 +123,6 @@ public class Employee
 
     public String getMiddleName() { return middleName; }
     public void setMiddleName(String middleName) { this.middleName = middleName; }
-
-    public List<ActiveSample> getActiveSamples() { return activeSamples; }
-    public void setActiveSamples(List<ActiveSample> activeSamples) { this.activeSamples = activeSamples; }
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }

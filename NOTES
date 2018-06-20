@@ -1,8 +1,39 @@
-Multiple association of media lot #'s with samples via bar code scanning
-------------------------------------------------------------------------
-  Allow user to scan media or sample, then scan one or more of the other to associate them.
-  App should load these via ActiveSampleUnmanagedResourceUsage's.
-  App may need to print or display the bar codes for the samples to be scanned for this.
+
+Views
+-----
+[MS] manage active samples
+  Import active samples and their employee work assignments from FACTS.
+  List currently active samples for the lab, activate and deactivate samples.
+  Make a named sample list from selected samples.
+  Allow searching samples by name/pattern optionally within a selected sample list.
+  Allow multiple selection.
+    When selection is non-empty:
+      Enable link to ASR view to associate samples with lab resources
+      Save selection list to Angular service within client for communication between views.
+
+
+[ASR] associate active samples with lab resources
+  1) Select one or more active samples, associate with batch of resource codes received from barcode scanner.
+  2) Display and/or print selected sample barcodes with descriptive information, so user can form associations using
+     only a barcode scanner away from their computer. Sample barcodes should be distinguishable from lab resource codes,
+     via a special prefix. Support receiving alternating sequence of sample-codes and resource codes to form associations:
+     _______ sample code __________ resource code ___________
+       |   |_______________|  |______________________|   |
+       |_________________________________________________|
+  In either case (1 or 2), present a matrix showing resources x samples for confirmation before saving the associations.
+  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
+  target go to holding area).
+
+manage tests in progress
+  criteria for display are some combination of the following depending on checked options:
+    not synced to FACTS
+    not signed completed or reviewed
+    test shares sample number with an active sample which is assigned to current user or no user
+      Assigned user requirement should be able to be easily omitted via checkbox ("show tests with samples assigned to other users").
+  edit test data
+  review signoff and FACTS submission (requires special REVIEW role)
+  print test data
+  delete tests
 
 
 
@@ -12,6 +43,7 @@ Multiple association of media lot #'s with samples via bar code scanning
       currentStage: string
   UI will allow flipping through stages for a test.
   Grid of active tests will just show current stages by default.
+
 
 Client/Server Project Skeletons
 -------------------------------

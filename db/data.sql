@@ -9,31 +9,31 @@ insert into role(name, description)
 insert into role(name, description)
   values('ADMIN', 'administrator');
 
-insert into employee_role(employee_id, role_id)
+insert into employee_role(emp_id, role_id)
   values((select id from employee where username='sharris'),(select id from role where name='USER'));
 
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('ARL00424', 'BALANCE', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('ARL00424', 'BAL', (select id from lab_group where name = 'ARL-MICRO'), null);
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('RT10971', 'WATERBATH', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('RT10971', 'WAB', (select id from lab_group where name = 'ARL-MICRO'), null);
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('ARL00190', 'WATERBATH', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('ARL00190', 'WAB', (select id from lab_group where name = 'ARL-MICRO'), null);
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('ARL00232', 'WATERBATH', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('ARL00232', 'WAB', (select id from lab_group where name = 'ARL-MICRO'), null);
 
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V1-5089993', 'VIDAS', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('V1-5089993', 'VID', (select id from lab_group where name = 'ARL-MICRO'), null);
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V2-5099353', 'VIDAS', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('V2-5099353', 'VID', (select id from lab_group where name = 'ARL-MICRO'), null);
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V3-5122706', 'VIDAS', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('V3-5122706', 'VID', (select id from lab_group where name = 'ARL-MICRO'), null);
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V4-5122707', 'VIDAS', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('V4-5122707', 'VID', (select id from lab_group where name = 'ARL-MICRO'), null);
 insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V5-5099389', 'VIDAS', (select id from lab_group where name = 'ARL-MICRO'), null);
+  values('V5-5099389', 'VID', (select id from lab_group where name = 'ARL-MICRO'), null);
 
-insert into lab_test_type(code, description)
+insert into test_type(code, description)
   values('IMP_SAL_VIDAS', 'Imported Salmonella - Vidas');
 
 insert into lab_group_test_type (lab_group_id, test_type_id)
-  values((select id from lab_group where name = 'ARL-MICRO'), (select id from lab_test_type where code='IMP-SAL-VIDAS'));
+  values((select id from lab_group where name = 'ARL-MICRO'), (select id from test_type where code='IMP_SAL_VIDAS'));

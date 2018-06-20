@@ -2,8 +2,17 @@ package gov.fda.nctr.arlims.models.dto;
 
 public enum LabResourceType
 {
-    BALANCE,
-    WATERBATH,
-    VIDAS,
-    INCUBATOR
+    BAL("balance"),
+    WAB("waterbath"),
+    VID("Vidas"),
+    INC("incubator");
+
+    private final String name;
+
+    LabResourceType(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName() { return name; }
 }

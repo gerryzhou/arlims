@@ -1,6 +1,7 @@
 package gov.fda.nctr.arlims.models.db;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
@@ -10,36 +11,36 @@ import gov.fda.nctr.arlims.models.dto.LabResourceType;
 
 @Entity
 @Table(
-    name = "ACT_SMP_UNMAN_RSC_USG",
+    name = "SAMPLE_UNMANGD_RESOURCE_USAGE",
     indexes = {
-        @Index(name = "IX_ACTSMPURSCU_ACTSMPID", columnList = "ACTIVE_SAMPLE_ID"),
-        @Index(name = "IX_ACTSMPURSCU_RSCCD", columnList = "RESOURCE_CODE"),
-        @Index(name = "IX_ACTSMPURSCU_RSCT", columnList = "RESOURCE_TYPE"),
+        @Index(name = "IX_SMPUNMRSCUSG_SMPID", columnList = "SAMPLE_ID"),
+        @Index(name = "IX_SMPUNMRSCUSG_RSCCD", columnList = "RESOURCE_CODE"),
+        @Index(name = "IX_SMPUNMRSCUSG_RSCT", columnList = "RESOURCE_TYPE"),
     }
 )
-public class ActiveSampleUnmanagedResourceUsage
+public class SampleUnmanagedResourceUsage
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "ACTIVE_SAMPLE_ID", foreignKey = @ForeignKey(name="FK_ACTSMPURSCU_ACTSMP")) @NotNull
-    private ActiveSample activeSample;
+    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_SMPUNMRSCUSG_RCVSMP")) @NotNull
+    private ReceivedSample sample;
 
-    @Column(name = "RESOURCE_CODE", length = 50) @Size(max = 50)
+    @Column(name = "RESOURCE_CODE", length = 50, nullable = false) @Size(max = 50) @NotEmpty
     private String resourceCode;
 
     @Enumerated(EnumType.STRING) @Column(name = "RESOURCE_TYPE", length = 60) @Null
     private LabResourceType resourceType;
 
 
-    public ActiveSampleUnmanagedResourceUsage
+    public SampleUnmanagedResourceUsage
         (
-            @NotNull ActiveSample activeSample,
-            @Size(max = 50) String resourceCode,
+            @NotNull ReceivedSample sample,
+            @Size(max = 50) @NotEmpty String resourceCode,
             @Null LabResourceType resourceType
         )
     {
-        this.activeSample = activeSample;
+        this.sample = sample;
         this.resourceCode = resourceCode;
         this.resourceType = resourceType;
     }
@@ -47,8 +48,8 @@ public class ActiveSampleUnmanagedResourceUsage
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public ActiveSample getActiveSample() { return activeSample; }
-    public void setActiveSample(ActiveSample activeSample) { this.activeSample = activeSample; }
+    public ReceivedSample getSample() { return sample; }
+    public void setSample(ReceivedSample sample) { this.sample = sample; }
 
     public String getResourceCode() { return resourceCode; }
     public void setResourceCode(String resourceCode) { this.resourceCode = resourceCode; }
