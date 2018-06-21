@@ -1,3 +1,5 @@
+Decide whether to proceed with JPA.
+
 
 Try implementing dummy header-based security, using Spring security filter.
   Using IE, is any SSO header available at the server?

@@ -118,16 +118,6 @@
    <build>
       <finalName>${prod.context.name}</finalName>
 
-      <testResources>
-         <testResource><directory>${project.basedir}/src/test/resources</directory></testResource>
-         <testResource>
-            <directory>${project.basedir}/db</directory>
-            <includes>
-               <include>*.sql</include>
-            </includes>
-         </testResource>
-      </testResources>
-
       <plugins>
          <plugin>
             <groupId>org.springframework.boot</groupId>

@@ -20,7 +20,7 @@ public class SampleList
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 30) @Null
+    @Size(max = 30)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_SMPLST_LABGRP")) @NotNull
@@ -54,7 +54,7 @@ public class SampleList
 
     public SampleList
         (
-            @Size(max = 30) @Null String name,
+            @Size(max = 30) String name,
             @NotNull LabGroup labGroup,
             @NotNull Instant created,
             @NotNull Employee createdByEmployee,

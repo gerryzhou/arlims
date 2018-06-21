@@ -3,7 +3,6 @@ package gov.fda.nctr.arlims.models.db;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 import gov.fda.nctr.arlims.models.dto.LabResourceType;
@@ -34,7 +33,7 @@ public class LabResource
             @NotBlank @Size(max = 50) String code,
             @NotNull LabResourceType resourceType,
             @NotNull LabGroup labGroup,
-            @Null @Size(max = 100) String description
+            @Size(max = 100) String description
         )
     {
         this.code = code;

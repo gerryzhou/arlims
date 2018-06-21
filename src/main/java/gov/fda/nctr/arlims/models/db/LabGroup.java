@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 
@@ -54,12 +53,12 @@ public class LabGroup
     public LabGroup
         (
             @Size(max = 20)  @NotBlank String name,
-            @Size(max = 200) @Null String addressStreet,
-            @Size(max = 200) @Null String buildingsAndRooms,
-            @Size(max = 200) @Null String addressCity,
-            @Size(max = 2)   @Null String addressState,
-            @Size(max = 11)  @Null String addressZip,
-            @Size(max = 100) @Null String description
+            @Size(max = 200) String addressStreet,
+            @Size(max = 200) String buildingsAndRooms,
+            @Size(max = 200) String addressCity,
+            @Size(max = 2)   String addressState,
+            @Size(max = 11)  String addressZip,
+            @Size(max = 100) String description
         )
     {
         this.name = name;

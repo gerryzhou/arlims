@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 
@@ -49,22 +48,22 @@ public class Test
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "LAST_SAVED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_LASTSAVED")) @NotNull
     private Employee lastSavedByEmployee;
 
-    @Column(name = "BEGIN_DATE") @Null
+    @Column(name = "BEGIN_DATE")
     private LocalDate beginDate;
 
-    @Size(max = 200) @Null
+    @Size(max = 200)
     private String note;
 
-    @Lob @Basic(fetch = FetchType.LAZY) @Null
+    @Lob @Basic(fetch = FetchType.LAZY)
     private String testDataJson;
 
-    @Null
+
     private Instant reviewed;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "REVIEWED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_REVIEWED")) @Null
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "REVIEWED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_REVIEWED"))
     private Employee reviewedByEmployee;
 
-    @Column(name = "SAVED_TO_FACTS") @Null
+    @Column(name = "SAVED_TO_FACTS")
     private Instant savedToFacts;
 
     public Test
@@ -74,9 +73,9 @@ public class Test
             @NotNull LabGroup labGroup,
             @NotNull Instant created,
             @NotNull Employee createdByEmployee,
-            @Null LocalDate beginDate,
-            @Null @Size(max = 200) String note,
-            @Null String testDataJson
+            LocalDate beginDate,
+            @Size(max = 200) String note,
+            String testDataJson
         )
     {
         this.sample = sample;

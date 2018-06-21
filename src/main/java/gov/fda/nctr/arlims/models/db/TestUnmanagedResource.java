@@ -3,7 +3,6 @@ package gov.fda.nctr.arlims.models.db;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 import gov.fda.nctr.arlims.models.dto.LabResourceType;
@@ -35,7 +34,7 @@ public class TestUnmanagedResource
     @Column(name = "RESOURCE_CODE", length = 50, nullable = false) @Size(max = 50) @NotEmpty
     private String resourceCode;
 
-    @Enumerated(EnumType.STRING) @Column(name = "RESOURCE_TYPE", length = 60) @Null
+    @Enumerated(EnumType.STRING) @Column(name = "RESOURCE_TYPE", length = 60)
     private LabResourceType resourceType;
 
 
@@ -43,7 +42,7 @@ public class TestUnmanagedResource
         (
             @NotNull Test test,
             @Size(max = 50) @NotEmpty String resourceCode,
-            @Null LabResourceType resourceType
+            LabResourceType resourceType
         )
     {
         this.test = test;

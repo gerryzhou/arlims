@@ -2,7 +2,6 @@ package gov.fda.nctr.arlims.models.db;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 
 /// Registers a test type as applicable for a lab group, optionally with customization of configuration options for the test type.
@@ -27,14 +26,14 @@ public class LabGroupTestType
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABTESTTYPE")) @NotNull
     private TestType testType;
 
-    @Lob @Basic(fetch = FetchType.LAZY) @Null
+    @Lob @Basic(fetch = FetchType.LAZY)
     private String testOptionsJson;
 
     public LabGroupTestType
         (
             @NotNull LabGroup labGroup,
             @NotNull TestType testType,
-            @Null String json
+            String json
         )
     {
         this.labGroup = labGroup;

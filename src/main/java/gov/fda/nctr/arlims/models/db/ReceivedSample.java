@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 
@@ -41,10 +40,10 @@ public class ReceivedSample
     @NotNull
     private LocalDate received;
 
-    @Size(max = 100) @Null
+    @Size(max = 100)
     private String receivedBy;
 
-    @Null @Column(name = "TEST_BEGIN_DATE")
+    @Column(name = "TEST_BEGIN_DATE")
     private LocalDate testBeginDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -70,8 +69,8 @@ public class ReceivedSample
             boolean active,
             @Size(max = 100) @NotBlank String productName,
             @NotNull LocalDate received,
-            @Null @Size(max = 100) String receivedBy,
-            @Null LocalDate testBeginDate,
+            @Size(max = 100) String receivedBy,
+            LocalDate testBeginDate,
             @NotNull Set<Employee> assignedToEmployees
         )
     {

@@ -32,10 +32,10 @@ public class Employee
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "FACTS_PERSON_ID") @Null
+    @Column(name = "FACTS_PERSON_ID")
     private Long factsPersonId;
 
-    @Size(max = 200) @Null
+    @Size(max = 200)
     private String password;
 
     @Column(name = "EMAIL", nullable = false) @Size(max = 150) @NotBlank @Email
@@ -47,7 +47,7 @@ public class Employee
     @Size(max = 60) @NotNull @NotBlank
     private String firstName;
 
-    @Size(max = 60) @Null
+    @Size(max = 60)
     private String middleName;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -73,12 +73,12 @@ public class Employee
             @Size(max = 30) @NotBlank String username,
             @Size(max = 10) @NotBlank String shortName,
             @NotNull LabGroup labGroup,
-            @Null Long factsPersonId,
-            @Size(max = 200) @Null String password,
+            Long factsPersonId,
+            @Size(max = 200) String password,
             @Size(max = 150) @NotBlank @Email String email,
             @Size(max = 60) @NotBlank String lastName,
             @Size(max = 60) @NotBlank String firstName,
-            @Size(max = 60) @Null String middleName,
+            @Size(max = 60) String middleName,
             @NotNull Set<Role> roles
         )
     {
