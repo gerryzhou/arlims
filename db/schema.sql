@@ -84,7 +84,7 @@ create table RECEIVED_SAMPLE
   SAMPLE_NUM      NUMBER(19)        not null,
   TEST_BEGIN_DATE DATE,
   LAB_GROUP_ID    NUMBER(19)        not null
-    constraint FK_ACTSMP_LABGROUP
+    constraint FK_RCVSMP_LABGROUP
     references LAB_GROUP
 )
 /
@@ -156,51 +156,6 @@ create index IX_SMPEMPAST_EMPID
   on SAMPLE_EMPLOYEE_ASSIGNMENT (EMP_ID)
 /
 
-create table SAMPLE_MANAGED_RESOURCE_USAGE
-(
-  ID            NUMBER(19) generated as identity
-    primary key,
-  RESOURCE_CODE VARCHAR2(255 char) not null
-    constraint FK_SMPMRSCUSG_RSC
-    references LAB_RESOURCE,
-  SAMPLE_ID     NUMBER(19)         not null
-    constraint FK_SMPMRSCUSG_RCVSMP
-    references RECEIVED_SAMPLE
-)
-/
-
-create index IX_SMPMRSCUSG_SMPID
-  on SAMPLE_MANAGED_RESOURCE_USAGE (SAMPLE_ID)
-/
-
-create index IX_SMPMRSCUSG_RSCCD
-  on SAMPLE_MANAGED_RESOURCE_USAGE (RESOURCE_CODE)
-/
-
-create table SAMPLE_UNMANGD_RESOURCE_USAGE
-(
-  ID            NUMBER(19) generated as identity
-    primary key,
-  RESOURCE_CODE VARCHAR2(50 char) not null,
-  RESOURCE_TYPE VARCHAR2(60 char),
-  SAMPLE_ID     NUMBER(19)        not null
-    constraint FK_SMPUNMRSCUSG_RCVSMP
-    references RECEIVED_SAMPLE
-)
-/
-
-create index IX_SMPUNMRSCUSG_SMPID
-  on SAMPLE_UNMANGD_RESOURCE_USAGE (SAMPLE_ID)
-/
-
-create index IX_SMPUNMRSCUSG_RSCCD
-  on SAMPLE_UNMANGD_RESOURCE_USAGE (RESOURCE_CODE)
-/
-
-create index IX_SMPUNMRSCUSG_RSCT
-  on SAMPLE_UNMANGD_RESOURCE_USAGE (RESOURCE_TYPE)
-/
-
 create table SAMPLE_LIST
 (
   ID                NUMBER(19) generated as identity
@@ -257,7 +212,10 @@ create table TEST_TYPE
   CODE        VARCHAR2(50 char) not null
     constraint UN_TSTT_CODE
     unique,
-  DESCRIPTION VARCHAR2(200 char)
+  DESCRIPTION VARCHAR2(2000 char),
+  NAME        VARCHAR2(80 char) not null
+    constraint UN_TSTT_NAME
+    unique
 )
 /
 
@@ -353,5 +311,52 @@ create index IX_TST_SAVEDTOFACTS
   on TEST (SAVED_TO_FACTS)
 /
 
+create table TEST_MANAGED_RESOURCE
+(
+  ID            NUMBER(19) generated as identity
+    primary key,
+  RESOURCE_CODE VARCHAR2(255 char)
+    constraint FK_TSTMANRSC_LABRSC
+    references LAB_RESOURCE,
+  TEST_ID       NUMBER(19)
+    constraint FK_TSTMANRSC_TST
+    references TEST,
+  constraint UN_TSTMANRSC_TSTIDRSCCD
+  unique (TEST_ID, RESOURCE_CODE)
+)
+/
 
+create index IX_TSTMANRSC_TSTID
+  on TEST_MANAGED_RESOURCE (TEST_ID)
+/
+
+create index IX_TSTMANRSC_RSCCD
+  on TEST_MANAGED_RESOURCE (RESOURCE_CODE)
+/
+
+create table TEST_UNMANAGED_RESOURCE
+(
+  ID            NUMBER(19) generated as identity
+    primary key,
+  RESOURCE_CODE VARCHAR2(50 char) not null,
+  RESOURCE_TYPE VARCHAR2(60 char),
+  TEST_ID       NUMBER(19)
+    constraint FK_TSTUNMRSC_TST
+    references TEST,
+  constraint UN_TSTUNMRSC_TSTIDRSCCDRSCT
+  unique (TEST_ID, RESOURCE_CODE, RESOURCE_TYPE)
+)
+/
+
+create index IX_TSTUNMRSC_TSTID
+  on TEST_UNMANAGED_RESOURCE (TEST_ID)
+/
+
+create index IX_TSTUNMRSC_RSCCD
+  on TEST_UNMANAGED_RESOURCE (RESOURCE_CODE)
+/
+
+create index IX_TSTUNMRSC_RSCT
+  on TEST_UNMANAGED_RESOURCE (RESOURCE_TYPE)
+/
 

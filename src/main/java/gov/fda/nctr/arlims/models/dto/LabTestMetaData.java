@@ -8,89 +8,90 @@ import java.util.Optional;
 public class LabTestMetaData
 {
     private long testId;
+    private long sampleId;
     private long sampleNum;
     private String pacCode;
+    private Optional<String> productName;
+    private LabTestTypeCode testTypeCode;
     private String testTypeName;
+    private Instant created;
+    private long createdByEmpId;
+    private Instant lastSaved;
+    private long lastSavedByEmpId;
     private Optional<LocalDate> beginDate;
     private Optional<String> note;
-    private Instant lastModified;
-    private Long lastModifiedByEmpId;
     private Optional<Instant> reviewed;
     private Optional<Long> reviewedByEmpId;
+    private boolean savedToFacts;
+
 
     public LabTestMetaData
-    (
-        long testId,
-        long sampleNum,
-        String pacCode,
-        String testTypeName,
-        Optional<LocalDate> beginDate,
-        Optional<String> note,
-        Instant lastModified,
-        Long lastModifiedByEmpId,
-        Optional<Instant> reviewed,
-        Optional<Long> reviewedByEmpId
-    )
+        (
+            long testId,
+            long sampleId,
+            long sampleNum,
+            String pacCode,
+            Optional<String> productName,
+            LabTestTypeCode testTypeCode,
+            String testTypeName,
+            Instant created,
+            long createdByEmpId,
+            Instant lastSaved,
+            long lastSavedByEmpId,
+            Optional<LocalDate> beginDate,
+            Optional<String> note,
+            Optional<Instant> reviewed,
+            Optional<Long> reviewedByEmpId,
+            boolean savedToFacts
+        )
     {
         this.testId = testId;
+        this.sampleId = sampleId;
         this.sampleNum = sampleNum;
         this.pacCode = pacCode;
+        this.productName = productName;
+        this.testTypeCode = testTypeCode;
         this.testTypeName = testTypeName;
+        this.created = created;
+        this.createdByEmpId = createdByEmpId;
+        this.lastSaved = lastSaved;
+        this.lastSavedByEmpId = lastSavedByEmpId;
         this.beginDate = beginDate;
         this.note = note;
-        this.lastModified = lastModified;
-        this.lastModifiedByEmpId = lastModifiedByEmpId;
         this.reviewed = reviewed;
         this.reviewedByEmpId = reviewedByEmpId;
+        this.savedToFacts = savedToFacts;
     }
 
-    public long getTestId()
-    {
-        return testId;
-    }
+    public long getTestId() { return testId; }
 
-    public long getSampleNum()
-    {
-        return sampleNum;
-    }
+    public long getSampleId() { return sampleId; }
 
-    public String getPacCode()
-    {
-        return pacCode;
-    }
+    public long getSampleNum() { return sampleNum; }
 
-    public String getTestTypeName()
-    {
-        return testTypeName;
-    }
+    public String getPacCode() { return pacCode; }
 
-    public Optional<LocalDate> getBeginDate()
-    {
-        return beginDate;
-    }
+    public Optional<String> getProductName() { return productName; }
 
-    public Optional<String> getNote()
-    {
-        return note;
-    }
+    public LabTestTypeCode getTestTypeCode() { return testTypeCode; }
 
-    public Instant getLastModified()
-    {
-        return lastModified;
-    }
+    public String getTestTypeName() { return testTypeName; }
 
-    public Long getLastModifiedByEmployeeId()
-    {
-        return lastModifiedByEmpId;
-    }
+    public Instant getCreated() { return created; }
 
-    public Optional<Instant> getReviewed()
-    {
-        return reviewed;
-    }
+    public long getCreatedByEmpId() { return createdByEmpId; }
 
-    public Optional<Long> getReviewedByEmployeeId()
-    {
-        return reviewedByEmpId;
-    }
+    public Instant getLastSaved() { return lastSaved; }
+
+    public long getLastSavedByEmpId() { return lastSavedByEmpId; }
+
+    public Optional<LocalDate> getBeginDate() { return beginDate; }
+
+    public Optional<String> getNote() { return note; }
+
+    public Optional<Instant> getReviewed() { return reviewed; }
+
+    public Optional<Long> getReviewedByEmpId() { return reviewedByEmpId; }
+
+    public boolean getSavedToFacts() { return savedToFacts; }
 }

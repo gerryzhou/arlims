@@ -32,7 +32,7 @@ insert into lab_resource(code, resource_type, lab_group_id, description)
 insert into lab_resource(code, resource_type, lab_group_id, description)
   values('V5-5099389', 'VID', (select id from lab_group where name = 'ARL-MICRO'), null);
 
-insert into test_type(code, description)
+insert into test_type(code, name)
   values('IMP_SAL_VIDAS', 'Imported Salmonella - Vidas');
 
 insert into lab_group_test_type (lab_group_id, test_type_id)

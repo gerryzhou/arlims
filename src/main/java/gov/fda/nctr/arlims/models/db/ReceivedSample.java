@@ -30,7 +30,7 @@ public class ReceivedSample
     @Column(name="PAC_CODE", nullable = false) @Size(max = 20) @NotBlank
     private String pacCode;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_ACTSMP_LABGROUP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_RCVSMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
     private boolean active = false;
@@ -58,12 +58,6 @@ public class ReceivedSample
         }
     )
     private Set<Employee> assignedToEmployees = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sample")
-    private Set<SampleUnmanagedResourceUsage> unmanagedResourceUsages = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sample")
-    private Set<SampleManagedResourceUsage> managedResourceUsages = new HashSet<>();
 
 
     protected ReceivedSample() {}
@@ -120,10 +114,4 @@ public class ReceivedSample
 
     public Set<Employee> getAssignedToEmployees() { return assignedToEmployees; }
     public void setAssignedToEmployees(Set<Employee> emps) { this.assignedToEmployees = emps; }
-
-    public Set<SampleUnmanagedResourceUsage> getUnmanagedResourceUsages() { return unmanagedResourceUsages; }
-    public void setUnmanagedResourceUsages(Set<SampleUnmanagedResourceUsage> usages) { this.unmanagedResourceUsages = usages; }
-
-    public Set<SampleManagedResourceUsage> getManagedResourceUsages() { return managedResourceUsages; }
-    public void setManagedResourceUsages(Set<SampleManagedResourceUsage> usages) { this.managedResourceUsages = usages; }
 }

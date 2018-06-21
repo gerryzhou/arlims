@@ -1,6 +1,7 @@
 package gov.fda.nctr.arlims.models.db;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,6 +12,7 @@ import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
 @Table(
     uniqueConstraints = {
         @UniqueConstraint(name="UN_TSTT_CODE", columnNames = {"CODE"}),
+        @UniqueConstraint(name="UN_TSTT_NAME", columnNames = {"NAME"}),
     }
 )
 public class TestType
@@ -21,7 +23,10 @@ public class TestType
     @Enumerated(EnumType.STRING) @Column(length = 50) @NotNull
     private LabTestTypeCode code;
 
-    @Size(max = 200)
+    @Column(name = "NAME", nullable = false) @Size(max = 80) @NotBlank
+    private String name;
+
+    @Size(max = 2000)
     private String description;
 
     protected TestType() {}
@@ -29,10 +34,12 @@ public class TestType
     public TestType
         (
             @NotNull LabTestTypeCode code,
+            @NotBlank String name,
             @Size(max = 200) String description
         )
     {
         this.code = code;
+        this.name = name;
         this.description = description;
     }
 
@@ -41,6 +48,9 @@ public class TestType
 
     public LabTestTypeCode getCode() { return code; }
     public void setCode(LabTestTypeCode code) { this.code = code; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

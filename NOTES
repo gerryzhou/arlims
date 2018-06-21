@@ -1,4 +1,18 @@
 
+Try implementing dummy header-based security, using Spring security filter.
+  Using IE, is any SSO header available at the server?
+  In Spring security filter, retrieve SSO header and lookup user in local Map created at services app startup time.
+    Refresh the map periodically or when requested via api.
+  Add sso_key to Employee with ix
+
+Implement getUserContext REST api method
+  +UserContext
+    User
+    LabGroup
+     add ids (pks) to these in dtos
+
+
+
 Views
 -----
 [MS] manage active samples
