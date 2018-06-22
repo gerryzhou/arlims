@@ -7,8 +7,8 @@ export class ApiUrlsService {
 
    constructor(private location: Location) {}
 
-   authenticateUrl(): string {
-      return this.location.prepareExternalUrl('/api/login/authenticate');
+   userContextUrl(): string {
+      return this.location.prepareExternalUrl('/api/user/context');
    }
 
 }

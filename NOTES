@@ -1,14 +1,14 @@
+http://localhost:8080/ARLIMS/api/user/context
+http://localhost:4200/
+
+
 Deliver UI prototype by Jul 22.
-
-Copy index page from REMS, add lab group to the toolbar.
-
 
 Services
 --------
-[Spring] UserService
-  getUserContext
-[Angular] UserService
-  getUserContext
+In angular, how/where to initialize the UserContext so that's it's available before the app does anything significant?
+  https://stackoverflow.com/a/46215017
+  https://github.com/angular/angular/issues/9047
 
 [Spring] SamplesService
 [Angular] SamplesService
