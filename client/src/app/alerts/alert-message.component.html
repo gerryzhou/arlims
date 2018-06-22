@@ -1,6 +1,4 @@
-<mat-card  *ngIf="message">
-   <div [ngClass]="message.type">
-      {{message.text}}
-   </div>
-</mat-card>
+<ngb-alert *ngIf="message" [type]="message.type" [dismissible]="true">
+   {{message.text}}
+</ngb-alert>
 

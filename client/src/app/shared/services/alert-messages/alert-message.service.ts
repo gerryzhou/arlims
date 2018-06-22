@@ -28,6 +28,11 @@ export class AlertMessageService {
       return this.subject.asObservable();
    }
 
+   alertInfo(message: string, persistThroughNavigation = false) {
+      this.persistThroughNavigation = persistThroughNavigation;
+      this.subject.next({ type: 'info', text: message });
+   }
+
    alertSuccess(message: string, persistThroughNavigation = false) {
       this.persistThroughNavigation = persistThroughNavigation;
       this.subject.next({ type: 'success', text: message });
@@ -35,7 +40,7 @@ export class AlertMessageService {
 
    alertError(message: string, persistThroughNavigation = false) {
       this.persistThroughNavigation = persistThroughNavigation;
-      this.subject.next({ type: 'error', text: message });
+      this.subject.next({ type: 'danger', text: message });
    }
 
 }

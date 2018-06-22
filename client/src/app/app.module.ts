@@ -26,16 +26,14 @@ import {TruncateModule} from '@yellowspot/ng-truncate';
 
 import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
-import {LoginComponent} from './login/login.component';
-import {LoadingIndicatorService} from "./shared/services/loading-indicator/loading-indicator-service";
+import {LoadingIndicatorService} from "./shared/services";
 import {LoadingIndicatorInterceptor} from "./shared/services/loading-indicator/loading-indicator-interceptor";
-import { AlertMessageComponent } from './alerts/alert-message.component';
-import { HomeComponent } from './home/home.component';
+import {AlertMessageComponent} from './alerts/alert-message.component';
+import {HomeComponent} from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     AlertMessageComponent,
     HomeComponent
   ],

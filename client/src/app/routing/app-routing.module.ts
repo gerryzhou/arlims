@@ -3,15 +3,15 @@ import {Routes, RouterModule} from '@angular/router';
 import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 import {environment} from '../../environments/environment';
-import {LoginComponent} from "../login/login.component";
+import {HomeComponent} from "../home/home.component";
 
 
 const routes: Routes = [
    {
-      path: 'login',
-      component: LoginComponent,
+      path: 'home',
+      component: HomeComponent,
    },
-   { path: '', redirectTo: 'login', pathMatch: 'full' },
+   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
 
 @NgModule({
