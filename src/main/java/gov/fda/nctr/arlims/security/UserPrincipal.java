@@ -16,7 +16,7 @@ import gov.fda.nctr.arlims.models.db.Employee;
 public class UserPrincipal implements UserDetails
 {
     private long employeeId;
-    private String username;
+    private String fdaEmailAccountName;
     private Optional<Long> factsPersonId;
     private String password;
     private String labGroupName;
@@ -28,7 +28,7 @@ public class UserPrincipal implements UserDetails
     public UserPrincipal
         (
             long employeeId,
-            String username,
+            String fdaEmailAccountName,
             Optional<Long> factsPersonId,
             String password,
             String labGroupName,
@@ -38,7 +38,7 @@ public class UserPrincipal implements UserDetails
             Collection<? extends GrantedAuthority> grantedAuthorities
         )
     {
-        Objects.requireNonNull(username, "employee username is required");
+        Objects.requireNonNull(fdaEmailAccountName, "employee fda email account name is required");
         Objects.requireNonNull(password, "employee password is required");
         Objects.requireNonNull(labGroupName, "employee lab group name is required");
         Objects.requireNonNull(shortName, "employee short name is required");
@@ -46,7 +46,7 @@ public class UserPrincipal implements UserDetails
         Objects.requireNonNull(firstName, "employee first name is required");
 
         this.employeeId = employeeId;
-        this.username = username;
+        this.fdaEmailAccountName = fdaEmailAccountName;
         this.factsPersonId = factsPersonId;
         this.password = password;
         this.labGroupName = labGroupName;
@@ -82,7 +82,7 @@ public class UserPrincipal implements UserDetails
     public Optional<Long> getFactsPersonId() { return factsPersonId; }
 
     @Override
-    public String getUsername() { return username; }
+    public String getUsername() { return fdaEmailAccountName; }
 
     @Override
     public String getPassword() { return password; }

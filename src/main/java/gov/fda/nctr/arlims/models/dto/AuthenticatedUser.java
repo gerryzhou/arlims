@@ -1,6 +1,7 @@
 package gov.fda.nctr.arlims.models.dto;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -13,9 +14,8 @@ public class AuthenticatedUser
     private final long labGroupId;
     private final String lastName;
     private final String firstName;
-
-    private final Instant authenticationInstant;
-
+    private final List<RoleName> roles;
+    private final Instant userInfoLastRefreshed;
 
     public AuthenticatedUser
         (
@@ -26,7 +26,8 @@ public class AuthenticatedUser
             long labGroupId,
             String lastName,
             String firstName,
-            Instant authenticationInstant
+            List<RoleName> roles,
+            Instant userInfoLastRefreshed
         )
     {
         this.employeeId = employeeId;
@@ -36,7 +37,8 @@ public class AuthenticatedUser
         this.labGroupId = labGroupId;
         this.lastName = lastName;
         this.firstName = firstName;
-        this.authenticationInstant = authenticationInstant;
+        this.roles = roles;
+        this.userInfoLastRefreshed = userInfoLastRefreshed;
     }
 
     public long getEmployeeId() { return employeeId; }
@@ -53,5 +55,7 @@ public class AuthenticatedUser
 
     public String getFirstName() { return firstName; }
 
-    public Instant getAuthenticationInstant() { return authenticationInstant; }
+    public List<RoleName> getRoles() { return roles; }
+
+    public Instant getUserInfoLastRefreshed() { return userInfoLastRefreshed; }
 }
