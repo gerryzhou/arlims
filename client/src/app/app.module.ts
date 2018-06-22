@@ -4,24 +4,7 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
 import {Location} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {
-   MatInputModule,
-   MatCheckboxModule,
-   MatSelectModule,
-   MatMenuModule,
-   MatPaginatorModule,
-   MatProgressSpinnerModule,
-   MatSortModule,
-   MatTableModule,
-   MatToolbarModule,
-   MatTooltipModule,
-   MatCardModule,
-   MatChipsModule,
-   MatExpansionModule,
-   MatSnackBarModule,
-} from '@angular/material';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TruncateModule} from '@yellowspot/ng-truncate';
 
 import {AppRoutingModule} from './routing/app-routing.module';
@@ -42,22 +25,7 @@ import {HomeComponent} from './home/home.component';
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    MatCardModule,
-    MatMenuModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatExpansionModule,
-    MatSnackBarModule,
+    NgbModule.forRoot(),
     AppRoutingModule,
     TruncateModule,
   ],

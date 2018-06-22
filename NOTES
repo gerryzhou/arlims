@@ -1,6 +1,85 @@
+Deliver UI prototype by Jul 22.
+
+Copy index page from REMS, add lab group to the toolbar.
+
+
+Services
+--------
+[Spring] UserService
+  getUserContext
+[Angular] UserService
+  getUserContext
+
+[Spring] SamplesService
+[Angular] SamplesService
+  Fetches and stores sample-related information including synchronizing sample information with FACTS.
+  Just mock the information for now but decide now on type to be returned by the service.
+    dto/Sample.java
+
+
+Views
+-----
+[MS] manage active samples
+  List sample information and active test links, with "+" to create new test.
+  DO NOT use a data table.  Just use a custom sample component.
+  Functions
+    Import active samples and their employee work assignments from FACTS.
+    List currently active samples for the lab, activate and deactivate samples.
+    Make a named sample list from selected samples.
+    Allow searching samples by name/pattern optionally within a selected sample list.
+    When selection is non-empty:
+      Enable link to ASR view to associate samples with lab resources
+      Save selection list to Angular service within client for communication between views.
+
+[ASR] associate active tests with lab resources
+  1) Select one or more active tests, associate with batch of resource codes received from barcode scanner.
+  2) Display and/or print selected sample barcodes with descriptive information for the tests, so user can form
+     associations using only a barcode scanner away from their computer. Sample barcodes should be distinguishable from
+     lab resource codes, via a special prefix. Support receiving alternating sequence of sample-codes and resource codes
+     to form associations:
+     _______ sample code __________ resource code ___________
+       |   |_______________|  |______________________|   |
+       |_________________________________________________|
+  In either case (1 or 2), present a matrix showing resources x samples for confirmation before saving the associations.
+  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
+  target go to holding area).
+
+[MT] manage active tests
+  criteria for display are some combination of the following depending on checked options:
+    not synced to FACTS
+    not signed completed or reviewed
+    test shares sample number with an active sample which is assigned to current user or no user
+      Assigned user requirement should be able to be easily omitted via checkbox ("show tests with samples assigned to other users").
+  edit test data
+  review signoff and FACTS submission (requires special REVIEW role)
+  print test data
+  delete tests
+
+[MLR] manage lab resources
+  usual crud ops
+
+[MU] manage employees/users for user's lab group
+  usual crud ops
+
+[MLG] manage lab groups
+
+[MTRA] manage test/lab-resource associations (managed and unmanaged)
+
+
+[dto and ui] Each test view should be able to know the tests current stage, and optionally show each stage's data contents individually.
+  + StagedLabTest interface
+      stages: string[]
+      currentStage: string
+  UI will allow flipping through stages for a test.
+  Grid of active tests will just show current stages by default.
+
+
+Data Access
+-----------
 Decide whether to proceed with JPA.
-
-
+  Try QueryDSL code generation from db.
+    http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/#sql_integration
+    Spring Integration: http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/#d0e1449
 Try implementing dummy header-based security, using Spring security filter.
   Using IE, is any SSO header available at the server?
   In Spring security filter, retrieve SSO header and lookup user in local Map created at services app startup time.
@@ -13,52 +92,6 @@ Implement getUserContext REST api method
     LabGroup
      add ids (pks) to these in dtos
 
-
-
-Views
------
-[MS] manage active samples
-  Import active samples and their employee work assignments from FACTS.
-  List currently active samples for the lab, activate and deactivate samples.
-  Make a named sample list from selected samples.
-  Allow searching samples by name/pattern optionally within a selected sample list.
-  Allow multiple selection.
-    When selection is non-empty:
-      Enable link to ASR view to associate samples with lab resources
-      Save selection list to Angular service within client for communication between views.
-
-
-[ASR] associate active samples with lab resources
-  1) Select one or more active samples, associate with batch of resource codes received from barcode scanner.
-  2) Display and/or print selected sample barcodes with descriptive information, so user can form associations using
-     only a barcode scanner away from their computer. Sample barcodes should be distinguishable from lab resource codes,
-     via a special prefix. Support receiving alternating sequence of sample-codes and resource codes to form associations:
-     _______ sample code __________ resource code ___________
-       |   |_______________|  |______________________|   |
-       |_________________________________________________|
-  In either case (1 or 2), present a matrix showing resources x samples for confirmation before saving the associations.
-  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
-  target go to holding area).
-
-manage tests in progress
-  criteria for display are some combination of the following depending on checked options:
-    not synced to FACTS
-    not signed completed or reviewed
-    test shares sample number with an active sample which is assigned to current user or no user
-      Assigned user requirement should be able to be easily omitted via checkbox ("show tests with samples assigned to other users").
-  edit test data
-  review signoff and FACTS submission (requires special REVIEW role)
-  print test data
-  delete tests
-
-
-
-[dto and ui] Each test view should be able to know the tests current stage, and optionally show each stage's data contents individually.
-  + StagedLabTest interface
-      stages: string[]
-      currentStage: string
-  UI will allow flipping through stages for a test.
-  Grid of active tests will just show current stages by default.
 
 
 Client/Server Project Skeletons
@@ -81,15 +114,10 @@ Create dto class SalImpVidasTestConfig
   Should serialize to something like:
       { samplingMethodChoices: [{ subGrams:... , numSubs:..., numComps:..., compGrams:..., subsPerComp:... }, ...] }
 
-Create EmployeeRepository with lookup by username.
-  Add unit test.
-    http://www.baeldung.com/spring-jpa-test-in-memory-database
-
-Configure Spring security for password authentication.
+Spring security refs
     https://www.callicoder.com/spring-boot-spring-security-jwt-mysql-react-app-part-1/
     or
     http://websystique.com/spring-security/spring-security-4-password-encoder-bcrypt-example-with-hibernate/
-
 
 
 # Test password auth:
@@ -101,13 +129,6 @@ Content-Type: application/x-www-form-urlencoded
 username=SCH1&password=123
 
 ###
-
-Create authentication-related dto types
-    +AuthenticationController
-      authenticate(username, password)
-        Lookup username in db (short_name).
-        Hash posted password, compare with password from db.
-        Return auth result structure.
 
 
 Login Page
