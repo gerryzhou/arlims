@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +16,11 @@ import gov.fda.nctr.arlims.models.db.Employee;
 public class UserPrincipal implements UserDetails
 {
     private long employeeId;
-    private Optional<Long> factsPersonId;
     private String username;
+    private Optional<Long> factsPersonId;
     private String password;
     private String labGroupName;
     private String shortName;
-    private String email;
     private String lastName;
     private String firstName;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
@@ -30,12 +28,11 @@ public class UserPrincipal implements UserDetails
     public UserPrincipal
         (
             long employeeId,
-            Optional<Long> factsPersonId,
             String username,
+            Optional<Long> factsPersonId,
             String password,
             String labGroupName,
             String shortName,
-            String email,
             String lastName,
             String firstName,
             Collection<? extends GrantedAuthority> grantedAuthorities
@@ -45,17 +42,15 @@ public class UserPrincipal implements UserDetails
         Objects.requireNonNull(password, "employee password is required");
         Objects.requireNonNull(labGroupName, "employee lab group name is required");
         Objects.requireNonNull(shortName, "employee short name is required");
-        Objects.requireNonNull(shortName, "employee email is required");
         Objects.requireNonNull(lastName, "employee last name is required");
         Objects.requireNonNull(firstName, "employee first name is required");
 
         this.employeeId = employeeId;
-        this.factsPersonId = factsPersonId;
         this.username = username;
+        this.factsPersonId = factsPersonId;
         this.password = password;
         this.labGroupName = labGroupName;
         this.shortName = shortName;
-        this.email = email;
         this.lastName = lastName;
         this.firstName = firstName;
         this.grantedAuthorities = grantedAuthorities;
@@ -70,12 +65,11 @@ public class UserPrincipal implements UserDetails
 
         return new UserPrincipal(
             emp.getId(),
+            emp.getFdaEmailAccountName(),
             Optional.ofNullable(emp.getFactsPersonId()),
-            emp.getUsername(),
             emp.getPassword(),
             emp.getLabGroup().getName(),
             emp.getShortName(),
-            emp.getEmail(),
             emp.getLastName(),
             emp.getFirstName(),
             authorities
@@ -87,6 +81,7 @@ public class UserPrincipal implements UserDetails
 
     public Optional<Long> getFactsPersonId() { return factsPersonId; }
 
+    @Override
     public String getUsername() { return username; }
 
     @Override
@@ -95,8 +90,6 @@ public class UserPrincipal implements UserDetails
     public String getLabGroupName() { return labGroupName; }
 
     public String getShortName() { return shortName; }
-
-    public String getEmail() { return email; }
 
     public String getLastName() { return lastName; }
 

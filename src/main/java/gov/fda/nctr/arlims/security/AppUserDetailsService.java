@@ -26,7 +26,7 @@ public class AppUserDetailsService implements UserDetailsService
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        Employee emp = employeeRepository.findByUsername(username).orElseThrow(() ->
+        Employee emp = employeeRepository.findByFdaEmailAccountName(username).orElseThrow(() ->
             new UsernameNotFoundException("user '" + username + "' not found")
         );
 

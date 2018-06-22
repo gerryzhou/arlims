@@ -51,7 +51,7 @@ public class AuthenticationController
             @RequestParam("password") String password
         )
     {
-        List<Employee> rcds = employeeRepository.findByUsername(username);
+        List<Employee> rcds = employeeRepository.findByFdaEmailAccountName(username);
 
         if ( rcds.isEmpty() )
             return new AuthenticationResult(Optional.empty(), Optional.of(getUserNotFoundMessage()));

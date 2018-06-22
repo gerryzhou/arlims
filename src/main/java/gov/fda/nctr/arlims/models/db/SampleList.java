@@ -9,6 +9,9 @@ import javax.validation.constraints.*;
 
 @Entity
 @Table(
+    uniqueConstraints = {
+        @UniqueConstraint(name="UN_SMPLST_NAME", columnNames = {"NAME"}),
+    },
     indexes = {
         @Index(name = "IX_SMPLST_LABGROUPID", columnList = "LAB_GROUP_ID"),
         @Index(name = "IX_SMPLST_CREATEDEMPID", columnList = "CREATED_BY_EMP_ID"),
@@ -20,7 +23,7 @@ public class SampleList
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 30)
+    @Column(name = "NAME", nullable = false) @Size(max = 30) @NotBlank
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_SMPLST_LABGRP")) @NotNull
@@ -54,7 +57,7 @@ public class SampleList
 
     public SampleList
         (
-            @Size(max = 30) String name,
+            @NotBlank @Size(max = 30) String name,
             @NotNull LabGroup labGroup,
             @NotNull Instant created,
             @NotNull Employee createdByEmployee,

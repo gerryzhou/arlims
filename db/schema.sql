@@ -24,19 +24,18 @@ create table LAB_GROUP
 
 create table EMPLOYEE
 (
-  ID              NUMBER(19) generated as identity
+  ID                     NUMBER(19) generated as identity
     primary key,
-  EMAIL           VARCHAR2(150 char) not null,
-  FACTS_PERSON_ID NUMBER(19),
-  FIRST_NAME      VARCHAR2(60 char)  not null,
-  LAST_NAME       VARCHAR2(60 char)  not null,
-  MIDDLE_NAME     VARCHAR2(60 char),
-  PASSWORD        VARCHAR2(200 char),
-  SHORT_NAME      VARCHAR2(10 char)  not null,
-  USERNAME        VARCHAR2(30 char)  not null
-    constraint UN_EMP_USERNAME
+  FACTS_PERSON_ID        NUMBER(19),
+  FDA_EMAIL_ACCOUNT_NAME VARCHAR2(150 char) not null
+    constraint UN_EMP_FDAEMAILACCN
     unique,
-  LAB_GROUP_ID    NUMBER(19)         not null
+  FIRST_NAME             VARCHAR2(60 char)  not null,
+  LAST_NAME              VARCHAR2(60 char)  not null,
+  MIDDLE_NAME            VARCHAR2(60 char),
+  PASSWORD               VARCHAR2(200 char),
+  SHORT_NAME             VARCHAR2(10 char)  not null,
+  LAB_GROUP_ID           NUMBER(19)         not null
     constraint FK_EMP_LABGROUP
     references LAB_GROUP,
   constraint UN_EMP_SHORTNAMELABGRP
@@ -50,10 +49,6 @@ create index IX_EMP_LABGROUPID
 
 create index IX_EMP_FACTSPERSONID
   on EMPLOYEE (FACTS_PERSON_ID)
-/
-
-create index IX_EMP_EMAIL
-  on EMPLOYEE (EMAIL)
 /
 
 create table LAB_RESOURCE
@@ -160,13 +155,15 @@ create table SAMPLE_LIST
 (
   ID                NUMBER(19) generated as identity
     primary key,
-  ACTIVE            NUMBER(1)    not null,
-  CREATED           TIMESTAMP(6) not null,
-  NAME              VARCHAR2(30 char),
-  CREATED_BY_EMP_ID NUMBER(19)   not null
+  ACTIVE            NUMBER(1)         not null,
+  CREATED           TIMESTAMP(6)      not null,
+  NAME              VARCHAR2(30 char) not null
+    constraint UN_SMPLST_NAME
+    unique,
+  CREATED_BY_EMP_ID NUMBER(19)        not null
     constraint FK_SMPLST_EMP_CREATED
     references EMPLOYEE,
-  LAB_GROUP_ID      NUMBER(19)   not null
+  LAB_GROUP_ID      NUMBER(19)        not null
     constraint FK_SMPLST_LABGRP
     references LAB_GROUP
 )
@@ -359,4 +356,5 @@ create index IX_TSTUNMRSC_RSCCD
 create index IX_TSTUNMRSC_RSCT
   on TEST_UNMANAGED_RESOURCE (RESOURCE_TYPE)
 /
+
 

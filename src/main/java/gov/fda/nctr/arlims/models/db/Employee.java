@@ -9,13 +9,12 @@ import javax.validation.constraints.*;
 @Entity
 @Table(
     uniqueConstraints = {
-        @UniqueConstraint(name="UN_EMP_USERNAME", columnNames = {"USERNAME"}),
+        @UniqueConstraint(name="UN_EMP_FDAEMAILACCN", columnNames = {"FDA_EMAIL_ACCOUNT_NAME"}),
         @UniqueConstraint(name="UN_EMP_SHORTNAMELABGRP", columnNames = {"SHORT_NAME", "LAB_GROUP_ID"})
     },
     indexes = {
         @Index(name = "IX_EMP_LABGROUPID", columnList = "LAB_GROUP_ID"),
         @Index(name = "IX_EMP_FACTSPERSONID", columnList = "FACTS_PERSON_ID"),
-        @Index(name = "IX_EMP_EMAIL", columnList = "EMAIL")
     }
 )
 public class Employee
@@ -23,8 +22,8 @@ public class Employee
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 30) @NotNull @NotBlank
-    private String username;
+    @Column(name = "FDA_EMAIL_ACCOUNT_NAME", nullable = false) @Size(max = 150) @NotBlank
+    private String fdaEmailAccountName;
 
     @Column(name = "SHORT_NAME", nullable = false) @Size(max = 10) @NotBlank
     private String shortName;
@@ -37,9 +36,6 @@ public class Employee
 
     @Size(max = 200)
     private String password;
-
-    @Column(name = "EMAIL", nullable = false) @Size(max = 150) @NotBlank @Email
-    private String email;
 
     @Size(max = 60) @NotNull @NotBlank
     private String lastName;
@@ -70,24 +66,22 @@ public class Employee
 
     public Employee
         (
-            @Size(max = 30) @NotBlank String username,
+            @Size(max = 150) @NotBlank String fdaEmailAccountName,
             @Size(max = 10) @NotBlank String shortName,
             @NotNull LabGroup labGroup,
             Long factsPersonId,
             @Size(max = 200) String password,
-            @Size(max = 150) @NotBlank @Email String email,
             @Size(max = 60) @NotBlank String lastName,
             @Size(max = 60) @NotBlank String firstName,
             @Size(max = 60) String middleName,
             @NotNull Set<Role> roles
         )
     {
-        this.username = username;
+        this.fdaEmailAccountName = fdaEmailAccountName;
         this.shortName = shortName;
         this.labGroup = labGroup;
         this.factsPersonId = factsPersonId;
         this.password = password;
-        this.email = email;
         this.lastName = lastName;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -97,8 +91,8 @@ public class Employee
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getFdaEmailAccountName() { return fdaEmailAccountName; }
+    public void setFdaEmailAccountName(String accountName ) { this.fdaEmailAccountName = accountName; }
 
     public String getShortName() { return shortName; }
     public void setShortName(String shortName) { this.shortName = shortName; }
@@ -111,9 +105,6 @@ public class Employee
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
 
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }

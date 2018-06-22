@@ -11,6 +11,6 @@ import gov.fda.nctr.arlims.models.db.Employee;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long>
 {
-    Optional<Employee> findByUsername(String username);
+    Optional<Employee> findByFdaEmailAccountName(String username);
 }
 
