@@ -16,8 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
-@Configuration
-@EnableWebSecurity @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+// TODO: Web security inactive for now, re-enable when needed.
+//@Configuration
+//@EnableWebSecurity @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
 {
     private UserDetailsService userDetailsService;
@@ -49,9 +50,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
         .cors().and()
         .csrf().disable()
         .exceptionHandling()
-            .authenticationEntryPoint(unauthorizedHandler).and()
+        .authenticationEntryPoint(unauthorizedHandler).and()
         .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests()
             .antMatchers(
                 "/",
