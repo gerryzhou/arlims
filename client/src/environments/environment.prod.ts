@@ -2,6 +2,6 @@
 
 export const environment = {
   production: true,
-  baseHref: '/ARLIMS',
+  baseHref: '/alis',
 };
 

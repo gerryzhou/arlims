@@ -1,8 +1,9 @@
-http://localhost:8080/ALIS/api/user/context
+http://localhost:8080/alis/api/user/context
 http://localhost:4200/
 
 
 Deliver UI prototype by Jul 22.
+
 
 Services
 --------
@@ -123,12 +124,12 @@ Spring security refs
 
 # Example api calls
 
-GET http://localhost:8080/ALIS/api/user/context
+GET http://localhost:8080/alis/api/user/context
 Accept: application/json
 Cache-Control: no-cache
 
 ###
-POST http://localhost:8080/ALIS/api/auth/password
+POST http://localhost:8080/alis/api/auth/password
 Accept: application/json
 Cache-Control: no-cache
 Content-Type: application/x-www-form-urlencoded

@@ -38,7 +38,7 @@
        server.servlet.contextPath property should be set to match the value of prod.context.name, for the case of
        running services in an embedded container.
        -->
-      <prod.context.name>ALIS</prod.context.name>
+      <prod.context.name>alis</prod.context.name>
       <filtering.output.message>THIS FILE WAS PRODUCED FROM A TEMPLATE, DO NOT EDIT.</filtering.output.message>
    </properties>
 
