@@ -9,7 +9,7 @@
    <packaging>war</packaging>
 
    <name>arlims</name>
-   <description>ARLIMS System</description>
+   <description>ALIS</description>
 
    <parent>
       <groupId>org.springframework.boot</groupId>
@@ -25,20 +25,20 @@
       <nodejs.version>v8.11.1</nodejs.version>
       <!-- prod.context.name:
        Provides the final war file name, and the context name (initial component of the resource part of the app's url)
-       under which the client produced here will expect application services to be mounted. The client is configured via
-       this param to use this prefix both in index.html and when building application urls for services. Normally
-       when just deploying the produced war to an external Tomcat instance without specially configuring a context
-       name, this will have the context name (derived from the war name) match what the client side expects and
-       no other configuration is necessary.
+       under which the client produced here will expect application services and static resources to be available. The
+       client is always configured via this param to use this prefix both in index.html as base href, and when building
+       application urls for services. Normally when just deploying the produced war to an external Tomcat instance
+       without specially configuring a context name, this will have the context name (derived from the war name) match
+       what the client side expects, and no other configuration is necessary.
 
-       When running an embedded container on the other hand, for example via "mvn spring-boot:run" or via "java -jar",
-       this parameter does not determine the context name of the app's services in the embedded server, but is still
-       used by the client. Instead in these cases the context for the services in the embedded container should be set
-       via "server.servlet.contextPath" property specified in the application properties file. So don't run via
-       "java -jar" or "mvn spring-boot:run" with a non-default context unless you also specify that context for property
-       server.servlet.contextPath, or else the client will not be configured properly for the server.
+       On the other hand when running an embedded container, for example via "mvn spring-boot:run" or via "java -jar",
+       this parameter does not determine the context name of the app's services in the embedded server. Instead, in
+       these cases the context is set via the "server.servlet.contextPath" property in one of the application properties
+       files. The client however is still configured to use the prod.context.name parameter as described above, so the
+       server.servlet.contextPath property should be set to match the value of prod.context.name, for the case of
+       running services in an embedded container.
        -->
-      <prod.context.name>ARLIMS</prod.context.name>
+      <prod.context.name>ALIS</prod.context.name>
       <filtering.output.message>THIS FILE WAS PRODUCED FROM A TEMPLATE, DO NOT EDIT.</filtering.output.message>
    </properties>
 

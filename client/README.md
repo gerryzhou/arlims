@@ -1,14 +1,18 @@
-# ArlimsClient
+# ALIS client
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.7.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` to start the client-side development server, and navigate to 
+`http://localhost:4200/`. The app will automatically reload if you change any of the source
+files. Any API requests made by the client will be forwarded to backend services as specified
+in file `dev-backend-proxy-config.json`.
 
 ## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `ng generate component component-name` to generate a new component.
+You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Build
 

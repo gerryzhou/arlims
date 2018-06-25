@@ -1,4 +1,4 @@
-http://localhost:8080/ARLIMS/api/user/context
+http://localhost:8080/ALIS/api/user/context
 http://localhost:4200/
 
 
@@ -120,8 +120,15 @@ Spring security refs
     http://websystique.com/spring-security/spring-security-4-password-encoder-bcrypt-example-with-hibernate/
 
 
-# Test password auth:
-POST http://localhost:8080/ARLIMS/api/auth/password
+
+# Example api calls
+
+GET http://localhost:8080/ALIS/api/user/context
+Accept: application/json
+Cache-Control: no-cache
+
+###
+POST http://localhost:8080/ALIS/api/auth/password
 Accept: application/json
 Cache-Control: no-cache
 Content-Type: application/x-www-form-urlencoded
