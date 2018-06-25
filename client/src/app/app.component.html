@@ -1,10 +1,10 @@
 
+<!-- TODO: Add global app toolbar here. -->
+
 <app-alert-message></app-alert-message>
 
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
+<div *ngIf="loading" class="spinner-holder">
+   <div class="spinner"></div>
 </div>
 
 <router-outlet></router-outlet>

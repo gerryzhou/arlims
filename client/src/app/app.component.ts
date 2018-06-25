@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { LoadingIndicatorService } from './shared/services';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-   title = 'ALIS';
+   loading: boolean;
 
-   constructor() { }
+   constructor(private loadingIndicatorService: LoadingIndicatorService) {
+      this.loading = false;
+      loadingIndicatorService.onLoadingChanged.subscribe(isLoading => this.loading = isLoading);
+   }
+
+   ngOnInit(): void {}
 }

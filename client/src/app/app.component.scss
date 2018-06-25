@@ -1,0 +1,32 @@
+.spinner-holder {
+   text-align: center;
+}
+
+// Pure css spinner from https://loading.io/css/ .
+.spinner {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  margin: 5px auto;
+}
+
+.spinner:after {
+  content: " ";
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #000;
+  border-color: #33f transparent #33f transparent;
+  animation: spinner 1.0s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

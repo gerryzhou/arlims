@@ -11,7 +11,6 @@ export class HomeComponent implements OnInit {
    constructor(private userSvc: UserService, private alertsSvc: AlertMessageService) { }
 
    ngOnInit() {
-      this.alertsSvc.alertInfo(`Welcome, ${this.userSvc.userContext}`);
    }
 
 }
