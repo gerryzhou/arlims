@@ -1,4 +1,5 @@
-<ngb-alert *ngIf="message" [type]="message.type" [dismissible]="true">
-   {{message.text}}
-</ngb-alert>
-
+<div class="alert-area">
+   <ngb-alert *ngIf="message" [type]="message.type" [dismissible]="true" (close)=clear()>
+      {{message.text}}
+   </ngb-alert>
+</div>

@@ -128,11 +128,11 @@
   "defaultProject": "arlims-client",
   "schematics": {
     "@schematics/angular:component": {
-      "prefix": "lims",
+      "prefix": "app",
          "styleext": "scss"
       },
     "@schematics/angular:directive": {
-      "prefix": "lims"
+      "prefix": "app"
     }
   }
 

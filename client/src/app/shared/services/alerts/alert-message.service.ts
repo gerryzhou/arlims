@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 
-import {AlertMessage} from "./alert-message";
+import {AlertMessage} from './alert-message';
 
 
 @Injectable({providedIn: 'root'})
 export class AlertMessageService {
 
-   private subject = new Subject<AlertMessage>()
+   private subject = new Subject<AlertMessage | null>();
+
    private persistThroughNavigation = false;
 
    constructor(private router: Router) {
@@ -18,13 +19,13 @@ export class AlertMessageService {
                this.persistThroughNavigation = false;
             } else {
                // clear alert
-               this.subject.next();
+               this.subject.next(null);
             }
          }
       });
    }
 
-   messages(): Observable<AlertMessage> {
+   messages(): Observable<AlertMessage | null> {
       return this.subject.asObservable();
    }
 

@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertMessageService, UserService } from '../shared/services';
 
 @Component({
-  selector: 'lims-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+   selector: 'app-home',
+   templateUrl: './home.component.html',
+   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+   constructor(private userSvc: UserService, private alertsSvc: AlertMessageService) { }
 
-  ngOnInit() {
-  }
+   ngOnInit() {
+      this.alertsSvc.alertInfo(`Welcome, ${this.userSvc.userContext}`);
+   }
 
 }

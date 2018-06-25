@@ -3,7 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 import {environment} from '../../environments/environment';
-import {HomeComponent} from "../home/home.component";
+import {HomeComponent} from '../home/home.component';
 
 
 const routes: Routes = [
