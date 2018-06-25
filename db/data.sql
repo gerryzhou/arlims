@@ -1,8 +1,8 @@
 insert into lab_group (name, address_street, buildings_and_rooms, address_city, address_state, address_zip, description)
   values ('ARL-MICRO', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
 
-insert into employee (short_name, lab_group_id, email, last_name, first_name, middle_name)
-  values ('SCH', (select id from lab_group where name = 'ARL-MICRO'), 'stephen.harris@fda.hhs.gov','Harris', 'Stephen', 'C');
+insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name)
+  values (1234567, 'stephen.harris', 'SCH', (select id from lab_group where name = 'ARL-MICRO'), 'Harris', 'Stephen', 'C');
 
 insert into role(name, description)
   values('USER', 'regular user');
@@ -11,6 +11,8 @@ insert into role(name, description)
 
 insert into employee_role(emp_id, role_id)
   values((select id from employee where short_name='SCH'),(select id from role where name='USER'));
+insert into employee_role(emp_id, role_id)
+  values((select id from employee where short_name='SCH'),(select id from role where name='ADMIN'));
 
 insert into lab_resource(code, resource_type, lab_group_id, description)
   values('ARL00424', 'BAL', (select id from lab_group where name = 'ARL-MICRO'), null);

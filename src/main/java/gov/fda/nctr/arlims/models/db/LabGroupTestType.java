@@ -29,6 +29,8 @@ public class LabGroupTestType
     @Lob @Basic(fetch = FetchType.LAZY)
     private String testOptionsJson;
 
+    protected LabGroupTestType() {}
+
     public LabGroupTestType
         (
             @NotNull LabGroup labGroup,
