@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.models.db;
+package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

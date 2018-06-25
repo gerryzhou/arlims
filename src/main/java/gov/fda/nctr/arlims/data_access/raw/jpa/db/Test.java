@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.models.db;
+package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 
 import java.time.Instant;
 import java.time.LocalDate;
