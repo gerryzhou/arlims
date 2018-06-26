@@ -1,4 +1,19 @@
-.alert-area {
-   margin: 10px 20%;
-   text-align: center;
+mat-card {
+   margin: 10px 25%;
+   div.success {
+      border-left: 10px solid green;
+      padding-left: 15px;
+   }
+   div.info {
+      border-left: 10px solid lightblue;
+      padding-left: 15px;
+   }
+   div.warn {
+      border-left: 10px solid orange;
+      padding-left: 15px;
+   }
+   div.error {
+      border-left: 10px solid red;
+      padding-left: 15px;
+   }
 }

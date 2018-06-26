@@ -1,0 +1,11 @@
+
+Add model class representing work assignments.
+
+Components
+----------
+  Work Assignments
+    User selector including each user for the lab group and "any".
+    Each assignment should list test types in progress.
+    Sort assignments without tests in progress to the top.
+
+

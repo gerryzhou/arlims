@@ -1,6 +1,3 @@
-# bootstrap is not handled through npm to avoid its js potentially being included in the app
-bootstrap.min.css
-
 # compiled output
 /dist
 /tmp

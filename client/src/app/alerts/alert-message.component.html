@@ -1,5 +1,5 @@
-<div class="alert-area">
-   <ngb-alert *ngIf="message" [type]="message.type" [dismissible]="true" (close)=clear()>
+<mat-card  *ngIf="message">
+   <div [ngClass]="message.type">
       {{message.text}}
-   </ngb-alert>
-</div>
+   </div>
+</mat-card>

@@ -8,7 +8,7 @@ import { AlertMessageService, UserService } from '../shared/services';
 })
 export class HomeComponent implements OnInit {
 
-   constructor(private userSvc: UserService, private alertsSvc: AlertMessageService) { }
+   constructor(private userSvc: UserService, private alertSvc: AlertMessageService) { }
 
    ngOnInit() {
    }

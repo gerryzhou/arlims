@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingIndicatorService } from './shared/services';
+import { LoadingIndicatorService, AlertMessageService } from './shared/services';
 
 @Component({
   selector: 'app-root',
@@ -15,5 +15,5 @@ export class AppComponent implements OnInit {
       loadingIndicatorService.onLoadingChanged.subscribe(isLoading => this.loading = isLoading);
    }
 
-   ngOnInit(): void {}
+   ngOnInit(): void { }
 }
