@@ -5,7 +5,7 @@ import java.time.Instant;
 
 public class SampleListMetadata
 {
-    private long id;
+    private long sampleListId;
 
     private String name;
 
@@ -15,19 +15,19 @@ public class SampleListMetadata
 
     public SampleListMetadata
         (
-            long id,
+            long sampleListId,
             String name,
             Instant created,
             UserIdentification createdByUser
         )
     {
-        this.id = id;
+        this.sampleListId = sampleListId;
         this.name = name;
         this.created = created;
         this.createdByUser = createdByUser;
     }
 
-    public long getId() { return id; }
+    public long getSampleListId() { return sampleListId; }
 
     public String getName() { return name; }
 
