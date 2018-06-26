@@ -46,6 +46,7 @@ public class JpaUserContextService implements UserContextService
             .getTestTypes().stream()
             .map(lgtt ->
                 new LabTestType(
+                    lgtt.getTestType().getId(),
                     lgtt.getTestType().getCode(),
                     lgtt.getTestType().getName(),
                     Optional.ofNullable(lgtt.getTestType().getDescription())
