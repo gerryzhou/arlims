@@ -1,73 +1,4 @@
 
-[Client Types]
-A LabTest instance in the client should support stage related operations:
-  applyData(Json partialData, DataApplicationOptions): TestDataApplicationResult
-  stageStatuses(): [StageStatus]
-  +StageStatus
-    stageName: string
-    completed: boolean
-    signed: js date
-    signedBy: UserInfo
-
-
-Services
---------
-
-
-Views
------
-[S] list/manage active samples
-  List sample information and active test links, with "+" to create new test.
-  DO NOT use a data table.  Just use a custom sample component.
-  Functions
-    Show "day" of sample calculated from begin date.
-    Import active samples and their employee work assignments from FACTS.
-    List currently active samples for the lab, activate and deactivate samples.
-    Make a named sample list from selected samples.
-    Allow searching samples by name/pattern, date range for various dates, user, sample list.
-
-[T] list/manage active tests
-  criteria for inclusion:
-    not completed (meaning one of signed off on/reviewed/synced to FACTS depending on option)
-    or
-    completed but with sample that is still active (optional)
-  When selection is non-empty:
-    Enable dialog to receive pasted resources to associate with selected tests.
-    Enable printing of test/sample information for association resources offline (via barcode scanner).
-  edit test data
-  review signoff and FACTS submission (requires special REVIEW role)
-  print test data
-  delete tests
-
-[TR] receive stream of test/lab resource associations
-     Support receiving alternating sequence of sample-codes and resource codes to form associations:
-     ________  test code __________ resource code ___________
-       |   |_______________|  |______________________|   |
-       |_________________________________________________|
-  In either case (1 or 2), present a matrix showing resources x tests for confirmation before saving the associations.
-  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
-  target go to holding area).
-
-
-[R] manage lab resources
-  usual crud ops
-
-[MU] manage employees/users for user's lab group
-  usual crud ops
-
-[MLG] manage lab groups
-
-[MTRA] manage test/lab-resource associations (managed and unmanaged)
-
-
-[dto and ui] Each test view should be able to know the tests current stage, and optionally show each stage's data contents individually.
-  + StagedLabTest interface
-      stages: string[]
-      currentStage: string
-  UI will allow flipping through stages for a test.
-  Grid of active tests will just show current stages by default.
-
-
 Data Access
 -----------
 Decide whether to proceed with JPA.
@@ -79,13 +10,6 @@ Try implementing dummy header-based security, using Spring security filter.
   In Spring security filter, retrieve SSO header and lookup user in local Map created at services app startup time.
     Refresh the map periodically or when requested via api.
   Add sso_key to Employee with ix
-
-Implement getUserContext REST api method
-  +UserContext
-    User
-    LabGroup
-     add ids (pks) to these in dtos
-
 
 
 Client/Server Project Skeletons
@@ -132,63 +56,6 @@ username=SCH1&password=123
 ###
 
 
-Login Page
-  Create Angular authentication service.
-    + authenticate
-    Post user (short) name and password to web service, emit authentication result event.
-    Either store authentication result in the controller or to local storage.
-  Create login form component, with auth service injected.
-    Subscribe to auth events.
-    If successful, route to home, else show an alert that authentication failed.
-
-Home
-  Requires login.
-    Logged in employee determines the lab group for the app globally.
-  Choice of tests determined from the lab group.
-  List of recent test activity for the user/lab group.
-
-Imported Salmonella Vidas test view.
-  Create form via css grid.
-
-
-Write service to fetch sample assignments for all users of a given facility, optionally limited to those for a given user and date range.
-Write service to fetch form data for a given test type and sample, pack.
-  Return as lab_test struct.
-  If no existing record is found, create a new one with empty test as json. Null last_saved/by fields will indicate that it's new.
-Write service to store form data for a given test type and sample, pack, and user (for last_saved_by).
-
-App Pages
----------
-  Login
-    On successful authentication:
-        Retrieve lab group and other users in the same lab group, set these in user context service.
-        Redirect to home.
-  Home
-    Search box for tests/samples.
-    Show tests in progress for the current user or all users in the lab group, or by test type.
-    Show current sample assignments for the user or all users in the lab group.
-      Show attached list of available tests registered for the lab group to allow starting a test for this sample.
-    Show general list of tests for the lab group for starting a new test with manually entered sample info.
-
-
-
-Query Rick about Sample/PAC combinations, work requests etc.
-  Q: What is PAC code?
-  Q: How are samples assigned to employees? (PAC specified?)
-  Q: Should we have an employee id separate from the FACTS employee id?
-
-
-
-
-Angular Services
-----------------
-[Current]EmployeeService
-  State:
-    Employee record for logged in employee.
-    Lab group name.
-    Employee records for all employees in the lab group.
-
-
 Vidas Data Retrieval
 --------------------
 QR Codes
@@ -207,7 +74,6 @@ Make a grid of QR codes for input text data.
 
 Schema/Entities
 ---------------
-
 
 FACTS Data
 ----------
@@ -321,23 +187,6 @@ SAML for single sign on?
 
 App ID: 0757
 
-
-
-Functionality
--------------
-Samples List
-  No current user, instead each signoff action requires authentication.
-  Typeahead/live search filtering.
-  User selection for filtering by sample assignments.
-
-Waterbath whiteboard
-    Add general screen to query for samples for a given test type and/or time period, and attach timestamped notes easily.
-
-Allow entering/editing equipment, associating with analysts.
-
-  Forms
-    For each boolean choice, form should include a yes/no or pos/neg radio group with same form field name and values 'Y'/'N' or '+'/-'.
-      Hopefully this will map naturally to the json field value of null/'+'/'-' etc.
 
 
 API Doc

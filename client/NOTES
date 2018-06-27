@@ -1,11 +1,72 @@
+LabTest Interface
+-----------------
+A LabTest instance in the client should support stage related operations:
+  applyData(Json partialData, DataApplicationOptions): TestDataApplicationResult
+  stageStatuses(): [StageStatus]
+  +StageStatus
+    stageName: string
+    completed: boolean
+    signed: js date
+    signedBy: UserInfo
 
-Add model class representing work assignments.
 
-Components
-----------
-  Work Assignments
-    User selector including each user for the lab group and "any".
-    Each assignment should list test types in progress.
-    Sort assignments without tests in progress to the top.
+Views
+-----
+[S] list/manage active samples
+  List sample information and active test links, with "+" to create new test.
+  DO NOT use a data table.  Just use a custom sample component.
+  Functions
+    Show "day" of sample calculated from begin date.
+    Import active samples and their employee work assignments from FACTS.
+    List currently active samples for the lab, activate and deactivate samples.
+    Make a named sample list from selected samples.
+    Allow searching samples by name/pattern, date range for various dates, user, sample list.
+
+[T] list/manage active tests
+  criteria for inclusion:
+    not completed (meaning one of signed off on/reviewed/synced to FACTS depending on option)
+    or
+    completed but with sample that is still active (optional)
+  When selection is non-empty:
+    Enable dialog to receive pasted resources to associate with selected tests.
+    Enable printing of test/sample information for association resources offline (via barcode scanner).
+  edit test data
+  review signoff and FACTS submission (requires special REVIEW role)
+  print test data
+  delete tests
+
+[TR] receive stream of test/lab resource associations
+     Support receiving alternating sequence of sample-codes and resource codes to form associations:
+     ________  test code __________ resource code ___________
+       |   |_______________|  |______________________|   |
+       |_________________________________________________|
+  In either case (1 or 2), present a matrix showing resources x tests for confirmation before saving the associations.
+  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
+  target go to holding area).
+
+[WB] Waterbath whiteboard
+  Add general screen to display samples/tests and attach status notes.
+
+[R] manage lab resources
+  usual crud ops
+
+[MU] manage employees/users for user's lab group
+  usual crud ops
+
+[MLG] manage lab groups
+
+[MTRA] manage test/lab-resource associations (managed and unmanaged)
 
 
+[dto and ui] Each test view should be able to know the tests current stage, and optionally show each stage's data contents individually.
+  + StagedLabTest interface
+      stages: string[]
+      currentStage: string
+  UI will allow flipping through stages for a test.
+  Grid of active tests will just show current stages by default.
+
+
+
+Forms
+  For each boolean choice, form should include a yes/no or pos/neg radio group with same form field name and values 'Y'/'N' or '+'/-'.
+    Hopefully this will map naturally to the json field value of null/'+'/'-' etc.
