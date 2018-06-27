@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertMessageService, UserService } from '../shared/services';
+import { AlertMessageService, UserContextService } from '../shared/services';
 
 @Component({
    selector: 'app-home',
@@ -8,7 +8,7 @@ import { AlertMessageService, UserService } from '../shared/services';
 })
 export class HomeComponent implements OnInit {
 
-   constructor(private userSvc: UserService, private alertSvc: AlertMessageService) { }
+   constructor(private userSvc: UserContextService, private alertSvc: AlertMessageService) { }
 
    ngOnInit() {
    }

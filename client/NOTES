@@ -1,3 +1,11 @@
+How should changes to the LabGroupContents property in UserContextService be propagated to the rest of the app?
+  Show the LabGroupContents be provided as an Observable/Subject?
+  It would be better if changes were only confined to router view transitions.
+    Then a route data resolver would delegate to the UserContextService for its data, and the service could decide each time
+    whether it's time to update or just return the existing data immediately.
+
+
+
 LabTest Interface
 -----------------
 A LabTest instance in the client should support stage related operations:
@@ -8,7 +16,6 @@ A LabTest instance in the client should support stage related operations:
     completed: boolean
     signed: js date
     signedBy: UserInfo
-
 
 Views
 -----

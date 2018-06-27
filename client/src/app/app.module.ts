@@ -26,7 +26,7 @@ import {TruncateModule} from '@yellowspot/ng-truncate';
 
 import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
-import {LoadingIndicatorService, UserService} from './shared/services';
+import {LoadingIndicatorService, UserContextService} from './shared/services';
 import {LoadingIndicatorInterceptor} from './shared/services/loading-indicator/loading-indicator-interceptor';
 import {AlertMessageComponent} from './alerts/alert-message.component';
 import {HomeComponent} from './home/home.component';
@@ -70,11 +70,11 @@ import {HomeComponent} from './home/home.component';
          multi: true,
          deps: [LoadingIndicatorService]
       },
-     UserService,
+     UserContextService,
      {
         provide: APP_INITIALIZER,
-        useFactory: userService => () => userService.loadUserContext(),
-        deps: [UserService],
+        useFactory: svc => () => svc.loadUserContext(),
+        deps: [UserContextService],
         multi: true
      }
   ],
