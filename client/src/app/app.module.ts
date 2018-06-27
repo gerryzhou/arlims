@@ -63,13 +63,15 @@ import {HomeComponent} from './home/home.component';
    ],
    providers: [
       Location,
-      LoadingIndicatorService, {
+      LoadingIndicatorService,
+      {
          provide: HTTP_INTERCEPTORS,
          useFactory: service => new LoadingIndicatorInterceptor(service),
          multi: true,
          deps: [LoadingIndicatorService]
       },
-     UserService, {
+     UserService,
+     {
         provide: APP_INITIALIZER,
         useFactory: userService => () => userService.loadUserContext(),
         deps: [UserService],
