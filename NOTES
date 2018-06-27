@@ -1,62 +1,55 @@
-http://localhost:8080/alis/api/user/context
-http://localhost:4200/
 
-
-Deliver UI prototype by Jul 22.
+[Client Types]
+A LabTest instance in the client should support stage related operations:
+  applyData(Json partialData, DataApplicationOptions): TestDataApplicationResult
+  stageStatuses(): [StageStatus]
+  +StageStatus
+    stageName: string
+    completed: boolean
+    signed: js date
+    signedBy: UserInfo
 
 
 Services
 --------
-In angular, how/where to initialize the UserContext so that's it's available before the app does anything significant?
-  https://stackoverflow.com/a/46215017
-  https://github.com/angular/angular/issues/9047
-
-[Spring] SamplesService
-[Angular] SamplesService
-  Fetches and stores sample-related information including synchronizing sample information with FACTS.
-  Just mock the information for now but decide now on type to be returned by the service.
-    dto/Sample.java
 
 
 Views
 -----
-[MS] manage active samples
+[S] list/manage active samples
   List sample information and active test links, with "+" to create new test.
   DO NOT use a data table.  Just use a custom sample component.
   Functions
+    Show "day" of sample calculated from begin date.
     Import active samples and their employee work assignments from FACTS.
     List currently active samples for the lab, activate and deactivate samples.
     Make a named sample list from selected samples.
-    Allow searching samples by name/pattern optionally within a selected sample list.
-    When selection is non-empty:
-      Enable link to ASR view to associate samples with lab resources
-      Save selection list to Angular service within client for communication between views.
+    Allow searching samples by name/pattern, date range for various dates, user, sample list.
 
-[ASR] associate active tests with lab resources
-  1) Select one or more active tests, associate with batch of resource codes received from barcode scanner.
-  2) Display and/or print selected sample barcodes with descriptive information for the tests, so user can form
-     associations using only a barcode scanner away from their computer. Sample barcodes should be distinguishable from
-     lab resource codes, via a special prefix. Support receiving alternating sequence of sample-codes and resource codes
-     to form associations:
-     _______ sample code __________ resource code ___________
-       |   |_______________|  |______________________|   |
-       |_________________________________________________|
-  In either case (1 or 2), present a matrix showing resources x samples for confirmation before saving the associations.
-  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
-  target go to holding area).
-
-[MT] manage active tests
-  criteria for display are some combination of the following depending on checked options:
-    not synced to FACTS
-    not signed completed or reviewed
-    test shares sample number with an active sample which is assigned to current user or no user
-      Assigned user requirement should be able to be easily omitted via checkbox ("show tests with samples assigned to other users").
+[T] list/manage active tests
+  criteria for inclusion:
+    not completed (meaning one of signed off on/reviewed/synced to FACTS depending on option)
+    or
+    completed but with sample that is still active (optional)
+  When selection is non-empty:
+    Enable dialog to receive pasted resources to associate with selected tests.
+    Enable printing of test/sample information for association resources offline (via barcode scanner).
   edit test data
   review signoff and FACTS submission (requires special REVIEW role)
   print test data
   delete tests
 
-[MLR] manage lab resources
+[TR] receive stream of test/lab resource associations
+     Support receiving alternating sequence of sample-codes and resource codes to form associations:
+     ________  test code __________ resource code ___________
+       |   |_______________|  |______________________|   |
+       |_________________________________________________|
+  In either case (1 or 2), present a matrix showing resources x tests for confirmation before saving the associations.
+  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
+  target go to holding area).
+
+
+[R] manage lab resources
   usual crud ops
 
 [MU] manage employees/users for user's lab group
@@ -356,3 +349,5 @@ EPLC
 ----
 Security doc required: System Security Plan (SSP), Risk Assessment, and Authorization to Operate (ATO)
 
+Oracle 12.2 Availability:
+  https://blogs.oracle.com/upgrade/oracle-database-12201-on-premises-is-now-available%2c-too
