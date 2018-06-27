@@ -3,26 +3,25 @@ package gov.fda.nctr.arlims.models.dto;
 
 public class Signature
 {
-    private long empId;
+    private long employeeId;
+    private String employeeShortName;
     private long signedEpochTimeMillis;
 
     public Signature
-    (
-        long empId,
-        long signedEpochTimeMillis
-    )
+        (
+            long employeeId,
+            String employeeShortName,
+            long signedEpochTimeMillis
+        )
     {
-        this.empId = empId;
+        this.employeeId = employeeId;
+        this.employeeShortName = employeeShortName;
         this.signedEpochTimeMillis = signedEpochTimeMillis;
     }
 
-    public long getEmployeeId()
-    {
-        return empId;
-    }
+    public long getEmployeeId() { return employeeId; }
 
-    public long getSignedEpochTimeMillis()
-    {
-        return signedEpochTimeMillis;
-    }
+    public String getEmployeeShortName() { return employeeShortName; }
+
+    public long getSignedEpochTimeMillis() { return signedEpochTimeMillis; }
 }

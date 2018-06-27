@@ -21,7 +21,7 @@ public class Sample
 
     private Optional<LocalDate> testBeginDate;
 
-    private List<UserReference> assignedEmployees;
+    private List<String> assignedEmployeeShortNames;
 
     private List<LabTestMetadata> tests;
 
@@ -36,7 +36,7 @@ public class Sample
             boolean active,
             LocalDate received,
             Optional<LocalDate> testBeginDate,
-            List<UserReference> assignedEmployees,
+            List<String> assignedEmployeeShortNames,
             List<LabTestMetadata> tests,
             List<SampleListMetadata> containingSampleLists
         )
@@ -48,7 +48,7 @@ public class Sample
         this.active = active;
         this.received = received;
         this.testBeginDate = testBeginDate;
-        this.assignedEmployees = assignedEmployees;
+        this.assignedEmployeeShortNames = assignedEmployeeShortNames;
         this.tests = tests;
         this.containingSampleLists = containingSampleLists;
     }
@@ -67,7 +67,7 @@ public class Sample
 
     public Optional<LocalDate> getTestBeginDate() { return testBeginDate; }
 
-    public List<UserReference> getAssignedEmployees() { return assignedEmployees; }
+    public List<String> getAssignedEmployeeShortNames() { return assignedEmployeeShortNames; }
 
     public List<LabTestMetadata> getTests() { return tests; }
 

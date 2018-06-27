@@ -64,7 +64,7 @@ public class JpaUserContextService implements UserContextService
         List<Sample> samples = new ArrayList<>();
         for ( ReceivedSample receivedSample : receivedSampleRepository.findByLabGroupIdAndActive(labGroup.getId(), true) )
         {
-            List<UserReference> assignedUsers = getSampleAssignedUsers(receivedSample);
+            List<String> assignedUsers = getSampleAssignedUserShortNames(receivedSample);
 
             List<LabTestMetadata> tests = getSampleTestMetadatas(receivedSample);
 
@@ -126,24 +126,24 @@ public class JpaUserContextService implements UserContextService
                     t.getTestType().getCode(),
                     t.getTestType().getName(),
                     t.getCreated(),
-                    t.getCreatedByEmployee().getId(),
+                    t.getCreatedByEmployee().getShortName(),
                     t.getLastSaved(),
-                    t.getLastSavedByEmployee().getId(),
+                    t.getLastSavedByEmployee().getShortName(),
                     Optional.ofNullable(t.getBeginDate()),
                     Optional.ofNullable(t.getNote()),
                     Optional.ofNullable(t.getReviewed()),
-                    Optional.ofNullable(t.getReviewedByEmployee().getId()),
+                    Optional.ofNullable(t.getReviewedByEmployee()).map(Employee::getShortName),
                     Optional.ofNullable(t.getSavedToFacts())
                 )
             )
             .collect(toList());
     }
 
-    private List<UserReference> getSampleAssignedUsers(ReceivedSample receivedSample)
+    private List<String> getSampleAssignedUserShortNames(ReceivedSample receivedSample)
     {
         return
             receivedSample.getAssignedToEmployees().stream()
-            .map(e -> new UserReference(e.getId(), e.getFdaEmailAccountName(), e.getShortName()))
+            .map(e -> e.getShortName())
             .collect(toList());
     }
 

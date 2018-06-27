@@ -15,13 +15,13 @@ public class LabTestMetadata
     private LabTestTypeCode testTypeCode;
     private String testTypeName;
     private Instant created;
-    private long createdByEmpId;
+    private String createdByEmpShortName;
     private Instant lastSaved;
-    private long lastSavedByEmpId;
+    private String lastSavedByEmpShortName;
     private Optional<LocalDate> beginDate;
     private Optional<String> note;
     private Optional<Instant> reviewed;
-    private Optional<Long> reviewedByEmpId;
+    private Optional<String> reviewedByEmpShortName;
     private Optional<Instant> savedToFacts;
 
 
@@ -35,13 +35,13 @@ public class LabTestMetadata
             LabTestTypeCode testTypeCode,
             String testTypeName,
             Instant created,
-            long createdByEmpId,
+            String createdByEmpShortName,
             Instant lastSaved,
-            long lastSavedByEmpId,
+            String lastSavedByEmpShortName,
             Optional<LocalDate> beginDate,
             Optional<String> note,
             Optional<Instant> reviewed,
-            Optional<Long> reviewedByEmpId,
+            Optional<String> reviewedByEmpShortName,
             Optional<Instant> savedToFacts
         )
     {
@@ -53,13 +53,13 @@ public class LabTestMetadata
         this.testTypeCode = testTypeCode;
         this.testTypeName = testTypeName;
         this.created = created;
-        this.createdByEmpId = createdByEmpId;
+        this.createdByEmpShortName = createdByEmpShortName;
         this.lastSaved = lastSaved;
-        this.lastSavedByEmpId = lastSavedByEmpId;
+        this.lastSavedByEmpShortName = lastSavedByEmpShortName;
         this.beginDate = beginDate;
         this.note = note;
         this.reviewed = reviewed;
-        this.reviewedByEmpId = reviewedByEmpId;
+        this.reviewedByEmpShortName = reviewedByEmpShortName;
         this.savedToFacts = savedToFacts;
     }
 
@@ -79,11 +79,11 @@ public class LabTestMetadata
 
     public Instant getCreated() { return created; }
 
-    public long getCreatedByEmpId() { return createdByEmpId; }
+    public String getCreatedByEmpShortName() { return createdByEmpShortName; }
 
     public Instant getLastSaved() { return lastSaved; }
 
-    public long getLastSavedByEmpId() { return lastSavedByEmpId; }
+    public String getLastSavedByEmpShortName() { return lastSavedByEmpShortName; }
 
     public Optional<LocalDate> getBeginDate() { return beginDate; }
 
@@ -91,7 +91,7 @@ public class LabTestMetadata
 
     public Optional<Instant> getReviewed() { return reviewed; }
 
-    public Optional<Long> getReviewedByEmpId() { return reviewedByEmpId; }
+    public Optional<String> getReviewedByEmpShortName() { return reviewedByEmpShortName; }
 
     public Optional<Instant> getSavedToFacts() { return savedToFacts; }
 }
