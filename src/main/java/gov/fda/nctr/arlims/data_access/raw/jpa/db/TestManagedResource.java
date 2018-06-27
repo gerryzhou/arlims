@@ -32,6 +32,8 @@ public class TestManagedResource
     @Column(name = "RESOURCE_CODE", insertable = false, updatable = false)
     private String resourceCode;
 
+    protected TestManagedResource() {}
+
     public TestManagedResource
         (
             @NotNull Test test,

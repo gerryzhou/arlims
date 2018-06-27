@@ -1,29 +1,22 @@
 package gov.fda.nctr.arlims.models.dto;
 
-import java.util.List;
-
 
 public class UserContext
 {
     private final AuthenticatedUser authenticatedUser;
-    private final String labGroupName;
-    private final List<LabTestType> labGroupTestTypes;
+    private final LabGroupContents labGroupContents;
 
     public UserContext
         (
             AuthenticatedUser authenticatedUser,
-            String labGroupName,
-            List<LabTestType> labGroupTestTypes
+            LabGroupContents labGroupContents
         )
     {
         this.authenticatedUser = authenticatedUser;
-        this.labGroupName = labGroupName;
-        this.labGroupTestTypes = labGroupTestTypes;
+        this.labGroupContents = labGroupContents;
     }
 
     public AuthenticatedUser getAuthenticatedUser() { return authenticatedUser; }
 
-    public String getLabGroupName() { return labGroupName; }
-
-    public List<LabTestType> getLabGroupTestTypes() { return labGroupTestTypes; }
+    public LabGroupContents getLabGroupContents() { return labGroupContents; }
 }

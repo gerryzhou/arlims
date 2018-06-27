@@ -1,13 +1,13 @@
 package gov.fda.nctr.arlims.models.dto;
 
 
-public class UserIdentification
+public class UserReference
 {
     private long employeeId;
     private String fdaEmailAccountName;
     private String shortName;
 
-    public UserIdentification
+    public UserReference
         (
             long employeeId,
             String fdaEmailAccountName,

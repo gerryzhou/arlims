@@ -25,8 +25,13 @@ public class LabResource
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LABRSC_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
+    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
+    private Long labGroupId;
+
     @Size(max = 100)
     private String description;
+
+    protected LabResource() {}
 
     public LabResource
         (
@@ -39,6 +44,7 @@ public class LabResource
         this.code = code;
         this.resourceType = resourceType;
         this.labGroup = labGroup;
+        this.labGroupId = labGroup.getId();
         this.description = description;
     }
 
@@ -48,7 +54,7 @@ public class LabResource
     public LabResourceType getLabResourceType() { return resourceType; }
     public void setLabResourceType(LabResourceType resourceType) { this.resourceType = resourceType; }
 
-    // (LabGroup accessors omitted)
+    public Long getLabGroupId() { return labGroupId; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

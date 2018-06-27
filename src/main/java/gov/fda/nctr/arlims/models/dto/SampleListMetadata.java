@@ -11,14 +11,14 @@ public class SampleListMetadata
 
     private Instant created;
 
-    private UserIdentification createdByUser;
+    private UserReference createdByUser;
 
     public SampleListMetadata
         (
             long sampleListId,
             String name,
             Instant created,
-            UserIdentification createdByUser
+            UserReference createdByUser
         )
     {
         this.sampleListId = sampleListId;
@@ -33,5 +33,5 @@ public class SampleListMetadata
 
     public Instant getCreated() { return created; }
 
-    public UserIdentification getCreatedByUser() { return createdByUser; }
+    public UserReference getCreatedByUser() { return createdByUser; }
 }

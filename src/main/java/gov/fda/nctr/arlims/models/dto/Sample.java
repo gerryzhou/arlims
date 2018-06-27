@@ -21,9 +21,9 @@ public class Sample
 
     private Optional<LocalDate> testBeginDate;
 
-    private List<UserIdentification> assignedToEmployees;
+    private List<UserReference> assignedEmployees;
 
-    private List<LabTestMetaData> tests;
+    private List<LabTestMetadata> tests;
 
     private List<SampleListMetadata> containingSampleLists;
 
@@ -36,8 +36,8 @@ public class Sample
             boolean active,
             LocalDate received,
             Optional<LocalDate> testBeginDate,
-            List<UserIdentification> assignedToEmployees,
-            List<LabTestMetaData> tests,
+            List<UserReference> assignedEmployees,
+            List<LabTestMetadata> tests,
             List<SampleListMetadata> containingSampleLists
         )
     {
@@ -48,14 +48,14 @@ public class Sample
         this.active = active;
         this.received = received;
         this.testBeginDate = testBeginDate;
-        this.assignedToEmployees = assignedToEmployees;
+        this.assignedEmployees = assignedEmployees;
         this.tests = tests;
         this.containingSampleLists = containingSampleLists;
     }
 
     public long getId() { return id; }
 
-    public long getSampleNum() { return sampleNum; }
+    public long getSampleNumber() { return sampleNum; }
 
     public Optional<String> getPacCode() { return pacCode; }
 
@@ -67,9 +67,9 @@ public class Sample
 
     public Optional<LocalDate> getTestBeginDate() { return testBeginDate; }
 
-    public List<UserIdentification> getAssignedToEmployees() { return assignedToEmployees; }
+    public List<UserReference> getAssignedEmployees() { return assignedEmployees; }
 
-    public List<LabTestMetaData> getTests() { return tests; }
+    public List<LabTestMetadata> getTests() { return tests; }
 
     public List<SampleListMetadata> getContainingSampleLists() { return containingSampleLists; }
 }

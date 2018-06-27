@@ -30,11 +30,17 @@ public class Test
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
     private ReceivedSample sample;
 
+    @Column(name = "SAMPLE_ID", insertable = false, updatable = false)
+    private Long sampleId;
+
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_TST_TSTT")) @NotNull
     private TestType testType;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_TST_LABGRP")) @NotNull
     private LabGroup labGroup;
+
+    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
+    private Long labGroupId;
 
     @Column(name = "CREATED") @NotNull
     private Instant created;
@@ -66,6 +72,8 @@ public class Test
     @Column(name = "SAVED_TO_FACTS")
     private Instant savedToFacts;
 
+    protected Test() {}
+
     public Test
         (
             @NotNull ReceivedSample sample,
@@ -79,8 +87,10 @@ public class Test
         )
     {
         this.sample = sample;
+        this.sampleId = sample.getId();
         this.testType = testType;
         this.labGroup = labGroup;
+        this.labGroupId = labGroup.getId();
         this.created = created;
         this.createdByEmployee = createdByEmployee;
         this.lastSaved = created;
@@ -99,10 +109,12 @@ public class Test
     public ReceivedSample getSample() { return sample; }
     public void setSample(ReceivedSample sample) { this.sample = sample; }
 
+    public Long getSampleId() { return sampleId; }
+
     public TestType getTestType() { return testType; }
     public void setTestType(TestType testType) { this.testType = testType; }
 
-    // (LabGroup accessors omitted)
+    public Long getLabGroupId() { return labGroupId; }
 
     public Instant getCreated() { return created; }
     public void setCreated(Instant created) { this.created = created; }

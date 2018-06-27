@@ -37,6 +37,7 @@ public class TestUnmanagedResource
     @Enumerated(EnumType.STRING) @Column(name = "RESOURCE_TYPE", length = 60)
     private LabResourceType resourceType;
 
+    protected TestUnmanagedResource() {}
 
     public TestUnmanagedResource
         (

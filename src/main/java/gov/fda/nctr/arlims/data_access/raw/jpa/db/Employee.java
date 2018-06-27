@@ -61,7 +61,6 @@ public class Employee
 
     protected Employee()
     {
-        roles = new HashSet<>();
     }
 
     public Employee

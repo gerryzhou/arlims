@@ -50,10 +50,7 @@ public class SampleList
     )
     List<ReceivedSample> samples;
 
-    protected SampleList()
-    {
-        samples = new ArrayList<>();
-    }
+    protected SampleList() {}
 
     public SampleList
         (

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 
-public class LabTestMetaData
+public class LabTestMetadata
 {
     private long testId;
     private long sampleId;
@@ -22,10 +22,10 @@ public class LabTestMetaData
     private Optional<String> note;
     private Optional<Instant> reviewed;
     private Optional<Long> reviewedByEmpId;
-    private boolean savedToFacts;
+    private Optional<Instant> savedToFacts;
 
 
-    public LabTestMetaData
+    public LabTestMetadata
         (
             long testId,
             long sampleId,
@@ -42,7 +42,7 @@ public class LabTestMetaData
             Optional<String> note,
             Optional<Instant> reviewed,
             Optional<Long> reviewedByEmpId,
-            boolean savedToFacts
+            Optional<Instant> savedToFacts
         )
     {
         this.testId = testId;
@@ -93,5 +93,5 @@ public class LabTestMetaData
 
     public Optional<Long> getReviewedByEmpId() { return reviewedByEmpId; }
 
-    public boolean getSavedToFacts() { return savedToFacts; }
+    public Optional<Instant> getSavedToFacts() { return savedToFacts; }
 }

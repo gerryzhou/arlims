@@ -32,6 +32,9 @@ public class ReceivedSample
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_RCVSMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
+    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
+    private Long labGroupId;
+
     private boolean active = false;
 
     @Size(max = 100) @NotBlank
@@ -46,7 +49,7 @@ public class ReceivedSample
     @Column(name = "TEST_BEGIN_DATE")
     private LocalDate testBeginDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "SAMPLE_EMPLOYEE_ASSIGNMENT",
         joinColumns = @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_SMPEMPAST_RCVSMP")),
@@ -77,6 +80,7 @@ public class ReceivedSample
         this.sampleNum = sampleNum;
         this.pacCode = pacCode;
         this.labGroup = labGroup;
+        this.labGroupId = labGroup.getId();
         this.active = active;
         this.productName = productName;
         this.received = received;
@@ -94,7 +98,7 @@ public class ReceivedSample
     public String getPacCode() { return pacCode; }
     public void setPacCode(String pacCode) { this.pacCode = pacCode; }
 
-    // (Lab group accessors omitted)
+    public Long getLabGroupId() { return labGroupId; }
 
     public boolean getActive() { return active; }
     public void setActive(boolean active) { this.active = active; }

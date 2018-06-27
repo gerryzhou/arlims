@@ -7,11 +7,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import gov.fda.nctr.arlims.models.dto.UserContext;
 
 /*
-public class JdbcUserContextService implements UserContextService
+public class JdbcUserService implements UserContextService
 {
     private final JdbcTemplate jdbc;
 
-    public JdbcUserContextService(JdbcTemplate jdbcTemplate)
+    public JdbcUserService(JdbcTemplate jdbcTemplate)
     {
         this.jdbc = jdbcTemplate;
     }
