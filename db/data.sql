@@ -39,3 +39,23 @@ insert into test_type(code, name)
 
 insert into lab_group_test_type (lab_group_id, test_type_id)
   values((select id from lab_group where name = 'ARL-MICRO'), (select id from test_type where code='IMP_SAL_VIDAS'));
+
+-- dummy test data
+insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
+  values(1, 1, 'C12345', 'Golanga', '22 Jun 2018', 1, 1, '27 Jun 2018');
+insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
+  values(1, 1, 'C23456', 'Shrimp Powder', '27 Jun 2018', 1, 1, '28 Jun 2018');
+insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
+  values(1, 1, 'C34567', 'Wheat Extract', '25 Jun 2018', 1, 1, '27 Jun 2018');
+insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
+  values(1, 1, 'C45678', 'Shrimp Curry', '26 Jun 2018', 1, 1, '26 Jun 2018');
+
+insert into test
+  (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
+   last_saved, last_saved_by_emp_id, reviewed_by_emp_id, saved_to_facts)
+values(1, 1, 1, '27 Jun 2018', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, null, null);
+insert into test
+  (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
+   last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts)
+values(1, 1, 2, '26 Jun 2018', CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'for JM', null, null);
+
