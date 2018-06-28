@@ -41,14 +41,23 @@ insert into lab_group_test_type (lab_group_id, test_type_id)
   values((select id from lab_group where name = 'ARL-MICRO'), (select id from test_type where code='IMP_SAL_VIDAS'));
 
 -- dummy test data
-insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
-  values(1, 1, 'C12345', 'Golanga', '22 Jun 2018', 1, 1, '27 Jun 2018');
-insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
-  values(1, 1, 'C23456', 'Shrimp Powder', '27 Jun 2018', 1, 1, '28 Jun 2018');
-insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
-  values(1, 1, 'C34567', 'Wheat Extract', '25 Jun 2018', 1, 1, '27 Jun 2018');
-insert into received_sample (lab_group_id, active, pac_code, product_name, received, received_by, sample_num, test_begin_date)
-  values(1, 1, 'C45678', 'Shrimp Curry', '26 Jun 2018', 1, 1, '26 Jun 2018');
+insert into sample (lab_group_id, sample_num, pac, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received)
+  values(1, '123456-0', 'C12345', 'Golanga', 'Assigned', '22 Jun 2018', CURRENT_TIMESTAMP-2, '21 Jun 2018');
+insert into sample (lab_group_id, sample_num, pac, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received)
+  values(1, '234567-0', 'C23456', 'Shrimp Powder', 'Assigned', '21 Jun 2018', CURRENT_TIMESTAMP-3, '20 Jun 2018');
+insert into sample (lab_group_id, sample_num, pac, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received)
+  values(1, '34567-0', 'C33456', 'Shrimp Tartar', 'In-progress', '21 Jun 2018', CURRENT_TIMESTAMP-3, '20 Jun 2018');
+insert into sample (lab_group_id, sample_num, pac, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received)
+  values(1, '595678-0', 'C46567', 'Steak Powder', 'Complete', '2 Jun 2018', CURRENT_TIMESTAMP-13, '2 Jun 2018');
+
+insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
+  values(1, 1, '22 Jun 2018', 1);
+insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
+  values(2, 1, '21 Jun 2018', 0);
+insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
+  values(3, 1, '20 Jun 2018', 1);
+insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
+  values(4, 1, '24 Jun 2018', 1);
 
 insert into test
   (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,

@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.models.dto;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -7,69 +8,93 @@ import java.util.Optional;
 
 public class Sample
 {
-    private long id;
+    private final long id;
 
-    private long sampleNum;
+    private final String sampleNum;
 
-    private Optional<String> pacCode;
+    private final String pac;
 
-    private String productName;
+    private final Optional<String> lid;
 
-    private boolean active;
+    private final Optional<String> paf;
 
-    private LocalDate received;
+    private final String productName;
 
-    private Optional<LocalDate> testBeginDate;
+    private final Optional<LocalDate> received;
 
-    private List<String> assignedEmployeeShortNames;
+    private final String factsStatus;
 
-    private List<LabTestMetadata> tests;
+    private final LocalDate factsStatusDate;
 
-    private List<SampleListMetadata> containingSampleLists;
+    private final Instant lastRefreshedFromFacts;
+
+    private final Optional<String> samplingOrganization;
+
+    private final Optional<String> subject;
+
+    private final List<SampleAssignment> assignments;
+
+    private final List<LabTestMetadata> tests;
 
     public Sample
         (
             long id,
-            long sampleNum,
-            Optional<String> pacCode,
+            String sampleNum,
+            String pac,
+            Optional<String> lid,
+            Optional<String> paf,
             String productName,
-            boolean active,
-            LocalDate received,
-            Optional<LocalDate> testBeginDate,
-            List<String> assignedEmployeeShortNames,
-            List<LabTestMetadata> tests,
-            List<SampleListMetadata> containingSampleLists
+            Optional<LocalDate> received,
+            String factsStatus,
+            LocalDate factsStatusDate,
+            Instant lastRefreshedFromFacts,
+            Optional<String> samplingOrganization,
+            Optional<String> subject,
+            List<SampleAssignment> assignments,
+            List<LabTestMetadata> tests
         )
     {
         this.id = id;
         this.sampleNum = sampleNum;
-        this.pacCode = pacCode;
+        this.pac = pac;
+        this.lid = lid;
+        this.paf = paf;
         this.productName = productName;
-        this.active = active;
         this.received = received;
-        this.testBeginDate = testBeginDate;
-        this.assignedEmployeeShortNames = assignedEmployeeShortNames;
+        this.factsStatus = factsStatus;
+        this.factsStatusDate = factsStatusDate;
+        this.lastRefreshedFromFacts = lastRefreshedFromFacts;
+        this.samplingOrganization = samplingOrganization;
+        this.subject = subject;
+        this.assignments = assignments;
         this.tests = tests;
-        this.containingSampleLists = containingSampleLists;
     }
 
     public long getId() { return id; }
 
-    public long getSampleNumber() { return sampleNum; }
+    public String getSampleNum() { return sampleNum; }
 
-    public Optional<String> getPacCode() { return pacCode; }
+    public String getPac() { return pac; }
+
+    public Optional<String> getLid() { return lid; }
+
+    public Optional<String> getPaf() { return paf; }
 
     public String getProductName() { return productName; }
 
-    public boolean getActive() { return active; }
+    public Optional<LocalDate> getReceived() { return received; }
 
-    public LocalDate getReceived() { return received; }
+    public String getFactsStatus() { return factsStatus; }
 
-    public Optional<LocalDate> getTestBeginDate() { return testBeginDate; }
+    public LocalDate getFactsStatusDate() { return factsStatusDate; }
 
-    public List<String> getAssignedEmployeeShortNames() { return assignedEmployeeShortNames; }
+    public Instant getLastRefreshedFromFacts() { return lastRefreshedFromFacts; }
+
+    public Optional<String> getSamplingOrganization() { return samplingOrganization; }
+
+    public Optional<String> getSubject() { return subject; }
+
+    public List<SampleAssignment> getAssignments() { return assignments; }
 
     public List<LabTestMetadata> getTests() { return tests; }
-
-    public List<SampleListMetadata> getContainingSampleLists() { return containingSampleLists; }
 }

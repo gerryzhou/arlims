@@ -1,7 +1,6 @@
 package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -48,7 +47,7 @@ public class SampleList
             @Index(name = "IX_SMPLSTSMP_SMPID", columnList = "SAMPLE_ID"),
         }
     )
-    List<ReceivedSample> samples;
+    List<Sample> samples;
 
     protected SampleList() {}
 
@@ -59,7 +58,7 @@ public class SampleList
             @NotNull Instant created,
             @NotNull Employee createdByEmployee,
             boolean active,
-            @NotNull List<ReceivedSample> samples
+            @NotNull List<Sample> samples
         )
     {
         this.name = name;
@@ -88,7 +87,7 @@ public class SampleList
     public boolean getActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-    public List<ReceivedSample> getSamples() { return samples; }
-    public void setSamples(List<ReceivedSample> samples) { this.samples = samples; }
+    public List<Sample> getSamples() { return samples; }
+    public void setSamples(List<Sample> samples) { this.samples = samples; }
 }
 

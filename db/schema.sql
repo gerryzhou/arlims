@@ -56,48 +56,15 @@ create table LAB_RESOURCE
   CODE          VARCHAR2(50 char) not null
     primary key,
   DESCRIPTION   VARCHAR2(100 char),
-  RESOURCE_TYPE VARCHAR2(60 char) not null,
-  LAB_GROUP_ID  NUMBER(19)        not null
+  LAB_GROUP_ID  NUMBER(19)
     constraint FK_LABRSC_LABGROUP
-    references LAB_GROUP
+    references LAB_GROUP,
+  RESOURCE_TYPE VARCHAR2(60 char) not null
 )
 /
 
 create index IX_LABRSC_LABGRPID
   on LAB_RESOURCE (LAB_GROUP_ID)
-/
-
-create table RECEIVED_SAMPLE
-(
-  ID              NUMBER(19) generated as identity
-    primary key,
-  ACTIVE          NUMBER(1)         not null,
-  PAC_CODE        VARCHAR2(20 char) not null,
-  PRODUCT_NAME    VARCHAR2(100 char),
-  RECEIVED        DATE              not null,
-  RECEIVED_BY     VARCHAR2(100 char),
-  SAMPLE_NUM      NUMBER(19)        not null,
-  TEST_BEGIN_DATE DATE,
-  LAB_GROUP_ID    NUMBER(19)        not null
-    constraint FK_RCVSMP_LABGROUP
-    references LAB_GROUP
-)
-/
-
-create index IX_RCVSMP_LABGRPID
-  on RECEIVED_SAMPLE (LAB_GROUP_ID)
-/
-
-create index IX_RCVSMP_SMPNUMPACCD
-  on RECEIVED_SAMPLE (SAMPLE_NUM, PAC_CODE)
-/
-
-create index IX_RCVSMP_RECEIVED
-  on RECEIVED_SAMPLE (RECEIVED)
-/
-
-create index IX_RCVSMP_TESTBEGINDATE
-  on RECEIVED_SAMPLE (TEST_BEGIN_DATE)
 /
 
 create table ROLE
@@ -131,24 +98,63 @@ create index IX_EMPROLE_ROLEID
   on EMPLOYEE_ROLE (ROLE_ID)
 /
 
-create table SAMPLE_EMPLOYEE_ASSIGNMENT
+create table SAMPLE
 (
-  SAMPLE_ID NUMBER(19) not null
-    constraint FK_SMPEMPAST_RCVSMP
-    references RECEIVED_SAMPLE,
-  EMP_ID    NUMBER(19) not null
-    constraint FK_SMPEMPAST_EMP
-    references EMPLOYEE,
-  primary key (SAMPLE_ID, EMP_ID)
+  ID                        NUMBER(19) generated as identity
+    primary key,
+  FACTS_STATUS              VARCHAR2(30 char) not null,
+  FACTS_STATUS_DATE         DATE              not null,
+  LAB_GROUP_ID              NUMBER(19)
+    constraint FK_SMP_LABGROUP
+    references LAB_GROUP,
+  LAST_REFRESHED_FROM_FACTS TIMESTAMP(6)      not null,
+  LID                       VARCHAR2(20 char),
+  PAC                       VARCHAR2(20 char) not null,
+  PAF                       VARCHAR2(20 char),
+  PRODUCT_NAME              VARCHAR2(100 char),
+  RECEIVED                  DATE,
+  RECEIVED_BY               VARCHAR2(100 char),
+  SAMPLE_NUM                VARCHAR2(20 char) not null,
+  SAMPLING_ORG              VARCHAR2(30 char),
+  SUBJECT                   VARCHAR2(4000 char)
 )
 /
 
-create index IX_SMPEMPAST_SMPID
-  on SAMPLE_EMPLOYEE_ASSIGNMENT (SAMPLE_ID)
+create index IX_SMP_LABGRPID
+  on SAMPLE (LAB_GROUP_ID)
 /
 
-create index IX_SMPEMPAST_EMPID
-  on SAMPLE_EMPLOYEE_ASSIGNMENT (EMP_ID)
+create index IX_SMP_SMPNUMPAC
+  on SAMPLE (SAMPLE_NUM, PAC)
+/
+
+create index IX_SMP_RECEIVED
+  on SAMPLE (RECEIVED)
+/
+
+create index IX_SMP_FACTSSTATUS
+  on SAMPLE (FACTS_STATUS)
+/
+
+create table SAMPLE_ASSIGNMENT
+(
+  ID            NUMBER(19) generated as identity
+    primary key,
+  ASSIGNED_DATE DATE,
+  EMPLOYEE_ID   NUMBER(19)
+    constraint FK_SMPAST_EMP
+    references EMPLOYEE,
+  LEAD          NUMBER(1),
+  SAMPLE_ID     NUMBER(19)
+    constraint FK_SMPAST_SMP
+    references SAMPLE,
+  constraint UN_SMPAST_SMPIDEMPID
+  unique (SAMPLE_ID, EMPLOYEE_ID)
+)
+/
+
+create index IX_SMPAST_EMPID
+  on SAMPLE_ASSIGNMENT (EMPLOYEE_ID)
 /
 
 create table SAMPLE_LIST
@@ -176,7 +182,7 @@ create table SAMPLE_LIST_SAMPLE
     references SAMPLE_LIST,
   SAMPLE_ID      NUMBER(19) not null
     constraint FK_SMPLSTSMP_SMP
-    references RECEIVED_SAMPLE,
+    references SAMPLE,
   SAMPLES_ORDER  NUMBER(10) not null,
   primary key (SAMPLE_LIST_ID, SAMPLES_ORDER)
 )
@@ -220,10 +226,10 @@ create table LAB_GROUP_TEST_TYPE
 (
   ID                NUMBER(19) generated as identity
     primary key,
-  TEST_OPTIONS_JSON CLOB,
-  LAB_GROUP_ID      NUMBER(19) not null
+  LAB_GROUP_ID      NUMBER(19)
     constraint FK_LGRPTSTT_LABGROUP
     references LAB_GROUP,
+  TEST_OPTIONS_JSON CLOB,
   TEST_TYPE_ID      NUMBER(19) not null
     constraint FK_LGRPTSTT_LABTESTTYPE
     references TEST_TYPE,
@@ -242,26 +248,26 @@ create table TEST
     primary key,
   BEGIN_DATE           DATE,
   CREATED              TIMESTAMP(6) not null,
+  LAB_GROUP_ID         NUMBER(19)
+    constraint FK_TST_LABGRP
+    references LAB_GROUP,
   LAST_SAVED           TIMESTAMP(6) not null,
   NOTE                 VARCHAR2(200 char),
   REVIEWED             TIMESTAMP(6),
+  SAMPLE_ID            NUMBER(19)
+    constraint FK_TST_RCVSMP
+    references SAMPLE,
   SAVED_TO_FACTS       TIMESTAMP(6),
   TEST_DATA_JSON       CLOB,
   CREATED_BY_EMP_ID    NUMBER(19)   not null
     constraint FK_TST_EMP_CREATED
     references EMPLOYEE,
-  LAB_GROUP_ID         NUMBER(19)   not null
-    constraint FK_TST_LABGRP
-    references LAB_GROUP,
   LAST_SAVED_BY_EMP_ID NUMBER(19)   not null
     constraint FK_TST_EMP_LASTSAVED
     references EMPLOYEE,
   REVIEWED_BY_EMP_ID   NUMBER(19)
     constraint FK_TST_EMP_REVIEWED
     references EMPLOYEE,
-  SAMPLE_ID            NUMBER(19)   not null
-    constraint FK_TST_RCVSMP
-    references RECEIVED_SAMPLE,
   TEST_TYPE_ID         NUMBER(19)   not null
     constraint FK_TST_TSTT
     references TEST_TYPE

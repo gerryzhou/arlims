@@ -28,7 +28,7 @@ public class Test
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
-    private ReceivedSample sample;
+    private Sample sample;
 
     @Column(name = "SAMPLE_ID", insertable = false, updatable = false)
     private Long sampleId;
@@ -76,7 +76,7 @@ public class Test
 
     public Test
         (
-            @NotNull ReceivedSample sample,
+            @NotNull Sample sample,
             @NotNull TestType testType,
             @NotNull LabGroup labGroup,
             @NotNull Instant created,
@@ -106,8 +106,8 @@ public class Test
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public ReceivedSample getSample() { return sample; }
-    public void setSample(ReceivedSample sample) { this.sample = sample; }
+    public Sample getSample() { return sample; }
+    public void setSample(Sample sample) { this.sample = sample; }
 
     public Long getSampleId() { return sampleId; }
 
