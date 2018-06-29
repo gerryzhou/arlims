@@ -1,8 +1,7 @@
-import {LabelAttachmentType} from "./label-attachment-type";
-import {Signature} from "../../../signature";
-import {SamplingMethod} from "../../../../../generated/dto";
+import {Signature} from '../../signature';
+import {SamplingMethod} from '../../../../generated/dto';
 
-export interface ImportedSalmonellaTestFormData {
+export interface ImpSlmTestData {
     sampleNumber?: number;
     productName?: string;
     sampleReceived?: string;
@@ -58,3 +57,6 @@ export interface ImportedSalmonellaTestFormData {
     allCompletedSignature?: Signature;
 }
 
+export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY' | 'SUBMITTED_ALONE';
+
+export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_AFTER_ANALYSIS' | 'ISOLATES_SENT' | 'OTHER';

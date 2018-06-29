@@ -224,13 +224,13 @@ create table TEST_TYPE
 
 create table LAB_GROUP_TEST_TYPE
 (
-  ID                NUMBER(19) generated as identity
+  ID                      NUMBER(19) generated as identity
     primary key,
-  LAB_GROUP_ID      NUMBER(19)
+  LAB_GROUP_ID            NUMBER(19)
     constraint FK_LGRPTSTT_LABGROUP
     references LAB_GROUP,
-  TEST_OPTIONS_JSON CLOB,
-  TEST_TYPE_ID      NUMBER(19) not null
+  TEST_CONFIGURATION_JSON CLOB,
+  TEST_TYPE_ID            NUMBER(19) not null
     constraint FK_LGRPTSTT_LABTESTTYPE
     references TEST_TYPE,
   constraint UN_LGRPTSTT_TSTTIDLGRPID
@@ -258,6 +258,7 @@ create table TEST
     constraint FK_TST_RCVSMP
     references SAMPLE,
   SAVED_TO_FACTS       TIMESTAMP(6),
+  STAGE_STATUSES_JSON  VARCHAR2(4000 char),
   TEST_DATA_JSON       CLOB,
   CREATED_BY_EMP_ID    NUMBER(19)   not null
     constraint FK_TST_EMP_CREATED
@@ -362,5 +363,4 @@ create index IX_TSTUNMRSC_RSCCD
 create index IX_TSTUNMRSC_RSCT
   on TEST_UNMANAGED_RESOURCE (RESOURCE_TYPE)
 /
-
 

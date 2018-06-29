@@ -92,25 +92,26 @@ public class JpaUserContextService implements UserContextService
     private List<LabTestType> getLabGroupTestTypes(LabGroup labGroup)
     {
         return
-        labGroup
-        .getTestTypes().stream()
-        .map(lgtt ->
-        new LabTestType(
-        lgtt.getTestType().getId(),
-        lgtt.getTestType().getCode(),
-        lgtt.getTestType().getName(),
-        Optional.ofNullable(lgtt.getTestType().getDescription())
-        )
-        )
-        .collect(toList());
+            labGroup
+            .getTestTypes().stream()
+            .map(lgtt ->
+                new LabTestType(
+                    lgtt.getTestType().getId(),
+                    lgtt.getTestType().getCode(),
+                    lgtt.getTestType().getName(),
+                    Optional.ofNullable(lgtt.getTestType().getDescription()),
+                    Optional.ofNullable(lgtt.getTestConfigurationJson())
+                )
+            )
+            .collect(toList());
     }
 
     private List<UserReference> getLabGroupUsers(LabGroup labGroup)
     {
         return
-        labGroup.getEmployees().stream()
-        .map(e -> new UserReference(e.getId(), e.getFdaEmailAccountName(), e.getShortName()))
-        .collect(toList());
+            labGroup.getEmployees().stream()
+            .map(e -> new UserReference(e.getId(), e.getFdaEmailAccountName(), e.getShortName()))
+            .collect(toList());
     }
 
 
@@ -166,6 +167,7 @@ public class JpaUserContextService implements UserContextService
                     t.getLastSavedByEmployee().getShortName(),
                     Optional.ofNullable(t.getBeginDate()),
                     Optional.ofNullable(t.getNote()),
+                    Optional.ofNullable(t.getStageStatusesJson()),
                     Optional.ofNullable(t.getReviewed()),
                     Optional.ofNullable(t.getReviewedByEmployee()).map(Employee::getShortName),
                     Optional.ofNullable(t.getSavedToFacts())

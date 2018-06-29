@@ -63,6 +63,8 @@ public class Test
     @Lob @Basic(fetch = FetchType.LAZY)
     private String testDataJson;
 
+    @Column(length = 4000)
+    private String stageStatusesJson;
 
     private Instant reviewed;
 
@@ -83,7 +85,8 @@ public class Test
             @NotNull Employee createdByEmployee,
             LocalDate beginDate,
             @Size(max = 200) String note,
-            String testDataJson
+            String testDataJson,
+            String stageStatusesJson
         )
     {
         this.sample = sample;
@@ -98,6 +101,7 @@ public class Test
         this.beginDate = beginDate;
         this.note = note;
         this.testDataJson = testDataJson;
+        this.stageStatusesJson = stageStatusesJson;
         this.reviewed = null;
         this.reviewedByEmployee = null;
         this.savedToFacts = null;
@@ -136,6 +140,9 @@ public class Test
 
     public String getTestDataJson() { return testDataJson; }
     public void setTestDataJson(String testDataJson) { this.testDataJson = testDataJson; }
+
+    public String getStageStatusesJson() { return stageStatusesJson; }
+    public void setStageStatusesJson(String stageStatusesJson) { this.stageStatusesJson = stageStatusesJson; }
 
     public Instant getReviewed() { return reviewed; }
     public void setReviewed(Instant reviewed) { this.reviewed = reviewed; }

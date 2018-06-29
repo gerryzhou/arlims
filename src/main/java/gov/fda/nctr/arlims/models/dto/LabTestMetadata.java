@@ -20,6 +20,7 @@ public class LabTestMetadata
     private String lastSavedByEmpShortName;
     private Optional<LocalDate> beginDate;
     private Optional<String> note;
+    private Optional<String> stageStatusesJson;
     private Optional<Instant> reviewed;
     private Optional<String> reviewedByEmpShortName;
     private Optional<Instant> savedToFacts;
@@ -40,6 +41,7 @@ public class LabTestMetadata
             String lastSavedByEmpShortName,
             Optional<LocalDate> beginDate,
             Optional<String> note,
+            Optional<String> stageStatusesJson,
             Optional<Instant> reviewed,
             Optional<String> reviewedByEmpShortName,
             Optional<Instant> savedToFacts
@@ -58,6 +60,7 @@ public class LabTestMetadata
         this.lastSavedByEmpShortName = lastSavedByEmpShortName;
         this.beginDate = beginDate;
         this.note = note;
+        this.stageStatusesJson = stageStatusesJson;
         this.reviewed = reviewed;
         this.reviewedByEmpShortName = reviewedByEmpShortName;
         this.savedToFacts = savedToFacts;
@@ -88,6 +91,8 @@ public class LabTestMetadata
     public Optional<LocalDate> getBeginDate() { return beginDate; }
 
     public Optional<String> getNote() { return note; }
+
+    public Optional<String> getStageStatusesJson() { return stageStatusesJson; }
 
     public Optional<Instant> getReviewed() { return reviewed; }
 

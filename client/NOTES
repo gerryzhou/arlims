@@ -1,14 +1,4 @@
 
-LabTest Interface
------------------
-A LabTest instance in the client should support stage related operations:
-  applyData(Json partialData, DataApplicationOptions): TestDataApplicationResult
-  stageStatuses(): [StageStatus]
-  +StageStatus
-    stageName: string
-    completed: boolean
-    signed: js date
-    signedBy: UserInfo
 
 Views
 -----

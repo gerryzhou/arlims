@@ -3,25 +3,29 @@ package gov.fda.nctr.arlims.models.dto;
 import java.util.Optional;
 
 
+/// Represents a lab test type as configured for a particular lab group (contextual).
 public class LabTestType
 {
     private long id;
     private LabTestTypeCode typeCode;
     private String name;
     private Optional<String> description;
+    private Optional<String> configJson;
 
     public LabTestType
         (
             long id,
             LabTestTypeCode typeCode,
             String name,
-            Optional<String> description
+            Optional<String> description,
+            Optional<String> configurationJson
         )
     {
         this.id = id;
         this.typeCode = typeCode;
         this.name = name;
         this.description = description;
+        this.configJson = configurationJson;
     }
 
     public long getId() { return id; }
@@ -31,4 +35,6 @@ public class LabTestType
     public String getName() { return name; }
 
     public Optional<String> getDescription() { return description; }
+
+    public Optional<String> getConfigurationJson() { return configJson; }
 }
