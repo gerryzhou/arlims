@@ -11,24 +11,6 @@ Try implementing dummy header-based security, using Spring security filter.
 
 Client/Server Project Skeletons
 -------------------------------
-Create dto class SalImpVidasTestConfig
-  insert into sampling_method
-    (name, description, sub_grams, num_subs, num_comps, comp_grams, subs_per_comp)
-    values (
-      '25gx15S-1C-3375mlB',
-      '25 grams from each of 15 subs tested as one 375g composite, 3375mls of pre-enriched broth added',
-      25, 15, 1, 375, 15
-    );
-  insert into sampling_method
-    (name, description, sub_grams, num_subs, num_comps, comp_grams, subs_per_comp)
-    values (
-      '25gx30S-2C-3375mlB',
-      '25 grams from each of 30 subs tested as two 375g composites, 3375mls of pre-enriched broth/composite',
-      25, 30, 2, 375, 15
-    );
-  Should serialize to something like:
-      { samplingMethodChoices: [{ subGrams:... , numSubs:..., numComps:..., compGrams:..., subsPerComp:... }, ...] }
-
 Spring security refs
     https://www.callicoder.com/spring-boot-spring-security-jwt-mysql-react-app-part-1/
     or
