@@ -37,33 +37,33 @@ insert into lab_resource(code, resource_type, lab_group_id, description)
 insert into test_type(code, name)
   values('MICRO_IMP_SAL_VIDAS', 'Imported Salmonella - Vidas');
 
-insert into lab_group_test_type (lab_group_id, test_type_id)
-  values((select id from lab_group where name = 'ARL-MICRO'), (select id from test_type where code='MICRO_IMP_SAL_VIDAS'));
-
-/* TODO
-{
-   "samplingMethodChoices": [
-      {
-         name: '25gx15S-1C-3375mlBr',
-         description: '25 grams from each of 15 subs tested as one 375g composite, 3375mls of pre-enriched broth added',
-         extractedGramsPerSub: 25,
-         numberOfSubs: 15,
-         numberOfComposites: 1,
-         compositeMassGrams: 375,
-         numberOfSubsPerComposite: 15
-      },
-      {
-         name: '25gx30S-2C-3375mlBr',
-         description: '25 grams from each of 30 subs tested as two 375g composites, 3375mls of pre-enriched broth/composite',
-         extractedGramsPerSub: 25,
-         numberOfSubs: 30,
-         numberOfComposites: 2,
-         compositeMassGrams: 375,
-         numberOfSubsPerComposite: 15
-      },
-   ]
-}
- */
+insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_json)
+  values(
+    (select id from lab_group where name = 'ARL-MICRO'),
+    (select id from test_type where code='MICRO_IMP_SAL_VIDAS'),
+    '{' ||
+      '"samplingMethodChoices": [' ||
+        '{' ||
+        '"name": "25gx15S-1C-3375mlBr",' ||
+        '"description": "25 grams from each of 15 subs tested as one 375g composite, 3375mls of pre-enriched broth added",' ||
+        '"extractedGramsPerSub": 25,' ||
+        '"numberOfSubs": 15,' ||
+        '"numberOfComposites": 1,' ||
+        '"compositeMassGrams": 375,' ||
+        '"numberOfSubsPerComposite": 15' ||
+        '},' ||
+        '{' ||
+        '"name": "25gx30S-2C-3375mlBr",' ||
+        '"description": "25 grams from each of 30 subs tested as two 375g composites, 3375mls of pre-enriched broth/composite",' ||
+        '"extractedGramsPerSub": 25,' ||
+        '"numberOfSubs": 30,' ||
+        '"numberOfComposites": 2,' ||
+        ' "compositeMassGrams": 375,' ||
+        ' "numberOfSubsPerComposite": 15' ||
+        '}' ||
+      ']' ||
+    '}'
+  );
 
 -- dummy test data
 insert into sample (lab_group_id, sample_num, pac, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received)
