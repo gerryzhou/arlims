@@ -1,8 +1,31 @@
 
+Components
+----------
+sample-with-test-metadatas
+  Card with sample info in header, vertical stacked test list in content.
+  test-filter params: include-completed test-types
+test
+  test metadata displayed horizontally
 
 Views
 -----
 [S] list/manage active samples
+ Include Samples Assigned to: list of checkboxes
+ Sort Samples
+   [x] assigned to current user (this checkbox only shown if assigned user is "any"), then
+   (.)last modified test ()begin date  ...
+ Filter test types: [x]IMP-SLM-VIDAS [x]DOM-SLM ...
+ [Refresh sample info from FACTS]
+ | -------------------------------------------------
+ | Product Name, Sample #, PAC (LID PAF) Assigned to
+ | -------------------------------------------------
+ | sel  TEST TYPE     Day  Stage
+ | [x]  IMP-SAL-VIDAS  3   Vidas
+ | [ ]  DOM-SAL        2   Pre-Enrichment
+ |----------------------------------------
+
+  Put samples assigned to the current user first.
+
   List sample information and active test links, with "+" to create new test.
   DO NOT use a data table.  Just use a custom sample component.
   Functions
@@ -13,10 +36,6 @@ Views
     Allow searching samples by name/pattern, date range for various dates, user, sample list.
 
 [T] list/manage active tests
-  criteria for inclusion:
-    not completed (meaning one of signed off on/reviewed/synced to FACTS depending on option)
-    or
-    completed but with sample that is still active (optional)
   When selection is non-empty:
     Enable dialog to receive pasted resources to associate with selected tests.
     Enable printing of test/sample information for association resources offline (via barcode scanner).
