@@ -1,11 +1,36 @@
+In Sample dto and data access layer, add number of associated managed/unmanaged lab resources to sample information.
+
+Allow viewing/editing associated resource lists for each sample.
+  Show counts of each as router link to detail view or lazy-loaded expansion panel(s).
+
+
+Consider relaxing requirement that resources are associated only with tests specifically.
+  User may not have created tests before wanting to associate resources with samples.
+  We already need to ask the user whether to apply associated resources to a given open test form and preview their application.
+    At that point we already know the test type.
+
+Add ability to select samples in samples-listing.
+
+
++ sample component
+  Header showing sample information.
+  list of test metadata components
+
+
+Q: How to compute the "day" to be displayed on tests or samples?
+  Is it an attribute of the sample or a test?
 
 Components
 ----------
-sample-with-test-metadatas
-  Card with sample info in header, vertical stacked test list in content.
-  test-filter params: include-completed test-types
-test
+test-metadata
+  input param: LabTestMetadata
   test metadata displayed horizontally
+
+sample-overview
+  material card
+      sample info in card header
+      vertical stacked test-metadata list in card content.
+  component attribute params for test filtering: include-completed test-types
 
 Views
 -----
@@ -16,6 +41,7 @@ Views
    (.)last modified test ()begin date  ...
  Filter test types: [x]IMP-SLM-VIDAS [x]DOM-SLM ...
  [Refresh sample info from FACTS]
+
  | -------------------------------------------------
  | Product Name, Sample #, PAC (LID PAF) Assigned to
  | -------------------------------------------------

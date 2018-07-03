@@ -12,5 +12,7 @@ import gov.fda.nctr.arlims.data_access.raw.jpa.db.Test;
 public interface TestRepository extends JpaRepository<Test,Long>
 {
     List<Test> findBySampleId(long sampleId);
+
+    List<Test> findBySampleIdIn(List<Long> sampleIds);
 }
 

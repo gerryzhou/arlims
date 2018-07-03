@@ -7,7 +7,6 @@ export interface TestStageStatus {
 
 export type FieldValuesStatusCode =
      'e'  // empty
-   | 'p'  // partial
-   | 'rc' // required fields complete
-   | 'c'  // fully complete
+   | 'i'  // incomplete
+   | 'c'  // required fields complete
 ;

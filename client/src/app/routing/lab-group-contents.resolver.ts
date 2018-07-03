@@ -5,7 +5,7 @@ import {UserContextService} from '../shared/services';
 import {LabGroupContents} from '../../generated/dto';
 
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class LabGroupContentsResolver implements Resolve<LabGroupContents> {
 
    constructor(private userContextService: UserContextService) {}

@@ -3,15 +3,17 @@ import {Routes, RouterModule} from '@angular/router';
 import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 import {environment} from '../../environments/environment';
-import {HomeComponent} from '../home/home.component';
+import {SamplesListingComponent} from '../samples-listing/samples-listing.component';
+import {LabGroupContentsResolver} from './lab-group-contents.resolver';
 
 
 const routes: Routes = [
    {
-      path: 'home',
-      component: HomeComponent,
+      path: 'samples',
+      component: SamplesListingComponent,
+      resolve: { LabGroupContentsResolver }
    },
-   { path: '', redirectTo: 'home', pathMatch: 'full' },
+   { path: '', redirectTo: 'samples', pathMatch: 'full' },
 ];
 
 @NgModule({

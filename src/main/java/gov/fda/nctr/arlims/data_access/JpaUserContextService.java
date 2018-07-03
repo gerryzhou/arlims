@@ -1,21 +1,26 @@
 package gov.fda.nctr.arlims.data_access;
 
+import java.sql.ResultSet;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import javax.transaction.Transactional;
-import static java.util.stream.Collectors.toList;
+import java.util.*;
 
+import static java.util.Collections.singletonMap;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import javax.transaction.Transactional;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import gov.fda.nctr.arlims.data_access.raw.jpa.EmployeeRepository;
-import gov.fda.nctr.arlims.data_access.raw.jpa.LabResourceRepository;
-import gov.fda.nctr.arlims.data_access.raw.jpa.SampleRepository;
-import gov.fda.nctr.arlims.data_access.raw.jpa.TestRepository;
+import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Role;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.LabGroup;
+import gov.fda.nctr.arlims.data_access.raw.jpa.db.Test;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.LabResource;
@@ -24,36 +29,42 @@ import gov.fda.nctr.arlims.models.dto.LabResource;
 @Service
 public class JpaUserContextService implements UserContextService
 {
-    private final EmployeeRepository employeeRepository;
-    private final SampleRepository sampleRepository;
-    private final TestRepository testRepository;
-    private final LabResourceRepository labResourceRepository;
+    private final EmployeeRepository employeeRepo;
+    private final SampleRepository sampleRepo;
+    private final SampleAssignmentRepository sampleAssignmentRepo;
+    private final TestRepository testRepo;
+    private final LabResourceRepository labResourceRepo;
+    private final JdbcTemplate jdbcTemplate;
 
     private static List<String> ACTIVE_SAMPLE_STATUSES = Arrays.asList("Assigned", "In-progress", "Original complete");
 
 
     public JpaUserContextService
         (
-            EmployeeRepository employeeRepository,
-            SampleRepository sampleRepository,
-            TestRepository testRepository,
-            LabResourceRepository labResourceRepository
+            EmployeeRepository employeeRepo,
+            SampleRepository sampleRepo,
+            SampleAssignmentRepository sampleAssignmentRepo,
+            TestRepository testRepo,
+            LabResourceRepository labResourceRepo,
+            JdbcTemplate jdbcTemplate
         )
     {
-        this.employeeRepository = employeeRepository;
-        this.sampleRepository = sampleRepository;
-        this.testRepository = testRepository;
-        this.labResourceRepository = labResourceRepository;
+        this.employeeRepo = employeeRepo;
+        this.sampleRepo = sampleRepo;
+        this.sampleAssignmentRepo = sampleAssignmentRepo;
+        this.testRepo = testRepo;
+        this.labResourceRepo = labResourceRepo;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    // TODO This implementation does far too many individual queries.
+    // TODO This implementation does too many individual queries.
     //   Implement without JPA or optimize the JPA as much as possible.
     //   Try adding EntityGraph annotation, see:
     //     https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.entity-graph
     @Transactional
     public UserContext getUserContext(String fdaEmailAccountName)
     {
-        Employee emp = employeeRepository.findByFdaEmailAccountName(fdaEmailAccountName).orElseThrow(() ->
+        Employee emp = employeeRepo.findByFdaEmailAccountName(fdaEmailAccountName).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
         );
 
@@ -65,10 +76,7 @@ public class JpaUserContextService implements UserContextService
 
         List<UserReference> users = getLabGroupUsers(labGroup);
 
-        List<Sample> samples =
-            sampleRepository.findByLabGroupIdAndFactsStatusIn(labGroup.getId(), ACTIVE_SAMPLE_STATUSES).stream()
-            .map(this::getSample)
-            .collect(toList());
+        List<Sample> samples = getLabGroupActiveSamples(labGroup);
 
         List<LabResource> labResources = getLabGroupLabResources(labGroup);
 
@@ -77,7 +85,7 @@ public class JpaUserContextService implements UserContextService
                 new AuthenticatedUser(
                     emp.getId(),
                     emp.getFdaEmailAccountName(),
-                    Optional.ofNullable(emp.getFactsPersonId()),
+                    opt(emp.getFactsPersonId()),
                     emp.getShortName(),
                     labGroup.getId(),
                     emp.getLastName(),
@@ -85,8 +93,113 @@ public class JpaUserContextService implements UserContextService
                     roleNames,
                     Instant.now()
                 ),
-                new LabGroupContents(labGroup.getId(), labGroup.getName(), testTypes, users, samples, labResources)
+                new LabGroupContents(
+                    labGroup.getId(),
+                    labGroup.getName(),
+                    testTypes,
+                    users,
+                    samples,
+                    labResources
+                )
             );
+    }
+
+    private List<Sample> getLabGroupActiveSamples(LabGroup labGroup)
+    {
+        List<gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample> dbSamples =
+            sampleRepo.findByLabGroupIdAndFactsStatusIn(labGroup.getId(), ACTIVE_SAMPLE_STATUSES);
+
+        List<Long> sampleIds = dbSamples.stream().map(s -> s.getId()).collect(toList());
+
+        Map<Long, List<SampleAssignment>> sampleAssignmentsBySampleId = getSampleAssignmentsBySampleId(sampleIds);
+
+        Map<Long, List<LabResourceListMetadata>> unmanagedResourceListsBySampleId = getUnmanagedResourceListsBySampleId(sampleIds);
+
+        Map<Long, List<LabResourceListMetadata>> managedResourceListsBySampleId = getManagedResourceListsBySampleId(sampleIds);
+
+        Map<Long, List<Test>> testsMap = getTestsBySampleId(sampleIds);
+
+        return
+            dbSamples.stream()
+            .map(dbSample -> makeSample(dbSample, sampleAssignmentsBySampleId, testsMap, unmanagedResourceListsBySampleId, managedResourceListsBySampleId))
+            .collect(toList());
+    }
+
+    private Map<Long, List<Test>> getTestsBySampleId(List<Long> sampleIds)
+    {
+        return
+            testRepo.findBySampleIdIn(sampleIds).stream()
+            .collect(groupingBy(Test::getSampleId));
+
+    }
+
+    private Map<Long, List<SampleAssignment>> getSampleAssignmentsBySampleId(List<Long> sampleIds)
+    {
+        return
+            sampleAssignmentRepo.findBySampleIdIn(sampleIds).stream()
+            .map(a -> new SampleAssignment(a.getSampleId(), a.getEmployee().getShortName(), opt(a.getAssignedDate()), opt(a.getLead())))
+            .collect(groupingBy(SampleAssignment::getSampleId));
+    }
+
+    private Map<Long, List<LabResourceListMetadata>> getUnmanagedResourceListsBySampleId(List<Long> sampleIds)
+    {
+        String qry =
+            "select r.sample_id, e.short_name, r.list_name, count(*) num_resources\n" +
+            "from sample_unmanaged_resource r\n" +
+            "join employee e on e.id = r.employee_id\n" +
+            "where r.sample_id in (:ids)\n" +
+            "group by r.sample_id, e.short_name, r.list_name";
+
+        RowMapper<LabResourceListMetadata> rowMapper = (rs,i) ->
+            new LabResourceListMetadata(rs.getString(3), rs.getString(2), rs.getInt(4));
+
+        NamedParameterJdbcTemplate namedParamJdbc = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
+
+        return
+            namedParamJdbc.query(
+                qry,
+                singletonMap("ids", sampleIds),
+                getLabResourceListsBySampleIdResultSetExtractor(1, rowMapper)
+            );
+    }
+
+    private Map<Long, List<LabResourceListMetadata>> getManagedResourceListsBySampleId(List<Long> sampleIds)
+    {
+        String qry =
+            "select r.sample_id, e.short_name, r.list_name, count(*) num_resources\n" +
+            "from sample_managed_resource r\n" +
+            "join employee e on e.id = r.employee_id\n" +
+            "where r.sample_id in (:ids)\n" +
+            "group by r.sample_id, e.short_name, r.list_name";
+
+        RowMapper<LabResourceListMetadata> rowMapper = (rs,i) ->
+            new LabResourceListMetadata(rs.getString(3), rs.getString(2), rs.getInt(4));
+
+        NamedParameterJdbcTemplate namedParamJdbc = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
+
+        return
+            namedParamJdbc.query(
+                qry,
+                singletonMap("ids", sampleIds),
+                getLabResourceListsBySampleIdResultSetExtractor(1, rowMapper)
+            );
+    }
+
+    private ResultSetExtractor<Map<Long, List<LabResourceListMetadata>>> getLabResourceListsBySampleIdResultSetExtractor
+        (
+            int sampleIdColNum,
+            RowMapper<LabResourceListMetadata> rowMapper
+        )
+    {
+        return (ResultSet rs) -> {
+            Map<Long, List<LabResourceListMetadata>> res = new HashMap<>();
+            int i = 0;
+            while (rs.next())
+            {
+                res.computeIfAbsent(rs.getLong(sampleIdColNum), k -> new ArrayList<>()).add(rowMapper.mapRow(rs, ++i));
+            }
+            return res;
+        };
     }
 
     private List<LabTestType> getLabGroupTestTypes(LabGroup labGroup)
@@ -99,8 +212,8 @@ public class JpaUserContextService implements UserContextService
                     lgtt.getTestType().getId(),
                     lgtt.getTestType().getCode(),
                     lgtt.getTestType().getName(),
-                    Optional.ofNullable(lgtt.getTestType().getDescription()),
-                    Optional.ofNullable(lgtt.getTestConfigurationJson())
+                    ofNullable(lgtt.getTestType().getDescription()),
+                    ofNullable(lgtt.getTestConfigurationJson())
                 )
             )
             .collect(toList());
@@ -114,80 +227,81 @@ public class JpaUserContextService implements UserContextService
             .collect(toList());
     }
 
-
-    private Sample getSample(gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample sample)
-    {
-        List<SampleAssignment> assignments = getSampleAssignments(sample);
-
-        List<LabTestMetadata> tests = getSampleTestMetadatas(sample);
-
-        return
-            new Sample(
-                sample.getId(),
-                sample.getSampleNumber(),
-                sample.getPac(),
-                Optional.ofNullable(sample.getLid()),
-                Optional.ofNullable(sample.getPaf()),
-                sample.getProductName(),
-                Optional.ofNullable(sample.getReceived()),
-                sample.getFactsStatus(),
-                sample.getFactsStatusDate(),
-                sample.getLastRefreshedFromFacts(),
-                Optional.ofNullable(sample.getSamplingOrganization()),
-                Optional.ofNullable(sample.getSubject()),
-                assignments,
-                tests
-            );
-    }
-
     private List<LabResource> getLabGroupLabResources(LabGroup labGroup)
     {
         return
-            labResourceRepository.findByLabGroupId(labGroup.getId()).stream()
-            .map(lr -> new LabResource(lr.getCode(), lr.getLabResourceType(), Optional.ofNullable(lr.getDescription())))
+            labResourceRepo.findByLabGroupId(labGroup.getId()).stream()
+            .map(lr -> new LabResource(lr.getCode(), lr.getLabResourceType(), ofNullable(lr.getDescription())))
             .collect(toList());
     }
 
-    private List<LabTestMetadata> getSampleTestMetadatas(gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample sample)
+
+    private Sample makeSample
+        (
+            gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample dbSample,
+            Map<Long, List<SampleAssignment>> sampleAssignmentsMap,
+            Map<Long, List<Test>> testsMap,
+            Map<Long, List<LabResourceListMetadata>> unmanagedResourceListsMap,
+            Map<Long, List<LabResourceListMetadata>> managedResourceListsMap
+        )
+    {
+        long sampleId = dbSample.getId();
+
+        List<SampleAssignment> assignments = sampleAssignmentsMap.getOrDefault(sampleId, Collections.emptyList());
+
+        List<LabTestMetadata> tests =
+            testsMap.getOrDefault(sampleId, Collections.emptyList()).stream()
+            .map(test -> makeLabTestMetadata(test, dbSample))
+            .collect(toList());
+
+        List<LabResourceListMetadata> unmanagedResourceLists = unmanagedResourceListsMap.getOrDefault(sampleId, Collections.emptyList());
+
+        List<LabResourceListMetadata> managedResourceLists = managedResourceListsMap.getOrDefault(sampleId, Collections.emptyList());
+
+        return
+            new Sample(
+                dbSample.getId(),
+                dbSample.getSampleNumber(),
+                dbSample.getPac(),
+                opt(dbSample.getLid()),
+                opt(dbSample.getPaf()),
+                dbSample.getProductName(),
+                opt(dbSample.getReceived()),
+                dbSample.getFactsStatus(),
+                dbSample.getFactsStatusDate(),
+                dbSample.getLastRefreshedFromFacts(),
+                opt(dbSample.getSamplingOrganization()),
+                opt(dbSample.getSubject()),
+                assignments,
+                tests,
+                unmanagedResourceLists,
+                managedResourceLists
+            );
+    }
+
+    private LabTestMetadata makeLabTestMetadata(Test t, gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample s)
     {
         return
-            testRepository.findBySampleId(sample.getId()).stream()
-            .map(t ->
-                new LabTestMetadata(
-                    t.getId(),
-                    sample.getId(),
-                    sample.getSampleNumber(),
-                    sample.getPac(),
-                    Optional.ofNullable(sample.getProductName()),
-                    t.getTestType().getCode(),
-                    t.getTestType().getName(),
-                    t.getCreated(),
-                    t.getCreatedByEmployee().getShortName(),
-                    t.getLastSaved(),
-                    t.getLastSavedByEmployee().getShortName(),
-                    Optional.ofNullable(t.getBeginDate()),
-                    Optional.ofNullable(t.getNote()),
-                    Optional.ofNullable(t.getStageStatusesJson()),
-                    Optional.ofNullable(t.getReviewed()),
-                    Optional.ofNullable(t.getReviewedByEmployee()).map(Employee::getShortName),
-                    Optional.ofNullable(t.getSavedToFacts())
-                )
-            )
-            .collect(toList());
+            new LabTestMetadata(
+                t.getId(),
+                s.getId(),
+                s.getSampleNumber(),
+                s.getPac(),
+                ofNullable(s.getProductName()),
+                t.getTestType().getCode(),
+                t.getTestType().getName(),
+                t.getCreated(),
+                t.getCreatedByEmployee().getShortName(),
+                t.getLastSaved(),
+                t.getLastSavedByEmployee().getShortName(),
+                ofNullable(t.getBeginDate()),
+                ofNullable(t.getNote()),
+                ofNullable(t.getStageStatusesJson()),
+                ofNullable(t.getReviewed()),
+                ofNullable(t.getReviewedByEmployee()).map(Employee::getShortName),
+                ofNullable(t.getSavedToFacts())
+            );
     }
 
-    private List<SampleAssignment> getSampleAssignments(gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample sample)
-    {
-        return
-            sample.getAssignments().stream()
-            .map(a ->
-                new SampleAssignment(
-                    a.getSampleId(),
-                    a.getEmployee().getShortName(),
-                    Optional.ofNullable(a.getAssignedDate()),
-                    Optional.ofNullable(a.getLead()))
-                )
-            .collect(toList());
-    }
-
+    private static <T> Optional<T> opt(T t) { return Optional.ofNullable(t); }
 }

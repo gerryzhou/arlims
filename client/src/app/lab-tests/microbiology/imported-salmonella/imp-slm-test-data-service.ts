@@ -5,7 +5,7 @@ import {ApiUrlsService} from '../../../shared/services/api-urls.service';
 import {ImpSlmTestData} from './imp-slm-test-data';
 import {TestStageStatus} from '../../test-stage-status';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ImpSlmTestDataService {
 
    constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) {}

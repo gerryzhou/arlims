@@ -1,0 +1,52 @@
+<mat-card>
+
+   <mat-card-header>
+      <mat-card-title>
+         <span class="product-name">{{sample.productName}}</span>
+         <span class="facts-status">{{sample.factsStatus}}</span>
+      </mat-card-title>
+
+      <mat-card-subtitle>
+         <span class="sample-num">{{sample.sampleNum}}</span>
+         <span class="pac">pac: <span class="pac-code">{{sample.pac}}</span></span>
+         <span class="lid" *ngIf="sample.lid">lid: {{sample.lid}}</span>
+         <span class="paf" *ngIf="sample.paf">paf: {{sample.paf}}</span>
+         <span class="received">received: {{sample.received | date : 'short'}}</span>
+         <span class="sampling-org">from org: {{sample.samplingOrganization}}</span>
+         <div class="sample-subject">subject: {{sample.subject}}</div>
+      </mat-card-subtitle>
+
+   </mat-card-header>
+
+   <mat-card-content>
+
+      <div class="employee-assignments">
+         <span *ngFor="let assignment of sample.assignments" class="assigned-employee">
+            <mat-icon>assignment_ind</mat-icon>
+            <span class="assigned-employee-name" [ngClass]="{'lead-employee-name': assignment.lead}">
+               assignment.employeeShortName
+            </span>
+            <span *ngIf="assignment.lead && sample.assignments.length > 1">(lead)</span>
+         </span>
+      </div>
+
+      <div class="test-metadatas">
+         <app-test-metadata *ngFor="let test of sample.tests" [test]="test"></app-test-metadata>
+      </div>
+
+      <!--TODO: Show counts of associated resources as either router links to dedicated views or else as expansion panels for inline editing.-->
+
+   </mat-card-content>
+
+
+   <mat-card-actions>
+      <!--TODO: Make this a link to a resource association page, only enable when samples/tests are selected.-->
+      <a href="#TODO">Associate Resources</a>
+   </mat-card-actions>
+
+   <mat-card-footer>
+      <span>FACTS status date: {{sample.factsStatusDate | date : 'short'}}</span>
+      <span>Refreshed: {{sample.lastRefreshedFromFacts | date : 'short'}}</span>
+   </mat-card-footer>
+
+</mat-card>

@@ -28,14 +28,20 @@ import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
 import {LoadingIndicatorService, UserContextService} from './shared/services';
 import {LoadingIndicatorInterceptor} from './shared/services/loading-indicator/loading-indicator-interceptor';
+import {TestMetadataComponent} from './shared/components/test-metadata/test-metadata.component';
+import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {AlertMessageComponent} from './alerts/alert-message.component';
-import {HomeComponent} from './home/home.component';
+import { TestStageStatusComponent } from './shared/components/test-stage-status/test-stage-status.component';
+import { SampleComponent } from './sample/sample.component';
 
 @NgModule({
    declarations: [
       AppComponent,
       AlertMessageComponent,
-      HomeComponent
+      SamplesListingComponent,
+      TestMetadataComponent,
+      TestStageStatusComponent,
+      SampleComponent
    ],
    imports: [
       BrowserModule,

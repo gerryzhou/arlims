@@ -1,5 +1,17 @@
+<mat-toolbar color="primary">
+   <mat-toolbar-row>
+      <nav>
+         <button mat-button routerLink="/" [routerLinkActive]="['active-route']">
+            <mat-icon>home</mat-icon> ALIS
+         </button>
+         <button mat-button routerLink="/samples" [routerLinkActive]="['active-route']">Samples</button>
+      </nav>
 
-<!-- TODO: Add global app toolbar here. -->
+      <span class="toolbar-center-fill"></span>
+
+      <span><mat-icon>person</mat-icon> {{authenticatedUser.shortName}}</span>
+   </mat-toolbar-row>
+</mat-toolbar>
 
 <app-alert-message></app-alert-message>
 

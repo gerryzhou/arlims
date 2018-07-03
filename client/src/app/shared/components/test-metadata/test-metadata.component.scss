@@ -1,0 +1,41 @@
+//.sample {}
+//.sample-num {}
+//.pac {}
+//.product-name {}
+
+.test-icon {
+   color: lightgray;
+}
+.test-type {
+   margin-left: 5px;
+
+   // TODO
+   .code {
+   }
+   .name {
+   }
+}
+
+.elapsed {
+   display: flex;
+   justify-content: flex-start;
+   align-items: center; // cross axis
+   .day {}
+   .day-number {}
+   .began {}
+   .began-date {}
+}
+
+.stage-statuses {
+   display: flex;
+}
+
+.note {
+   mat-icon {
+      color: cadetblue;
+   }
+}
+
+.saved-to-facts-icon {
+   color: green;
+}

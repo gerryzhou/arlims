@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingIndicatorService, AlertMessageService } from './shared/services';
+import {LoadingIndicatorService, AlertMessageService, UserContextService} from './shared/services';
+import {AuthenticatedUser} from '../generated/dto';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,10 @@ export class AppComponent implements OnInit {
 
    loading: boolean;
 
-   constructor(private loadingIndicatorService: LoadingIndicatorService) {
+   authenticatedUser: AuthenticatedUser;
+
+   constructor(private userCtxSvc: UserContextService, private loadingIndicatorService: LoadingIndicatorService) {
+      this.authenticatedUser = userCtxSvc.authenticatedUser;
       this.loading = false;
       loadingIndicatorService.onLoadingChanged.subscribe(isLoading => this.loading = isLoading);
    }
