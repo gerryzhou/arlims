@@ -20,13 +20,13 @@ public class TestManagedResource
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEST_ID", foreignKey = @ForeignKey(name="FK_TSTMANRSC_TST")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "TEST_ID", foreignKey = @ForeignKey(name="FK_TSTMANRSC_TST")) @NotNull
     private Test test;
 
     @Column(name = "TEST_ID", insertable = false, updatable = false)
     private Long testId;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "RESOURCE_CODE", foreignKey = @ForeignKey(name="FK_TSTMANRSC_LABRSC")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "RESOURCE_CODE", foreignKey = @ForeignKey(name="FK_TSTMANRSC_LABRSC")) @NotNull
     private LabResource labResource;
 
     @Column(name = "RESOURCE_CODE", insertable = false, updatable = false)

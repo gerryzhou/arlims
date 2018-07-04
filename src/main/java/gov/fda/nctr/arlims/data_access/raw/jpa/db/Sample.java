@@ -24,7 +24,7 @@ public class Sample
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_SMP_LABGROUP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_SMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
     @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)

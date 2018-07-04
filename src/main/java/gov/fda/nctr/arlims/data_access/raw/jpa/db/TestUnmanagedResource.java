@@ -25,7 +25,7 @@ public class TestUnmanagedResource
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "TEST_ID", foreignKey = @ForeignKey(name="FK_TSTUNMRSC_TST")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "TEST_ID", foreignKey = @ForeignKey(name="FK_TSTUNMRSC_TST")) @NotNull
     private Test test;
 
     @Column(name = "TEST_ID", insertable = false, updatable = false)

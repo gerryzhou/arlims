@@ -25,13 +25,13 @@ public class SampleList
     @Column(name = "NAME", nullable = false) @Size(max = 30) @NotBlank
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_SMPLST_LABGRP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_SMPLST_LABGRP")) @NotNull
     private LabGroup labGroup;
 
     @NotNull
     private Instant created;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "CREATED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_SMPLST_EMP_CREATED")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "CREATED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_SMPLST_EMP_CREATED")) @NotNull
     private Employee createdByEmployee;
 
     boolean active;

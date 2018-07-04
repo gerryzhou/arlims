@@ -3,7 +3,7 @@
       <span class="stage-name">{{status.stageName}}</span>
       (<span class="field-values-status" [matTooltip]="fieldValuesStatusText">{{status.fieldValuesStatus}}</span>)
    </div>
-   <div *ngIf="!!signedEpochTimeMillis" class="signoff">
+   <div *ngIf="!!status.signedEpochTimeMillis" class="signoff">
       {{status.signedByShortName}}
       <mat-icon>check_circle</mat-icon>
       {{status.signedEpochTimeMillis | date: 'medium'}}

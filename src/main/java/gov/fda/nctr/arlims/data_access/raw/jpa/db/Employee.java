@@ -28,7 +28,7 @@ public class Employee
     @Column(name = "SHORT_NAME", nullable = false) @Size(max = 10) @NotBlank
     private String shortName;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
     @Column(name = "FACTS_PERSON_ID")

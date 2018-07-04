@@ -22,7 +22,7 @@ public class LabResource
     @Enumerated(EnumType.STRING) @Column(length = 60) @NotNull
     private LabResourceType resourceType;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LABRSC_LABGROUP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LABRSC_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
     @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)

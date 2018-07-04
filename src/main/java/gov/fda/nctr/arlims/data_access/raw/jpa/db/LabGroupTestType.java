@@ -20,13 +20,13 @@ public class LabGroupTestType
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABGROUP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
     @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
     private Long labGroupId;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABTESTTYPE")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABTESTTYPE")) @NotNull
     private TestType testType;
 
     @Lob @Basic(fetch = FetchType.LAZY)

@@ -23,13 +23,13 @@ public class SampleUnmanagedResource
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_SMPUNMRSC_SMP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_SMPUNMRSC_SMP")) @NotNull
     private Sample sample;
 
     @Column(name = "SAMPLE_ID", insertable = false, updatable = false)
     private Long sampleId;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_SMPUNMRSC_EMP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_SMPUNMRSC_EMP")) @NotNull
     private Employee employee;
 
     @Column(name = "EMPLOYEE_ID", insertable = false, updatable = false)

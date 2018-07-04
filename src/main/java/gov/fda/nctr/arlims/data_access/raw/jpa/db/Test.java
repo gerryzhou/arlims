@@ -27,16 +27,16 @@ public class Test
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
     private Sample sample;
 
     @Column(name = "SAMPLE_ID", insertable = false, updatable = false)
     private Long sampleId;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_TST_TSTT")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_TST_TSTT")) @NotNull
     private TestType testType;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_TST_LABGRP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_TST_LABGRP")) @NotNull
     private LabGroup labGroup;
 
     @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
@@ -45,14 +45,20 @@ public class Test
     @Column(name = "CREATED") @NotNull
     private Instant created;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "CREATED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_CREATED")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "CREATED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_CREATED")) @NotNull
     private Employee createdByEmployee;
+
+    @Column(name = "CREATED_BY_EMP_ID", insertable = false, updatable = false)
+    private Long createdByEmpId;
 
     @Column(name = "LAST_SAVED") @NotNull
     private Instant lastSaved;
 
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "LAST_SAVED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_LASTSAVED")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "LAST_SAVED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_LASTSAVED")) @NotNull
     private Employee lastSavedByEmployee;
+
+    @Column(name = "LAST_SAVED_BY_EMP_ID", insertable = false, updatable = false)
+    private Long lastSavedByEmpId;
 
     @Column(name = "BEGIN_DATE")
     private LocalDate beginDate;
@@ -70,6 +76,9 @@ public class Test
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "REVIEWED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_REVIEWED"))
     private Employee reviewedByEmployee;
+
+    @Column(name = "REVIEWED_BY_EMP_ID", insertable = false, updatable = false)
+    private Long reviewedByEmpId;
 
     @Column(name = "SAVED_TO_FACTS")
     private Instant savedToFacts;
@@ -96,14 +105,17 @@ public class Test
         this.labGroupId = labGroup.getId();
         this.created = created;
         this.createdByEmployee = createdByEmployee;
-        this.lastSaved = created;
+        this.createdByEmpId = createdByEmployee.getId();
+        this.lastSaved = created; // initially last saved attributes are those of the creation
         this.lastSavedByEmployee = createdByEmployee;
+        this.lastSavedByEmpId = createdByEmployee.getId();
         this.beginDate = beginDate;
         this.note = note;
         this.testDataJson = testDataJson;
         this.stageStatusesJson = stageStatusesJson;
         this.reviewed = null;
         this.reviewedByEmployee = null;
+        this.reviewedByEmpId = null;
         this.savedToFacts = null;
     }
 
@@ -126,11 +138,15 @@ public class Test
     public Employee getCreatedByEmployee() { return createdByEmployee; }
     public void setCreatedByEmployee(Employee createdBy) { this.createdByEmployee = createdBy; }
 
+    public Long getCreatedByEmpId() { return createdByEmpId; }
+
     public Instant getLastSaved() { return lastSaved; }
     public void setLastSaved(Instant lastSaved) { this.lastSaved = lastSaved; }
 
     public Employee getLastSavedByEmployee() { return lastSavedByEmployee; }
     public void setLastSavedByEmployee(Employee lastSavedBy) { this.lastSavedByEmployee = lastSavedBy; }
+
+    public Long getLastSavedByEmpId() { return lastSavedByEmpId; }
 
     public LocalDate getBeginDate() { return beginDate; }
     public void setBeginDate(LocalDate beginDate) { this.beginDate = beginDate; }
@@ -149,6 +165,8 @@ public class Test
 
     public Employee getReviewedByEmployee() { return reviewedByEmployee; }
     public void setReviewedByEmployee(Employee reviewedBy) { this.reviewedByEmployee = reviewedBy; }
+
+    public Long getReviewedByEmpId() { return reviewedByEmpId; }
 
     public Instant getSavedToFacts() { return savedToFacts; }
     public void setSavedToFacts(Instant savedToFacts) { this.savedToFacts = savedToFacts; }
