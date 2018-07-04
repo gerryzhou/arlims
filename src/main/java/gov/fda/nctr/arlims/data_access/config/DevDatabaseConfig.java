@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
-
+/// See DEV_SETUP.md in the top level project directory.
 @Configuration
 @Profile("dev")
 public class DevDatabaseConfig
