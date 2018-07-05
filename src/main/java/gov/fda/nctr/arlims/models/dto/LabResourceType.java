@@ -5,7 +5,9 @@ public enum LabResourceType
     BAL("balance"),
     WAB("waterbath"),
     VID("Vidas"),
-    INC("incubator");
+    INC("incubator"),
+    MED("media")
+    ;
 
     private final String name;
 

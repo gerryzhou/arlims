@@ -84,6 +84,24 @@ insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
 insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
   values(4, 1, '24 Jun 2018', 1);
 
+insert into sample_managed_resource (sample_id, employee_id, list_name, resource_code)
+  values(1, 1, 'golanga SLM - Jul 3, 2018', 'ARL00424');
+insert into sample_managed_resource (sample_id, employee_id, list_name, resource_code)
+  values(1, 1, 'golanga SLM - Jul 3, 2018', 'ARL00190');
+insert into sample_managed_resource (sample_id, employee_id, list_name, resource_code)
+  values(2, 1, 'shrimp - Jul 5, 2018', 'ARL00424');
+insert into sample_managed_resource (sample_id, employee_id, list_name, resource_code)
+  values(2, 1, 'shrimp - Jul 5, 2018', 'ARL00190');
+
+insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resource_code, resource_type)
+  values(1, 1, 'golanga media - Jul 3, 2018', 'RT-123456', 'MED');
+insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resource_code, resource_type)
+  values(1, 1, 'golanga media - Jul 3, 2018', 'TT-234567', 'MED');
+insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resource_code, resource_type)
+  values(2, 1, 'shrimp media - Jul 3, 2018', 'RT-234567', 'MED');
+insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resource_code, resource_type)
+  values(2, 1, 'shrimp media - Jul 3, 2018', 'TT-345678', 'MED');
+
 insert into test
   (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
    last_saved, last_saved_by_emp_id, reviewed_by_emp_id, saved_to_facts)
