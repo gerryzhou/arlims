@@ -268,6 +268,7 @@ public class JpaUserContextService implements UserContextService
                     lgtt.getTestType().getId(),
                     lgtt.getTestType().getCode(),
                     lgtt.getTestType().getName(),
+                    lgtt.getTestType().getShortName(),
                     opt(lgtt.getTestType().getDescription()),
                     opt(lgtt.getTestConfigurationJson())
                 )
@@ -322,6 +323,7 @@ public class JpaUserContextService implements UserContextService
                 opt(s.getProductName()),
                 t.getTestType().getCode(),
                 t.getTestType().getName(),
+                t.getTestType().getShortName(),
                 t.getCreated(),
                 createdByUserShortName,
                 t.getLastSaved(),

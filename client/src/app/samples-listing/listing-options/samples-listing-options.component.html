@@ -1,0 +1,14 @@
+<!-- TODO
+   [Maybe] Test type selection for filtering to samples that have a test of the given type.
+   [Maybe] Sorting options: last modified, test begin date, facts status.
+   [Maybe] FACTS status checkboxes for filtering samples.
+-->
+<form [formGroup]="listingOptionsFormGroup">
+   <mat-icon>search</mat-icon>
+   <mat-form-field>
+      <input [formControlName]="'searchText'" matInput placeholder="Search">
+   </mat-form-field>
+   <mat-checkbox [formControlName]="'includeSamplesAssignedOnlyToOtherUsers'" labelPosition="before">
+      Include samples assigned to others
+   </mat-checkbox>
+</form>

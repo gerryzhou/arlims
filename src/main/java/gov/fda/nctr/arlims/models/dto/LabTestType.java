@@ -9,6 +9,7 @@ public class LabTestType
     private long id;
     private LabTestTypeCode typeCode;
     private String name;
+    private String shortName;
     private Optional<String> description;
     private Optional<String> configJson;
 
@@ -17,6 +18,7 @@ public class LabTestType
             long id,
             LabTestTypeCode typeCode,
             String name,
+            String shortName,
             Optional<String> description,
             Optional<String> configurationJson
         )
@@ -24,6 +26,7 @@ public class LabTestType
         this.id = id;
         this.typeCode = typeCode;
         this.name = name;
+        this.shortName = shortName;
         this.description = description;
         this.configJson = configurationJson;
     }
@@ -33,6 +36,8 @@ public class LabTestType
     public LabTestTypeCode getCode() { return typeCode; }
 
     public String getName() { return name; }
+
+    public String getShortName() { return shortName; }
 
     public Optional<String> getDescription() { return description; }
 

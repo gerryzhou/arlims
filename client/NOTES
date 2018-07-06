@@ -1,36 +1,22 @@
-In Sample dto and data access layer, add number of associated managed/unmanaged lab resources to sample information.
+Test Metadata
+-------------
+Show stage statuses
+   Row Layout: [Test name] [Day: ...] [stage statuses] ["..." more info popup: begin date, created, created by, last saved]
 
-Allow viewing/editing associated resource lists for each sample.
-  Show counts of each as router link to detail view or lazy-loaded expansion panel(s).
+Sample
+------
+Show associated resource lists.
+  Allow viewing/editing resource lists.
 
+Samples Listing
+---------------
+Add support for multiple selection of samples.
+  As set of sample ids in controllers.
 
-Consider relaxing requirement that resources are associated only with tests specifically.
-  User may not have created tests before wanting to associate resources with samples.
-  We already need to ask the user whether to apply associated resources to a given open test form and preview their application.
-    At that point we already know the test type.
+Set flex layout in listing options toolbar, add spacing around items.
 
-Add ability to select samples in samples-listing.
+Create a new service for setting page title in center of toolbar, use this to hold sample listing page title, "Samples".
 
-
-+ sample component
-  Header showing sample information.
-  list of test metadata components
-
-
-Q: How to compute the "day" to be displayed on tests or samples?
-  Is it an attribute of the sample or a test?
-
-Components
-----------
-test-metadata
-  input param: LabTestMetadata
-  test metadata displayed horizontally
-
-sample-overview
-  material card
-      sample info in card header
-      vertical stacked test-metadata list in card content.
-  component attribute params for test filtering: include-completed test-types
 
 Views
 -----
@@ -105,3 +91,12 @@ Views
 Forms
   For each boolean choice, form should include a yes/no or pos/neg radio group with same form field name and values 'Y'/'N' or '+'/-'.
     Hopefully this will map naturally to the json field value of null/'+'/'-' etc.
+
+.flexbox-ex {
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: flex-start; // main axis: flex-start/end, center, space-around, space-between, space-evenly
+   align-items: stretch;        // cross axis: stretch, center, flex-start, flex-end
+}
+
+

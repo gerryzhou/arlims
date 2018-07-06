@@ -1,52 +1,67 @@
-<mat-card>
+<mat-card class="sample">
 
-   <mat-card-header>
-      <mat-card-title>
-         <span class="product-name">{{sample.productName}}</span>
-         <span class="facts-status">{{sample.factsStatus}}</span>
-      </mat-card-title>
+   <div class="sample-metadata">
 
-      <mat-card-subtitle>
-         <span class="sample-num">{{sample.sampleNumber}}</span>
-         <span class="pac">pac: <span class="pac-code">{{sample.pac}}</span></span>
-         <span class="lid" *ngIf="sample.lid">lid: {{sample.lid}}</span>
-         <span class="paf" *ngIf="sample.paf">paf: {{sample.paf}}</span>
-         <span class="received">received: {{sample.received | date : 'short'}}</span>
-         <span class="sampling-org">from org: {{sample.samplingOrganization}}</span>
-         <div class="sample-subject">subject: {{sample.subject}}</div>
-      </mat-card-subtitle>
+      <div class="product-name">{{sample.productName}}</div>
 
-   </mat-card-header>
+      <div class="sample-pac-stack">
+         <div>
+            <span class="field-label"></span>
+            <span class="field-value">{{sample.sampleNumber}}</span>
+         </div>
+         <div>
+            <span class="field-label">pac: </span>
+            <span class="field-value">{{sample.pac}}</span>
+         </div>
+      </div>
 
-   <mat-card-content>
+      <div class="facts-status-stack" [ngClass]="factsStatusCssClass">
+         <div>{{sample.factsStatus}}</div>
+         <div class="facts-status-date">@{{sample.factsStatusDate}}</div>
+      </div>
 
       <div class="employee-assignments">
-         <span *ngFor="let assignment of sample.assignments" class="assigned-employee">
+         <span  class="assigned-employee" *ngFor="let assignment of sample.assignments">
             <mat-icon>assignment_ind</mat-icon>
+            <span *ngIf="assignment.lead && sample.assignments.length > 1">*</span>
             <span class="assigned-employee-name" [ngClass]="{'lead-employee-name': assignment.lead}">
-               assignment.employeeShortName
+               {{assignment.employeeShortName}}
             </span>
-            <span *ngIf="assignment.lead && sample.assignments.length > 1">(lead)</span>
          </span>
       </div>
 
-      <div class="test-metadatas">
-         <app-test-metadata *ngFor="let test of sample.tests" [test]="test"></app-test-metadata>
+      <div *ngIf="sample.lid">
+         <span class="field-label">lid: </span>
+         <span class="field-value">{{sample.lid}}</span>
+      </div>
+      <div *ngIf="sample.paf">
+         <span class="field-label">paf: </span>
+         <span class="field-value">{{sample.paf}}</span>
       </div>
 
-      <!--TODO: Show counts of associated resources as either router links to dedicated views or else as expansion panels for inline editing.-->
+      <div class="received-from-stack">
+         <div *ngIf="sample.received">
+            <span class="field-label">rcvd: </span>
+            <span class="field-value">{{sample.received}}</span>
+         </div>
+         <div *ngIf="sample.samplingOrganization">
+            <span class="field-label">from: </span>
+           <span class="field-value">{{sample.samplingOrganization}}</span>
+         </div>
+      </div>
 
-   </mat-card-content>
+      <div *ngIf="sample.subject">
+         <span class="field-label">subj: </span>
+         <span class="field-value">{{sample.subject}}</span>
+      </div>
 
+   </div>
 
-   <mat-card-actions>
-      <!--TODO: Make this a link to a resource association page, only enable when samples/tests are selected.-->
-      <a href="#TODO">Associate Resources</a>
-   </mat-card-actions>
+   <div class="test-metadatas">
+      <app-test-metadata *ngFor="let test of sample.tests" [test]="test"></app-test-metadata>
+   </div>
 
-   <mat-card-footer>
-      <span>FACTS status date: {{sample.factsStatusDate | date : 'short'}}</span>
-      <span>Refreshed: {{sample.lastRefreshedFromFacts | date : 'short'}}</span>
-   </mat-card-footer>
+   <!--TODO: Show associated resource list metadatas (put both resource lists on one row).-->
+
 
 </mat-card>

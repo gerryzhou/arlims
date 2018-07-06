@@ -33,15 +33,19 @@ import {SamplesListingComponent} from './samples-listing/samples-listing.compone
 import {AlertMessageComponent} from './alerts/alert-message.component';
 import { TestStageStatusComponent } from './shared/components/test-stage-status/test-stage-status.component';
 import { SampleComponent } from './sample/sample.component';
+import { SamplesListingOptionsComponent } from './samples-listing/listing-options/samples-listing-options.component';
+import { DayNumberPipe } from './shared/pipes/day-number.pipe';
 
 @NgModule({
    declarations: [
       AppComponent,
       AlertMessageComponent,
       SamplesListingComponent,
+      SamplesListingOptionsComponent,
       TestMetadataComponent,
       TestStageStatusComponent,
-      SampleComponent
+      SampleComponent,
+      DayNumberPipe
    ],
    imports: [
       BrowserModule,

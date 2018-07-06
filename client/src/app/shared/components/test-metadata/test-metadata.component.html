@@ -1,39 +1,25 @@
-<mat-card>
+<mat-card class="test-metadata">
 
-   <mat-card-header>
+   <div class="test-identification">
 
-      <mat-card-title>
-         <span *ngIf="showSampleAttributes" class="sample">
-            <span class="sample-num">{{test.sampleNum}}</span>
-            <span class="pac">{{test.pac}}</span>
-            <span class="product-name">{{test.productName}}</span>
-         </span>
-         <mat-icon class="test-icon">title</mat-icon>
-         <span class="test-type">
-            <span class="name">{{test.testTypeName}}</span>
-         </span>
-      </mat-card-title>
+      <div class="test-type" [matTooltip]="test.testTypeName">
+         {{test.testTypeShortName}}
+      </div>
 
-      <mat-card-subtitle>
-         created {{test.created | date : 'medium'}}
-         by {{test.createdByEmpShortName}}
-      </mat-card-subtitle>
-
-   </mat-card-header>
-
-
-   <mat-card-content>
+      <!--TODO: Provide a "..." popup with full information about the test, created, last saved etc.-->
+      <!--created {{test.created | date : 'medium'}}-->
+      <!--by {{test.createdByEmpShortName}}-->
 
       <div class="stage-statuses">
          <app-test-stage-status *ngFor="let status of stageStatuses" [status]="status"></app-test-stage-status>
       </div>
 
-      <div class="elapsed">
-         <mat-icon>event</mat-icon>
-         <span class="day">
-            Day <span class="day-number">{{testDayNumber()}}</span>
-         </span>
-         <span class="began">began: <span class="began-date">{{test.beginDate | date : 'full'}}</span></span>
+      <div class="elapsed" [matTooltip]="'test begin date: ' + test.beginDate">
+         <div class="day-icon-stack">
+            <mat-icon>event</mat-icon>
+            <span class="day-label">day</span>
+         </div>
+         <span class="day-number">{{test.beginDate | dayNumber}}</span>
       </div>
 
       <div *ngIf="test.note" class="note">
@@ -41,24 +27,22 @@
          {{test.note}}
       </div>
 
-   </mat-card-content>
+   </div>
 
 
-   <mat-card-actions>
-      <!-- TODO: Add actions on the test here, for example to associate resources, edit etc. -->
-   </mat-card-actions>
+   <!-- TODO: Add actions on the test here, for example to associate resources, edit etc. -->
 
-   <mat-card-footer>
+   <!--<mat-card-footer>-->
 
-      <span *ngIf="test.reviewed">Reviewed by {{test.reviewedByEmpShortName}}, {{test.reviewed | date: 'medium'}}</span>
+      <!--<span *ngIf="test.reviewed">Reviewed by {{test.reviewedByEmpShortName}}, {{test.reviewed | date: 'medium'}}</span>-->
 
-      <span *ngIf="test.lastSaved">Last saved by {{test.lastSavedByEmpShortName}}, {{test.lastSaved | date: 'medium'}}</span>
+      <!--<span *ngIf="test.lastSaved">Last saved by {{test.lastSavedByEmpShortName}}, {{test.lastSaved | date: 'medium'}}</span>-->
 
-      <span *ngIf="test.savedToFacts">
-         <mat-icon class="saved-to-facts-icon">cloud_done</mat-icon>
-         {{test.savedToFacts | date: 'medium'}}
-      </span>
+      <!--<span *ngIf="test.savedToFacts">-->
+         <!--<mat-icon class="saved-to-facts-icon">cloud_done</mat-icon>-->
+         <!--{{test.savedToFacts | date: 'medium'}}-->
+      <!--</span>-->
 
-   </mat-card-footer>
+   <!--</mat-card-footer>-->
 
 </mat-card>

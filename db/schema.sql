@@ -2,6 +2,22 @@
 select 'drop table ' || table_name || ' cascade constraints purge;' drop_command
 from user_tables
 ;
+drop table TEST_UNMANAGED_RESOURCE cascade constraints purge;
+drop table TEST_TYPE cascade constraints purge;
+drop table TEST_MANAGED_RESOURCE cascade constraints purge;
+drop table TEST cascade constraints purge;
+drop table SAMPLE_UNMANAGED_RESOURCE cascade constraints purge;
+drop table SAMPLE_MANAGED_RESOURCE cascade constraints purge;
+drop table SAMPLE_LIST_SAMPLE cascade constraints purge;
+drop table SAMPLE_LIST cascade constraints purge;
+drop table SAMPLE_ASSIGNMENT cascade constraints purge;
+drop table SAMPLE cascade constraints purge;
+drop table ROLE cascade constraints purge;
+drop table LAB_RESOURCE cascade constraints purge;
+drop table LAB_GROUP_TEST_TYPE cascade constraints purge;
+drop table LAB_GROUP cascade constraints purge;
+drop table EMPLOYEE_ROLE cascade constraints purge;
+drop table EMPLOYEE cascade constraints purge;
 
 purge recyclebin;
 */
@@ -271,6 +287,9 @@ create table TEST_TYPE
   DESCRIPTION VARCHAR2(2000 char),
   NAME        VARCHAR2(80 char) not null
     constraint UN_TSTT_NAME
+    unique,
+  SHORT_NAME  VARCHAR2(80 char) not null
+    constraint UN_TSTT_SHORTNAME
     unique
 )
 /
@@ -301,27 +320,27 @@ create table TEST
     primary key,
   BEGIN_DATE           DATE,
   CREATED              TIMESTAMP(6) not null,
+  CREATED_BY_EMP_ID    NUMBER(19)
+    constraint FK_TST_EMP_CREATED
+    references EMPLOYEE,
   LAB_GROUP_ID         NUMBER(19)
     constraint FK_TST_LABGRP
     references LAB_GROUP,
   LAST_SAVED           TIMESTAMP(6) not null,
+  LAST_SAVED_BY_EMP_ID NUMBER(19)
+    constraint FK_TST_EMP_LASTSAVED
+    references EMPLOYEE,
   NOTE                 VARCHAR2(200 char),
   REVIEWED             TIMESTAMP(6),
+  REVIEWED_BY_EMP_ID   NUMBER(19)
+    constraint FK_TST_EMP_REVIEWED
+    references EMPLOYEE,
   SAMPLE_ID            NUMBER(19)
     constraint FK_TST_RCVSMP
     references SAMPLE,
   SAVED_TO_FACTS       TIMESTAMP(6),
   STAGE_STATUSES_JSON  VARCHAR2(4000 char),
   TEST_DATA_JSON       CLOB,
-  CREATED_BY_EMP_ID    NUMBER(19)   not null
-    constraint FK_TST_EMP_CREATED
-    references EMPLOYEE,
-  LAST_SAVED_BY_EMP_ID NUMBER(19)   not null
-    constraint FK_TST_EMP_LASTSAVED
-    references EMPLOYEE,
-  REVIEWED_BY_EMP_ID   NUMBER(19)
-    constraint FK_TST_EMP_REVIEWED
-    references EMPLOYEE,
   TEST_TYPE_ID         NUMBER(19)   not null
     constraint FK_TST_TSTT
     references TEST_TYPE

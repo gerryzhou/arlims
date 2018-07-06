@@ -12,6 +12,7 @@ import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
 @Table(
     uniqueConstraints = {
         @UniqueConstraint(name="UN_TSTT_CODE", columnNames = {"CODE"}),
+        @UniqueConstraint(name="UN_TSTT_SHORTNAME", columnNames = {"SHORT_NAME"}),
         @UniqueConstraint(name="UN_TSTT_NAME", columnNames = {"NAME"}),
     }
 )
@@ -26,6 +27,9 @@ public class TestType
     @Column(name = "NAME", nullable = false) @Size(max = 80) @NotBlank
     private String name;
 
+    @Column(name = "SHORT_NAME", nullable = false) @Size(max = 80) @NotBlank
+    private String shortName;
+
     @Size(max = 2000)
     private String description;
 
@@ -35,11 +39,13 @@ public class TestType
         (
             @NotNull LabTestTypeCode code,
             @NotBlank String name,
+            @NotBlank String shortName,
             @Size(max = 200) String description
         )
     {
         this.code = code;
         this.name = name;
+        this.shortName = shortName;
         this.description = description;
     }
 
@@ -51,6 +57,9 @@ public class TestType
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getShortName() { return shortName; }
+    public void setShortName(String shortName) { this.shortName = shortName; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

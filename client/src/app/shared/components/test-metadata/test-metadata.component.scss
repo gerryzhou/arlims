@@ -1,29 +1,48 @@
-//.sample {}
-//.sample-num {}
-//.pac {}
-//.product-name {}
-
-.test-icon {
-   color: lightgray;
-}
-.test-type {
-   margin-left: 5px;
-
-   // TODO
-   .code {
-   }
-   .name {
-   }
+.test-metadata {
+   padding: 10px 5px 5px 30px;
 }
 
-.elapsed {
+.test-identification {
    display: flex;
+   flex-flow: row wrap;
+   align-items: center;
    justify-content: flex-start;
-   align-items: center; // cross axis
-   .day {}
-   .day-number {}
-   .began {}
-   .began-date {}
+
+   .test-type {
+      padding: 5px;
+      width: 200px;
+      text-align: center;
+      border: 2px solid darkgray;
+      background: beige;
+   }
+
+   .elapsed {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      border-left: 5px solid lightgray;
+      border-right: 5px solid lightgray;
+      padding: 0 6px;
+
+      .day-icon-stack {
+         display: flex;
+         flex-flow: column nowrap;
+         align-items: center;
+      }
+      .day-label {
+         font-size: 85%;
+      }
+      .day-number {
+         margin-left: 3px;
+         font-size: 300%;
+         font-weight: bold;
+
+      }
+   }
+
+   > * {
+      margin: 3px 5px;
+   }
 }
 
 .stage-statuses {

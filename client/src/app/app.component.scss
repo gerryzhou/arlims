@@ -9,6 +9,14 @@ nav {
    }
 }
 
+.user {
+   display: flex;
+   align-items: center;
+   mat-icon {
+      margin-right: 3px;
+   }
+}
+
 
 .spinner-holder {
    text-align: center;

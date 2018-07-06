@@ -11,9 +11,12 @@ export class SampleComponent implements OnInit {
    @Input()
    sample: Sample;
 
+   factsStatusCssClass: string;
+
    constructor() { }
 
    ngOnInit() {
+      this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
    }
 
 }

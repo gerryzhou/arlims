@@ -11,7 +11,7 @@ const routes: Routes = [
    {
       path: 'samples',
       component: SamplesListingComponent,
-      resolve: { LabGroupContentsResolver }
+      resolve: { labGroupContents: LabGroupContentsResolver }
    },
    { path: '', redirectTo: 'samples', pathMatch: 'full' },
 ];
