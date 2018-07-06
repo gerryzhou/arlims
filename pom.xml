@@ -168,6 +168,10 @@
                <excludeClassPatterns>
                   <excludeClassPattern>**.*Exception</excludeClassPattern>
                </excludeClassPatterns>
+               <customTypeMappings>
+                  <mapping>java.time.LocalDate:string</mapping>
+                  <mapping>java.time.Instant:string</mapping>
+               </customTypeMappings>
                <outputKind>module</outputKind>
                <outputFileType>implementationFile</outputFileType>
                <outputFile>client/src/generated/dto.ts</outputFile>
