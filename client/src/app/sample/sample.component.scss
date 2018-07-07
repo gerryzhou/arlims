@@ -88,6 +88,11 @@
       margin-top: 0;
       margin-bottom: 0;
    }
+
+   .num-tests-and-resource-lists-stack {
+      display: flex;
+      flex-flow: column nowrap;
+   }
 }
 
 

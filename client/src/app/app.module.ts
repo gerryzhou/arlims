@@ -19,6 +19,7 @@ import {
    MatChipsModule,
    MatExpansionModule,
    MatSnackBarModule,
+   MatSlideToggleModule
 } from '@angular/material';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -31,10 +32,10 @@ import {LoadingIndicatorInterceptor} from './shared/services/loading-indicator/l
 import {TestMetadataComponent} from './shared/components/test-metadata/test-metadata.component';
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {AlertMessageComponent} from './alerts/alert-message.component';
-import { TestStageStatusComponent } from './shared/components/test-stage-status/test-stage-status.component';
-import { SampleComponent } from './sample/sample.component';
-import { SamplesListingOptionsComponent } from './samples-listing/listing-options/samples-listing-options.component';
-import { DayNumberPipe } from './shared/pipes/day-number.pipe';
+import {TestStageStatusComponent} from './shared/components/test-stage-status/test-stage-status.component';
+import {SampleComponent} from './sample/sample.component';
+import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
+import {DayNumberPipe} from './shared/pipes/day-number.pipe';
 
 @NgModule({
    declarations: [
@@ -68,6 +69,7 @@ import { DayNumberPipe } from './shared/pipes/day-number.pipe';
       MatChipsModule,
       MatExpansionModule,
       MatSnackBarModule,
+      MatSlideToggleModule,
       AppRoutingModule,
       TruncateModule,
    ],

@@ -1,0 +1,9 @@
+.options-panel {
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: center;
+   align-items: center;
+   .option {
+      margin: 3px 10px;
+   }
+}

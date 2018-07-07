@@ -1,6 +1,6 @@
 <mat-card class="test-metadata">
 
-   <div class="test-identification">
+   <div class="test-overview">
 
       <div class="test-type" [matTooltip]="test.testTypeName">
          {{test.testTypeShortName}}
@@ -14,22 +14,26 @@
          <span class="day-number">{{test.beginDate | dayNumber}}</span>
       </div>
 
-      <!--TODO: Maybe show these in "more info" popup.-->
-      <!--created: string;-->
+      <!--TODO: Maybe show these in "more info" popup. -->
+      <!--createdInstant: string;-->
       <!--createdByEmpShortName: string;-->
-
-      <!--TODO: Where to put last saved info?-->
-      <!--lastSaved: string;-->
-      <!--lastSavedByEmpShortName: string;-->
 
       <div class="stage-statuses">
          <app-test-stage-status *ngFor="let status of stageStatuses" [status]="status"></app-test-stage-status>
       </div>
 
+      <div class="expanding-flex-space"></div>
+
       <div *ngIf="test.note" class="note">
          <mat-icon>comment</mat-icon>
          {{test.note}}
       </div>
+
+      <div class="last-saved-stack">
+         <div class="last-saved-instant">Saved {{test.lastSavedInstant | date: 'MMM-dd h:mm a'}}</div>
+         <div class="last-saved-by">by <mat-icon>person</mat-icon>{{test.lastSavedByEmpShortName}}</div>
+      </div>
+
 
       <!--TODO: Add statuses if reviewed or save to FACTS. -->
       <!--reviewedInstant?: string;-->

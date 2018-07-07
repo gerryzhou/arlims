@@ -1,5 +1,4 @@
 
-
 Test Metadata
 -------------
 Show stage statuses
@@ -12,6 +11,11 @@ Show associated resource lists.
 
 Samples Listing
 ---------------
+Allow toggling visibility of tests under samples.
+  Collapse/expand all tests button.
+  Collapse/expand each test by clicking within the sample header.
+Add end of each sample row, show test count button stacked ("n tests","show/hide").
+  Button toggles test visibility.
 Add support for multiple selection of samples.
   As set of sample ids in controllers.
 

@@ -2,7 +2,7 @@
    padding: 10px 5px 5px 30px;
 }
 
-.test-identification {
+.test-overview {
    display: flex;
    flex-flow: row wrap;
    align-items: center;
@@ -17,6 +17,7 @@
    }
 
    .elapsed {
+      flex-grow: 0;
       display: flex;
       justify-content: flex-start;
       align-items: center;
@@ -40,8 +41,14 @@
       }
    }
 
+   .last-saved-stack {
+      flex-grow: 0;
+      text-align: center;
+      margin: 0px 10px;
+   }
+
    > * {
-      margin: 3px 5px;
+      margin: 3px 10px;
    }
 }
 

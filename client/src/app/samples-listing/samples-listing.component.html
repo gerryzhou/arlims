@@ -1,11 +1,12 @@
-<div class="listing-options-panel">
-   <app-samples-listing-options
-      [initialOptions]="defaultListingOptions"
-      (optionsChanged)="listingOptionsChanged($event)">
-   </app-samples-listing-options>
-</div>
+<app-samples-listing-options
+  [initialOptions]="defaultListingOptions"
+  (optionsChanged)="listingOptionsChanged($event)">
+</app-samples-listing-options>
 
 <div class="listing">
-   <app-sample *ngFor="let sample of filteredSamples" [sample]="sample"></app-sample>
+   <app-sample *ngFor="let sample of filteredSamples"
+      [sample]="sample"
+      [showTestsAndResources]="showSampleDetails">
+   </app-sample>
 </div>
 

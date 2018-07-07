@@ -4,11 +4,22 @@
    [Maybe] FACTS status checkboxes for filtering samples.
 -->
 <form [formGroup]="listingOptionsFormGroup">
-   <mat-icon>search</mat-icon>
-   <mat-form-field>
-      <input [formControlName]="'searchText'" matInput placeholder="Search">
-   </mat-form-field>
-   <mat-checkbox [formControlName]="'includeSamplesAssignedOnlyToOtherUsers'" labelPosition="before">
-      Include samples assigned to others
-   </mat-checkbox>
+   <div class="options-panel">
+       <div class="option">
+           <mat-icon>search</mat-icon>
+           <mat-form-field>
+              <input formControlName="searchText" matInput placeholder="Search">
+           </mat-form-field>
+       </div>
+       <div class="option">
+           <mat-slide-toggle formControlName="includeSamplesAssignedOnlyToOtherUsers">
+              Include samples assigned to others
+           </mat-slide-toggle>
+       </div>
+       <div class="option">
+           <mat-slide-toggle formControlName="showSampleDetails">
+              Show sample details
+           </mat-slide-toggle>
+       </div>
+   </div>
 </form>

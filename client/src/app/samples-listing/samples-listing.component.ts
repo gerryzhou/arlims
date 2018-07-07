@@ -17,8 +17,11 @@ export class SamplesListingComponent implements OnInit {
 
    filteredSamples: Sample[];
 
+   showSampleDetails: boolean;
+
    readonly defaultListingOptions: ListingOptions = {
-      includeSamplesAssignedOnlyToOtherUsers: false
+      includeSamplesAssignedOnlyToOtherUsers: false,
+      showSampleDetails: false
    };
 
    constructor(userContextService: UserContextService, private activatedRoute: ActivatedRoute) {
@@ -32,6 +35,7 @@ export class SamplesListingComponent implements OnInit {
    }
 
    listingOptionsChanged(listingOptions: ListingOptions) {
+      this.showSampleDetails = listingOptions.showSampleDetails;
       this.applyFilters(listingOptions);
    }
 
@@ -51,5 +55,4 @@ export class SamplesListingComponent implements OnInit {
       return listingOptions.includeSamplesAssignedOnlyToOtherUsers ||
          sample.assignments.findIndex(a => a.employeeShortName === this.userShortName) !== -1;
    }
-
 }
