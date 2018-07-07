@@ -15,9 +15,9 @@ public class LabTestMetadata
     private LabTestTypeCode testTypeCode;
     private String testTypeName;
     private String testTypeShortName;
-    private Instant created;
+    private Instant createdInstant;
     private String createdByEmpShortName;
-    private Instant lastSaved;
+    private Instant lastSavedInstant;
     private String lastSavedByEmpShortName;
     private Optional<LocalDate> beginDate;
     private Optional<String> note;
@@ -37,9 +37,9 @@ public class LabTestMetadata
             LabTestTypeCode testTypeCode,
             String testTypeName,
             String testTypeShortName,
-            Instant created,
+            Instant createdInstant,
             String createdByEmpShortName,
-            Instant lastSaved,
+            Instant lastSavedInstant,
             String lastSavedByEmpShortName,
             Optional<LocalDate> beginDate,
             Optional<String> note,
@@ -57,9 +57,9 @@ public class LabTestMetadata
         this.testTypeCode = testTypeCode;
         this.testTypeName = testTypeName;
         this.testTypeShortName = testTypeShortName;
-        this.created = created;
+        this.createdInstant = createdInstant;
         this.createdByEmpShortName = createdByEmpShortName;
-        this.lastSaved = lastSaved;
+        this.lastSavedInstant = lastSavedInstant;
         this.lastSavedByEmpShortName = lastSavedByEmpShortName;
         this.beginDate = beginDate;
         this.note = note;
@@ -85,11 +85,11 @@ public class LabTestMetadata
 
     public String getTestTypeShortName() { return testTypeShortName; }
 
-    public Instant getCreated() { return created; }
+    public Instant getCreatedInstant() { return createdInstant; }
 
     public String getCreatedByEmpShortName() { return createdByEmpShortName; }
 
-    public Instant getLastSaved() { return lastSaved; }
+    public Instant getLastSavedInstant() { return lastSavedInstant; }
 
     public String getLastSavedByEmpShortName() { return lastSavedByEmpShortName; }
 
