@@ -6,14 +6,6 @@
          {{test.testTypeShortName}}
       </div>
 
-      <!--TODO: Provide a "..." popup with full information about the test, created, last saved etc.-->
-      <!--created {{test.created | date : 'medium'}}-->
-      <!--by {{test.createdByEmpShortName}}-->
-
-      <div class="stage-statuses">
-         <app-test-stage-status *ngFor="let status of stageStatuses" [status]="status"></app-test-stage-status>
-      </div>
-
       <div class="elapsed" [matTooltip]="'test begin date: ' + test.beginDate">
          <div class="day-icon-stack">
             <mat-icon>event</mat-icon>
@@ -22,10 +14,32 @@
          <span class="day-number">{{test.beginDate | dayNumber}}</span>
       </div>
 
+      <!--TODO: Maybe show these in "more info" popup.-->
+      <!--created: string;-->
+      <!--createdByEmpShortName: string;-->
+
+      <!--TODO: Where to put last saved info?-->
+      <!--lastSaved: string;-->
+      <!--lastSavedByEmpShortName: string;-->
+
+      <div class="stage-statuses">
+         <app-test-stage-status *ngFor="let status of stageStatuses" [status]="status"></app-test-stage-status>
+      </div>
+
       <div *ngIf="test.note" class="note">
          <mat-icon>comment</mat-icon>
          {{test.note}}
       </div>
+
+      <!--TODO: Add statuses if reviewed or save to FACTS. -->
+      <!--reviewedInstant?: string;-->
+      <!--reviewedByEmpShortName?: string;-->
+      <!--savedToFactsInstant?: string;-->
+
+      <!--<span *ngIf="test.savedToFactsInstant">-->
+      <!--<mat-icon class="saved-to-facts-icon">cloud_done</mat-icon>-->
+      <!--{{test.savedToFactsInstant | date: 'medium'}}-->
+      <!--</span>-->
 
    </div>
 
@@ -34,14 +48,6 @@
 
    <!--<mat-card-footer>-->
 
-      <!--<span *ngIf="test.reviewed">Reviewed by {{test.reviewedByEmpShortName}}, {{test.reviewed | date: 'medium'}}</span>-->
-
-      <!--<span *ngIf="test.lastSaved">Last saved by {{test.lastSavedByEmpShortName}}, {{test.lastSaved | date: 'medium'}}</span>-->
-
-      <!--<span *ngIf="test.savedToFacts">-->
-         <!--<mat-icon class="saved-to-facts-icon">cloud_done</mat-icon>-->
-         <!--{{test.savedToFacts | date: 'medium'}}-->
-      <!--</span>-->
 
    <!--</mat-card-footer>-->
 

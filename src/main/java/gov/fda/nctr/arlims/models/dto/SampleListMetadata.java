@@ -9,7 +9,7 @@ public class SampleListMetadata
 
     private String name;
 
-    private Instant created;
+    private Instant createdInstant;
 
     private String createdByUserShortName;
 
@@ -17,13 +17,13 @@ public class SampleListMetadata
         (
             long sampleListId,
             String name,
-            Instant created,
+            Instant createdInstant,
             String createdByUserShortName
         )
     {
         this.sampleListId = sampleListId;
         this.name = name;
-        this.created = created;
+        this.createdInstant = createdInstant;
         this.createdByUserShortName = createdByUserShortName;
     }
 
@@ -31,7 +31,7 @@ public class SampleListMetadata
 
     public String getName() { return name; }
 
-    public Instant getCreated() { return created; }
+    public Instant getCreatedInstant() { return createdInstant; }
 
     public String getCreatedByUserShortName() { return createdByUserShortName; }
 }

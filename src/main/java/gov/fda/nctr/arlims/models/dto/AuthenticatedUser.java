@@ -15,7 +15,7 @@ public class AuthenticatedUser
     private final String lastName;
     private final String firstName;
     private final List<RoleName> roles;
-    private final Instant userInfoLastRefreshed;
+    private final Instant userInfoLastRefreshedInstant;
 
     public AuthenticatedUser
         (
@@ -27,7 +27,7 @@ public class AuthenticatedUser
             String lastName,
             String firstName,
             List<RoleName> roles,
-            Instant userInfoLastRefreshed
+            Instant userInfoLastRefreshedInstant
         )
     {
         this.employeeId = employeeId;
@@ -38,7 +38,7 @@ public class AuthenticatedUser
         this.lastName = lastName;
         this.firstName = firstName;
         this.roles = roles;
-        this.userInfoLastRefreshed = userInfoLastRefreshed;
+        this.userInfoLastRefreshedInstant = userInfoLastRefreshedInstant;
     }
 
     public long getEmployeeId() { return employeeId; }
@@ -57,5 +57,5 @@ public class AuthenticatedUser
 
     public List<RoleName> getRoles() { return roles; }
 
-    public Instant getUserInfoLastRefreshed() { return userInfoLastRefreshed; }
+    public Instant getUserInfoLastRefreshedInstant() { return userInfoLastRefreshedInstant; }
 }

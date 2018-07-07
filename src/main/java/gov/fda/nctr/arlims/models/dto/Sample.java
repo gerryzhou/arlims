@@ -20,13 +20,13 @@ public class Sample
 
     private final String productName;
 
-    private final Optional<LocalDate> received;
+    private final Optional<LocalDate> receivedDate;
 
     private final String factsStatus;
 
     private final LocalDate factsStatusDate;
 
-    private final Instant lastRefreshedFromFacts;
+    private final Instant lastRefreshedFromFactsInstant;
 
     private final Optional<String> samplingOrganization;
 
@@ -48,10 +48,10 @@ public class Sample
             Optional<String> lid,
             Optional<String> paf,
             String productName,
-            Optional<LocalDate> received,
+            Optional<LocalDate> receivedDate,
             String factsStatus,
             LocalDate factsStatusDate,
-            Instant lastRefreshedFromFacts,
+            Instant lastRefreshedFromFactsInstant,
             Optional<String> samplingOrganization,
             Optional<String> subject,
             List<SampleAssignment> assignments,
@@ -66,10 +66,10 @@ public class Sample
         this.lid = lid;
         this.paf = paf;
         this.productName = productName;
-        this.received = received;
+        this.receivedDate = receivedDate;
         this.factsStatus = factsStatus;
         this.factsStatusDate = factsStatusDate;
-        this.lastRefreshedFromFacts = lastRefreshedFromFacts;
+        this.lastRefreshedFromFactsInstant = lastRefreshedFromFactsInstant;
         this.samplingOrganization = samplingOrganization;
         this.subject = subject;
         this.assignments = assignments;
@@ -90,13 +90,13 @@ public class Sample
 
     public String getProductName() { return productName; }
 
-    public Optional<LocalDate> getReceived() { return received; }
+    public Optional<LocalDate> getReceivedDate() { return receivedDate; }
 
     public String getFactsStatus() { return factsStatus; }
 
     public LocalDate getFactsStatusDate() { return factsStatusDate; }
 
-    public Instant getLastRefreshedFromFacts() { return lastRefreshedFromFacts; }
+    public Instant getLastRefreshedFromFactsInstant() { return lastRefreshedFromFactsInstant; }
 
     public Optional<String> getSamplingOrganization() { return samplingOrganization; }
 
