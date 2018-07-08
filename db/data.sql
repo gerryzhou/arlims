@@ -88,7 +88,7 @@ insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts
 insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
   values(1, '34567-0', 'C33456',  'M', 'MIC', 'Shrimp Tartar', 'Assigned', CURRENT_DATE-5, CURRENT_TIMESTAMP-3, CURRENT_DATE-5, 'REI2');
 insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
-  values(1, '595678-0', 'C46567', 'M', 'MIC', 'Steak Powder', 'Assigned', CURRENT_DATE-4, CURRENT_TIMESTAMP-4, CURRENT_DATE-5, 'WER');
+  values(1, '595678-0', 'C46567', 'M', 'MIC', 'Steak Sauce', 'Assigned', CURRENT_DATE-4, CURRENT_TIMESTAMP-4, CURRENT_DATE-5, 'WER');
 insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
   values(1, '595678-0', 'C46567', 'M', 'MIC', 'Tomato Powder', 'Complete', CURRENT_DATE-15, CURRENT_TIMESTAMP-13, CURRENT_DATE-16, 'DNH1');
 
@@ -144,3 +144,17 @@ insert into test
 (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
  last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts)
   values(1, 2, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'X', null, null);
+
+update test set stage_statuses_json =
+  '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
+   '{"stageName": "PRE-ENR", "fieldValuesStatus": "i"},' ||
+   '{"stageName": "SEL-ENR", "fieldValuesStatus": "e"},' ||
+   '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
+where id = 1;
+
+update test set stage_statuses_json =
+'[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
+'{"stageName": "PRE-ENR", "fieldValuesStatus": "c"},' ||
+'{"stageName": "SEL-ENR", "fieldValuesStatus": "i"},' ||
+'{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
+where id = 2;

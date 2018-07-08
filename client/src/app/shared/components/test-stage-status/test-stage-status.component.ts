@@ -13,6 +13,8 @@ export class TestStageStatusComponent implements OnInit {
 
    fieldValuesStatusText: string;
 
+   signatureDescription: string | null;
+
    constructor() { }
 
    ngOnInit() {
@@ -22,6 +24,10 @@ export class TestStageStatusComponent implements OnInit {
          case 'c': this.fieldValuesStatusText = 'complete'; break;
          default: this.fieldValuesStatusText = '?';
       }
+      this.signatureDescription =
+         !!this.status.signature ?
+            'signed by ' + this.status.signature.employeeShortName + ' at ' + this.status.signature.signedInstant :
+            null;
    }
 
 }

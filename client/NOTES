@@ -1,8 +1,9 @@
+Add test stage statuses example data and test stage statuses display.
 
 Test Metadata
 -------------
 Show stage statuses
-   Row Layout: [Test name] [Day: ...] [stage statuses] ["..." more info popup: begin date, created, created by, last saved]
+   Row Layout: [Test name] [Day: ...] [stage statuses] [last saved]
 
 Sample
 ------

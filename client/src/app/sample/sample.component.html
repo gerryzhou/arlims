@@ -62,7 +62,8 @@
          <span>{{numAssociatedResourceLists}} resource list{{numAssociatedResourceLists != 1 ? 's' : ''}}</span>
       </div>
 
-      <button mat-button color="accent" *ngIf="hasTestsOrResources" (click)="toggleTestsAndResources()">
+      <button mat-button color="accent" *ngIf="hasTestsOrResources"
+              (click)="toggleTestsAndResources()">
          {{showTestsAndResources ? 'hide' : 'show'}} details
       </button>
 

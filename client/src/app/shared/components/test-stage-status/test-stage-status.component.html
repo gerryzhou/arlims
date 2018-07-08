@@ -1,12 +1,26 @@
-<div>
-   <div class="stage-values" [ngClass]="status.fieldValuesStatus">
-      <span class="stage-name">{{status.stageName}}</span>
-      (<span class="field-values-status" [matTooltip]="fieldValuesStatusText">{{status.fieldValuesStatus}}</span>)
+<div class="test-stage-status">
+
+   <div class="stage-name">{{status.stageName}}</div>
+
+   <div class="status-measures">
+
+      <div class="field-values-completion-gauge"
+           [ngClass]="'fields-' + status.fieldValuesStatus"
+           [matTooltip]="fieldValuesStatusText">
+         <div class="completed-portion"></div>
+      </div>
+
+      <div class="signoff">
+         <mat-icon *ngIf="status.signature"
+                   [matTooltip]="signatureDescription">
+            check_box
+         </mat-icon>
+         <mat-icon *ngIf="!status.signature && status.fieldValuesStatus === 'c'">
+            check_box_outline_blank
+         </mat-icon>
+      </div>
+
    </div>
-   <div *ngIf="!!status.signedEpochTimeMillis" class="signoff">
-      {{status.signedByShortName}}
-      <mat-icon>check_circle</mat-icon>
-      {{status.signedEpochTimeMillis | date: 'medium'}}
-   </div>
+
 </div>
 

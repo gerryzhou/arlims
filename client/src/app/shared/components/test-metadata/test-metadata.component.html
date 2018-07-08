@@ -14,23 +14,22 @@
          <span class="day-number">{{test.beginDate | dayNumber}}</span>
       </div>
 
-      <!--TODO: Maybe show these in "more info" popup. -->
-      <!--createdInstant: string;-->
-      <!--createdByEmpShortName: string;-->
-
-      <div class="stage-statuses">
-         <app-test-stage-status *ngFor="let status of stageStatuses" [status]="status"></app-test-stage-status>
+      <div *ngIf="stageStatuses" class="stage-statuses">
+         <app-test-stage-status *ngFor="let status of stageStatuses"
+            [status]="status">
+         </app-test-stage-status>
       </div>
 
       <div class="expanding-flex-space"></div>
 
       <div *ngIf="test.note" class="note">
          <mat-icon>comment</mat-icon>
+         <!--TODO: Truncate the note if longer than ~10 chars, with clickable "..." button to view the full note. -->
          {{test.note}}
       </div>
 
       <div class="last-saved-stack">
-         <div class="last-saved-instant">Saved {{test.lastSavedInstant | date: 'MMM-dd h:mm a'}}</div>
+         <div class="last-saved-instant">Saved {{test.lastSavedInstant | date: 'MMM d h:mm a'}}</div>
          <div class="last-saved-by">by <mat-icon>person</mat-icon>{{test.lastSavedByEmpShortName}}</div>
       </div>
 

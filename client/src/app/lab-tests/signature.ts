@@ -1,6 +1,5 @@
 
 export interface Signature {
-    employeeId: number;
-    employeeShortName: string;
-    signedEpochTimeMillis: number;
+   employeeShortName: string;
+   signedInstant: string;
 }

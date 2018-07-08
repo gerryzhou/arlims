@@ -1,8 +1,9 @@
+import {Signature} from './signature';
+
 export interface TestStageStatus {
    stageName: string;
    fieldValuesStatus: FieldValuesStatusCode;
-   signedEpochTimeMillis: number;
-   signedByShortName: string;
+   signature?: Signature;
 }
 
 export type FieldValuesStatusCode =

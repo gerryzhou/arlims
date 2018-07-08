@@ -1,10 +1,40 @@
-.stage-values{
-   .stage-name {}
-   .field-values-status {}
-   .e { // empty field values status
-      color: darkgray;
+.test-stage-status {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
+
+   .stage-name {
+      font-weight: bold;
+   }
+
+   .status-measures {
+      display: flex;
+      flex-flow: row nowrap;
+
+      .signoff mat-icon {
+         color: green;
+      }
+
+      .field-values-completion-gauge {
+         width: 30px;
+         height: 20px;
+         border: 2px solid black;
+         border-radius: 5px;
+         padding: 2px;
+         .completed-portion {
+            height: 100%;
+            border-radius: 5px;
+         }
+         &.fields-e {
+            .completed-portion { width: 0; background: black; }
+         }
+         &.fields-i {
+            .completed-portion { width: 50%; background: orange; }
+         }
+         &.fields-c {
+            .completed-portion { width: 100%; background: green; }
+         }
+      }
    }
 }
-.signoff mat-icon {
-   color: green;
-}
+

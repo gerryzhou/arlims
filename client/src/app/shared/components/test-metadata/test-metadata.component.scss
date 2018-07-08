@@ -5,15 +5,19 @@
 .test-overview {
    display: flex;
    flex-flow: row wrap;
-   align-items: center;
+   align-items: stretch;
    justify-content: flex-start;
 
    .test-type {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
       padding: 5px;
-      width: 200px;
+      width: 250px;
       text-align: center;
-      border: 2px solid darkgray;
+      border: 3px solid darkgray;
       background: beige;
+      font-size: 120%;
    }
 
    .elapsed {
@@ -45,6 +49,14 @@
       flex-grow: 0;
       text-align: center;
       margin: 0px 10px;
+      .last-saved-by {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         mat-icon {
+            margin: 0 2px 0 3px;
+         }
+      }
    }
 
    > * {
@@ -54,6 +66,13 @@
 
 .stage-statuses {
    display: flex;
+   align-items: center;
+   border: 2px solid lightgray;
+   margin: 0px 10px;
+
+   app-test-stage-status {
+      margin: 0px 7px;
+   }
 }
 
 .note {
