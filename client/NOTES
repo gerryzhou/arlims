@@ -1,32 +1,27 @@
-Add test stage statuses example data and test stage statuses display.
 
-Test Metadata
--------------
-Show stage statuses
-   Row Layout: [Test name] [Day: ...] [stage statuses] [last saved]
-
-Sample
-------
-Show associated resource lists.
-  Allow viewing/editing resource lists.
 
 Samples Listing
 ---------------
-Allow toggling visibility of tests under samples.
-  Collapse/expand all tests button.
-  Collapse/expand each test by clicking within the sample header.
-Add end of each sample row, show test count button stacked ("n tests","show/hide").
-  Button toggles test visibility.
 Add support for multiple selection of samples.
   As set of sample ids in controllers.
 
-Set flex layout in listing options toolbar, add spacing around items.
+When one or more samples are selected, allow creating new resources association list (go to new ERL view).
 
 Create a new service for setting page title in center of toolbar, use this to hold sample listing page title, "Samples".
 
 
 Views
 -----
+
+[MRL] Manage Resource Lists
+   Listing of resource lists and their metadata (who created, when, number of items).
+   Editing and delete link.
+[ERL] Edit Resource List
+   List resource items on left as editable mat-chip-list.
+   List associated samples on the right as editable mat-chip-list.
+   Allow pasting in new resource items or sample-items sequence to add new associations.
+
+
 [S] list/manage active samples
  Include Samples Assigned to: list of checkboxes
  Sort Samples

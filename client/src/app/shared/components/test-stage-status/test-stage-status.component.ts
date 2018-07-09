@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TestStageStatus} from '../../../lab-tests/test-stage-status';
+import {DatePipe} from '@angular/common';
+import {parseISOTimestampLocal} from '../../util/dates-and-times';
 
 @Component({
   selector: 'app-test-stage-status',
@@ -15,7 +17,7 @@ export class TestStageStatusComponent implements OnInit {
 
    signatureDescription: string | null;
 
-   constructor() { }
+   constructor(private datePipe: DatePipe) { }
 
    ngOnInit() {
       switch ( this.status.fieldValuesStatus ) {
@@ -24,10 +26,15 @@ export class TestStageStatusComponent implements OnInit {
          case 'c': this.fieldValuesStatusText = 'complete'; break;
          default: this.fieldValuesStatusText = '?';
       }
-      this.signatureDescription =
-         !!this.status.signature ?
-            'signed by ' + this.status.signature.employeeShortName + ' at ' + this.status.signature.signedInstant :
-            null;
+
+      if (!!this.status.signature ) {
+         const sigTs = parseISOTimestampLocal(this.status.signature.signedInstant);
+         this.signatureDescription =
+            'signed by ' + this.status.signature.employeeShortName +
+            ' on ' + this.datePipe.transform(sigTs, 'long');
+      } else {
+         this.signatureDescription = null;
+      }
    }
 
 }

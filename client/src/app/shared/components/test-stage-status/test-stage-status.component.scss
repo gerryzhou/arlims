@@ -1,15 +1,19 @@
 .test-stage-status {
    display: flex;
    flex-flow: column nowrap;
-   align-items: center;
 
    .stage-name {
+      font-size: 80%;
       font-weight: bold;
    }
 
    .status-measures {
       display: flex;
       flex-flow: row nowrap;
+      align-items: center;
+      .material-icons {
+         font-size: 20px;
+      }
 
       .signoff mat-icon {
          color: green;
@@ -17,7 +21,7 @@
 
       .field-values-completion-gauge {
          width: 30px;
-         height: 20px;
+         height: 15px;
          border: 2px solid black;
          border-radius: 5px;
          padding: 2px;

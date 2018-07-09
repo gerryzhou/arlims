@@ -2,25 +2,27 @@
 
    <div class="sample-metadata">
 
-      <div class="product-name">{{sample.productName}}</div>
+      <div class="sample-metadata-row">
 
-      <div class="sample-pac-stack">
-         <div>
-            <span class="field-label"></span>
-            <span class="field-value">{{sample.sampleNumber}}</span>
+         <div class="product-name">{{sample.productName}}</div>
+
+         <div class="sample-pac-stack">
+            <div>
+               <span class="field-label"></span>
+               <span class="field-value">{{sample.sampleNumber}}</span>
+            </div>
+            <div>
+               <span class="field-label">pac: </span>
+               <span class="field-value">{{sample.pac}}</span>
+            </div>
          </div>
-         <div>
-            <span class="field-label">pac: </span>
-            <span class="field-value">{{sample.pac}}</span>
+
+         <div class="facts-status-stack" [ngClass]="factsStatusCssClass">
+            <div>{{sample.factsStatus}}</div>
+            <div class="facts-status-date">@{{sample.factsStatusDate}}</div>
          </div>
-      </div>
 
-      <div class="facts-status-stack" [ngClass]="factsStatusCssClass">
-         <div>{{sample.factsStatus}}</div>
-         <div class="facts-status-date">@{{sample.factsStatusDate}}</div>
-      </div>
-
-      <div class="employee-assignments">
+         <div class="employee-assignments">
          <span  class="assigned-employee" *ngFor="let assignment of sample.assignments">
             <mat-icon>assignment_ind</mat-icon>
             <span *ngIf="assignment.lead && sample.assignments.length > 1">*</span>
@@ -28,55 +30,71 @@
                {{assignment.employeeShortName}}
             </span>
          </span>
-      </div>
-
-      <div *ngIf="sample.lid">
-         <span class="field-label">lid: </span>
-         <span class="field-value">{{sample.lid}}</span>
-      </div>
-      <div *ngIf="sample.paf">
-         <span class="field-label">paf: </span>
-         <span class="field-value">{{sample.paf}}</span>
-      </div>
-
-      <div class="received-from-stack">
-         <div *ngIf="sample.receivedDate">
-            <span class="field-label">rcvd: </span>
-            <span class="field-value">{{sample.receivedDate}}</span>
          </div>
-         <div *ngIf="sample.samplingOrganization">
-            <span class="field-label">from: </span>
-           <span class="field-value">{{sample.samplingOrganization}}</span>
+
+         <div *ngIf="sample.lid">
+            <span class="field-label">lid: </span>
+            <span class="field-value">{{sample.lid}}</span>
          </div>
+         <div *ngIf="sample.paf">
+            <span class="field-label">paf: </span>
+            <span class="field-value">{{sample.paf}}</span>
+         </div>
+
+         <div class="received-from-stack">
+            <div *ngIf="sample.receivedDate">
+               <span class="field-label">rcvd: </span>
+               <span class="field-value">{{sample.receivedDate}}</span>
+            </div>
+            <div *ngIf="sample.samplingOrganization">
+               <span class="field-label">from: </span>
+               <span class="field-value">{{sample.samplingOrganization}}</span>
+            </div>
+         </div>
+
+         <div class="expanding-flex-space"></div>
+
+         <div class="num-tests-and-resource-lists-stack">
+            <span>{{sample.tests.length}} test{{sample.tests.length != 1 ? 's' : ''}}</span>
+            <span>{{numAssociatedResourceLists}} resource list{{numAssociatedResourceLists != 1 ? 's' : ''}}</span>
+         </div>
+
+         <button mat-button color="accent" *ngIf="hasTestsOrResources || hasAdditionalSampleMetadata"
+                 (click)="toggleTestsAndResources()">
+            {{showSampleDetails ? 'hide' : 'show'}} details
+         </button>
+      </div> <!-- Ends first row of sample metadata. -->
+
+      <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
+      <div class="sample-metadata-row" *ngIf="showSampleDetails && hasAdditionalSampleMetadata">
+         <div *ngIf="sample.subject">
+            <span class="field-label">subject: </span>
+            <span class="field-value">{{sample.subject}}</span>
+         </div>
+
       </div>
-
-      <div *ngIf="sample.subject">
-         <span class="field-label">subj: </span>
-         <span class="field-value">{{sample.subject}}</span>
-      </div>
-
-      <div class="expanding-flex-space"></div>
-
-      <div class="num-tests-and-resource-lists-stack">
-         <span>{{sample.tests.length}} test{{sample.tests.length != 1 ? 's' : ''}}</span>
-         <span>{{numAssociatedResourceLists}} resource list{{numAssociatedResourceLists != 1 ? 's' : ''}}</span>
-      </div>
-
-      <button mat-button color="accent" *ngIf="hasTestsOrResources"
-              (click)="toggleTestsAndResources()">
-         {{showTestsAndResources ? 'hide' : 'show'}} details
-      </button>
-
    </div>
 
-   <div *ngIf="showTestsAndResources">
+   <!-- tests and associated lab resources area -->
+   <div *ngIf="showSampleDetails">
 
-       <div class="test-metadatas">
-          <app-test-metadata *ngFor="let test of sample.tests" [test]="test"></app-test-metadata>
-       </div>
+      <div class="test-metadatas">
+         <app-test-metadata *ngFor="let test of sample.tests" [test]="test"></app-test-metadata>
+      </div>
 
-       <!--TODO: Show associated resource list metadatas (put both resource lists on one row).-->
+      <div class="associated-lab-resource-lists" *ngIf="numAssociatedResourceLists > 0">
+         <span class="label">Associated Lab Resources: </span>
+         <mat-chip-list>
+            <mat-chip *ngFor="let resourceList of sample.associatedUnmanagedResourceLists" class="resource-list">
+               <span class="items-count">{{resourceList.resourcesCount}} items</span>
+               <span class="list-name">{{resourceList.listName}}</span>
+            </mat-chip>
+         </mat-chip-list>
+         <!--TODO: Show managed resources here if needed.  -->
+         <!--{{sample.associatedManagedResourceLists}}-->
+      </div>
 
    </div>
 
 </mat-card>
+<div *ngIf="showSampleDetails" class="extra-spacing-between-samples"></div>

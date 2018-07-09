@@ -11,11 +11,14 @@ export class SampleComponent implements OnInit {
    @Input()
    sample: Sample;
 
+   // Sample "details" include tests or resource lists, and additional sample metadata.
+   hasAdditionalSampleMetadata: boolean; // whether sample metadata needs a second row
    hasTestsOrResources: boolean;
+
    numAssociatedResourceLists: number;
 
    @Input()
-   showTestsAndResources: boolean;
+   showSampleDetails: boolean;
 
    factsStatusCssClass: string;
 
@@ -26,11 +29,12 @@ export class SampleComponent implements OnInit {
       this.numAssociatedResourceLists =
          this.sample.associatedManagedResourceLists.length +
          this.sample.associatedUnmanagedResourceLists.length;
+      this.hasAdditionalSampleMetadata = !!this.sample.subject;
       this.hasTestsOrResources =
          this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
    }
 
    toggleTestsAndResources() {
-      this.showTestsAndResources = !this.showTestsAndResources;
+      this.showSampleDetails = !this.showSampleDetails;
    }
 }

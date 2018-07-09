@@ -1,5 +1,5 @@
 .test-metadata {
-   padding: 10px 5px 5px 30px;
+   padding: 0;
 }
 
 .test-overview {
@@ -12,12 +12,13 @@
       display: flex;
       flex-flow: column nowrap;
       justify-content: center;
-      padding: 5px;
-      width: 250px;
+      padding: 0;
+      width: 220px;
       text-align: center;
       border: 3px solid darkgray;
       background: beige;
-      font-size: 120%;
+      font-size: 110%;
+      font-weight: bold;
    }
 
    .elapsed {
@@ -33,13 +34,11 @@
          display: flex;
          flex-flow: column nowrap;
          align-items: center;
-      }
-      .day-label {
-         font-size: 85%;
+         font-size: 60%;
       }
       .day-number {
          margin-left: 3px;
-         font-size: 300%;
+         font-size: 250%;
          font-weight: bold;
 
       }
@@ -48,7 +47,9 @@
    .last-saved-stack {
       flex-grow: 0;
       text-align: center;
-      margin: 0px 10px;
+      margin: 0;
+      border: 3px solid lightgray;
+      padding: 3px 5px;
       .last-saved-by {
          display: flex;
          justify-content: center;
@@ -56,6 +57,34 @@
          mat-icon {
             margin: 0 2px 0 3px;
          }
+      }
+   }
+
+   .reviewed-stack {
+      flex-grow: 0;
+      text-align: center;
+      margin: 0;
+      border: 3px solid lightgray;
+      padding: 3px 5px;
+      .reviewed-by {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         mat-icon {
+            margin: 0 2px 0 3px;
+         }
+      }
+   }
+
+   .saved-to-facts-stack {
+      flex-grow: 0;
+      text-align: center;
+      margin: 0;
+      border: 3px solid lightgray;
+      padding: 3px 5px;
+      .saved-to-facts-icon {
+         color: green;
+         vertical-align: bottom;
       }
    }
 
@@ -71,7 +100,7 @@
    margin: 0px 10px;
 
    app-test-stage-status {
-      margin: 0px 7px;
+      margin: 0 7px;
    }
 }
 
@@ -81,6 +110,3 @@
    }
 }
 
-.saved-to-facts-icon {
-   color: green;
-}

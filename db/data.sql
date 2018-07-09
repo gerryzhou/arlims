@@ -1,3 +1,4 @@
+
 insert into lab_group (name, address_street, buildings_and_rooms, address_city, address_state, address_zip, description)
   values ('ARL-MICRO', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
 
@@ -70,6 +71,8 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
 
 insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name)
   values (234234, 'John.Doe', 'JD', (select id from lab_group where name = 'ARL-MICRO'), 'John', 'Doe', null);
+insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name)
+  values (842345, 'Manager.Doe', 'MD', (select id from lab_group where name = 'ARL-MICRO'), 'Manager', 'Doe', null);
 
 insert into test_type(code, short_name, name)
   values('MICRO_LST', 'Listeria', 'Listeria abbreviated test');
@@ -138,8 +141,8 @@ insert into test
   values(1, 1, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'for JM', null, null);
 insert into test
 (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
- last_saved, last_saved_by_emp_id, reviewed_by_emp_id, saved_to_facts)
-  values(1, 2, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, null, null);
+ last_saved, last_saved_by_emp_id, reviewed, reviewed_by_emp_id, saved_to_facts)
+  values(1, 2, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP);
 insert into test
 (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
  last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts)
@@ -147,14 +150,19 @@ insert into test
 
 update test set stage_statuses_json =
   '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
-   '{"stageName": "PRE-ENR", "fieldValuesStatus": "i"},' ||
-   '{"stageName": "SEL-ENR", "fieldValuesStatus": "e"},' ||
-   '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
-where id = 1;
+  '{"stageName": "PRE-ENR", "fieldValuesStatus": "i"},' ||
+  '{"stageName": "SEL-ENR", "fieldValuesStatus": "e"},' ||
+  '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
+  where id = 1;
 
 update test set stage_statuses_json =
-'[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
-'{"stageName": "PRE-ENR", "fieldValuesStatus": "c"},' ||
-'{"stageName": "SEL-ENR", "fieldValuesStatus": "i"},' ||
-'{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
-where id = 2;
+  '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
+  '{"stageName": "PRE-ENR", "fieldValuesStatus": "c"},' ||
+  '{"stageName": "SEL-ENR", "fieldValuesStatus": "i"},' ||
+  '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
+  where id = 2;
+update test set stage_statuses_json =
+  '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/06T09:32:12"}},' ||
+  '{"stageName": "ENR", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/07T09:32:12"}},' ||
+  '{"stageName": "VIDAS", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T12:39:34"}}]'
+  where id = 3;

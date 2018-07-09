@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
-import {Location} from '@angular/common';
+import {DatePipe, Location} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
    MatInputModule,
@@ -75,6 +75,7 @@ import {DayNumberPipe} from './shared/pipes/day-number.pipe';
    ],
    providers: [
       Location,
+      DatePipe, // for use in JS
       LoadingIndicatorService,
       {
          provide: HTTP_INTERCEPTORS,
