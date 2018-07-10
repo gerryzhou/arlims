@@ -1,1 +1,20 @@
+.control-area {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: center;
 
+   .selected-count-message {
+      font-size: small;
+   }
+}
+
+.listing {
+   .sample-container {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      app-sample {
+         flex-grow: 1;
+      }
+   }
+}

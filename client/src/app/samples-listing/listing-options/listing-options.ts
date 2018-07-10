@@ -7,4 +7,6 @@ export interface ListingOptions {
 
    showSampleDetails: boolean;
 
+   limitSelectionToVisibleSamples: boolean;
+
 }

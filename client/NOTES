@@ -1,9 +1,8 @@
-
+TUE: Multiple samples selection -> ERL view.
 
 Samples Listing
 ---------------
 Add support for multiple selection of samples.
-  As set of sample ids in controllers.
 
 When one or more samples are selected, allow creating new resources association list (go to new ERL view).
 
@@ -12,14 +11,14 @@ Create a new service for setting page title in center of toolbar, use this to ho
 
 Views
 -----
+[ERL] Edit Resource List
+   List samples on the left as table showing basic metadata (include list of open test types).
+   List resource items on right as editable mat-chip-list.
+   Allow pasting in new resource items or sample-items sequence to add new associations.
 
 [MRL] Manage Resource Lists
    Listing of resource lists and their metadata (who created, when, number of items).
    Editing and delete link.
-[ERL] Edit Resource List
-   List resource items on left as editable mat-chip-list.
-   List associated samples on the right as editable mat-chip-list.
-   Allow pasting in new resource items or sample-items sequence to add new associations.
 
 
 [S] list/manage active samples

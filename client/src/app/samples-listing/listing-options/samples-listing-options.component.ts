@@ -23,7 +23,8 @@ export class SamplesListingOptionsComponent implements OnInit {
          new FormGroup({
             searchText: new FormControl(this.initialOptions.searchText),
             includeSamplesAssignedOnlyToOtherUsers: new FormControl(this.initialOptions.includeSamplesAssignedOnlyToOtherUsers),
-            showSampleDetails: new FormControl(this.initialOptions.showSampleDetails)
+            showSampleDetails: new FormControl(this.initialOptions.showSampleDetails),
+            limitSelectionToVisibleSamples: new FormControl(this.initialOptions.limitSelectionToVisibleSamples)
          });
 
       this.listingOptionsFormGroup.valueChanges.subscribe(data => this.onFormChange(data));

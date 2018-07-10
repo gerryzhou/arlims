@@ -1,12 +1,20 @@
-<app-samples-listing-options
-  [initialOptions]="defaultListingOptions"
-  (optionsChanged)="listingOptionsChanged($event)">
-</app-samples-listing-options>
+<div class="control-area">
+   <mat-checkbox #selectAllNoneCheckbox (change)="selectOrUnselectVisible($event.checked)" matTooltip="select/unselect all (visible) samples"></mat-checkbox>
+   <app-samples-listing-options
+      [initialOptions]="defaultListingOptions"
+      (optionsChanged)="listingOptionsChanged($event)">
+   </app-samples-listing-options>
+   <div class="selected-count-message">
+      {{countSelected()}} selected
+      <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
+   </div>
+</div>
 
 <div class="listing">
-   <app-sample *ngFor="let sample of filteredSamples"
-      [sample]="sample"
-               [showSampleDetails]="showSampleDetails">
-   </app-sample>
+   <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
+      <!--TODO: Really need to replace the sample here or the whole display list, else the change won't be noticed.-->
+      <mat-checkbox [(ngModel)]="allSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
+      <app-sample [sample]="allSamples[sampleIx].sample" [showSampleDetails]="showSampleDetails"></app-sample>
+   </div>
 </div>
 
