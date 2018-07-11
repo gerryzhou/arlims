@@ -148,7 +148,7 @@ export class SamplesListingComponent implements OnInit {
       if (selectedSamples.length === 0) { return; }
 
       const dlg = this.dialogSvc.open(UnmanagedResourcesDialogComponent, {
-         width: '700px',
+         width: '800px', // TODO-RESPONSIVE
          data: {
             listName: '',
             appendDateTimeToListName: true,

@@ -5,5 +5,9 @@
    align-items: center;
    .option {
       margin: 3px 10px;
+      &.search {
+         display: flex;
+         align-items: center;
+      }
    }
 }
