@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Associate Lab Resources with {{data.samples.length}} Samples</h2>
+
+<mat-dialog-content>
+
+   <div class="list-name-area">
+      <mat-form-field>
+         <input [(ngModel)]="data.listName" matInput placeholder="Enter list name">
+      </mat-form-field>
+         <input type="checkbox" [(ngModel)]="data.appendDateTimeToListName"> Append date/time to list name
+   </div>
+
+   <div class="samples-area">
+      <h2>Samples</h2>
+      <mat-chip-list>
+         <mat-chip color="accent" *ngFor="let sample of data.samples" [selectable]="false"
+                   [removable]="true" (removed)="removeSample(sample)">
+            {{sample.productName}} {{sample.sampleNumber}}/{{sample.pac}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+         </mat-chip>
+      </mat-chip-list>
+   </div>
+
+   <div class="resources-area">
+      <h2>Associated Resources</h2>
+      <mat-form-field>
+         <mat-chip-list #resourceCodesChipList>
+            <mat-chip *ngFor="let resourceCode of data.resourceCodes" [selectable]="false"
+                      [removable]="true" (removed)="removeResourceCode(resourceCode)">
+               {{resourceCode}}
+               <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Enter resource codes..."
+                   [matChipInputFor]="resourceCodesChipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="addResourceCodes($event)">
+         </mat-chip-list>
+      </mat-form-field>
+   </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+   <button mat-button mat-dialog-close>Cancel</button>
+   <button mat-button
+           [mat-dialog-close]="data"
+           [disabled]="data.samples.length === 0 || data.resourceCodes.length === 0">
+      Save Associations
+   </button>
+</mat-dialog-actions>

@@ -1,17 +1,26 @@
-TUE: Multiple samples selection -> ERL view.
+Resources Association Dialog
+----------------------------
+Validate and save assocations to database.
+  Maybe add dialog option to eliminate duplicates?
+
 
 Samples Listing
 ---------------
-Add support for multiple selection of samples.
-
 When one or more samples are selected, allow creating new resources association list (go to new ERL view).
 
 Create a new service for setting page title in center of toolbar, use this to hold sample listing page title, "Samples".
 
-
 Views
 -----
-[ERL] Edit Resource List
+
+[SRA] Manage a simple association of a samples list with a resources list (where each sample will have the same associated resources)
+   Needed data:
+     Resolver:
+       Will return data of the form: { sampleIds: number[]; resourceCodes: string[] }.
+       Inject UserContextService and SelectedSamplesService.
+       if emp id not provided, get from user context service.
+       samples with empty resource codes list.
+
    List samples on the left as table showing basic metadata (include list of open test types).
    List resource items on right as editable mat-chip-list.
    Allow pasting in new resource items or sample-items sequence to add new associations.

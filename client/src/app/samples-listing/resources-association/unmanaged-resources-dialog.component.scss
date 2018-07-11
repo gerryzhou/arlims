@@ -1,0 +1,24 @@
+.list-name-area {
+
+}
+
+.samples-area {
+   .mat-chip {
+      color: lightgray;
+      background-color: darkblue;
+      font-weight: bold;
+      mat-icon {
+         color: lightgray;
+      }
+   }
+}
+
+.resources-area {
+   mat-form-field {
+      width: 100%;
+   }
+   .mat-chip {
+      background-color: lightblue;
+   }
+}
+

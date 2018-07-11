@@ -1,5 +1,8 @@
 <div class="control-area">
-   <mat-checkbox #selectAllNoneCheckbox (change)="selectOrUnselectVisible($event.checked)" matTooltip="select/unselect all (visible) samples"></mat-checkbox>
+   <mat-checkbox #selectAllNoneCheckbox
+      (change)="selectOrUnselectVisible($event.checked)"
+      matTooltip="select/unselect all visible samples">
+   </mat-checkbox>
    <app-samples-listing-options
       [initialOptions]="defaultListingOptions"
       (optionsChanged)="listingOptionsChanged($event)">
@@ -8,11 +11,14 @@
       {{countSelected()}} selected
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
+   <button id="assoc-resources-btn" mat-button *ngIf="countSelected() > 0"
+           (click)="promptAssociateUnmanagedResourcesWithSelected()">
+      Link resources...
+   </button>
 </div>
 
 <div class="listing">
    <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
-      <!--TODO: Really need to replace the sample here or the whole display list, else the change won't be noticed.-->
       <mat-checkbox [(ngModel)]="allSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
       <app-sample [sample]="allSamples[sampleIx].sample" [showSampleDetails]="showSampleDetails"></app-sample>
    </div>

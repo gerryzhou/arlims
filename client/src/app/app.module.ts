@@ -20,7 +20,8 @@ import {
    MatChipsModule,
    MatExpansionModule,
    MatSnackBarModule,
-   MatSlideToggleModule
+   MatSlideToggleModule,
+   MatDialogModule
 } from '@angular/material';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -37,6 +38,7 @@ import {TestStageStatusComponent} from './shared/components/test-stage-status/te
 import {SampleComponent} from './sample/sample.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {DayNumberPipe} from './shared/pipes/day-number.pipe';
+import {UnmanagedResourcesDialogComponent} from './samples-listing/resources-association/unmanaged-resources-dialog.component';
 
 @NgModule({
    declarations: [
@@ -47,7 +49,11 @@ import {DayNumberPipe} from './shared/pipes/day-number.pipe';
       TestMetadataComponent,
       TestStageStatusComponent,
       SampleComponent,
-      DayNumberPipe
+      DayNumberPipe,
+      UnmanagedResourcesDialogComponent,
+   ],
+   entryComponents: [
+     UnmanagedResourcesDialogComponent,
    ],
    imports: [
       BrowserModule,
@@ -72,6 +78,7 @@ import {DayNumberPipe} from './shared/pipes/day-number.pipe';
       MatExpansionModule,
       MatSnackBarModule,
       MatSlideToggleModule,
+      MatDialogModule,
       AppRoutingModule,
       TruncateModule,
    ],
