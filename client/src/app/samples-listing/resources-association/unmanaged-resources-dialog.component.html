@@ -30,6 +30,7 @@
                <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input placeholder="Enter resource codes..."
+                   cdkFocusInitial
                    [matChipInputFor]="resourceCodesChipList"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matChipInputAddOnBlur]="true"
