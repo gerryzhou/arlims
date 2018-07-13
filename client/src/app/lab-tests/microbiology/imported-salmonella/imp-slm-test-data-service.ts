@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of as obsof} from 'rxjs';
 import {ApiUrlsService} from '../../../shared/services/api-urls.service';
 import {ImpSlmTestData} from './imp-slm-test-data';
-import {TestStageStatus} from '../../test-stage-status';
+import {TestStageStatus} from '../../test-stages';
 
 @Injectable({providedIn: 'root'})
 export class ImpSlmTestDataService {

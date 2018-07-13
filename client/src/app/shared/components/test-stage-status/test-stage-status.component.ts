@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TestStageStatus} from '../../../lab-tests/test-stage-status';
+import {TestStageStatus} from '../../../lab-tests/test-stages';
 import {DatePipe} from '@angular/common';
 import {parseISOTimestampLocal} from '../../util/dates-and-times';
 

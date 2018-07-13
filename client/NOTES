@@ -1,5 +1,11 @@
+Add test data retrieval service in backend and in angular.
+
+
+Add router entry for editing a test stage.
+  tests/<test-type-code>/<test-id>/<stage-name>
+  e.g. tests/MICRO_IMP_SAL_VIDAS/123/PRE-ENR
+
 IMP SLM test data structure should be factored into stages with mapping between field name and stage name.
-  "PRE-ENR" -> field preEnr
 
 
 [ETAS] Edit Test at Stage
@@ -76,3 +82,7 @@ Forms
 }
 
 
+Barcode Scanners
+----------------
+Wedge utility for Zebra DS6707
+https://www.zebra.com/us/en/support-downloads/software/utilities/cordless-scantoconnect.html

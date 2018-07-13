@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {LabTestMetadata} from '../../../../generated/dto';
-import {TestStageStatus} from '../../../lab-tests/test-stage-status';
+import {TestStageStatus} from '../../../lab-tests/test-stages';
 import {parseISODateLocal} from '../../util/dates-and-times';
 
 @Component({
