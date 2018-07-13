@@ -1,33 +1,49 @@
-Add test data retrieval service in backend and in angular.
+Add general test data retrieval service in backend and in angular (test-data-service).
+   Add backend url to api urls service, inject into test data service.
+     getTestData(testId: number): Observable<string|null>
+     saveTestData(testId: number, testData: any, stageStatuses: StageStatus[])
 
+Add resolver TestDataResolver which fetches test data for a given test id (from url path param).
+  Inject general test data service.
 
-Add router entry for editing a test stage.
-  tests/<test-type-code>/<test-id>/<stage-name>
-  e.g. tests/MICRO_IMP_SAL_VIDAS/123/PRE-ENR
+Add component lab-tests/microbiology/imported-salmonella-vidas/test
+    Add router entry for this component view.
+      Url: tests/MICRO_IMP_SAL_VIDAS/123[/PRE-ENR] (following general pattern tests/<test-type-code>/<test-id>[/<stage-name>])
+      Resolver: Resolve "testData" supplied by TestDataResolver.
+
+Create a component for each test stage.
+  stage-prep
+  stage-pre-enr
+  stage-sel-enr
+  stage-vidas
+  stage-results
+
+In test.component.html:
+  If stage is specified: switch to select one test stage component to show.
+  Else show all test stages as expandable (accordian) sections.
+
+In TestComponent:
+   Implement initialization:
+      Get testId from url param.
+         Lookup Sample via new method in UserContextService which keeps mapping to test id -> { Sample, Test }.
+      Get stage (string | null) from url param.
+      Get testData (string | null) supplied by resolver.
+      [Maybe, Future] Can ask if there is a set of resource codes in context via a new CurrentResourceCodes context.
+        Would allow specifying codes for use in a sequence of test stage edits.
+        resourceCodes: string[] | null
+
+Implement details of test.component.html:
+    Layout:
+      sample information header
+      control row, allowing to navigate and/or toggle visible stages
+      form data for the currently selected stage(s)
+      resource codes panel shown on right if supplied
+          allow pasting in new resource codes
+          button to apply resources
+            Highlight application points in the form.
+            Distinguish applied resource codes from those that didn't match any form fields.
 
 IMP SLM test data structure should be factored into stages with mapping between field name and stage name.
-
-
-[ETAS] Edit Test at Stage
--------------------------
-Required data:
-   testId: number (lookup Sample via new method in UserContextService which keeps mapping to test id -> { Sample, Test }
-   stage: string
-   [via new TestDataResolver]
-     test data json for the given test id
-[Maybe, Future] Can ask if there is a set of resource codes in context via a new CurrentResourceCodes context.
-   Would allow specifying codes for use in a sequence of test stage edits.
-   resourceCodes: string[] | null
-
-Layout:
-  sample information header
-  control row, allowing to navigate and/or toggle visible stages
-  form data for the currently selected stage(s)
-  resource codes panel shown on right if supplied
-      allow pasting in new resource codes
-      button to apply resources
-        Highlight application points in the form.
-        Distinguish applied resource codes from those that didn't match any form fields.
 
 John: For now, don't use resource lists, just allow pasting directly to a form section after clicking on a test stage.
       So, may not need multiple selection at all, for now.

@@ -1,6 +1,6 @@
 import {SamplingMethod} from '../../../../generated/dto';
 
-export interface ImpSlmTestConfig {
+export interface TestConfig {
 
    samplingMethodChoices: SamplingMethod[];
 

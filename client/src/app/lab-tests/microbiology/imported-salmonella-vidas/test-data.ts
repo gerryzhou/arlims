@@ -1,7 +1,9 @@
 import {Signature} from '../../signature';
 import {SamplingMethod} from '../../../../generated/dto';
+import {TestStageStatus} from '../../test-stages';
 
-export interface ImpSlmTestData {
+// TODO: Break this down into stages.
+export interface TestData {
     sampleNumber?: number;
     productName?: string;
     sampleReceived?: string;
@@ -60,3 +62,18 @@ export interface ImpSlmTestData {
 export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY' | 'SUBMITTED_ALONE';
 
 export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_AFTER_ANALYSIS' | 'ISOLATES_SENT' | 'OTHER';
+
+export interface ImpSlmTestDataMergeResult {
+   overwrittenFieldValuesCount: number;
+}
+
+export function assignTestData(toTestData: TestData, fromTestData: TestData): ImpSlmTestDataMergeResult {
+   // TODO
+   return null;
+}
+
+export function getStageStatuses(testData: TestData): TestStageStatus[] {
+   // TODO
+   return [];
+}
+
