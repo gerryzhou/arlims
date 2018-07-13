@@ -1,79 +1,45 @@
-Resources Association Dialog
-----------------------------
-Validate and save assocations to database.
-  Maybe add dialog option to eliminate duplicates?
+IMP SLM test data structure should be factored into stages with mapping between field name and stage name.
+  "PRE-ENR" -> field preEnr
 
 
-Samples Listing
+[ETAS] Edit Test at Stage
+-------------------------
+Required data:
+   testId: number (lookup Sample via new method in UserContextService which keeps mapping to test id -> { Sample, Test }
+   stage: string
+   [via new TestDataResolver]
+     test data json for the given test id
+[Maybe, Future] Can ask if there is a set of resource codes in context via a new CurrentResourceCodes context.
+   Would allow specifying codes for use in a sequence of test stage edits.
+   resourceCodes: string[] | null
+
+Layout:
+  sample information header
+  control row, allowing to navigate and/or toggle visible stages
+  form data for the currently selected stage(s)
+  resource codes panel shown on right if supplied
+      allow pasting in new resource codes
+      button to apply resources
+        Highlight application points in the form.
+        Distinguish applied resource codes from those that didn't match any form fields.
+
+John: For now, don't use resource lists, just allow pasting directly to a form section after clicking on a test stage.
+      So, may not need multiple selection at all, for now.
+      If selection is needed, it would probably be selection of tests not samples, for example to apply some data to
+      multiple tests at once.
+
+[SL] Samples Listing
 ---------------
-When one or more samples are selected, allow creating new resources association list (go to new ERL view).
+New filtering options:
+  - by FACTS status
+  - by test type (maybe optional whether to actually hide other test types in samples that contain the specified test type)
+
+Hide slider switch to allow hidden selections by default, make available in some sort of "advanced options" panel.
+
+
 
 Create a new service for setting page title in center of toolbar, use this to hold sample listing page title, "Samples".
 
-Views
------
-
-[SRA] Manage a simple association of a samples list with a resources list (where each sample will have the same associated resources)
-   Needed data:
-     Resolver:
-       Will return data of the form: { sampleIds: number[]; resourceCodes: string[] }.
-       Inject UserContextService and SelectedSamplesService.
-       if emp id not provided, get from user context service.
-       samples with empty resource codes list.
-
-   List samples on the left as table showing basic metadata (include list of open test types).
-   List resource items on right as editable mat-chip-list.
-   Allow pasting in new resource items or sample-items sequence to add new associations.
-
-[MRL] Manage Resource Lists
-   Listing of resource lists and their metadata (who created, when, number of items).
-   Editing and delete link.
-
-
-[S] list/manage active samples
- Include Samples Assigned to: list of checkboxes
- Sort Samples
-   [x] assigned to current user (this checkbox only shown if assigned user is "any"), then
-   (.)last modified test ()begin date  ...
- Filter test types: [x]IMP-SLM-VIDAS [x]DOM-SLM ...
- [Refresh sample info from FACTS]
-
- | -------------------------------------------------
- | Product Name, Sample #, PAC (LID PAF) Assigned to
- | -------------------------------------------------
- | sel  TEST TYPE     Day  Stage
- | [x]  IMP-SAL-VIDAS  3   Vidas
- | [ ]  DOM-SAL        2   Pre-Enrichment
- |----------------------------------------
-
-  Put samples assigned to the current user first.
-
-  List sample information and active test links, with "+" to create new test.
-  DO NOT use a data table.  Just use a custom sample component.
-  Functions
-    Show "day" of sample calculated from begin date.
-    Import active samples and their employee work assignments from FACTS.
-    List currently active samples for the lab, activate and deactivate samples.
-    Make a named sample list from selected samples.
-    Allow searching samples by name/pattern, date range for various dates, user, sample list.
-
-[T] list/manage active tests
-  When selection is non-empty:
-    Enable dialog to receive pasted resources to associate with selected tests.
-    Enable printing of test/sample information for association resources offline (via barcode scanner).
-  edit test data
-  review signoff and FACTS submission (requires special REVIEW role)
-  print test data
-  delete tests
-
-[TR] receive stream of test/lab resource associations
-     Support receiving alternating sequence of sample-codes and resource codes to form associations:
-     ________  test code __________ resource code ___________
-       |   |_______________|  |______________________|   |
-       |_________________________________________________|
-  In either case (1 or 2), present a matrix showing resources x tests for confirmation before saving the associations.
-  Allow user to drag selected resources in a column to another column to correct associations (previous values at drop
-  target go to holding area).
 
 [WB] Waterbath whiteboard
   Add general screen to display samples/tests and attach status notes.

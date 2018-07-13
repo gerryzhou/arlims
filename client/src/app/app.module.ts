@@ -38,7 +38,6 @@ import {TestStageStatusComponent} from './shared/components/test-stage-status/te
 import {SampleComponent} from './sample/sample.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {DayNumberPipe} from './shared/pipes/day-number.pipe';
-import {UnmanagedResourcesDialogComponent} from './samples-listing/resources-association/unmanaged-resources-dialog.component';
 
 @NgModule({
    declarations: [
@@ -50,10 +49,9 @@ import {UnmanagedResourcesDialogComponent} from './samples-listing/resources-ass
       TestStageStatusComponent,
       SampleComponent,
       DayNumberPipe,
-      UnmanagedResourcesDialogComponent,
    ],
    entryComponents: [
-     UnmanagedResourcesDialogComponent,
+     // (dialog components here)
    ],
    imports: [
       BrowserModule,

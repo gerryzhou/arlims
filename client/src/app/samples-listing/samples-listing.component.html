@@ -11,10 +11,6 @@
       {{countSelected()}} selected
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
-   <button id="assoc-resources-btn" mat-button *ngIf="countSelected() > 0"
-           (click)="promptAssociateUnmanagedResourcesWithSelected()">
-      Link resources...
-   </button>
 </div>
 
 <div class="listing">

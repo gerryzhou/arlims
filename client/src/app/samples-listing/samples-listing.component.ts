@@ -4,7 +4,6 @@ import {LabGroupContents, Sample} from '../../generated/dto';
 import {UserContextService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
 import {MatDialog} from '@angular/material';
-import {UnmanagedResourcesDialogComponent} from './resources-association/unmanaged-resources-dialog.component';
 
 @Component({
   selector: 'app-samples-listing',
@@ -143,26 +142,6 @@ export class SamplesListingComponent implements OnInit {
       return selectedCount;
    }
 
-   promptAssociateUnmanagedResourcesWithSelected() {
-      const selectedSamples = this.selectedSamples;
-      if (selectedSamples.length === 0) { return; }
-
-      const dlg = this.dialogSvc.open(UnmanagedResourcesDialogComponent, {
-         width: '800px', // TODO-RESPONSIVE
-         data: {
-            listName: '',
-            appendDateTimeToListName: true,
-            samples: selectedSamples,
-            resourceCodes: [],
-         }
-      });
-
-      dlg.afterClosed().subscribe(result => {
-         console.log('The dialog was closed with result:');
-         console.log(result);
-         // TODO: Save the associations.
-      });
-   }
 }
 
 class SelectableSample {
