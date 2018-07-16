@@ -1,10 +1,4 @@
-Add general test data retrieval service in backend and in angular (test-data-service).
-   Add backend url to api urls service, inject into test data service.
-     getTestData(testId: number): Observable<string|null>
-     saveTestData(testId: number, testData: any, stageStatuses: StageStatus[])
-
-Add resolver TestDataResolver which fetches test data for a given test id (from url path param).
-  Inject general test data service.
+Update db based on JPA definitions (added test_data_md5 column to test).
 
 Add component lab-tests/microbiology/imported-salmonella-vidas/test
     Add router entry for this component view.

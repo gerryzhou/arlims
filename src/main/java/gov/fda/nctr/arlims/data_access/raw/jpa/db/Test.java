@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
         @Index(name = "IX_TST_BEGINDATE", columnList = "BEGIN_DATE"),
         @Index(name = "IX_TST_REVIEWEDEMPID", columnList = "REVIEWED_BY_EMP_ID"),
         @Index(name = "IX_TST_SAVEDTOFACTS", columnList = "SAVED_TO_FACTS"),
+        @Index(name = "IX_TST_TESTDATAMD5", columnList = "TEST_DATA_MD5"),
     }
 )
 public class Test
@@ -69,6 +70,9 @@ public class Test
     @Lob @Basic(fetch = FetchType.LAZY)
     private String testDataJson;
 
+    @Column(name = "TEST_DATA_MD5", length=32, nullable=false)
+    private String testDataMd5;
+
     @Column(length = 4000)
     private String stageStatusesJson;
 
@@ -95,6 +99,7 @@ public class Test
             LocalDate beginDate,
             @Size(max = 200) String note,
             String testDataJson,
+            String testDataMd5,
             String stageStatusesJson
         )
     {
@@ -112,6 +117,7 @@ public class Test
         this.beginDate = beginDate;
         this.note = note;
         this.testDataJson = testDataJson;
+        this.testDataMd5 = testDataMd5;
         this.stageStatusesJson = stageStatusesJson;
         this.reviewed = null;
         this.reviewedByEmployee = null;
@@ -156,6 +162,9 @@ public class Test
 
     public String getTestDataJson() { return testDataJson; }
     public void setTestDataJson(String testDataJson) { this.testDataJson = testDataJson; }
+
+    public String getTestDataMd5() { return testDataMd5; }
+    public void setTestDataMd5(String testDataMd5) { this.testDataMd5 = testDataMd5; }
 
     public String getStageStatusesJson() { return stageStatusesJson; }
     public void setStageStatusesJson(String stageStatusesJson) { this.stageStatusesJson = stageStatusesJson; }
