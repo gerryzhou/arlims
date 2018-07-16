@@ -2,6 +2,7 @@
 select 'drop table ' || table_name || ' cascade constraints purge;' drop_command
 from user_tables
 ;
+
 drop table TEST_UNMANAGED_RESOURCE cascade constraints purge;
 drop table TEST_TYPE cascade constraints purge;
 drop table TEST_MANAGED_RESOURCE cascade constraints purge;

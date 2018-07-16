@@ -120,20 +120,20 @@ insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resour
 
 insert into test
   (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
-   last_saved, last_saved_by_emp_id, reviewed_by_emp_id, saved_to_facts)
-  values(1, 1, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, null, null);
+   last_saved, last_saved_by_emp_id, reviewed_by_emp_id, saved_to_facts, test_data_md5)
+  values(1, 1, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, null, null, 'd41d8cd98f00b204e9800998ecf8427e');
 insert into test
   (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
-   last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts)
-  values(1, 1, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'for JM', null, null);
+   last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts, test_data_md5)
+  values(1, 1, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'for JM', null, null, 'd41d8cd98f00b204e9800998ecf8427e');
 insert into test
 (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
- last_saved, last_saved_by_emp_id, reviewed, reviewed_by_emp_id, saved_to_facts)
-  values(1, 2, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP);
+ last_saved, last_saved_by_emp_id, reviewed, reviewed_by_emp_id, saved_to_facts, test_data_md5)
+  values(1, 2, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 'd41d8cd98f00b204e9800998ecf8427e');
 insert into test
 (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
- last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts)
-  values(1, 2, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'X', null, null);
+ last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts, test_data_md5)
+  values(1, 2, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'X', null, null, 'd41d8cd98f00b204e9800998ecf8427e');
 
 update test set stage_statuses_json =
   '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
