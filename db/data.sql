@@ -136,20 +136,20 @@ insert into test
   values(1, 2, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'X', null, null, 'd41d8cd98f00b204e9800998ecf8427e');
 
 update test set stage_statuses_json =
-  '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
+  '[{"stageName": "INSPECT", "fieldValuesStatus": "c"},' ||
   '{"stageName": "PRE-ENR", "fieldValuesStatus": "i"},' ||
   '{"stageName": "SEL-ENR", "fieldValuesStatus": "e"},' ||
   '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
   where id = 1;
 
 update test set stage_statuses_json =
-  '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T11:38:31"}},' ||
+  '[{"stageName": "INSPECT", "fieldValuesStatus": "c"},' ||
   '{"stageName": "PRE-ENR", "fieldValuesStatus": "c"},' ||
   '{"stageName": "SEL-ENR", "fieldValuesStatus": "i"},' ||
   '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
   where id = 2;
 update test set stage_statuses_json =
-  '[{"stageName": "INSPECT", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/06T09:32:12"}},' ||
-  '{"stageName": "ENR", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/07T09:32:12"}},' ||
-  '{"stageName": "VIDAS", "fieldValuesStatus": "c", "signature": {"employeeShortName": "SCH", "signedInstant": "2018/07/08T12:39:34"}}]'
+  '[{"stageName": "INSPECT", "fieldValuesStatus": "c"},' ||
+  '{"stageName": "ENR", "fieldValuesStatus": "c"},' ||
+  '{"stageName": "VIDAS", "fieldValuesStatus": "c"}]'
   where id = 3;

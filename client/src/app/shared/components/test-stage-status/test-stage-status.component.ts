@@ -15,8 +15,6 @@ export class TestStageStatusComponent implements OnInit {
 
    fieldValuesStatusText: string;
 
-   signatureDescription: string | null;
-
    constructor(private datePipe: DatePipe) { }
 
    ngOnInit() {
@@ -25,15 +23,6 @@ export class TestStageStatusComponent implements OnInit {
          case 'i': this.fieldValuesStatusText = 'incomplete'; break;
          case 'c': this.fieldValuesStatusText = 'complete'; break;
          default: this.fieldValuesStatusText = '?';
-      }
-
-      if (!!this.status.signature ) {
-         const sigTs = parseISOTimestampLocal(this.status.signature.signedInstant);
-         this.signatureDescription =
-            'signed by ' + this.status.signature.employeeShortName +
-            ' on ' + this.datePipe.transform(sigTs, 'long');
-      } else {
-         this.signatureDescription = null;
       }
    }
 

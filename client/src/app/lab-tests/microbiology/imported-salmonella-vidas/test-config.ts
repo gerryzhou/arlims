@@ -1,4 +1,5 @@
-import {SamplingMethod} from '../../../../generated/dto';
+import {SamplingMethod} from "../sampling-method";
+
 
 export interface TestConfig {
 

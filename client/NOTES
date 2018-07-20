@@ -1,20 +1,21 @@
+Finish defining test data structure for imp slm test.
 
-Add component lab-tests/microbiology/imported-salmonella-vidas/test
-   Add router entry for this component view.
-      Url: tests/micro-imp-sal-vidas/123/PRE-ENR (following general pattern tests/<some form of the test type>/<test-id>/<stage-name>)
-      Resolver: Resolve "versionedTestData" supplied by TestDataResolver.
+Allow creating a new empty test of a given type in UI for selected sample(s).
+  Should have to enter test begin date (TEST.BEGIN_DATE in db) from which day numbers are calculated.
 
-Create a component for each test stage.
+Create a component for each test stage via ng cli.
   stage-prep
   stage-pre-enr
-  stage-sel-enr
-  stage-vidas
-  stage-results
+  ...
+
+Add router entries for test-data-entry component view.
+  Url: tests/micro-imp-sal-vidas/123/PRE-ENR (following general pattern tests/<some form of the test type>/<test-id>/<stage-name>)
+  Resolver: Resolve "versionedTestData" supplied by TestDataResolver.
 
 In test.component.html:
   switch to select one test stage component to show.
 
-In TestComponent:
+In TestDataEntryComponent:
    Implement initialization:
       Get testId from url param.
          Lookup Sample via new method getTestMetadata(testId) in UserContextService which keeps mapping to test id -> { Sample, TestMetadata or test index within Sample}.
@@ -44,16 +45,6 @@ John: For now, don't use resource lists, just allow pasting directly to a form s
 
 [SL] Samples Listing
 ---------------
-New filtering options:
-  - by FACTS status
-  - by test type (maybe optional whether to actually hide other test types in samples that contain the specified test type)
-
-Hide slider switch to allow hidden selections by default, make available in some sort of "advanced options" panel.
-
-
-
-Create a new service for setting page title in center of toolbar, use this to hold sample listing page title, "Samples".
-
 
 [WB] Waterbath whiteboard
   Add general screen to display samples/tests and attach status notes.
@@ -76,6 +67,7 @@ Create a new service for setting page title in center of toolbar, use this to ho
   UI will allow flipping through stages for a test.
   Grid of active tests will just show current stages by default.
 
+Create a new service for setting page title in center of toolbar, use this to hold sample listing page title, "Samples".
 
 
 Forms
