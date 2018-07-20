@@ -1,8 +1,9 @@
-import {Signature} from '../../signature';
+import {Signature} from '../../../shared/models/signature';
 import {SamplingMethod} from '../../../../generated/dto';
 import {TestStageStatus} from '../../test-stages';
 
-// TODO: Break this down into stages.
+// TODO: Break this down into stages, make function to create a new test with a {}-valued field for each stage.
+//       Maybe remove sampleNumber and productName fields.
 export interface TestData {
     sampleNumber?: number;
     productName?: string;
@@ -65,6 +66,10 @@ export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_A
 
 export interface ImpSlmTestDataMergeResult {
    overwrittenFieldValuesCount: number;
+}
+
+export function emptyTestData(): TestData {
+      return {}; // TODO: Include field for each stage with value {}.
 }
 
 export function assignTestData(toTestData: TestData, fromTestData: TestData): ImpSlmTestDataMergeResult {

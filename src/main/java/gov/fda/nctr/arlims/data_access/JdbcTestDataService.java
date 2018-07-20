@@ -31,14 +31,17 @@ public class JdbcTestDataService implements TestDataService
     public VersionedTestData getVersionedTestData(long testId)
     {
         String sql =
-            "select t.test_data_json, t.test_data_md5\n" +
+            "select t.test_data_json, t.test_data_md5, e.short_name, t.last_saved\n" +
             "from test t\n" +
+            "join employee e on t.saved_by_emp_id = e.id\n" +
             "where id = ?";
 
         RowMapper<VersionedTestData> rowMapper = (row, rowNum) -> {
             Optional<String> data = Optional.ofNullable(row.getString(1));
             String md5 = row.getString(2);
-            return new VersionedTestData(data, md5);
+            String savedBy = row.getString(3);
+            Instant savedInstant = row.getTimestamp(4).toInstant();
+            return new VersionedTestData(testId, data, new DataModificationInfo(savedBy, savedInstant, md5));
         };
 
         return jdbc.queryForObject(sql, rowMapper, testId);

@@ -3,28 +3,34 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of as obsof} from 'rxjs';
 
 import {ApiUrlsService} from './api-urls.service';
-import {UserContext, LabGroupContents, AuthenticatedUser} from '../../../generated/dto';
+import {UserContext, LabGroupContents, AuthenticatedUser, LabTestMetadata, Sample} from '../../../generated/dto';
+import {SampleInTest} from '../models/sample-in-test';
 
 @Injectable()
 export class UserContextService {
 
    public authenticatedUser: AuthenticatedUser;
 
-   private _labGroupContents: LabGroupContents;
-   private _labGroupContentsLastUpdated: Date;
+   private labGroupContents: LabGroupContents;
+   private labGroupContentsLastUpdated: Date;
+   private testIdToSampleInTest: Map<number, SampleInTest>;
 
    constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) {}
 
    public getLabGroupContents(): Observable<LabGroupContents> {
       // TODO: Refresh lab group contents here as needed depending on options and when it was last updated.
-      return obsof(this._labGroupContents);
+      return obsof(this.labGroupContents);
+   }
+
+   getSampleInTest(testId: number): SampleInTest | undefined {
+      return this.testIdToSampleInTest.get(testId);
    }
 
    private setUserContext(userContext: UserContext) {
       this.authenticatedUser = userContext.authenticatedUser;
-      this._labGroupContents = userContext.labGroupContents;
-      this._labGroupContentsLastUpdated = new Date();
-      // TODO: Initialize lookup maps etc from the LabGroupContents as needed (e.g. short name -> UserReference) .
+      this.labGroupContents = userContext.labGroupContents;
+      this.labGroupContentsLastUpdated = new Date();
+      this.testIdToSampleInTest = this.getSampleInTestsByTestId(userContext.labGroupContents.activeSamples);
    }
 
    // Called via app-module to initialize the service prior to usage.
@@ -39,4 +45,15 @@ export class UserContextService {
       return ucProm;
    }
 
+   private getSampleInTestsByTestId(samples: Sample[]) {
+      const m = new Map<number, SampleInTest>();
+
+      for (const s of samples) {
+         for (const t of s.tests) {
+            m.set(t.testId, { sample: s, testMetadata: t });
+         }
+      }
+
+      return m;
+   }
 }

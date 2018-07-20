@@ -1,4 +1,4 @@
-import {Signature} from './signature';
+import {Signature} from '../shared/models/signature';
 
 export interface TestStageStatus {
    stageName: string;

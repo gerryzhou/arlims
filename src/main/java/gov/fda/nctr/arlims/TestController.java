@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import gov.fda.nctr.arlims.data_access.TestDataService;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.DataModificationInfo;
-import gov.fda.nctr.arlims.models.dto.DataUpdateStatus;
+import gov.fda.nctr.arlims.models.dto.OptimisticDataUpdateResult;
 import gov.fda.nctr.arlims.models.dto.VersionedTestData;
 
 
@@ -40,7 +40,7 @@ public class TestController
     }
 
     @PostMapping("{testId}/data")
-    public DataUpdateStatus saveTestDataJson
+    public OptimisticDataUpdateResult saveTestDataJson
         (
             @PathVariable("testId") long testId,
             @RequestParam("testDataJson") String testDataJson,
@@ -53,7 +53,7 @@ public class TestController
         boolean saved = testDataService.saveTestDataJson(testId, testDataJson, previousMd5);
 
         if ( saved )
-            return new DataUpdateStatus(true, Optional.empty());
+            return new OptimisticDataUpdateResult(true, Optional.empty());
         else
         {
             Optional<DataModificationInfo> maybeMod = testDataService.getTestDataModificationInfo(testId);
@@ -61,7 +61,7 @@ public class TestController
             if ( !maybeMod.isPresent() )
                 throw new ResourceNotFoundException("test not found");
 
-            return new DataUpdateStatus(false, maybeMod);
+            return new OptimisticDataUpdateResult(false, maybeMod);
         }
     }
 

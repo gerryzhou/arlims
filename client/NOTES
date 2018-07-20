@@ -1,9 +1,8 @@
-Update db based on JPA definitions (added test_data_md5 column to test).
 
 Add component lab-tests/microbiology/imported-salmonella-vidas/test
-    Add router entry for this component view.
-      Url: tests/MICRO_IMP_SAL_VIDAS/123[/PRE-ENR] (following general pattern tests/<test-type-code>/<test-id>[/<stage-name>])
-      Resolver: Resolve "testData" supplied by TestDataResolver.
+   Add router entry for this component view.
+      Url: tests/micro-imp-sal-vidas/123/PRE-ENR (following general pattern tests/<some form of the test type>/<test-id>/<stage-name>)
+      Resolver: Resolve "versionedTestData" supplied by TestDataResolver.
 
 Create a component for each test stage.
   stage-prep
@@ -13,15 +12,14 @@ Create a component for each test stage.
   stage-results
 
 In test.component.html:
-  If stage is specified: switch to select one test stage component to show.
-  Else show all test stages as expandable (accordian) sections.
+  switch to select one test stage component to show.
 
 In TestComponent:
    Implement initialization:
       Get testId from url param.
-         Lookup Sample via new method in UserContextService which keeps mapping to test id -> { Sample, Test }.
-      Get stage (string | null) from url param.
-      Get testData (string | null) supplied by resolver.
+         Lookup Sample via new method getTestMetadata(testId) in UserContextService which keeps mapping to test id -> { Sample, TestMetadata or test index within Sample}.
+      Get optional stage from url param.
+      Get VersionedTestData supplied by resolver.
       [Maybe, Future] Can ask if there is a set of resource codes in context via a new CurrentResourceCodes context.
         Would allow specifying codes for use in a sequence of test stage edits.
         resourceCodes: string[] | null

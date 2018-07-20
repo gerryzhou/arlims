@@ -5,20 +5,25 @@ import java.util.Optional;
 
 public class VersionedTestData
 {
-    Optional<String> testDataJson;
-    String testDataMd5;
+    private final long testId;
+    private final Optional<String> testDataJson;
+    private final DataModificationInfo modInfo;
 
     public VersionedTestData
         (
+            long testId,
             Optional<String> testDataJson,
-            String testDataMd5
+            DataModificationInfo modInfo
         )
     {
+        this.testId = testId;
         this.testDataJson = testDataJson;
-        this.testDataMd5 = testDataMd5;
+        this.modInfo = modInfo;
     }
+
+    public long getTestId() { return testId; }
 
     public Optional<String> getTestDataJson() { return testDataJson; }
 
-    public String getTestDataMd5() { return testDataMd5; }
+    public DataModificationInfo getModificationInfo() { return modInfo; }
 }

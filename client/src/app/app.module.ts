@@ -38,6 +38,7 @@ import {TestStageStatusComponent} from './shared/components/test-stage-status/te
 import {SampleComponent} from './sample/sample.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {DayNumberPipe} from './shared/pipes/day-number.pipe';
+import { TestDataEntryComponent } from './lab-tests/microbiology/imported-salmonella-vidas/test-data-entry/test-data-entry.component';
 
 @NgModule({
    declarations: [
@@ -49,6 +50,7 @@ import {DayNumberPipe} from './shared/pipes/day-number.pipe';
       TestStageStatusComponent,
       SampleComponent,
       DayNumberPipe,
+      TestDataEntryComponent,
    ],
    entryComponents: [
      // (dialog components here)
