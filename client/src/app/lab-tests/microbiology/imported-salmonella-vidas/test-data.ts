@@ -2,101 +2,18 @@ import {Signature} from '../../../shared/models/signature';
 import {FieldValuesStatusCode, stageNameToTestDataFieldName, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SamplingMethod} from '../sampling-method';
 
-
-interface Stage {
-   name: string;
-   statusCodeFn: (any) => FieldValuesStatusCode;
+export interface TestData {
+   prepData: PrepData;
+   preEnrData: PreEnrData;
+   selEnrData: SelEnrData;
+   mBrothData: MBrothData,
+   vidasData: VidasData;
+   controlsData: ControlsData,
+   resultsData: ResultsData;
+   wrapupData: WrapupData;
 }
 
-const stages: Stage[] = [
-   {name: 'PREP', statusCodeFn: prepStatusCode},
-   {name: 'PRE-ENR', statusCodeFn: preEnrStatusCode},
-   {name: 'SEL-ENR', statusCodeFn: selEnrStatusCode},
-   {name: 'M-BROTH', statusCodeFn: mBrothStatusCode},
-   {name: 'VIDAS', statusCodeFn:  vidasStatusCode},
-   {name: 'CONTROLS', statusCodeFn: controlsStatusCode},
-   {name: 'RESULTS', statusCodeFn: resultsStatusCode},
-   {name: 'WRAPUP', statusCodeFn: wrapupStatusCode},
-];
-
-function prepStatusCode(data: PrepData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      data.sampleReceived,
-      data.sampleReceivedFrom,
-      data.descriptionMatchesCR,
-      data.labelAttachmentType,
-      data.containerMatchesCR,
-      data.containerMatchesCRSignature,
-      data.codeMatchesCR,
-      data.codeMatchesCRNotes,
-      data.codeMatchesCRSignature
-   ]);
-}
-
-function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      data.samplingMethod,
-      data.samplingMethodExceptionNotes,
-      data.balanceId,
-      data.blenderJarId,
-      data.bagId,
-      data.sampleSpike,
-      data.spikePlateCount,
-      data.preenrichMediumBatchId,
-      data.preenrichIncubatorId,
-      data.preenrichPositiveControlGrowth,
-      data.preenrichMediumControlGrowth,
-      data.preenrichSignature
-   ]);
-}
-
-function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      data.rvBatchId,
-      data.ttBatchId,
-      data.bgBatchId,
-      data.l2KiBatchId,
-      data.rvttWaterBathId,
-      data.rvttSignature,
-   ]);
-}
-
-function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      // TODO
-   ]);
-}
-function vidasStatusCode(data: VidasData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      // TODO
-   ]);
-}
-function controlsStatusCode(data: ControlsData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      // TODO
-   ]);
-}
-function resultsStatusCode(data: ResultsData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      // TODO
-   ]);
-}
-function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      // TODO
-   ]);
-}
-
-function getStageStatuses(testData: TestData): TestStageStatus[] {
-   return stages.map(stage => {
-      const stageTestDataFieldName = stageNameToTestDataFieldName(stage.stageName);
-      const stageData = testData[stageTestDataFieldName];
-      return { stageName: stage.name, fieldValuesStatus: stage.statusCodeFn(stageData) };
-   });
-}
-
-
-interface PrepData {
+export interface PrepData {
    sampleReceived?: string;
    sampleReceivedFrom?: string;
    descriptionMatchesCR?: boolean;
@@ -108,7 +25,7 @@ interface PrepData {
    codeMatchesCRSignature?: Signature;
 }
 
-interface PreEnrData {
+export interface PreEnrData {
    samplingMethod?: SamplingMethod;
    samplingMethodExceptionNotes?: string;
    balanceId?: string;
@@ -123,7 +40,7 @@ interface PreEnrData {
    preenrichSignature?: Signature;
 }
 
-interface SelEnrData {
+export interface SelEnrData {
    rvBatchId?: string;
    ttBatchId?: string;
    bgBatchId?: string;
@@ -132,13 +49,13 @@ interface SelEnrData {
    rvttSignature?: Signature;
 }
 
-interface MBrothData {
+export interface MBrothData {
    mBrothBatchId?: string;
    mBrothWaterBathId?: string;
    mBrothSignature?: Signature;
 }
 
-interface VidasData {
+export interface VidasData {
    vidasInstrumentId?: string;
    vidasKitIds?: string[];
    vidasCompositesDetections?: boolean[];
@@ -148,7 +65,7 @@ interface VidasData {
    vidasSignature?: Signature;
 }
 
-interface ControlsData {
+export interface ControlsData {
    systemControlsPositiveControlGrowth?: boolean;
    systemMediumPositiveControlGrowth?: boolean;
    systemControlsSignature?: Signature;
@@ -159,41 +76,152 @@ interface ControlsData {
    bacterialControlsSignature?: Signature;
 }
 
-interface ResultsData {
+export interface ResultsData {
    resultPositiveCompositesCount?: number;
    resultSignature?: Signature;
 }
 
-interface WrapupData {
+export interface WrapupData {
    reserveReserveSampleDisposition?: ReserveSampleDisposition;
    reserveSampleDestinations?: string[];
    reserveSampleNote?: string;
    allCompletedSignature?: Signature;
 }
 
-export interface TestData {
-   prepData:    PrepData;
-   preEnrData:  PreEnrData;
-   selEnrData:  SelEnrData;
-   vidasData:   VidasData;
-   resultsData: ResultsData;
-}
-
 export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY' | 'SUBMITTED_ALONE';
 
 export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_AFTER_ANALYSIS' | 'ISOLATES_SENT' | 'OTHER';
-
-export interface ImpSlmTestDataMergeResult {
-   overwrittenFieldValuesCount: number;
-}
 
 export function emptyTestData(): TestData {
    return {
       prepData: {},
       preEnrData: {},
       selEnrData: {},
+      mBrothData: {},
       vidasData: {},
+      controlsData: {},
       resultsData: {},
+      wrapupData: {},
    };
+}
+
+interface Stage {
+   name: string;
+   statusCodeFn: (any) => FieldValuesStatusCode;
+}
+
+const stages: Stage[] = [
+   {name: 'PREP',     statusCodeFn: prepStatusCode},
+   {name: 'PRE-ENR',  statusCodeFn: preEnrStatusCode},
+   {name: 'SEL-ENR',  statusCodeFn: selEnrStatusCode},
+   {name: 'M-BROTH',  statusCodeFn: mBrothStatusCode},
+   {name: 'VIDAS',    statusCodeFn: vidasStatusCode},
+   {name: 'CONTROLS', statusCodeFn: controlsStatusCode},
+   {name: 'RESULTS',  statusCodeFn: resultsStatusCode},
+   {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
+];
+
+function prepStatusCode(data: PrepData): FieldValuesStatusCode {
+   return statusForRequiredFieldValues([
+      data.sampleReceived,
+      data.sampleReceivedFrom,
+      data.descriptionMatchesCR,
+      data.labelAttachmentType,
+      data.containerMatchesCR,
+      data.containerMatchesCRSignature,
+      data.codeMatchesCR,
+      data.codeMatchesCRSignature
+   ]);
+}
+
+function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {
+   const coreFieldsStatus = statusForRequiredFieldValues([
+      data.samplingMethod,
+      data.balanceId,
+      data.blenderJarId,
+      data.bagId,
+      data.sampleSpike,
+      data.preenrichMediumBatchId,
+      data.preenrichIncubatorId,
+      data.preenrichPositiveControlGrowth,
+      data.preenrichMediumControlGrowth,
+      data.preenrichSignature
+   ]);
+
+   // Spike plate count is required iff sampleSpike is true.
+   if (coreFieldsStatus === 'c' && data.sampleSpike && !data.spikePlateCount) {
+      return 'i';
+   }
+   return coreFieldsStatus;
+}
+
+function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode {
+   return statusForRequiredFieldValues([
+      data.rvBatchId,
+      data.ttBatchId,
+      // data.bgBatchId,  TODO: Are these two required?
+      // data.l2KiBatchId,
+      data.rvttWaterBathId,
+      data.rvttSignature,
+   ]);
+}
+
+function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode {
+   return statusForRequiredFieldValues([
+      data.mBrothBatchId,
+      data.mBrothWaterBathId,
+      data.mBrothSignature,
+   ]);
+}
+
+function vidasStatusCode(data: VidasData): FieldValuesStatusCode {
+   return statusForRequiredFieldValues([
+      data.vidasInstrumentId,
+      data.vidasKitIds,
+      data.vidasCompositesDetections,
+      data.vidasPositiveControlDetection,
+      data.vidasMediumControlDetection,
+      data.vidasSpikeDetection,
+      data.vidasSignature,
+   ]);
+}
+
+function controlsStatusCode(data: ControlsData): FieldValuesStatusCode {
+   return statusForRequiredFieldValues([
+      data.systemControlsPositiveControlGrowth,
+      data.systemMediumPositiveControlGrowth,
+      data.systemControlsSignature,
+      data.collectorControlsPositveControlGrowth,
+      data.collectorControlsMediumControlGrowth,
+      data.collectorControlsSignature,
+      data.bacterialControlsUsed,
+      data.bacterialControlsSignature,
+   ]);
+}
+
+function resultsStatusCode(data: ResultsData): FieldValuesStatusCode {
+   return statusForRequiredFieldValues([
+      data.resultPositiveCompositesCount,
+      data.resultSignature,
+   ]);
+}
+
+function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode {
+   return statusForRequiredFieldValues([
+      data.reserveReserveSampleDisposition,
+      data.reserveSampleDestinations,
+      data.allCompletedSignature,
+   ]);
+}
+
+export function getTestStageStatuses(testData: TestData): TestStageStatus[] {
+   return stages.map(stage => {
+      const stageFieldName = stageNameToTestDataFieldName(stage.name);
+      const stageData = testData[stageFieldName];
+      return {
+         stageName: stage.name,
+         fieldValuesStatus: stageData ? stage.statusCodeFn(stageData) : 'e'
+      };
+   });
 }
 

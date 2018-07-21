@@ -9,7 +9,7 @@ Create a component for each test stage via ng cli.
   ...
 
 Add router entries for test-data-entry component view.
-  Url: tests/micro-imp-sal-vidas/123/PRE-ENR (following general pattern tests/<some form of the test type>/<test-id>/<stage-name>)
+  Url: tests/micro/imp-sal-vidas/123/PRE-ENR (following general pattern tests/<some form of the test type>/<test-id>/<stage-name>)
   Resolver: Resolve "versionedTestData" supplied by TestDataResolver.
 
 In test.component.html:
