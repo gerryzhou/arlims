@@ -1,34 +1,11 @@
-Finish defining test data structure for imp slm test.
+First just allow editing existing tests (test creation later).
 
-Allow creating a new empty test of a given type in UI for selected sample(s).
-  Should have to enter test begin date (TEST.BEGIN_DATE in db) from which day numbers are calculated.
+In TestData.preEnrData, just make sampling method a subform, with no separate name/identifier field.
+  Then can add convenience buttons to allow filling with standard sampling method values.
 
-Create a component for each test stage via ng cli.
-  stage-prep
-  stage-pre-enr
-  ...
-
-Add router entries for test-data-entry component view.
-  Url: tests/micro/imp-sal-vidas/123/PRE-ENR (following general pattern tests/<some form of the test type>/<test-id>/<stage-name>)
-  Resolver: Resolve "versionedTestData" supplied by TestDataResolver.
-
-In test.component.html:
-  switch to select one test stage component to show.
-
-In TestDataEntryComponent:
-   Implement initialization:
-      Get testId from url param.
-         Lookup Sample via new method getTestMetadata(testId) in UserContextService which keeps mapping to test id -> { Sample, TestMetadata or test index within Sample}.
-      Get optional stage from url param.
-      Get VersionedTestData supplied by resolver.
-      [Maybe, Future] Can ask if there is a set of resource codes in context via a new CurrentResourceCodes context.
-        Would allow specifying codes for use in a sequence of test stage edits.
-        resourceCodes: string[] | null
-
-Implement details of test.component.html:
+Implement details of test-data-entry.component.html:
     Layout:
       sample information header
-      control row, allowing to navigate and/or toggle visible stages
       form data for the currently selected stage(s)
       resource codes panel shown on right if supplied
           allow pasting in new resource codes
@@ -36,7 +13,19 @@ Implement details of test.component.html:
             Highlight application points in the form.
             Distinguish applied resource codes from those that didn't match any form fields.
 
-IMP SLM test data structure should be factored into stages with mapping between field name and stage name.
+In TestDataEntryComponent:
+  [Maybe, Future] Can ask if there is a set of resource codes in context via a new CurrentResourceCodes context.
+    Would allow specifying codes for use in a sequence of test stage edits.
+    resourceCodes: string[] | null
+  Be sure to unset the codes in the service when the operation is completed for all selected tests.
+
+Allow creating a new empty test of a given type in UI for selected sample(s).
+  Test data field and status fields should be null.
+  Should have to enter test begin date (TEST.BEGIN_DATE in db) from which day numbers are calculated.
+
+Decide how signatures in forms will be handled.
+  They can't be handled like other form data, both components must be set automatically only when user passes an authentication test.
+  Probably only the form stage should be signable as complete/correct and achieved outside the form?
 
 John: For now, don't use resource lists, just allow pasting directly to a form section after clicking on a test stage.
       So, may not need multiple selection at all, for now.

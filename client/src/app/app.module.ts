@@ -38,7 +38,7 @@ import {TestStageStatusComponent} from './shared/components/test-stage-status/te
 import {SampleComponent} from './sample/sample.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {DayNumberPipe} from './shared/pipes/day-number.pipe';
-import { TestDataEntryComponent } from './lab-tests/microbiology/imported-salmonella-vidas/test-data-entry/test-data-entry.component';
+import {ImportedSalmonellaVidasModule} from './lab-tests/microbiology/imported-salmonella-vidas/imported-salmonella-vidas.module';
 
 @NgModule({
    declarations: [
@@ -49,8 +49,7 @@ import { TestDataEntryComponent } from './lab-tests/microbiology/imported-salmon
       TestMetadataComponent,
       TestStageStatusComponent,
       SampleComponent,
-      DayNumberPipe,
-      TestDataEntryComponent,
+      DayNumberPipe
    ],
    entryComponents: [
      // (dialog components here)
@@ -79,8 +78,10 @@ import { TestDataEntryComponent } from './lab-tests/microbiology/imported-salmon
       MatSnackBarModule,
       MatSlideToggleModule,
       MatDialogModule,
-      AppRoutingModule,
       TruncateModule,
+      // app modules
+      AppRoutingModule,
+      ImportedSalmonellaVidasModule,
    ],
    providers: [
       Location,

@@ -10,7 +10,7 @@ public interface TestDataService
 {
     VersionedTestData getVersionedTestData(long testId);
 
-    boolean saveTestDataJson(long testId, String json, String previousMd5);
+    boolean saveTestDataJson(long testId, String testDataJson, String stageStatusesJson, String previousMd5);
 
     Optional<DataModificationInfo> getTestDataModificationInfo(long testId);
 }

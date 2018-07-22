@@ -5,6 +5,7 @@ import {DataModificationInfo, OptimisticDataUpdateResult, VersionedTestData} fro
 import {HttpClient} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
+import {TestStageStatus} from "../../lab-tests/test-stages";
 
 
 @Injectable({
@@ -20,12 +21,19 @@ export class TestsService {
       );
    }
 
-   saveTestData(testId: number, testData: any, prevTestData: any, prevTestDataMd5: string): Observable<SaveResult> {
+   saveTestData(testId: number, testData: any, prevTestData: any, prevTestDataMd5: string, stageStatusesFn: (any) => TestStageStatus[]): Observable<SaveResult> {
       const formData: FormData = new FormData();
 
       formData.append('testDataJson',
          new Blob(
             [JSON.stringify(testData)],
+            { type: 'application/json' }
+         )
+      );
+
+      formData.append('stageStatusesJson',
+         new Blob(
+            [JSON.stringify(stageStatusesFn(testData))],
             { type: 'application/json' }
          )
       );
@@ -48,7 +56,7 @@ export class TestsService {
                      // If conflicts exist, just report the conflicts without any further attempt to save.
                      observable(new SaveResult(false, mergeRes))
                      // Latest db data merged cleanly onto local changes: attempt this process again with new db test data as baseline.
-                     : this.saveTestData(testId, mergeRes.mergedTestData, mergeRes.dbTestData, mergeRes.dbModificationInfo.dataMd5);
+                     : this.saveTestData(testId, mergeRes.mergedTestData, mergeRes.dbTestData, mergeRes.dbModificationInfo.dataMd5, stageStatusesFn);
                })
             );
          })

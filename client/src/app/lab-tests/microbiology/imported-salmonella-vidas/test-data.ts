@@ -1,16 +1,18 @@
-import {Signature} from '../../../shared/models/signature';
+// import {Signature} from '../../../shared/models/signature';
 import {FieldValuesStatusCode, stageNameToTestDataFieldName, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SamplingMethod} from '../sampling-method';
 
+// TODO: Remove signature fields (commented out) if signatures will be kept outside of the test data.
+
 export interface TestData {
-   prepData: PrepData;
-   preEnrData: PreEnrData;
-   selEnrData: SelEnrData;
-   mBrothData: MBrothData,
-   vidasData: VidasData;
-   controlsData: ControlsData,
-   resultsData: ResultsData;
-   wrapupData: WrapupData;
+   prepData:     PrepData;
+   preEnrData:   PreEnrData;
+   selEnrData:   SelEnrData;
+   mBrothData:   MBrothData;
+   vidasData:    VidasData;
+   controlsData: ControlsData;
+   resultsData:  ResultsData;
+   wrapupData:   WrapupData;
 }
 
 export interface PrepData {
@@ -19,15 +21,14 @@ export interface PrepData {
    descriptionMatchesCR?: boolean;
    labelAttachmentType?: LabelAttachmentType;
    containerMatchesCR?: boolean;
-   containerMatchesCRSignature?: Signature;
+   // containerMatchesCRSignature?: Signature;
    codeMatchesCR?: boolean;
    codeMatchesCRNotes?: string;
-   codeMatchesCRSignature?: Signature;
+   // codeMatchesCRSignature?: Signature;
 }
 
 export interface PreEnrData {
    samplingMethod?: SamplingMethod;
-   samplingMethodExceptionNotes?: string;
    balanceId?: string;
    blenderJarId?: string;
    bagId?: string;
@@ -37,7 +38,7 @@ export interface PreEnrData {
    preenrichIncubatorId?: string;
    preenrichPositiveControlGrowth?: boolean;
    preenrichMediumControlGrowth?: boolean;
-   preenrichSignature?: Signature;
+   // preenrichSignature?: Signature;
 }
 
 export interface SelEnrData {
@@ -46,46 +47,46 @@ export interface SelEnrData {
    bgBatchId?: string;
    l2KiBatchId?: string;
    rvttWaterBathId?: string;
-   rvttSignature?: Signature;
+   // rvttSignature?: Signature;
 }
 
 export interface MBrothData {
    mBrothBatchId?: string;
    mBrothWaterBathId?: string;
-   mBrothSignature?: Signature;
+   // mBrothSignature?: Signature;
 }
 
 export interface VidasData {
-   vidasInstrumentId?: string;
-   vidasKitIds?: string[];
-   vidasCompositesDetections?: boolean[];
-   vidasPositiveControlDetection?: boolean;
-   vidasMediumControlDetection?: boolean;
-   vidasSpikeDetection?: boolean;
-   vidasSignature?: Signature;
+   instrumentId?: string;
+   kitIds?: string;
+   compositesDetection?: boolean;
+   positiveControlDetection?: boolean;
+   mediumControlDetection?: boolean;
+   spikeDetection?: boolean;
+   // signature?: Signature;
 }
 
 export interface ControlsData {
    systemControlsPositiveControlGrowth?: boolean;
    systemMediumPositiveControlGrowth?: boolean;
-   systemControlsSignature?: Signature;
+   // systemControlsSignature?: Signature;
    collectorControlsPositveControlGrowth?: boolean;
    collectorControlsMediumControlGrowth?: boolean;
-   collectorControlsSignature?: Signature;
+   // collectorControlsSignature?: Signature;
    bacterialControlsUsed?: boolean;
-   bacterialControlsSignature?: Signature;
+   // bacterialControlsSignature?: Signature;
 }
 
 export interface ResultsData {
    resultPositiveCompositesCount?: number;
-   resultSignature?: Signature;
+   // resultSignature?: Signature;
 }
 
 export interface WrapupData {
    reserveReserveSampleDisposition?: ReserveSampleDisposition;
-   reserveSampleDestinations?: string[];
+   reserveSampleDestinations?: string;
    reserveSampleNote?: string;
-   allCompletedSignature?: Signature;
+   // allCompletedSignature?: Signature;
 }
 
 export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY' | 'SUBMITTED_ALONE';
@@ -128,15 +129,15 @@ function prepStatusCode(data: PrepData): FieldValuesStatusCode {
       data.descriptionMatchesCR,
       data.labelAttachmentType,
       data.containerMatchesCR,
-      data.containerMatchesCRSignature,
+      // data.containerMatchesCRSignature,
       data.codeMatchesCR,
-      data.codeMatchesCRSignature
+      // data.codeMatchesCRSignature
    ]);
 }
 
 function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {
-   const coreFieldsStatus = statusForRequiredFieldValues([
-      data.samplingMethod,
+   // Check unconditional top-level fields.
+   const uncondTopLevelFieldsStatus = statusForRequiredFieldValues([
       data.balanceId,
       data.blenderJarId,
       data.bagId,
@@ -145,14 +146,29 @@ function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {
       data.preenrichIncubatorId,
       data.preenrichPositiveControlGrowth,
       data.preenrichMediumControlGrowth,
-      data.preenrichSignature
+      // data.preenrichSignature
    ]);
 
-   // Spike plate count is required iff sampleSpike is true.
-   if (coreFieldsStatus === 'c' && data.sampleSpike && !data.spikePlateCount) {
-      return 'i';
-   }
-   return coreFieldsStatus;
+   // Check nested sampling method fields.
+   const samplingMethodFieldsStatus =
+      !data.samplingMethod ? 'e' :
+         statusForRequiredFieldValues([
+            data.samplingMethod.numberOfSubs,
+            data.samplingMethod.numberOfComposites,
+            data.samplingMethod.numberOfSubsPerComposite,
+            data.samplingMethod.compositeMassGrams,
+            data.samplingMethod.extractedGramsPerSub,
+         ]);
+
+   // Spike count is conditional on sampleSpike field.
+   const spikeCountMissing = !!data.sampleSpike && !data.spikePlateCount;
+
+   return (
+      uncondTopLevelFieldsStatus === 'i' || samplingMethodFieldsStatus === 'i' ? 'i'
+         : uncondTopLevelFieldsStatus === 'c' && (samplingMethodFieldsStatus !== 'c' || spikeCountMissing) ? 'i'
+         : uncondTopLevelFieldsStatus === 'e' && (samplingMethodFieldsStatus !== 'e' || data.spikePlateCount) ? 'i'
+         : uncondTopLevelFieldsStatus
+   );
 }
 
 function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode {
@@ -162,7 +178,7 @@ function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode {
       // data.bgBatchId,  TODO: Are these two required?
       // data.l2KiBatchId,
       data.rvttWaterBathId,
-      data.rvttSignature,
+      // data.rvttSignature,
    ]);
 }
 
@@ -170,19 +186,19 @@ function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
       data.mBrothBatchId,
       data.mBrothWaterBathId,
-      data.mBrothSignature,
+      // data.mBrothSignature,
    ]);
 }
 
 function vidasStatusCode(data: VidasData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
-      data.vidasInstrumentId,
-      data.vidasKitIds,
-      data.vidasCompositesDetections,
-      data.vidasPositiveControlDetection,
-      data.vidasMediumControlDetection,
-      data.vidasSpikeDetection,
-      data.vidasSignature,
+      data.instrumentId,
+      data.kitIds,
+      data.compositesDetection, // TODO: May need an array of detection status by composite #.
+      data.positiveControlDetection,
+      data.mediumControlDetection,
+      data.spikeDetection,
+      // data.signature,
    ]);
 }
 
@@ -190,19 +206,19 @@ function controlsStatusCode(data: ControlsData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
       data.systemControlsPositiveControlGrowth,
       data.systemMediumPositiveControlGrowth,
-      data.systemControlsSignature,
+      // data.systemControlsSignature,
       data.collectorControlsPositveControlGrowth,
       data.collectorControlsMediumControlGrowth,
-      data.collectorControlsSignature,
+      // data.collectorControlsSignature,
       data.bacterialControlsUsed,
-      data.bacterialControlsSignature,
+      // data.bacterialControlsSignature,
    ]);
 }
 
 function resultsStatusCode(data: ResultsData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
       data.resultPositiveCompositesCount,
-      data.resultSignature,
+      // data.resultSignature,
    ]);
 }
 
@@ -210,7 +226,7 @@ function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
       data.reserveReserveSampleDisposition,
       data.reserveSampleDestinations,
-      data.allCompletedSignature,
+      // data.allCompletedSignature,
    ]);
 }
 

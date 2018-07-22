@@ -5,13 +5,24 @@ import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/co
 import {environment} from '../../environments/environment';
 import {SamplesListingComponent} from '../samples-listing/samples-listing.component';
 import {LabGroupContentsResolver} from './lab-group-contents.resolver';
-
+import {TestDataEntryComponent as MicroImpSalVidasTestDataComponent} from '../lab-tests/microbiology/imported-salmonella-vidas/test-data-entry/test-data-entry.component';
+import {TestDataResolver} from './test-data.resolver';
 
 const routes: Routes = [
    {
       path: 'samples',
       component: SamplesListingComponent,
       resolve: { labGroupContents: LabGroupContentsResolver }
+   },
+   {
+      path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId',
+      component: MicroImpSalVidasTestDataComponent,
+      resolve: { testData: TestDataResolver }
+   },
+   {
+      path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId/:phase',
+      component: MicroImpSalVidasTestDataComponent,
+      resolve: { testData: TestDataResolver }
    },
    { path: '', redirectTo: 'samples', pathMatch: 'full' },
 ];

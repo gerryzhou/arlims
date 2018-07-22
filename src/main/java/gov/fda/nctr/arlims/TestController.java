@@ -44,13 +44,14 @@ public class TestController
         (
             @PathVariable("testId") long testId,
             @RequestParam("testDataJson") String testDataJson,
+            @RequestParam("stageStatusesJson") String stageStatusesJson,
             @RequestParam("previousMd5") String previousMd5,
             @RequestHeader HttpHeaders httpHeaders
         )
     {
         String fdaEmailAccountName = "stephen.harris"; // TODO: Verify user can access this test.
 
-        boolean saved = testDataService.saveTestDataJson(testId, testDataJson, previousMd5);
+        boolean saved = testDataService.saveTestDataJson(testId, testDataJson, stageStatusesJson, previousMd5);
 
         if ( saved )
             return new OptimisticDataUpdateResult(true, Optional.empty());

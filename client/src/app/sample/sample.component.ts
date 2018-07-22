@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Sample} from '../../generated/dto';
+import {LabTestMetadata, Sample} from '../../generated/dto';
+import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-sample',
@@ -11,18 +13,18 @@ export class SampleComponent implements OnInit {
    @Input()
    sample: Sample;
 
+   @Input()
+   showSampleDetails: boolean;
+
    // Sample "details" include tests or resource lists, and additional sample metadata.
    hasAdditionalSampleMetadata: boolean; // whether sample metadata needs a second row
    hasTestsOrResources: boolean;
 
    numAssociatedResourceLists: number;
 
-   @Input()
-   showSampleDetails: boolean;
-
    factsStatusCssClass: string;
 
-   constructor() { }
+   constructor(private router: Router) { }
 
    ngOnInit() {
       this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
@@ -36,5 +38,13 @@ export class SampleComponent implements OnInit {
 
    toggleTestsAndResources() {
       this.showSampleDetails = !this.showSampleDetails;
+   }
+
+   navigateToTest(test: LabTestMetadata) {
+      this.router.navigate(['test-data', test.testTypeCode, test.testId]);
+   }
+
+   navigateToTestStage(testStage: LabTestStageMetadata) {
+      this.router.navigate(['test-data', testStage.labTestMetadata.testTypeCode, testStage.labTestMetadata.testId]);
    }
 }

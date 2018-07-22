@@ -48,16 +48,22 @@ public class JdbcTestDataService implements TestDataService
     }
 
     @Transactional @Override
-    public boolean saveTestDataJson(long testId, String testDataJson, String previousMd5)
+    public boolean saveTestDataJson
+        (
+            long testId,
+            String testDataJson,
+            String stageStatusesJson,
+            String previousMd5
+        )
     {
         String newMd5 = md5OfUtf8Bytes(testDataJson);
 
         String sql =
             "update test\n" +
-            "set test_data_json = ?, test_data_md5 = ?\n" +
+            "set test_data_json = ?, stage_statuses_json = ?, test_data_md5 = ?\n" +
             "where id = ? and test_data_md5 = ?";
 
-        int updateCount = jdbc.update(sql, testDataJson, newMd5, testId, previousMd5);
+        int updateCount = jdbc.update(sql, testDataJson, stageStatusesJson, newMd5, testId, previousMd5);
 
         return updateCount > 0;
     }

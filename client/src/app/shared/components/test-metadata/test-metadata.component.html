@@ -2,7 +2,8 @@
 
    <div class="test-overview">
 
-      <div class="test-type" [matTooltip]="test.testTypeName">
+      <div class="test-type" [matTooltip]="test.testTypeName"
+         (click)="onTestClicked()">
          {{test.testTypeShortName}}
       </div>
 
@@ -15,7 +16,10 @@
       </div>
 
       <div *ngIf="stageStatuses" class="stage-statuses">
-         <app-test-stage-status *ngFor="let status of stageStatuses" [status]="status"></app-test-stage-status>
+         <app-test-stage-status *ngFor="let status of stageStatuses"
+            [status]="status"
+            (click)="onStageClicked(status.stageName)">
+         </app-test-stage-status>
       </div>
 
       <div class="expanding-flex-space"></div>

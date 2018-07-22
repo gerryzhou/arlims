@@ -79,7 +79,11 @@
    <div *ngIf="showSampleDetails">
 
       <div class="test-metadatas">
-         <app-test-metadata *ngFor="let test of sample.tests" [test]="test"></app-test-metadata>
+         <app-test-metadata *ngFor="let test of sample.tests"
+            [test]="test"
+            (testClick)="navigateToTest(test)"
+            (stageClick)="navigateToTestStage($event)">
+         </app-test-metadata>
       </div>
 
       <div class="associated-lab-resource-lists" *ngIf="numAssociatedResourceLists > 0">

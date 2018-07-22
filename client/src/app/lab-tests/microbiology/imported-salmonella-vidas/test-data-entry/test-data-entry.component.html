@@ -1,3 +1,97 @@
-<p>
-  test-data-entry works!
-</p>
+<div class="test-toolbar">
+   <button *ngIf="stage" (click)="toggleShowAllStages()">
+      {{toggleShowAllStages ? 'Show only ' + stage + ' test stage' : 'Show all test stages'}}
+   </button>
+</div>
+
+<!--TODO: Wrap a form around the below with each stage given a subform.
+          Make sure that *full* form data is submitted when not showing all stages.-->
+
+<mat-expansion-panel *ngIf="stage === 'PREP' || showAllStages"
+                     [expanded]="stage === 'PREP'">
+   <mat-expansion-panel-header>
+      PREPARATION
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-prep></app-stage-prep>
+   </ng-template>
+</mat-expansion-panel>
+
+<mat-expansion-panel *ngIf="stage === 'PRE-ENR' || showAllStages"
+                     [expanded]="stage === 'PRE-ENR'">
+   <mat-expansion-panel-header>
+      PRE-ENRICHMENT
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-pre-enr></app-stage-pre-enr>
+   </ng-template>
+</mat-expansion-panel>
+
+<mat-expansion-panel *ngIf="stage === 'SEL-ENR' || showAllStages"
+                     [expanded]="stage === 'SEL-ENR'">
+   <mat-expansion-panel-header>
+      SELECTIVE ENRICHMENT
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-sel-enr></app-stage-sel-enr>
+   </ng-template>
+</mat-expansion-panel>
+
+<mat-expansion-panel *ngIf="stage === 'M-BROTH' || showAllStages"
+                     [expanded]="stage === 'M-BROTH'">
+   <mat-expansion-panel-header>
+      M BROTH
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-m-broth></app-stage-m-broth>
+   </ng-template>
+</mat-expansion-panel>
+
+<mat-expansion-panel *ngIf="stage === 'VIDAS' || showAllStages"
+                     [expanded]="stage === 'VIDAS'">
+   <mat-expansion-panel-header>
+      VIDAS
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-vidas></app-stage-vidas>
+   </ng-template>
+</mat-expansion-panel>
+
+<mat-expansion-panel *ngIf="stage === 'CONTROLS' || showAllStages"
+                     [expanded]="stage === 'CONTROLS'">
+   <mat-expansion-panel-header>
+      CONTROLS
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-controls></app-stage-controls>
+   </ng-template>
+</mat-expansion-panel>
+
+<mat-expansion-panel *ngIf="stage === 'RESULTS' || showAllStages"
+                     [expanded]="stage === 'RESULTS'">
+   <mat-expansion-panel-header>
+      RESULTS
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-results></app-stage-results>
+   </ng-template>
+</mat-expansion-panel>
+
+<mat-expansion-panel *ngIf="stage === 'WRAPUP' || showAllStages"
+                     [expanded]="stage === 'WRAPUP'">
+   <mat-expansion-panel-header>
+      WRAPUP
+   </mat-expansion-panel-header>
+   <ng-template matExpansionPanelContent>
+      <!--TODO: Pass ngFormGroup for the subform for this stage as component input. -->
+      <app-stage-wrapup></app-stage-wrapup>
+   </ng-template>
+</mat-expansion-panel>
+

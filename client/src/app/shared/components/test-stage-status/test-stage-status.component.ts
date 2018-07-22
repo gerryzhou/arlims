@@ -1,7 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TestStageStatus} from '../../../lab-tests/test-stages';
 import {DatePipe} from '@angular/common';
 import {parseISOTimestampLocal} from '../../util/dates-and-times';
+import {LabTestMetadata} from '../../../../generated/dto';
 
 @Component({
   selector: 'app-test-stage-status',
@@ -9,6 +10,9 @@ import {parseISOTimestampLocal} from '../../util/dates-and-times';
   styleUrls: ['./test-stage-status.component.scss']
 })
 export class TestStageStatusComponent implements OnInit {
+
+   @Output()
+   click = new EventEmitter<null>();
 
    @Input()
    status: TestStageStatus;
@@ -26,4 +30,7 @@ export class TestStageStatusComponent implements OnInit {
       }
    }
 
+   onClicked() {
+      this.click.next(null);
+   }
 }
