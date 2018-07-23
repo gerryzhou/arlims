@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {LabTestMetadata, Sample} from '../../generated/dto';
-import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
+import {LabTestMetadata, Sample} from '../../../generated/dto';
+import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 import {Router} from '@angular/router';
 
 @Component({
@@ -14,10 +14,19 @@ export class SampleComponent implements OnInit {
    sample: Sample;
 
    @Input()
-   showSampleDetails: boolean;
+   showTestsAndResources: boolean;
+
+   @Input()
+   allowTogglingTestsAndResources = true;
+
+   @Input()
+   showTestsAndResourcesSummaryInSampleMetadata = true;
+
+   @Input()
+   showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
 
    // Sample "details" include tests or resource lists, and additional sample metadata.
-   hasAdditionalSampleMetadata: boolean; // whether sample metadata needs a second row
+   hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasTestsOrResources: boolean;
 
    numAssociatedResourceLists: number;
@@ -31,13 +40,13 @@ export class SampleComponent implements OnInit {
       this.numAssociatedResourceLists =
          this.sample.associatedManagedResourceLists.length +
          this.sample.associatedUnmanagedResourceLists.length;
-      this.hasAdditionalSampleMetadata = !!this.sample.subject;
+      this.hasExtendedSampleMetadata = !!this.sample.subject;
       this.hasTestsOrResources =
          this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
    }
 
    toggleTestsAndResources() {
-      this.showSampleDetails = !this.showSampleDetails;
+      this.showTestsAndResources = !this.showTestsAndResources;
    }
 
    navigateToTest(test: LabTestMetadata) {
@@ -45,6 +54,7 @@ export class SampleComponent implements OnInit {
    }
 
    navigateToTestStage(testStage: LabTestStageMetadata) {
-      this.router.navigate(['test-data', testStage.labTestMetadata.testTypeCode, testStage.labTestMetadata.testId]);
+      const test = testStage.labTestMetadata;
+      this.router.navigate(['test-data', test.testTypeCode, test.testId, testStage.stageName]);
    }
 }

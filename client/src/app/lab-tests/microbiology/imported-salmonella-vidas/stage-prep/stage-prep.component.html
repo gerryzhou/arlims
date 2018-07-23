@@ -1,3 +1,39 @@
-<p>
-  stage-prep works!
-</p>
+<form [formGroup]="form">
+
+   <div class="received">
+      <mat-form-field>
+         <input matInput placeholder="Date sample received" formControlName="sampleReceived">
+      </mat-form-field>
+      <mat-form-field>
+         <input matInput placeholder="Received from" formControlName="sampleReceivedFrom">
+      </mat-form-field>
+   </div>
+
+   <div class="label-attachment-type">
+      <span class="label">labeling: </span>
+      <mat-radio-group formControlName="labelAttachmentType">
+         <mat-radio-button value="NONE">None available</mat-radio-button>
+         <mat-radio-button value="ATTACHED_ORIGINAL">Attached original</mat-radio-button>
+         <mat-radio-button value="ATTACHED_COPY">Attached copy</mat-radio-button>
+         <mat-radio-button value="SUBMITTED_ALONE">Submitted alone</mat-radio-button>
+      </mat-radio-group>
+   </div>
+
+   <div class="cr-matching-grid">
+      <mat-checkbox formControlName="descriptionMatchesCR">Description matches CR</mat-checkbox>
+      <mat-form-field class="notes">
+         <input matInput placeholder="Notes" formControlName="descriptionMatchesCRNotes">
+      </mat-form-field>
+
+      <mat-checkbox formControlName="containerMatchesCR">Container matches CR</mat-checkbox>
+      <mat-form-field class="notes">
+         <input matInput placeholder="Notes" formControlName="containerMatchesCRNotes">
+      </mat-form-field>
+
+      <mat-checkbox formControlName="codeMatchesCR">Code matches CR</mat-checkbox>
+      <mat-form-field class="notes">
+         <input matInput placeholder="Notes" formControlName="codeMatchesCRNotes">
+      </mat-form-field>
+   </div>
+
+</form>

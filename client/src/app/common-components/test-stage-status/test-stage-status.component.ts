@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TestStageStatus} from '../../../lab-tests/test-stages';
+import {TestStageStatus} from '../../lab-tests/test-stages';
 import {DatePipe} from '@angular/common';
-import {parseISOTimestampLocal} from '../../util/dates-and-times';
-import {LabTestMetadata} from '../../../../generated/dto';
+import {parseISOTimestampLocal} from '../../shared/util/dates-and-times';
+import {LabTestMetadata} from '../../../generated/dto';
 
 @Component({
   selector: 'app-test-stage-status',

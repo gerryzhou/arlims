@@ -8,19 +8,6 @@
    align-items: stretch;
    justify-content: flex-start;
 
-   .test-type {
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: center;
-      padding: 0;
-      width: 220px;
-      text-align: center;
-      border: 3px solid darkgray;
-      background: beige;
-      font-size: 110%;
-      font-weight: bold;
-   }
-
    .elapsed {
       flex-grow: 0;
       display: flex;

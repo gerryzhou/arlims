@@ -16,7 +16,7 @@
 <div class="listing">
    <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
       <mat-checkbox [(ngModel)]="allSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
-      <app-sample [sample]="allSamples[sampleIx].sample" [showSampleDetails]="showSampleDetails"></app-sample>
+      <app-sample [sample]="allSamples[sampleIx].sample" [showTestsAndResources]="showSampleDetails"></app-sample>
    </div>
 </div>
 

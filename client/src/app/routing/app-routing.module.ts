@@ -20,7 +20,7 @@ const routes: Routes = [
       resolve: { testData: TestDataResolver }
    },
    {
-      path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId/:phase',
+      path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId/:stage',
       component: MicroImpSalVidasTestDataComponent,
       resolve: { testData: TestDataResolver }
    },

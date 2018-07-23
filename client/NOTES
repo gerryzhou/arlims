@@ -1,23 +1,20 @@
-First just allow editing existing tests (test creation later).
+Add styling to the prep form.
 
-In TestData.preEnrData, just make sampling method a subform, with no separate name/identifier field.
-  Then can add convenience buttons to allow filling with standard sampling method values.
+Implement another form or two.
 
-Implement details of test-data-entry.component.html:
-    Layout:
-      sample information header
-      form data for the currently selected stage(s)
-      resource codes panel shown on right if supplied
-          allow pasting in new resource codes
-          button to apply resources
-            Highlight application points in the form.
-            Distinguish applied resource codes from those that didn't match any form fields.
+Try saving test data.
 
-In TestDataEntryComponent:
-  [Maybe, Future] Can ask if there is a set of resource codes in context via a new CurrentResourceCodes context.
-    Would allow specifying codes for use in a sequence of test stage edits.
-    resourceCodes: string[] | null
-  Be sure to unset the codes in the service when the operation is completed for all selected tests.
+Force reload of user context info on next access when test is saved.
+
+test data entry component
+-------------------------
+  Allow pasting resource codes to be automatically matched to form fields by type.
+  dialog to paste codes
+  button to apply resources
+    Highlight application points in the form.
+    Distinguish applied resource codes from those that didn't match any form fields.
+
+Add convenience buttons to allow filling sampling method values with those from the test config.
 
 Allow creating a new empty test of a given type in UI for selected sample(s).
   Test data field and status fields should be null.

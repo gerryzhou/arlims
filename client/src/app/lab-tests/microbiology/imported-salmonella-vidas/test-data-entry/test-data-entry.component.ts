@@ -7,6 +7,7 @@ import {cloneDataObject} from '../../../../shared/util/data-objects';
 import {emptyTestData, TestData} from '../test-data';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TestConfig} from '../test-config';
+import {TestStageStatus} from '../../../test-stages';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-test-data-entry',
@@ -58,11 +59,12 @@ export class TestDataEntryComponent implements OnInit {
    ngOnInit() {
    }
 
-   toggleShowAllStages() {
-      if (this.stage) {
-         this.showAllStages = !this.showAllStages;
-      }
+   onFormSubmit() {
+      console.log('Form value:');
+      console.log(this.testDataForm.getRawValue());
+      // TODO
    }
+
 }
 
 function makeTestDataFormGroup(testData: TestData): FormGroup {
@@ -71,8 +73,10 @@ function makeTestDataFormGroup(testData: TestData): FormGroup {
          sampleReceived: new FormControl(testData.prepData.sampleReceived), // TODO: Add date validator.
          sampleReceivedFrom: new FormControl(testData.prepData.sampleReceivedFrom),
          descriptionMatchesCR: new FormControl(testData.prepData.descriptionMatchesCR),
+         descriptionMatchesCRNotes: new FormControl(testData.prepData.descriptionMatchesCRNotes),
          labelAttachmentType: new FormControl(testData.prepData.labelAttachmentType),
          containerMatchesCR: new FormControl(testData.prepData.containerMatchesCR),
+         containerMatchesCRNotes: new FormControl(testData.prepData.containerMatchesCRNotes),
          codeMatchesCR: new FormControl(testData.prepData.codeMatchesCR),
          codeMatchesCRNotes: new FormControl(testData.prepData.codeMatchesCRNotes),
       }),

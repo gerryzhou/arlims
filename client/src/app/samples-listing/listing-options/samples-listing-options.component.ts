@@ -31,7 +31,6 @@ export class SamplesListingOptionsComponent implements OnInit {
    }
 
    emitChangeEvent(data: ListingOptions) {
-      console.log('emitting changed options value ', data);
       this.optionsChanged.emit(data);
    }
 

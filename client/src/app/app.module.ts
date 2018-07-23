@@ -31,14 +31,11 @@ import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
 import {LoadingIndicatorService, UserContextService} from './shared/services';
 import {LoadingIndicatorInterceptor} from './shared/services/loading-indicator/loading-indicator-interceptor';
-import {TestMetadataComponent} from './shared/components/test-metadata/test-metadata.component';
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {AlertMessageComponent} from './alerts/alert-message.component';
-import {TestStageStatusComponent} from './shared/components/test-stage-status/test-stage-status.component';
-import {SampleComponent} from './sample/sample.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
-import {DayNumberPipe} from './shared/pipes/day-number.pipe';
 import {ImportedSalmonellaVidasModule} from './lab-tests/microbiology/imported-salmonella-vidas/imported-salmonella-vidas.module';
+import {CommonComponentsModule} from './common-components/common-components.module';
 
 @NgModule({
    declarations: [
@@ -46,10 +43,6 @@ import {ImportedSalmonellaVidasModule} from './lab-tests/microbiology/imported-s
       AlertMessageComponent,
       SamplesListingComponent,
       SamplesListingOptionsComponent,
-      TestMetadataComponent,
-      TestStageStatusComponent,
-      SampleComponent,
-      DayNumberPipe
    ],
    entryComponents: [
      // (dialog components here)
@@ -81,6 +74,7 @@ import {ImportedSalmonellaVidasModule} from './lab-tests/microbiology/imported-s
       TruncateModule,
       // app modules
       AppRoutingModule,
+      CommonComponentsModule,
       ImportedSalmonellaVidasModule,
    ],
    providers: [

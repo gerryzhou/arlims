@@ -19,8 +19,10 @@ export interface PrepData {
    sampleReceived?: string;
    sampleReceivedFrom?: string;
    descriptionMatchesCR?: boolean;
+   descriptionMatchesCRNotes?: string;
    labelAttachmentType?: LabelAttachmentType;
    containerMatchesCR?: boolean;
+   containerMatchesCRNotes?: string;
    // containerMatchesCRSignature?: Signature;
    codeMatchesCR?: boolean;
    codeMatchesCRNotes?: string;
@@ -93,10 +95,12 @@ export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY'
 
 export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_AFTER_ANALYSIS' | 'ISOLATES_SENT' | 'OTHER';
 
+// Empty test data should define all fields necessary to reach the leaf data elements which are bound
+// to form controls, other than the leaf data elements themselves.
 export function emptyTestData(): TestData {
    return {
       prepData: {},
-      preEnrData: {},
+      preEnrData: { samplingMethod: {}},
       selEnrData: {},
       mBrothData: {},
       vidasData: {},
@@ -122,17 +126,38 @@ const stages: Stage[] = [
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 
+export const stageStatusFunctions = {
+   'PREP':     prepStatusCode,
+   'PRE-ENR':  preEnrStatusCode,
+   'SEL-ENR':  selEnrStatusCode,
+   'M-BROTH':  mBrothStatusCode,
+   'VIDAS':    vidasStatusCode,
+   'CONTROLS': controlsStatusCode,
+   'RESULTS':  resultsStatusCode,
+   'WRAPUP':   wrapupStatusCode,
+};
+
 function prepStatusCode(data: PrepData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
+   const reqStatus = statusForRequiredFieldValues([
       data.sampleReceived,
       data.sampleReceivedFrom,
       data.descriptionMatchesCR,
+      // (descriptionMatchesCRNotes is not required)
       data.labelAttachmentType,
       data.containerMatchesCR,
+      // (containerMatchesCRNotes is not required)
       // data.containerMatchesCRSignature,
       data.codeMatchesCR,
+      // (codeMatchesCRNotes is not required)
       // data.codeMatchesCRSignature
    ]);
+
+   if (reqStatus === 'e') {
+      // Non-required fields could affect empty status.
+      return (data.descriptionMatchesCRNotes || data.containerMatchesCRNotes || data.codeMatchesCR) ? 'i' : 'e';
+   } else {
+      return reqStatus;
+   }
 }
 
 function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {

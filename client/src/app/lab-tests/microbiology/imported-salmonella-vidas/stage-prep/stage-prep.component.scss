@@ -1,0 +1,23 @@
+.received {
+   display: flex;
+   align-items: center;
+   margin: 10px;
+   mat-form-field {
+      margin-right: 10px;
+   }
+}
+
+.label-attachment-type {
+   // TODO: Add spacing between items.
+   display: flex;
+   margin: 10px;
+}
+
+.cr-matching-grid {
+   margin: 20px 10px;
+   display: grid;
+   grid-template-columns: 1fr 5fr;
+   align-items: center;
+   grid-gap: 10px;
+}
+

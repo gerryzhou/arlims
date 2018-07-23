@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-stage-results',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StageResultsComponent implements OnInit {
 
-  constructor() { }
+   @Input()
+   form: FormGroup;
 
-  ngOnInit() {
-  }
+   constructor() { }
+
+   ngOnInit() {
+   }
 
 }

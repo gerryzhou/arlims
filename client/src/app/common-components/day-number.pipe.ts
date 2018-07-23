@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {parseISODateLocal} from '../util/dates-and-times';
+import {parseISODateLocal} from '../shared/util/dates-and-times';
 
 @Pipe({
   name: 'dayNumber'

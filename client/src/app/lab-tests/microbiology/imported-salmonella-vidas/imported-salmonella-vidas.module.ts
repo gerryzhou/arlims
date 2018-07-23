@@ -1,6 +1,17 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatExpansionModule} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
+import {
+   MatCheckboxModule,
+   MatExpansionModule,
+   MatInputModule,
+   MatRadioModule,
+   MatSelectModule,
+   MatSlideToggleModule
+} from '@angular/material';
+
+import {CommonComponentsModule} from '../../../common-components/common-components.module';
 import {StagePrepComponent} from './stage-prep/stage-prep.component';
 import {TestDataEntryComponent} from './test-data-entry/test-data-entry.component';
 import {StagePreEnrComponent} from './stage-pre-enr/stage-pre-enr.component';
@@ -15,6 +26,15 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
    imports: [
       CommonModule,
       MatExpansionModule,
+      ReactiveFormsModule,
+      FormsModule,
+      MatInputModule,
+      MatCheckboxModule,
+      MatSelectModule,
+      MatRadioModule,
+      MatSlideToggleModule,
+      //
+      CommonComponentsModule,
    ],
    declarations: [
       TestDataEntryComponent,

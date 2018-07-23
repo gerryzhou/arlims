@@ -23,13 +23,13 @@
          </div>
 
          <div class="employee-assignments">
-         <span  class="assigned-employee" *ngFor="let assignment of sample.assignments">
-            <mat-icon>assignment_ind</mat-icon>
-            <span *ngIf="assignment.lead && sample.assignments.length > 1">*</span>
-            <span class="assigned-employee-name" [ngClass]="{'lead-employee-name': assignment.lead}">
-               {{assignment.employeeShortName}}
+            <span  class="assigned-employee" *ngFor="let assignment of sample.assignments">
+               <mat-icon>assignment_ind</mat-icon>
+               <span *ngIf="assignment.lead && sample.assignments.length > 1">*</span>
+               <span class="assigned-employee-name" [ngClass]="{'lead-employee-name': assignment.lead}">
+                  {{assignment.employeeShortName}}
+               </span>
             </span>
-         </span>
          </div>
 
          <div *ngIf="sample.lid">
@@ -54,29 +54,28 @@
 
          <div class="expanding-flex-space"></div>
 
-         <div class="num-tests-and-resource-lists-stack">
+         <div *ngIf="showTestsAndResourcesSummaryInSampleMetadata" class="num-tests-and-resource-lists-stack">
             <span>{{sample.tests.length}} test{{sample.tests.length != 1 ? 's' : ''}}</span>
             <span>{{numAssociatedResourceLists}} resource list{{numAssociatedResourceLists != 1 ? 's' : ''}}</span>
          </div>
 
-         <button mat-button color="accent" *ngIf="hasTestsOrResources || hasAdditionalSampleMetadata"
+         <button mat-button color="accent" *ngIf="(hasTestsOrResources || hasExtendedSampleMetadata) && allowTogglingTestsAndResources"
                  (click)="toggleTestsAndResources()">
-            {{showSampleDetails ? 'hide' : 'show'}} details
+            {{showTestsAndResources ? 'hide' : 'show'}} details
          </button>
       </div> <!-- Ends first row of sample metadata. -->
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
-      <div class="sample-metadata-row" *ngIf="showSampleDetails && hasAdditionalSampleMetadata">
+      <div class="sample-metadata-row" *ngIf="hasExtendedSampleMetadata && (showTestsAndResources || showExtendedSampleMetadataAlways)">
          <div *ngIf="sample.subject">
             <span class="field-label">subject: </span>
             <span class="field-value">{{sample.subject}}</span>
          </div>
-
       </div>
    </div>
 
    <!-- tests and associated lab resources area -->
-   <div *ngIf="showSampleDetails">
+   <div *ngIf="showTestsAndResources">
 
       <div class="test-metadatas">
          <app-test-metadata *ngFor="let test of sample.tests"
@@ -94,11 +93,9 @@
                <span class="list-name">{{resourceList.listName}}</span>
             </mat-chip>
          </mat-chip-list>
-         <!--TODO: Show managed resources here if needed.  -->
-         <!--{{sample.associatedManagedResourceLists}}-->
       </div>
 
    </div>
 
 </mat-card>
-<div *ngIf="showSampleDetails" class="extra-spacing-between-samples"></div>
+<div *ngIf="showTestsAndResources" class="extra-bottom-spacing"></div>

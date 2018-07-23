@@ -22,3 +22,17 @@
    flex-grow: 1;
 }
 
+.test-type {
+   display: flex;
+   flex-flow: column nowrap;
+   justify-content: center;
+   padding: 14px;
+   width: 200px;
+   text-align: center;
+   border: 3px solid darkgray;
+   background: beige;
+   font-size: 110%;
+   font-weight: bold;
+}
+
+

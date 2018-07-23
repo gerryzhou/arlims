@@ -22,6 +22,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             sampleReceived: '3/12/2010',
             sampleReceivedFrom: 'Scott',
             descriptionMatchesCR: true,
+            // descriptionMatchesCRNotes (not required)
             labelAttachmentType: 'NONE',
             containerMatchesCR: true,
             codeMatchesCR: true,
