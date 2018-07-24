@@ -1,10 +1,32 @@
-Add styling to the prep form.
+UserContextService
+  Lab group needs to always be accessed as a promise from outside of this class.
+  Should be able to just expose a labGroupContents$ property.
+
+      // if (this.labGroupContentsReloadRequested) {
+      //    console.log('Fetching new lab group contents.');
+      //    this.labGroupContentsReloadRequested = false;
+      //    this.httpClient.get<UserContext>(this.apiUrlsSvc.userContextUrl())
+      //       .pipe(
+      //          map(userContext => userContext.labGroupContents)
+      //       )
+      //       .subscribe(newLabGroupContents => {
+      //          console.log('Got new lab group contents.');
+      //          this.setLabGroupContents(newLabGroupContents);
+      //       });
+      // } else {
+      //    return obsof(this.labGroupContents);
+      // }
+
+TestsService.saveTestData
+   Null value should be able to conflict with non-null value.
+   Implement conflict handling in save method for imp sal test data.
+      Add fields and method to show conflicting values when auto-merging isn't possible.
+   Force reload of user context info on next access when test is saved.
+
+Can disable expansion panel header when only showing a single stage?
 
 Implement another form or two.
 
-Try saving test data.
-
-Force reload of user context info on next access when test is saved.
 
 test data entry component
 -------------------------

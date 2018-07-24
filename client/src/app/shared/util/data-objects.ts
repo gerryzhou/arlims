@@ -180,7 +180,9 @@ export function mergeValues(toObj, fromObj, allowReplacingExistingAtomicValues =
                throw new MergeError('Will not replace a non-atomic value with an atomic value in merge operation.');
             }
             if (!allowReplacingExistingAtomicValues) {
-               throw new MergeError('Merge operation would have overwritten an existing atomic value.');
+               console.dir(toObj);
+               console.dir(fromObj);
+               throw new MergeError(`Merge operation would have overwritten an existing atomic value for key '${k}'.`);
             }
          }
          toObj[k] = copyAtomicValue(fromVal);

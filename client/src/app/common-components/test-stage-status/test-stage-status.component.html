@@ -6,7 +6,7 @@
 
       <div class="field-values-completion-gauge"
            [ngClass]="'fields-' + status.fieldValuesStatus"
-           [matTooltip]="fieldValuesStatusText">
+           [matTooltip]="'view/edit ' + status.stageName + ' data (' + fieldValuesStatusText + ')'">
          <div class="completed-portion"></div>
       </div>
 

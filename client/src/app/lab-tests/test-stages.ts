@@ -26,7 +26,7 @@ export function statusForRequiredFieldValues(fieldValues: any[]): FieldValuesSta
    let nonValueFound = false;
 
    for (const v of fieldValues) {
-      if (v === undefined || v === null) {
+      if (v === undefined || v === null || v === '') {
          nonValueFound = true;
       } else {
          valueFound = true;

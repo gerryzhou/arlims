@@ -126,17 +126,6 @@ const stages: Stage[] = [
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 
-export const stageStatusFunctions = {
-   'PREP':     prepStatusCode,
-   'PRE-ENR':  preEnrStatusCode,
-   'SEL-ENR':  selEnrStatusCode,
-   'M-BROTH':  mBrothStatusCode,
-   'VIDAS':    vidasStatusCode,
-   'CONTROLS': controlsStatusCode,
-   'RESULTS':  resultsStatusCode,
-   'WRAPUP':   wrapupStatusCode,
-};
-
 function prepStatusCode(data: PrepData): FieldValuesStatusCode {
    const reqStatus = statusForRequiredFieldValues([
       data.sampleReceived,

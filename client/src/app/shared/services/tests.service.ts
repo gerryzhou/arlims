@@ -5,7 +5,7 @@ import {DataModificationInfo, OptimisticDataUpdateResult, VersionedTestData} fro
 import {HttpClient} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
-import {TestStageStatus} from "../../lab-tests/test-stages";
+import {TestStageStatus} from '../../lab-tests/test-stages';
 
 
 @Injectable({
@@ -21,7 +21,12 @@ export class TestsService {
       );
    }
 
-   saveTestData(testId: number, testData: any, prevTestData: any, prevTestDataMd5: string, stageStatusesFn: (any) => TestStageStatus[]): Observable<SaveResult> {
+   saveTestData(testId: number,
+                testData: any,
+                prevTestData: any,
+                prevTestDataMd5: string,
+                stageStatusesFn: (any) => TestStageStatus[])
+                : Observable<SaveResult> {
       const formData: FormData = new FormData();
 
       formData.append('testDataJson',
@@ -54,9 +59,15 @@ export class TestsService {
                flatMap(mergeRes => {
                   return mergeRes.hasConflicts ?
                      // If conflicts exist, just report the conflicts without any further attempt to save.
-                     observable(new SaveResult(false, mergeRes))
+                     observable(new SaveResult(false, mergeRes)) :
                      // Latest db data merged cleanly onto local changes: attempt this process again with new db test data as baseline.
-                     : this.saveTestData(testId, mergeRes.mergedTestData, mergeRes.dbTestData, mergeRes.dbModificationInfo.dataMd5, stageStatusesFn);
+                     this.saveTestData(
+                        testId,
+                        mergeRes.mergedTestData,
+                        mergeRes.dbTestData,
+                        mergeRes.dbModificationInfo.dataMd5,
+                        stageStatusesFn
+                     );
                })
             );
          })
@@ -75,7 +86,7 @@ export class TestsService {
             const mergeableDbValues = conflictPartitionedDbValues.nonConflictingValues;
             const conflictingDbValues = conflictPartitionedDbValues.conflictingValues;
 
-            const mergedTestData = copyWithMergedValuesFrom(testData, mergeableDbValues, false);
+            const mergedTestData = copyWithMergedValuesFrom(testData, mergeableDbValues, true);
 
             return new MergeResults(mergedTestData, conflictingDbValues, dbTestData, dbModInfo);
          })

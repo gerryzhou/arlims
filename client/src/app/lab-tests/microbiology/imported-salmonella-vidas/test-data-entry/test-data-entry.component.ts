@@ -1,13 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {ApiUrlsService, UserContextService} from '../../../../shared/services';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AlertMessageService, ApiUrlsService, TestsService, UserContextService} from '../../../../shared/services';
 import {VersionedTestData} from '../../../../../generated/dto';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
-import {cloneDataObject} from '../../../../shared/util/data-objects';
-import {emptyTestData, TestData} from '../test-data';
+import {emptyTestData, getTestStageStatuses, TestData} from '../test-data';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TestConfig} from '../test-config';
-import {TestStageStatus} from '../../../test-stages';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-test-data-entry',
@@ -16,14 +14,12 @@ import {TestStageStatus} from '../../../test-stages';
 })
 export class TestDataEntryComponent implements OnInit {
 
-   readonly testData: TestData;
-
-   readonly stage: string | null;
-   showAllStages: boolean;
-
    // The original test data and its md5 are needed for detecting and merging concurrent updates to the same data.
    originalTestData: TestData;
    originalTestDataMd5: string;
+
+   readonly stage: string | null;
+   showAllStages: boolean;
 
    readonly sampleInTest: SampleInTest;
 
@@ -34,14 +30,16 @@ export class TestDataEntryComponent implements OnInit {
    constructor(
       private activatedRoute: ActivatedRoute,
       private apiUrls: ApiUrlsService,
-      usrCtxSvc: UserContextService
+      private testsSvc: TestsService,
+      private alertMessageSvc: AlertMessageService,
+      private router: Router,
+      private usrCtxSvc: UserContextService
    ) {
       const verTestData: VersionedTestData = this.activatedRoute.snapshot.data['testData'];
-      this.testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
+      this.originalTestData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
+      this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
       this.stage = activatedRoute.snapshot.paramMap.get('stage') || null;
       this.showAllStages = !this.stage;
-      this.originalTestData = cloneDataObject(this.testData);
-      this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
 
       this.sampleInTest = usrCtxSvc.getSampleInTest(verTestData.testId);
       if ( !this.sampleInTest ) {
@@ -53,16 +51,42 @@ export class TestDataEntryComponent implements OnInit {
          this.testConfig = JSON.parse(configJson);
       }
 
-      this.testDataForm = makeTestDataFormGroup(this.testData);
+      this.testDataForm = makeTestDataFormGroup(this.originalTestData);
    }
 
    ngOnInit() {
    }
 
    onFormSubmit() {
-      console.log('Form value:');
-      console.log(this.testDataForm.getRawValue());
-      // TODO
+      console.log('Saving test data:');
+      console.log(this.testDataForm.value);
+
+      this.testsSvc.saveTestData(
+         this.sampleInTest.testMetadata.testId,
+         this.testDataForm.value,
+         this.originalTestData,
+         this.originalTestDataMd5,
+         getTestStageStatuses
+      )
+      .subscribe(saveResults => {
+         if (saveResults.saved) {
+            this.usrCtxSvc.requestLabGroupContentsReload();
+            // TODO: Clear conflictingTestData field.
+            this.alertMessageSvc.alertSuccess('Test data saved.', true);
+            this.router.navigate(['/samples']); // TODO: Add query param telling to show details for this sample.
+         } else {
+            const conflicts = saveResults.mergeConflicts;
+            const modInfo = conflicts.dbModificationInfo;
+            const msg = `Changes not saved: conflicting changes were made by ${modInfo.savedByUserShortName}: ` +
+                        `${JSON.stringify(conflicts.conflictingDbValues)}.  Please incorporate changes and save again.`;
+            this.testDataForm.setValue(conflicts.mergedTestData);
+            this.originalTestData = conflicts.dbTestData;
+            this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
+            // TODO: Show conflicting values by setting conflictingTestData (new field).
+            this.alertMessageSvc.alertWarning(msg);
+         }
+      });
+      // TODO: Catch observable errors, alert user via alert service that the save opearation failed and to try again.
    }
 
 }

@@ -2,7 +2,14 @@
 
    <div class="received">
       <mat-form-field>
-         <input matInput placeholder="Date sample received" formControlName="sampleReceived">
+         <!--TODO: This should really be a date picker not a timestamp picker which this is (despite the name).
+                   It's taking 00:00 this today local time as an instant and converting it to UTC,
+                   e.g. 2018-07-24T05:00:00.000Z.
+         -->
+         <input matInput formControlName="sampleReceived" [matDatepicker]="datepicker"
+                placeholder="Sample received date" >
+         <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+         <mat-datepicker #datepicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field>
          <input matInput placeholder="Received from" formControlName="sampleReceivedFrom">
@@ -10,7 +17,7 @@
    </div>
 
    <div class="label-attachment-type">
-      <span class="label">labeling: </span>
+      <span class="label">Labeling </span>
       <mat-radio-group formControlName="labelAttachmentType">
          <mat-radio-button value="NONE">None available</mat-radio-button>
          <mat-radio-button value="ATTACHED_ORIGINAL">Attached original</mat-radio-button>
@@ -20,17 +27,38 @@
    </div>
 
    <div class="cr-matching-grid">
-      <mat-checkbox formControlName="descriptionMatchesCR">Description matches CR</mat-checkbox>
+      <mat-radio-group formControlName="descriptionMatchesCR">
+         <div>Description matches CR</div>
+         <div>
+            <mat-radio-button [value]="true">Y</mat-radio-button>
+            <mat-radio-button [value]="false">N</mat-radio-button>
+            <mat-radio-button [value]="null">NA</mat-radio-button>
+         </div>
+      </mat-radio-group>
       <mat-form-field class="notes">
          <input matInput placeholder="Notes" formControlName="descriptionMatchesCRNotes">
       </mat-form-field>
 
-      <mat-checkbox formControlName="containerMatchesCR">Container matches CR</mat-checkbox>
+      <mat-radio-group formControlName="containerMatchesCR">
+         <div>Container matches CR</div>
+         <div>
+            <mat-radio-button [value]="true">Y</mat-radio-button>
+            <mat-radio-button [value]="false">N</mat-radio-button>
+            <mat-radio-button [value]="null">NA</mat-radio-button>
+         </div>
+      </mat-radio-group>
       <mat-form-field class="notes">
          <input matInput placeholder="Notes" formControlName="containerMatchesCRNotes">
       </mat-form-field>
 
-      <mat-checkbox formControlName="codeMatchesCR">Code matches CR</mat-checkbox>
+      <mat-radio-group formControlName="codeMatchesCR">
+         <div>Code matches CR</div>
+         <div>
+            <mat-radio-button [value]="true">Y</mat-radio-button>
+            <mat-radio-button [value]="false">N</mat-radio-button>
+            <mat-radio-button [value]="null">NA</mat-radio-button>
+         </div>
+      </mat-radio-group>
       <mat-form-field class="notes">
          <input matInput placeholder="Notes" formControlName="codeMatchesCRNotes">
       </mat-form-field>

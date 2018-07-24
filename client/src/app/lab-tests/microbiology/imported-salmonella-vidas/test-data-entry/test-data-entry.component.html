@@ -18,7 +18,7 @@
 
 </div>
 
-<form [formGroup]="testDataForm" (submit)="onFormSubmit()">
+<form [formGroup]="testDataForm" (ngSubmit)="onFormSubmit()">
 
    <mat-accordion>
 
@@ -106,6 +106,8 @@
 
    </mat-accordion>
 
-   <button mat-button type="submit" (submit)="onFormSubmit()" color="primary">Save</button>
+   <div class="form-bottom-toolbar">
+      <button mat-button type="submit" color="primary">Save</button>
+   </div>
 
 </form>

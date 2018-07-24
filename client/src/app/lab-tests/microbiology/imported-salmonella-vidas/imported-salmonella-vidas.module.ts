@@ -8,7 +8,10 @@ import {
    MatInputModule,
    MatRadioModule,
    MatSelectModule,
-   MatSlideToggleModule
+   MatSlideToggleModule,
+   MatButtonModule,
+   MatDatepickerModule,
+   MatNativeDateModule,
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
@@ -33,6 +36,9 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       MatSelectModule,
       MatRadioModule,
       MatSlideToggleModule,
+      MatButtonModule,
+      MatDatepickerModule,
+      MatNativeDateModule,
       //
       CommonComponentsModule,
    ],

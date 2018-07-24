@@ -5,6 +5,7 @@ import {Observable, of as obsof} from 'rxjs';
 import {ApiUrlsService} from './api-urls.service';
 import {UserContext, LabGroupContents, AuthenticatedUser, LabTestMetadata, Sample, LabTestType} from '../../../generated/dto';
 import {SampleInTest} from '../models/sample-in-test';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UserContextService {
@@ -12,6 +13,7 @@ export class UserContextService {
    public authenticatedUser: AuthenticatedUser;
 
    public labGroupContents: LabGroupContents;
+   private labGroupContentsReloadRequested = false;
 
    private labGroupContentsLastUpdated: Date;
    private testIdToSampleInTest: Map<number, SampleInTest>;
@@ -21,8 +23,11 @@ export class UserContextService {
    constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) {}
 
    public getLabGroupContents(): Observable<LabGroupContents> {
-      // TODO: Refresh lab group contents here as needed depending on options and when it was last updated.
       return obsof(this.labGroupContents);
+   }
+
+   requestLabGroupContentsReload() {
+      this.labGroupContentsReloadRequested = true;
    }
 
    getSampleInTest(testId: number): SampleInTest | undefined {
@@ -33,12 +38,11 @@ export class UserContextService {
       return this.testTypeCodeToLabGroupTestConfigJson.get(testTypeCode);
    }
 
-   private setUserContext(userContext: UserContext) {
-      this.authenticatedUser = userContext.authenticatedUser;
-      this.labGroupContents = userContext.labGroupContents;
+   private setLabGroupContents(lgContents: LabGroupContents) {
+      this.labGroupContents = lgContents;
       this.labGroupContentsLastUpdated = new Date();
-      this.testIdToSampleInTest = this.getSampleInTestsByTestId(userContext.labGroupContents.activeSamples);
-      this.testTypeCodeToLabGroupTestConfigJson = this.getLabGroupTestConfigJsonsByTestTypeCode(userContext.labGroupContents.supportedTestTypes);
+      this.testIdToSampleInTest = this.getSampleInTestsByTestId(lgContents.activeSamples);
+      this.testTypeCodeToLabGroupTestConfigJson = this.getLabGroupTestConfigJsonsByTestTypeCode(lgContents.supportedTestTypes);
    }
 
    // Called via app-module to initialize the service prior to usage.
@@ -51,6 +55,11 @@ export class UserContextService {
       ucProm.then(userCtx => this.setUserContext(userCtx));
 
       return ucProm;
+   }
+
+   private setUserContext(userContext: UserContext) {
+      this.authenticatedUser = userContext.authenticatedUser;
+      this.setLabGroupContents(userContext.labGroupContents);
    }
 
    private getSampleInTestsByTestId(samples: Sample[]) {

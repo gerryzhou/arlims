@@ -43,9 +43,9 @@ public class TestController
     public OptimisticDataUpdateResult saveTestDataJson
         (
             @PathVariable("testId") long testId,
-            @RequestParam("testDataJson") String testDataJson,
-            @RequestParam("stageStatusesJson") String stageStatusesJson,
-            @RequestParam("previousMd5") String previousMd5,
+            @RequestPart("testDataJson") String testDataJson,
+            @RequestPart("stageStatusesJson") String stageStatusesJson,
+            @RequestPart("previousMd5") String previousMd5,
             @RequestHeader HttpHeaders httpHeaders
         )
     {
