@@ -106,21 +106,24 @@ function makeTestDataFormGroup(testData: TestData): FormGroup {
       }),
       preEnrData: new FormGroup({
          samplingMethod: new FormGroup({
-            extractedGramsPerSub: new FormControl(testData.preEnrData.samplingMethod.extractedGramsPerSub),
             numberOfComposites: new FormControl(testData.preEnrData.samplingMethod.numberOfComposites),
-            compositeMassGrams: new FormControl(testData.preEnrData.samplingMethod.compositeMassGrams),
             numberOfSubsPerComposite: new FormControl(testData.preEnrData.samplingMethod.numberOfSubsPerComposite),
+            extractedGramsPerSub: new FormControl(testData.preEnrData.samplingMethod.extractedGramsPerSub),
             numberOfSubs: new FormControl(testData.preEnrData.samplingMethod.numberOfSubs),
+            compositeMassGrams: new FormControl(testData.preEnrData.samplingMethod.compositeMassGrams),
          }),
+
          balanceId: new FormControl(testData.preEnrData.balanceId),
          blenderJarId: new FormControl(testData.preEnrData.blenderJarId),
          bagId: new FormControl(testData.preEnrData.bagId),
+         mediumBatchId: new FormControl(testData.preEnrData.mediumBatchId),
+         incubatorId: new FormControl(testData.preEnrData.incubatorId),
+
          sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
          spikePlateCount: new FormControl(testData.preEnrData.spikePlateCount),
-         preenrichMediumBatchId: new FormControl(testData.preEnrData.preenrichMediumBatchId),
-         preenrichIncubatorId: new FormControl(testData.preEnrData.preenrichIncubatorId),
-         preenrichPositiveControlGrowth: new FormControl(testData.preEnrData.preenrichPositiveControlGrowth),
-         preenrichMediumControlGrowth: new FormControl(testData.preEnrData.preenrichMediumControlGrowth),
+
+         positiveControlGrowth: new FormControl(testData.preEnrData.positiveControlGrowth),
+         mediumControlGrowth: new FormControl(testData.preEnrData.mediumControlGrowth),
       }),
       selEnrData: new FormGroup({
          rvBatchId: new FormControl(testData.selEnrData.rvBatchId),

@@ -36,10 +36,10 @@ export interface PreEnrData {
    bagId?: string;
    sampleSpike?: boolean;
    spikePlateCount?: number;
-   preenrichMediumBatchId?: string;
-   preenrichIncubatorId?: string;
-   preenrichPositiveControlGrowth?: boolean;
-   preenrichMediumControlGrowth?: boolean;
+   mediumBatchId?: string;
+   incubatorId?: string;
+   positiveControlGrowth?: boolean;
+   mediumControlGrowth?: boolean;
    // preenrichSignature?: Signature;
 }
 
@@ -156,10 +156,10 @@ function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {
       data.blenderJarId,
       data.bagId,
       data.sampleSpike,
-      data.preenrichMediumBatchId,
-      data.preenrichIncubatorId,
-      data.preenrichPositiveControlGrowth,
-      data.preenrichMediumControlGrowth,
+      data.mediumBatchId,
+      data.incubatorId,
+      data.positiveControlGrowth,
+      data.mediumControlGrowth,
       // data.preenrichSignature
    ]);
 

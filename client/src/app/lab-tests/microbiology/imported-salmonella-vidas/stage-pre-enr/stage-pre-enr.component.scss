@@ -1,0 +1,28 @@
+.area {
+   margin: 10px 20px 10px 5px;
+}
+
+.sampling-method {
+   display: flex;
+   mat-form-field {
+      margin-right: 20px;
+   }
+}
+.resource-identifiers {
+   mat-form-field {
+      margin-right: 20px;
+   }
+}
+
+.spiking-and-controls {
+   display: flex;
+   mat-radio-group, mat-form-field {
+      margin-right: 20px;
+   }
+}
+
+mat-radio-button {
+   margin-left: 5px;
+   margin-right: 5px;
+}
+

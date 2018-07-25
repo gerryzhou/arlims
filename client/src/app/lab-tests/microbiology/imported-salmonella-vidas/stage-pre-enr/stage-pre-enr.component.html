@@ -1,3 +1,92 @@
-<p>
-  stage-pre-enr works!
-</p>
+<form [formGroup]="form">
+   <div formGroupName="samplingMethod" class="sampling-method area">
+      <mat-form-field>
+         <input formControlName="numberOfComposites" type="number" min="0" step="1" matInput
+                placeholder="Number of composites">
+      </mat-form-field>
+      <mat-form-field>
+         <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
+                placeholder="Number of subs per composite">
+      </mat-form-field>
+      <mat-form-field>
+         <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
+                placeholder="Extracted mass per sub, grams">
+      </mat-form-field>
+      <mat-form-field>
+         <input formControlName="numberOfSubs" type="number" min="0" step="1" matInput
+                placeholder="Number of subs">
+      </mat-form-field>
+      <mat-form-field>
+         <input formControlName="compositeMassGrams" type="number" min="0" step="1" matInput
+                placeholder="Composite mass, grams">
+      </mat-form-field>
+   </div>
+
+   <div class="resource-identifiers area">
+      <!-- TODO: Populate this select list from balances listed in lab group contents.-->
+      <mat-form-field>
+         <mat-select placeholder="Balance">
+            <mat-option [value]="'ARL00424'">Bal ARL00424 (RM 224A)</mat-option>
+            <mat-option [value]="'ARL00512'">Bal ARL00512 (RM 224A)</mat-option>
+            <mat-option [value]="'ARL00622'">Bal ARL00622 (RM 224A)</mat-option>
+            <mat-option [value]="'ARL00623'">Bal ARL00623 (RM 230)</mat-option>
+         </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+         <input formControlName="blenderJarId" type="text" matInput
+                placeholder="Blender jar">
+      </mat-form-field>
+      <mat-form-field>
+         <input formControlName="bagId" type="text" matInput
+                placeholder="Bag">
+      </mat-form-field>
+      <mat-form-field>
+         <input formControlName="mediumBatchId" type="text" matInput
+                placeholder="Medium Batch">
+      </mat-form-field>
+      <!-- TODO: Populate this select list from incubators listed in lab group contents.-->
+      <mat-form-field>
+         <mat-select placeholder="Balance">
+            <mat-option [value]="'5089365'">Inc 5089365 (RM 224A)</mat-option>
+            <mat-option [value]="'5099324'">Inc 5099324 (RM 224A)</mat-option>
+            <mat-option [value]="'5049461'">Inc 5049461 (RM 224A)</mat-option>
+         </mat-select>
+      </mat-form-field>
+   </div>
+
+   <div class="spiking-and-controls area">
+
+      <mat-radio-group formControlName="sampleSpike">
+         <div>Sample spiking</div>
+         <div>
+            <mat-radio-button [value]="true">Y</mat-radio-button>
+            <mat-radio-button [value]="false">N</mat-radio-button>
+            <mat-radio-button [value]="null">NA</mat-radio-button>
+         </div>
+      </mat-radio-group>
+      <mat-form-field>
+         <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput placeholder="Spike plate count"
+                [disabled]="!form.get('sampleSpike')">
+      </mat-form-field>
+
+      <mat-radio-group formControlName="positiveControlGrowth">
+         <div>Positive control growth</div>
+         <div>
+            <mat-radio-button [value]="true">Y</mat-radio-button>
+            <mat-radio-button [value]="false">N</mat-radio-button>
+            <mat-radio-button [value]="null">NA</mat-radio-button>
+         </div>
+      </mat-radio-group>
+
+      <mat-radio-group formControlName="mediumControlGrowth">
+         <div>Medium control growth</div>
+         <div>
+            <mat-radio-button [value]="true">Y</mat-radio-button>
+            <mat-radio-button [value]="false">N</mat-radio-button>
+            <mat-radio-button [value]="null">NA</mat-radio-button>
+         </div>
+      </mat-radio-group>
+   </div>
+
+</form>
+

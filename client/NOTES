@@ -1,3 +1,7 @@
+test data entry component
+   Remove accordion, add "expand all" button.
+
+
 UserContextService
    Expose ReplaySubject's (buffer size = 1) for the LG and its dependent data (maps).
    These RS's won't be replaced, just call next() on them as part of loading process.

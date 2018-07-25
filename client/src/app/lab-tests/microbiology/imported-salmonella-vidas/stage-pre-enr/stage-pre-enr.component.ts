@@ -11,6 +11,7 @@ export class StagePreEnrComponent implements OnInit {
    @Input()
    form: FormGroup;
 
+   // TODO: Fetch resource identifiers by type from the lab group (should be added to resolver-supplied data), for balances and incubators select lists.
    constructor() { }
 
    ngOnInit() {
