@@ -25,7 +25,7 @@
    <div class="resource-identifiers area">
       <!-- TODO: Populate this select list from balances listed in lab group contents.-->
       <mat-form-field>
-         <mat-select placeholder="Balance">
+         <mat-select formControlName="balanceId" placeholder="Balance">
             <mat-option [value]="'ARL00424'">Bal ARL00424 (RM 224A)</mat-option>
             <mat-option [value]="'ARL00512'">Bal ARL00512 (RM 224A)</mat-option>
             <mat-option [value]="'ARL00622'">Bal ARL00622 (RM 224A)</mat-option>
@@ -46,7 +46,7 @@
       </mat-form-field>
       <!-- TODO: Populate this select list from incubators listed in lab group contents.-->
       <mat-form-field>
-         <mat-select placeholder="Balance">
+         <mat-select formControlName="incubatorId" placeholder="Incubator">
             <mat-option [value]="'5089365'">Inc 5089365 (RM 224A)</mat-option>
             <mat-option [value]="'5099324'">Inc 5099324 (RM 224A)</mat-option>
             <mat-option [value]="'5049461'">Inc 5049461 (RM 224A)</mat-option>
@@ -65,8 +65,7 @@
          </div>
       </mat-radio-group>
       <mat-form-field>
-         <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput placeholder="Spike plate count"
-                [disabled]="!form.get('sampleSpike')">
+         <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput placeholder="Spike plate count">
       </mat-form-field>
 
       <mat-radio-group formControlName="positiveControlGrowth">
