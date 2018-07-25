@@ -20,91 +20,87 @@
 
 <form [formGroup]="testDataForm" (ngSubmit)="onFormSubmit()">
 
-   <mat-accordion>
+   <mat-expansion-panel *ngIf="stage === 'PREP' || showAllStages"
+                        [expanded]="stage === 'PREP'">
+      <mat-expansion-panel-header>
+         <mat-panel-title>
+            PREPARATION
+         </mat-panel-title>
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'PREP' || showAllStages"
-                           [expanded]="stage === 'PREP'">
-         <mat-expansion-panel-header>
-            <mat-panel-title>
-               PREPARATION
-            </mat-panel-title>
-         </mat-expansion-panel-header>
+      <app-stage-prep [form]="testDataForm.get('prepData')"></app-stage-prep>
 
-         <app-stage-prep [form]="testDataForm.get('prepData')"></app-stage-prep>
+   </mat-expansion-panel>
 
-      </mat-expansion-panel>
+   <mat-expansion-panel *ngIf="stage === 'PRE-ENR' || showAllStages"
+                        [expanded]="stage === 'PRE-ENR'">
+      <mat-expansion-panel-header>
+         PRE-ENRICHMENT
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'PRE-ENR' || showAllStages"
-                           [expanded]="stage === 'PRE-ENR'">
-         <mat-expansion-panel-header>
-            PRE-ENRICHMENT
-         </mat-expansion-panel-header>
+      <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"></app-stage-pre-enr>
 
-         <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"></app-stage-pre-enr>
+   </mat-expansion-panel>
 
-      </mat-expansion-panel>
+   <mat-expansion-panel *ngIf="stage === 'SEL-ENR' || showAllStages"
+                        [expanded]="stage === 'SEL-ENR'">
+      <mat-expansion-panel-header>
+         SELECTIVE ENRICHMENT
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'SEL-ENR' || showAllStages"
-                           [expanded]="stage === 'SEL-ENR'">
-         <mat-expansion-panel-header>
-            SELECTIVE ENRICHMENT
-         </mat-expansion-panel-header>
+      <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"></app-stage-sel-enr>
 
-         <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"></app-stage-sel-enr>
+   </mat-expansion-panel>
 
-      </mat-expansion-panel>
+   <mat-expansion-panel *ngIf="stage === 'M-BROTH' || showAllStages"
+                        [expanded]="stage === 'M-BROTH'">
+      <mat-expansion-panel-header>
+         M BROTH
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'M-BROTH' || showAllStages"
-                           [expanded]="stage === 'M-BROTH'">
-         <mat-expansion-panel-header>
-            M BROTH
-         </mat-expansion-panel-header>
+      <app-stage-m-broth [form]="testDataForm.get('mBrothData')"></app-stage-m-broth>
 
-         <app-stage-m-broth [form]="testDataForm.get('mBrothData')"></app-stage-m-broth>
+   </mat-expansion-panel>
 
-      </mat-expansion-panel>
+   <mat-expansion-panel *ngIf="stage === 'VIDAS' || showAllStages"
+                        [expanded]="stage === 'VIDAS'">
+      <mat-expansion-panel-header>
+         VIDAS
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'VIDAS' || showAllStages"
-                           [expanded]="stage === 'VIDAS'">
-         <mat-expansion-panel-header>
-            VIDAS
-         </mat-expansion-panel-header>
+      <app-stage-vidas [form]="testDataForm.get('vidasData')"></app-stage-vidas>
 
-         <app-stage-vidas [form]="testDataForm.get('vidasData')"></app-stage-vidas>
+   </mat-expansion-panel>
 
-      </mat-expansion-panel>
+   <mat-expansion-panel *ngIf="stage === 'CONTROLS' || showAllStages"
+                        [expanded]="stage === 'CONTROLS'">
+      <mat-expansion-panel-header>
+         CONTROLS
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'CONTROLS' || showAllStages"
-                           [expanded]="stage === 'CONTROLS'">
-         <mat-expansion-panel-header>
-            CONTROLS
-         </mat-expansion-panel-header>
+      <app-stage-controls [form]="testDataForm.get('controlsData')"></app-stage-controls>
 
-         <app-stage-controls [form]="testDataForm.get('controlsData')"></app-stage-controls>
+   </mat-expansion-panel>
 
-      </mat-expansion-panel>
+   <mat-expansion-panel *ngIf="stage === 'RESULTS' || showAllStages"
+                        [expanded]="stage === 'RESULTS'">
+      <mat-expansion-panel-header>
+         RESULTS
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'RESULTS' || showAllStages"
-                           [expanded]="stage === 'RESULTS'">
-         <mat-expansion-panel-header>
-            RESULTS
-         </mat-expansion-panel-header>
+      <app-stage-results [form]="testDataForm.get('resultsData')"></app-stage-results>
 
-         <app-stage-results [form]="testDataForm.get('resultsData')"></app-stage-results>
+   </mat-expansion-panel>
 
-      </mat-expansion-panel>
+   <mat-expansion-panel *ngIf="stage === 'WRAPUP' || showAllStages"
+                        [expanded]="stage === 'WRAPUP'">
+      <mat-expansion-panel-header>
+         WRAPUP
+      </mat-expansion-panel-header>
 
-      <mat-expansion-panel *ngIf="stage === 'WRAPUP' || showAllStages"
-                           [expanded]="stage === 'WRAPUP'">
-         <mat-expansion-panel-header>
-            WRAPUP
-         </mat-expansion-panel-header>
+      <app-stage-wrapup [form]="testDataForm.get('wrapupData')"></app-stage-wrapup>
 
-         <app-stage-wrapup [form]="testDataForm.get('wrapupData')"></app-stage-wrapup>
-
-      </mat-expansion-panel>
-
-   </mat-accordion>
+   </mat-expansion-panel>
 
    <div class="form-bottom-toolbar">
       <button mat-button type="submit" color="primary">Save</button>
