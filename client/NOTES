@@ -1,21 +1,8 @@
 UserContextService
-  Lab group needs to always be accessed as a promise from outside of this class.
-  Should be able to just expose a labGroupContents$ property.
-
-      // if (this.labGroupContentsReloadRequested) {
-      //    console.log('Fetching new lab group contents.');
-      //    this.labGroupContentsReloadRequested = false;
-      //    this.httpClient.get<UserContext>(this.apiUrlsSvc.userContextUrl())
-      //       .pipe(
-      //          map(userContext => userContext.labGroupContents)
-      //       )
-      //       .subscribe(newLabGroupContents => {
-      //          console.log('Got new lab group contents.');
-      //          this.setLabGroupContents(newLabGroupContents);
-      //       });
-      // } else {
-      //    return obsof(this.labGroupContents);
-      // }
+   Expose ReplaySubject's (buffer size = 1) for the LG and its dependent data (maps).
+   These RS's won't be replaced, just call next() on them as part of loading process.
+   Create a new type to represent data given to test data entry components, in addition to VersionedTestData.
+   In imp slm vidas resolver, flatmap accesses from user context service and to make this new structure.
 
 TestsService.saveTestData
    Null value should be able to conflict with non-null value.
@@ -24,8 +11,6 @@ TestsService.saveTestData
    Force reload of user context info on next access when test is saved.
 
 Can disable expansion panel header when only showing a single stage?
-
-Implement another form or two.
 
 
 test data entry component
