@@ -20,7 +20,7 @@
       <app-sample
          [sample]="allSamples[sampleIx].sample"
          [showTestsAndResources]="expandedSampleIds.has(allSamples[sampleIx].sample.id)"
-         (requestShowTestsAndResources)="setSampleExpanded(allSamples[sampleIx].sample.id, $event)"
+         (toggleTestsAndResources)="setSampleExpanded(allSamples[sampleIx].sample.id, $event)"
          (testClick)="navigateToTest($event)"
          (testStageClick)="navigateToTestStage($event)">
       </app-sample>

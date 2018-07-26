@@ -25,7 +25,7 @@ export class SampleComponent implements OnInit {
    showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
 
    @Output()
-   requestShowTestsAndResources = new EventEmitter<boolean>();
+   toggleTestsAndResources = new EventEmitter<boolean>();
 
    @Output()
    testClick = new EventEmitter<LabTestMetadata>();
@@ -54,7 +54,7 @@ export class SampleComponent implements OnInit {
    }
 
    onTestsAndResourcesToggleRequest() {
-      this.requestShowTestsAndResources.next(!this.showTestsAndResources);
+      this.toggleTestsAndResources.next(!this.showTestsAndResources);
    }
 
    onTestClicked(test: LabTestMetadata) {
