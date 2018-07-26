@@ -73,9 +73,9 @@ import {CommonComponentsModule} from './common-components/common-components.modu
       MatDialogModule,
       TruncateModule,
       // app modules
-      AppRoutingModule,
       CommonComponentsModule,
       ImportedSalmonellaVidasModule,
+      AppRoutingModule,
    ],
    providers: [
       Location,
