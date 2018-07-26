@@ -49,8 +49,6 @@ export class SamplesListingComponent implements OnInit {
             if (sampleId) { this.expandedSampleIds.add(sampleId); }
          }
       }
-      console.log('Detailed sample ids: ');
-      console.log(this.expandedSampleIds);
    }
 
    ngOnInit() {
