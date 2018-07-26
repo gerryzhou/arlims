@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, of as obsof} from 'rxjs';
+import {Observable, of as obsof, ReplaySubject} from 'rxjs';
 
 import {ApiUrlsService} from './api-urls.service';
-import {UserContext, LabGroupContents, AuthenticatedUser, LabTestMetadata, Sample, LabTestType} from '../../../generated/dto';
+import {UserContext, LabGroupContents, AuthenticatedUser, Sample, LabTestType, LabResource} from '../../../generated/dto';
 import {SampleInTest} from '../models/sample-in-test';
 import {map} from 'rxjs/operators';
 
@@ -12,51 +12,82 @@ export class UserContextService {
 
    public authenticatedUser: AuthenticatedUser;
 
-   // TODO: Expose as ReplaySubject(1).
-   private labGroupContents$: Observable<LabGroupContents>;
+   private labGroupContents$: ReplaySubject<LabGroupContents>;
+   private testIdToSampleInTest$: ReplaySubject<Map<number, SampleInTest>>;
+   private testTypeCodeToLabGroupTestConfigJson$: ReplaySubject<Map<string, string>>;
+   private labResourcesByType$: ReplaySubject<Map<string, LabResource[]>>;
 
    private labGroupContentsLastUpdated: Date;
 
-   // Make these readonly ReplaySubject(1)s.
-   private testIdToSampleInTest: Map<number, SampleInTest>;
-   private testTypeCodeToLabGroupTestConfigJson: Map<string, string>;
-
    constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) {}
 
-   public getLabGroupContents(): Observable<LabGroupContents> {
+   getLabGroupContents(): Observable<LabGroupContents> {
       return this.labGroupContents$;
    }
 
-   private setLabGroupContents(lgContents: LabGroupContents) {
-      this.labGroupContents$ = obsof(lgContents);
-      this.labGroupContentsLastUpdated = new Date();
-
-      // TODO: Remove or make observable.
-      this.testIdToSampleInTest = this.getSampleInTestsByTestId(lgContents.activeSamples);
-      this.testTypeCodeToLabGroupTestConfigJson = this.getLabGroupTestConfigJsonsByTestTypeCode(lgContents.supportedTestTypes);
-   }
-
    requestLabGroupContentsReload() {
-      this.labGroupContents$ =
-         this.httpClient.get<UserContext>(this.apiUrlsSvc.userContextUrl()).pipe(
-            map(userContext => userContext.labGroupContents)
-         );
-      this.labGroupContents$.subscribe(newLabGroupContents => {
-         this.setLabGroupContents(newLabGroupContents);
-      });
+      this.loadLabGroupContentsVia(this.fetchLabGroupContents());
    }
 
-   ///////////////////////////////////////////////
-   // TODO: Expose as observable based on access of the Map ReplaySubject member.
-   getSampleInTest(testId: number): SampleInTest | undefined {
-      return this.testIdToSampleInTest.get(testId);
+   getSampleInTest(testId: number): Observable<SampleInTest | undefined> {
+      return this.testIdToSampleInTest$.pipe(map(m => m.get(testId)));
    }
-   // TODO: Expose as observable based on access of the Map ReplaySubject member.
-   getLabGroupTestConfigJson(testTypeCode: string): string | undefined {
-      return this.testTypeCodeToLabGroupTestConfigJson.get(testTypeCode);
+
+   getLabGroupTestConfigJson(testTypeCode: string): Observable<string | undefined> {
+      return this.testTypeCodeToLabGroupTestConfigJson$.pipe(map(m => m.get(testTypeCode)));
    }
-   // TODO: Make available as ReplaySubject(1).
-   private getSampleInTestsByTestId(samples: Sample[]) {
+
+   getLabResourcesByType(): Observable<Map<string, LabResource[]>> {
+      return this.labResourcesByType$;
+   }
+
+   // Called via app-module to initialize the service prior to usage.
+   loadUserContext(): Promise<UserContext> {
+      return (
+         this.fetchUserContext()
+            .toPromise()
+            .then(userCtx => {
+               this.authenticatedUser = userCtx.authenticatedUser;
+               this.loadLabGroupContentsVia(obsof(userCtx.labGroupContents));
+               return userCtx;
+            })
+      );
+   }
+
+   private loadLabGroupContentsVia(lgContents$: Observable<LabGroupContents>) {
+      this.labGroupContents$ = new ReplaySubject(1);
+      this.testIdToSampleInTest$ = new ReplaySubject<Map<number, SampleInTest>>(1);
+      this.testTypeCodeToLabGroupTestConfigJson$ = new ReplaySubject<Map<string, string>>(1);
+      this.labResourcesByType$ = new ReplaySubject<Map<string, LabResource[]>>(1);
+
+      this.labGroupContents$
+         .pipe( map(lgContents => UserContextService.getSampleInTestsByTestId(lgContents.activeSamples)) )
+         .subscribe(this.testIdToSampleInTest$);
+
+      this.labGroupContents$
+         .pipe( map(lgContents => UserContextService.getLabGroupTestConfigJsonsByTestTypeCode(lgContents.supportedTestTypes)) )
+         .subscribe(this.testTypeCodeToLabGroupTestConfigJson$);
+
+      this.labGroupContents$
+         .pipe( map(lgContents => UserContextService.groupLabResourcesByType(lgContents.managedResources)) )
+         .subscribe(this.labResourcesByType$);
+
+      this.labGroupContents$.subscribe(() => {
+         this.labGroupContentsLastUpdated = new Date();
+      });
+
+      lgContents$.subscribe(this.labGroupContents$);
+   }
+
+   private fetchUserContext(): Observable<UserContext> {
+      return this.httpClient.get<UserContext>(this.apiUrlsSvc.userContextUrl());
+   }
+
+   private fetchLabGroupContents(): Observable<LabGroupContents> {
+      return this.fetchUserContext().pipe(map(usrCtx => usrCtx.labGroupContents));
+   }
+
+   private static getSampleInTestsByTestId(samples: Sample[]): Map<number, SampleInTest> {
       const m = new Map<number, SampleInTest>();
       for (const s of samples) {
          for (const t of s.tests) {
@@ -65,8 +96,8 @@ export class UserContextService {
       }
       return m;
    }
-   // TODO: Make available as ReplaySubject(1).
-   private getLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string> {
+
+   private static getLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string> {
       const m = new Map<string, string>();
       for (const testType of testTypes) {
          if (testType.configurationJson) {
@@ -75,23 +106,19 @@ export class UserContextService {
       }
       return m;
    }
-   ///////////////////////////////////////////////
 
-   // Called via app-module to initialize the service prior to usage.
-   loadUserContext(): Promise<UserContext> {
-      const ucProm: Promise<UserContext> =
-         this.httpClient
-         .get<UserContext>(this.apiUrlsSvc.userContextUrl())
-         .toPromise();
+   private static groupLabResourcesByType(managedResources: LabResource[]) {
+      const m = new Map<string, LabResource[]>();
 
-      ucProm.then(userCtx => this.setUserContext(userCtx));
+      for (const labResource of managedResources) {
+         const resourcesOfType = m.get(labResource.resourceType);
+         if (!resourcesOfType) {
+            m[labResource.resourceType] = [labResource];
+         } else {
+            resourcesOfType.push(labResource);
+         }
+      }
 
-      return ucProm;
+      return m;
    }
-
-   private setUserContext(userContext: UserContext) {
-      this.authenticatedUser = userContext.authenticatedUser;
-      this.setLabGroupContents(userContext.labGroupContents);
-   }
-
 }

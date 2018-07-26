@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AlertMessageService, ApiUrlsService, TestsService, UserContextService} from '../../../../shared/services';
-import {VersionedTestData} from '../../../../../generated/dto';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {emptyTestData, getTestStageStatuses, TestData} from '../test-data';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TestConfig} from '../test-config';
+import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
+import {LabResource, LabResourceType} from '../../../../../generated/dto';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-test-data-entry',
@@ -27,6 +28,16 @@ export class TestDataEntryComponent implements OnInit {
 
    readonly testDataForm: FormGroup;
 
+   readonly balances: LabResource[] | undefined;
+   readonly incubators: LabResource[] | undefined;
+   readonly waterbaths: LabResource[] | undefined;
+   readonly vidasMachines: LabResource[] | undefined;
+
+   private static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
+   private static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
+   private static readonly WATERBATH_RESOURCE_TYPE: LabResourceType = 'WAB';
+   private static readonly VIDAS_RESOURCE_TYPE: LabResourceType = 'VID';
+
    constructor(
       private activatedRoute: ActivatedRoute,
       private apiUrls: ApiUrlsService,
@@ -35,23 +46,21 @@ export class TestDataEntryComponent implements OnInit {
       private router: Router,
       private usrCtxSvc: UserContextService
    ) {
-      const verTestData: VersionedTestData = this.activatedRoute.snapshot.data['testData'];
+      const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
+      const verTestData = labGroupTestData.versionedTestData;
       this.originalTestData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
       this.stage = activatedRoute.snapshot.paramMap.get('stage') || null;
       this.showAllStages = !this.stage;
-
-      this.sampleInTest = usrCtxSvc.getSampleInTest(verTestData.testId);
-      if ( !this.sampleInTest ) {
-         throw new Error('Sample not found for test id ' + verTestData.testId);
-      }
-
-      const configJson = usrCtxSvc.getLabGroupTestConfigJson(this.sampleInTest.testMetadata.testTypeCode);
-      if (configJson) {
-         this.testConfig = JSON.parse(configJson);
-      }
-
+      this.sampleInTest = labGroupTestData.sampleInTest;
+      this.testConfig = labGroupTestData.labGroupTestConfig;
       this.testDataForm = makeTestDataFormGroup(this.originalTestData);
+
+      const labResources = labGroupTestData.labResourcesByType;
+      this.balances = labResources[TestDataEntryComponent.BALANCE_RESOURCE_TYPE];
+      this.incubators = labResources[TestDataEntryComponent.INCUBATOR_RESOURCE_TYPE];
+      this.waterbaths = labResources[TestDataEntryComponent.WATERBATH_RESOURCE_TYPE];
+      this.vidasMachines = labResources[TestDataEntryComponent.VIDAS_RESOURCE_TYPE];
    }
 
    ngOnInit() {

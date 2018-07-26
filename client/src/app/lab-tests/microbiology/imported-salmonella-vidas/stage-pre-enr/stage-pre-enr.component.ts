@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {LabResource} from '../../../../../generated/dto';
 
 @Component({
   selector: 'app-stage-pre-enr',
@@ -11,7 +12,12 @@ export class StagePreEnrComponent implements OnInit {
    @Input()
    form: FormGroup;
 
-   // TODO: Fetch resource identifiers by type from the lab group (should be added to resolver-supplied data), for balances and incubators select lists.
+   @Input()
+   balances: LabResource[];
+
+   @Input()
+   incubators: LabResource[];
+
    constructor() { }
 
    ngOnInit() {

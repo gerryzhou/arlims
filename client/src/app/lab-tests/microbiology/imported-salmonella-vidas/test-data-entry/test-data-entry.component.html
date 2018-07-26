@@ -38,7 +38,10 @@
          PRE-ENRICHMENT
       </mat-expansion-panel-header>
 
-      <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"></app-stage-pre-enr>
+      <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"
+                         [balances]="balances"
+                         [incubators]="incubators">
+      </app-stage-pre-enr>
 
    </mat-expansion-panel>
 

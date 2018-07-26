@@ -1,18 +1,20 @@
 
-UserContextService
-   Expose ReplaySubject's (buffer size = 1) for the LG and its dependent data (maps).
-   These RS's won't be replaced, just call next() on them as part of loading process.
-   Create a new type to represent data given to test data entry components, in addition to VersionedTestData.
-   In imp slm vidas resolver, flatmap accesses from user context service and to make this new structure.
+Commit Notes
+------------
+Make lab group contents access fully async in user context service.
+Provide richer resolved content (LabGroupTestData) to test data entry components.
+In test forms, if non-empty select list is available for a lab resource then provide select list, else text input.
+
+Create a new type to represent data given to test data entry components, in addition to VersionedTestData.
+  Also add lab group resources by type.
 
 TestsService.saveTestData
    Null value should be able to conflict with non-null value.
-   Implement conflict handling in save method for imp sal test data.
-      Add fields and method to show conflicting values when auto-merging isn't possible.
-   Force reload of user context info on next access when test is saved.
+   Add form fields/methods to show conflicting values when auto-merging isn't possible.
 
 Can disable expansion panel header when only showing a single stage?
 
+Try alternate datepicker adapter using moment.js, see if getting actual dates is an option.
 
 test data entry component
 -------------------------
@@ -39,6 +41,7 @@ John: For now, don't use resource lists, just allow pasting directly to a form s
 
 [SL] Samples Listing
 ---------------
+Only show latest of saved/reviewed/synced statuses on right side, maybe show all via popup.
 
 [WB] Waterbath whiteboard
   Add general screen to display samples/tests and attach status notes.

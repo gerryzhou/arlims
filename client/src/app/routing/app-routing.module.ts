@@ -6,7 +6,7 @@ import {environment} from '../../environments/environment';
 import {SamplesListingComponent} from '../samples-listing/samples-listing.component';
 import {LabGroupContentsResolver} from './lab-group-contents.resolver';
 import {TestDataEntryComponent as MicroImpSalVidasTestDataComponent} from '../lab-tests/microbiology/imported-salmonella-vidas/test-data-entry/test-data-entry.component';
-import {TestDataResolver} from './test-data.resolver';
+import {LabGroupTestDataResolver} from './lab-group-test-data.resolver';
 
 const routes: Routes = [
    {
@@ -17,12 +17,12 @@ const routes: Routes = [
    {
       path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId',
       component: MicroImpSalVidasTestDataComponent,
-      resolve: { testData: TestDataResolver }
+      resolve: { labGroupTestData: LabGroupTestDataResolver }
    },
    {
       path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId/:stage',
       component: MicroImpSalVidasTestDataComponent,
-      resolve: { testData: TestDataResolver }
+      resolve: { labGroupTestData: LabGroupTestDataResolver }
    },
    { path: '', redirectTo: 'samples', pathMatch: 'full' },
 ];

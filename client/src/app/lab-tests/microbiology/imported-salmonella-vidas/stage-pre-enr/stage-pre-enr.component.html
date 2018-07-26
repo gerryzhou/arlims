@@ -23,14 +23,16 @@
    </div>
 
    <div class="resource-identifiers area">
-      <!-- TODO: Populate this select list from balances listed in lab group contents.-->
       <mat-form-field>
-         <mat-select formControlName="balanceId" placeholder="Balance">
-            <mat-option [value]="'ARL00424'">Bal ARL00424 (RM 224A)</mat-option>
-            <mat-option [value]="'ARL00512'">Bal ARL00512 (RM 224A)</mat-option>
-            <mat-option [value]="'ARL00622'">Bal ARL00622 (RM 224A)</mat-option>
-            <mat-option [value]="'ARL00623'">Bal ARL00623 (RM 230)</mat-option>
+         <mat-select formControlName="balanceId" placeholder="Balance" *ngIf="balances; else textInputBalance">
+            <mat-option [value]="null"></mat-option>
+            <mat-option *ngFor="let labRsc of balances" [value]="labRsc.code">
+               {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+            </mat-option>
          </mat-select>
+         <ng-template #textInputBalance>
+            <input formControlName="balanceId" type="text" matInput placeholder="Balance">
+         </ng-template>
       </mat-form-field>
       <mat-form-field>
          <input formControlName="blenderJarId" type="text" matInput
@@ -44,13 +46,16 @@
          <input formControlName="mediumBatchId" type="text" matInput
                 placeholder="Medium Batch">
       </mat-form-field>
-      <!-- TODO: Populate this select list from incubators listed in lab group contents.-->
       <mat-form-field>
-         <mat-select formControlName="incubatorId" placeholder="Incubator">
-            <mat-option [value]="'5089365'">Inc 5089365 (RM 224A)</mat-option>
-            <mat-option [value]="'5099324'">Inc 5099324 (RM 224A)</mat-option>
-            <mat-option [value]="'5049461'">Inc 5049461 (RM 224A)</mat-option>
+         <mat-select formControlName="incubatorId" placeholder="Incubator" *ngIf="incubators; else textInputIncubator">
+            <mat-option [value]="null"></mat-option>
+            <mat-option *ngFor="let labRsc of incubators" [value]="labRsc.code">
+               {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+            </mat-option>
          </mat-select>
+         <ng-template #textInputIncubator>
+            <input formControlName="incubatorId" type="text" matInput placeholder="Incubator">
+         </ng-template>
       </mat-form-field>
    </div>
 
