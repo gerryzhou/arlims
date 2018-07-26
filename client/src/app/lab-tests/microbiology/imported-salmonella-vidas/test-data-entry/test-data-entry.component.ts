@@ -82,7 +82,7 @@ export class TestDataEntryComponent implements OnInit {
             this.usrCtxSvc.requestLabGroupContentsReload();
             // TODO: Clear conflictingTestData field.
             this.alertMessageSvc.alertSuccess('Test data saved.', true);
-            this.router.navigate(['/samples']); // TODO: Add query param telling to show details for this sample.
+            this.router.navigate(['/samples', {expsmp: `${this.sampleInTest.sample.id}`}]);
          } else {
             const conflicts = saveResults.mergeConflicts;
             const modInfo = conflicts.dbModificationInfo;

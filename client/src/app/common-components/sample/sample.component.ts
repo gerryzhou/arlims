@@ -1,7 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LabTestMetadata, Sample} from '../../../generated/dto';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-sample',
@@ -17,13 +16,22 @@ export class SampleComponent implements OnInit {
    showTestsAndResources: boolean;
 
    @Input()
-   allowTogglingTestsAndResources = true;
+   showTestsAndResourcesToggle = true;
 
    @Input()
    showTestsAndResourcesSummaryInSampleMetadata = true;
 
    @Input()
    showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
+
+   @Output()
+   requestShowTestsAndResources = new EventEmitter<boolean>();
+
+   @Output()
+   testClick = new EventEmitter<LabTestMetadata>();
+
+   @Output()
+   testStageClick = new EventEmitter<LabTestStageMetadata>();
 
    // Sample "details" include tests or resource lists, and additional sample metadata.
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
@@ -33,7 +41,7 @@ export class SampleComponent implements OnInit {
 
    factsStatusCssClass: string;
 
-   constructor(private router: Router) { }
+   constructor() { }
 
    ngOnInit() {
       this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
@@ -45,16 +53,16 @@ export class SampleComponent implements OnInit {
          this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
    }
 
-   toggleTestsAndResources() {
-      this.showTestsAndResources = !this.showTestsAndResources;
+   onTestsAndResourcesToggleRequest() {
+      this.requestShowTestsAndResources.next(!this.showTestsAndResources);
    }
 
-   navigateToTest(test: LabTestMetadata) {
-      this.router.navigate(['test-data', test.testTypeCode, test.testId]);
+   onTestClicked(test: LabTestMetadata) {
+      this.testClick.next(test);
    }
 
-   navigateToTestStage(testStage: LabTestStageMetadata) {
-      const test = testStage.labTestMetadata;
-      this.router.navigate(['test-data', test.testTypeCode, test.testId, testStage.stageName]);
+   onTestStageClicked(testStage: LabTestStageMetadata) {
+      this.testStageClick.next(testStage);
    }
+
 }

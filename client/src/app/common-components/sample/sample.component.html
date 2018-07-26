@@ -59,8 +59,8 @@
             <span>{{numAssociatedResourceLists}} resource list{{numAssociatedResourceLists != 1 ? 's' : ''}}</span>
          </div>
 
-         <button mat-button color="accent" *ngIf="(hasTestsOrResources || hasExtendedSampleMetadata) && allowTogglingTestsAndResources"
-                 (click)="toggleTestsAndResources()">
+         <button mat-button color="accent" *ngIf="(hasTestsOrResources || hasExtendedSampleMetadata) && showTestsAndResourcesToggle"
+                 (click)="onTestsAndResourcesToggleRequest()">
             {{showTestsAndResources ? 'hide' : 'show'}} details
          </button>
       </div> <!-- Ends first row of sample metadata. -->
@@ -80,8 +80,8 @@
       <div class="test-metadatas">
          <app-test-metadata *ngFor="let test of sample.tests"
             [test]="test"
-            (testClick)="navigateToTest(test)"
-            (stageClick)="navigateToTestStage($event)">
+            (testClick)="onTestClicked(test)"
+            (stageClick)="onTestStageClicked($event)">
          </app-test-metadata>
       </div>
 

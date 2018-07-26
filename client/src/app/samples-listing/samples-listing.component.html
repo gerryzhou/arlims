@@ -11,12 +11,19 @@
       {{countSelected()}} selected
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
+   <button mat-button (click)="expandOrContractAllSamples()">{{expandedSampleIds.size > 0 ? 'collapse samples' : 'expand samples'}}</button>
 </div>
 
 <div class="listing">
    <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
       <mat-checkbox [(ngModel)]="allSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
-      <app-sample [sample]="allSamples[sampleIx].sample" [showTestsAndResources]="showSampleDetails"></app-sample>
+      <app-sample
+         [sample]="allSamples[sampleIx].sample"
+         [showTestsAndResources]="expandedSampleIds.has(allSamples[sampleIx].sample.id)"
+         (requestShowTestsAndResources)="setSampleExpanded(allSamples[sampleIx].sample.id, $event)"
+         (testClick)="navigateToTest($event)"
+         (testStageClick)="navigateToTestStage($event)">
+      </app-sample>
    </div>
 </div>
 

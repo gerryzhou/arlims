@@ -5,8 +5,6 @@ export interface ListingOptions {
 
    includeSamplesAssignedOnlyToOtherUsers: boolean;
 
-   showSampleDetails: boolean;
-
    limitSelectionToVisibleSamples: boolean;
 
 }

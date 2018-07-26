@@ -1,9 +1,10 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {LabGroupContents, Sample} from '../../generated/dto';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {LabGroupContents, LabTestMetadata, Sample} from '../../generated/dto';
 import {UserContextService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
 import {MatDialog} from '@angular/material';
+import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
 
 @Component({
   selector: 'app-samples-listing',
@@ -19,8 +20,9 @@ export class SamplesListingComponent implements OnInit {
    // samples to be displayed, having survived filters and optionally undergone sorting
    visibleSampleIxs: number[];
 
-   showSampleDetails: boolean;
    limitSelectionToVisibleSamples: boolean;
+
+   expandedSampleIds = new Set<number>();
 
    hiddenSelectedCount = 0;
 
@@ -29,16 +31,26 @@ export class SamplesListingComponent implements OnInit {
    readonly defaultListingOptions: ListingOptions =
       {
          includeSamplesAssignedOnlyToOtherUsers: false,
-         showSampleDetails: false,
          limitSelectionToVisibleSamples: true
       };
 
    constructor(
       userContextService: UserContextService,
       private activatedRoute: ActivatedRoute,
+      private router: Router,
       private dialogSvc: MatDialog
    ) {
       this.userShortName = userContextService.authenticatedUser.shortName;
+
+      const expandedSampleIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
+      if (expandedSampleIdsStr) {
+         for (const sampleIdStr of expandedSampleIdsStr.split(',')) {
+            const sampleId = +sampleIdStr;
+            if (sampleId) { this.expandedSampleIds.add(sampleId); }
+         }
+      }
+      console.log('Detailed sample ids: ');
+      console.log(this.expandedSampleIds);
    }
 
    ngOnInit() {
@@ -48,7 +60,6 @@ export class SamplesListingComponent implements OnInit {
    }
 
    listingOptionsChanged(listingOptions: ListingOptions) {
-      this.showSampleDetails = listingOptions.showSampleDetails;
       this.limitSelectionToVisibleSamples = listingOptions.limitSelectionToVisibleSamples;
       this.applyFilters(listingOptions);
    }
@@ -73,6 +84,34 @@ export class SamplesListingComponent implements OnInit {
       }
       this.visibleSampleIxs = visibleIxs;
    }
+
+   setSampleExpanded(sampleId: number, expand: boolean) {
+      if (!expand) {
+         this.expandedSampleIds.delete(sampleId);
+      } else {
+         this.expandedSampleIds.add(sampleId);
+      }
+   }
+
+   expandOrContractAllSamples() {
+      if (this.expandedSampleIds.size > 0) {
+         this.expandedSampleIds.clear();
+      } else {
+         this.visibleSampleIxs.forEach(sampleIx =>
+            this.expandedSampleIds.add(this.allSamples[sampleIx].sample.id)
+         );
+      }
+   }
+
+   navigateToTest(test: LabTestMetadata) {
+      this.router.navigate(['test-data', test.testTypeCode, test.testId]);
+   }
+
+   navigateToTestStage(testStage: LabTestStageMetadata) {
+      const test = testStage.labTestMetadata;
+      this.router.navigate(['test-data', test.testTypeCode, test.testId, testStage.stageName]);
+   }
+
 
    private sampleSatisfiesSearchTextRequirement(sample: Sample, listingOptions: ListingOptions): boolean {
       return !listingOptions.searchText || listingOptions.searchText.trim().length === 0 ||
