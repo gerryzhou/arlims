@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
         @Index(name = "IX_TST_BEGINDATE", columnList = "BEGIN_DATE"),
         @Index(name = "IX_TST_REVIEWEDEMPID", columnList = "REVIEWED_BY_EMP_ID"),
         @Index(name = "IX_TST_SAVEDTOFACTS", columnList = "SAVED_TO_FACTS"),
+        @Index(name = "IX_TST_SAVEDTOFACTSEMPID", columnList = "SAVED_TO_FACTS_BY_EMP_ID"),
         @Index(name = "IX_TST_TESTDATAMD5", columnList = "TEST_DATA_MD5"),
     }
 )
@@ -87,6 +88,12 @@ public class Test
     @Column(name = "SAVED_TO_FACTS")
     private Instant savedToFacts;
 
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "SAVED_TO_FACTS_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_SAVEDTOFACTS"))
+    private Employee savedToFactsByEmployee;
+
+    @Column(name = "SAVED_TO_FACTS_BY_EMP_ID", insertable = false, updatable = false)
+    private Long savedToFactsByEmpId;
+
     protected Test() {}
 
     public Test
@@ -123,6 +130,8 @@ public class Test
         this.reviewedByEmployee = null;
         this.reviewedByEmpId = null;
         this.savedToFacts = null;
+        this.savedToFactsByEmployee = null;
+        this.savedToFactsByEmpId = null;
     }
 
     public Long getId() { return id; }
@@ -179,5 +188,10 @@ public class Test
 
     public Instant getSavedToFacts() { return savedToFacts; }
     public void setSavedToFacts(Instant savedToFacts) { this.savedToFacts = savedToFacts; }
+
+    public Employee getSavedToFactsByEmployee() { return savedToFactsByEmployee; }
+    public void setSavedToFactsByEmployee(Employee savedToFactsBy) { this.savedToFactsByEmployee = savedToFactsBy; }
+
+    public Long getSavedToFactsByEmpId() { return savedToFactsByEmpId; }
 }
 

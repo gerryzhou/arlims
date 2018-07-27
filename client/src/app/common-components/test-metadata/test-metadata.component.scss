@@ -31,47 +31,23 @@
       }
    }
 
-   .last-saved-stack {
+   .last-test-status-action {
       flex-grow: 0;
       text-align: center;
-      margin: 0;
+      margin: 4px 0px;
       border: 3px solid lightgray;
       padding: 3px 5px;
-      .last-saved-by {
+      font-size: small;
+      .action-instant {
+         font-weight: bold;
+      }
+      .action-employee {
          display: flex;
          justify-content: center;
          align-items: center;
          mat-icon {
-            margin: 0 2px 0 3px;
+            margin: 0;
          }
-      }
-   }
-
-   .reviewed-stack {
-      flex-grow: 0;
-      text-align: center;
-      margin: 0;
-      border: 3px solid lightgray;
-      padding: 3px 5px;
-      .reviewed-by {
-         display: flex;
-         justify-content: center;
-         align-items: center;
-         mat-icon {
-            margin: 0 2px 0 3px;
-         }
-      }
-   }
-
-   .saved-to-facts-stack {
-      flex-grow: 0;
-      text-align: center;
-      margin: 0;
-      border: 3px solid lightgray;
-      padding: 3px 5px;
-      .saved-to-facts-icon {
-         color: green;
-         vertical-align: bottom;
       }
    }
 

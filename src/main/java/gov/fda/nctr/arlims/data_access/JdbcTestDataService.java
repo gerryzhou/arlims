@@ -53,6 +53,7 @@ public class JdbcTestDataService implements TestDataService
             long testId,
             String testDataJson,
             String stageStatusesJson,
+            long empId,
             String previousMd5
         )
     {
@@ -60,10 +61,20 @@ public class JdbcTestDataService implements TestDataService
 
         String sql =
             "update test\n" +
-            "set test_data_json = ?, stage_statuses_json = ?, test_data_md5 = ?\n" +
+            "set test_data_json = ?, stage_statuses_json = ?, last_saved = ?, last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
             "where id = ? and test_data_md5 = ?";
 
-        int updateCount = jdbc.update(sql, testDataJson, stageStatusesJson, newMd5, testId, previousMd5);
+        int updateCount =
+            jdbc.update(
+                sql,
+                testDataJson,
+                stageStatusesJson,
+                new java.sql.Timestamp(Instant.now().toEpochMilli()),
+                empId,
+                newMd5,
+                testId,
+                previousMd5
+            );
 
         return updateCount > 0;
     }

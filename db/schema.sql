@@ -317,32 +317,36 @@ create index IX_LGRPTSTT_LGRPID
 
 create table TEST
 (
-  ID                   NUMBER(19) generated as identity
+  ID                       NUMBER(19) generated as identity
     primary key,
-  BEGIN_DATE           DATE,
-  CREATED              TIMESTAMP(6) not null,
-  CREATED_BY_EMP_ID    NUMBER(19)
+  BEGIN_DATE               DATE,
+  CREATED                  TIMESTAMP(6)      not null,
+  CREATED_BY_EMP_ID        NUMBER(19)
     constraint FK_TST_EMP_CREATED
     references EMPLOYEE,
-  LAB_GROUP_ID         NUMBER(19)
+  LAB_GROUP_ID             NUMBER(19)
     constraint FK_TST_LABGRP
     references LAB_GROUP,
-  LAST_SAVED           TIMESTAMP(6) not null,
-  LAST_SAVED_BY_EMP_ID NUMBER(19)
+  LAST_SAVED               TIMESTAMP(6)      not null,
+  LAST_SAVED_BY_EMP_ID     NUMBER(19)
     constraint FK_TST_EMP_LASTSAVED
     references EMPLOYEE,
-  NOTE                 VARCHAR2(200 char),
-  REVIEWED             TIMESTAMP(6),
-  REVIEWED_BY_EMP_ID   NUMBER(19)
+  NOTE                     VARCHAR2(200 char),
+  REVIEWED                 TIMESTAMP(6),
+  REVIEWED_BY_EMP_ID       NUMBER(19)
     constraint FK_TST_EMP_REVIEWED
     references EMPLOYEE,
-  SAMPLE_ID            NUMBER(19)
+  SAMPLE_ID                NUMBER(19)
     constraint FK_TST_RCVSMP
     references SAMPLE,
-  SAVED_TO_FACTS       TIMESTAMP(6),
-  STAGE_STATUSES_JSON  VARCHAR2(4000 char),
-  TEST_DATA_JSON       CLOB,
-  TEST_TYPE_ID         NUMBER(19)   not null
+  SAVED_TO_FACTS           TIMESTAMP(6),
+  SAVED_TO_FACTS_BY_EMP_ID NUMBER(19)
+    constraint FK_TST_EMP_SAVEDTOFACTS
+    references EMPLOYEE,
+  STAGE_STATUSES_JSON      VARCHAR2(4000 char),
+  TEST_DATA_JSON           CLOB,
+  TEST_DATA_MD5            VARCHAR2(32 char) not null,
+  TEST_TYPE_ID             NUMBER(19)        not null
     constraint FK_TST_TSTT
     references TEST_TYPE
 )
@@ -386,6 +390,14 @@ create index IX_TST_REVIEWEDEMPID
 
 create index IX_TST_SAVEDTOFACTS
   on TEST (SAVED_TO_FACTS)
+/
+
+create index IX_TST_SAVEDTOFACTSEMPID
+  on TEST (SAVED_TO_FACTS_BY_EMP_ID)
+/
+
+create index IX_TST_TESTDATAMD5
+  on TEST (TEST_DATA_MD5)
 /
 
 create table TEST_MANAGED_RESOURCE

@@ -25,6 +25,7 @@ public class LabTestMetadata
     private Optional<Instant> reviewedInstant;
     private Optional<String> reviewedByEmpShortName;
     private Optional<Instant> savedToFactsInstant;
+    private Optional<String> savedToFactsByEmpShortName;
 
 
     public LabTestMetadata
@@ -46,7 +47,8 @@ public class LabTestMetadata
             Optional<String> stageStatusesJson,
             Optional<Instant> reviewedInstant,
             Optional<String> reviewedByEmpShortName,
-            Optional<Instant> savedToFactsInstant
+            Optional<Instant> savedToFactsInstant,
+            Optional<String> savedToFactsByEmpShortName
         )
     {
         this.testId = testId;
@@ -67,6 +69,7 @@ public class LabTestMetadata
         this.reviewedInstant = reviewedInstant;
         this.reviewedByEmpShortName = reviewedByEmpShortName;
         this.savedToFactsInstant = savedToFactsInstant;
+        this.savedToFactsByEmpShortName = savedToFactsByEmpShortName;
     }
 
     public long getTestId() { return testId; }
@@ -104,4 +107,6 @@ public class LabTestMetadata
     public Optional<String> getReviewedByEmpShortName() { return reviewedByEmpShortName; }
 
     public Optional<Instant> getSavedToFactsInstant() { return savedToFactsInstant; }
+
+    public Optional<String> getSavedToFactsByEmpShortName() { return savedToFactsByEmpShortName; }
 }

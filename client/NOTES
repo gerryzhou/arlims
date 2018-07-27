@@ -1,9 +1,6 @@
 samples listing
   Only show latest of saved/reviewed/synced statuses on right side, maybe show all via popup.
 
-sample
-  Change "TestsAndResources" to "AssociatedItems" everywhere.
-
 TestsService.saveTestData
    Null value should be able to conflict with non-null value.
    Add form fields/methods to show conflicting values when auto-merging isn't possible.

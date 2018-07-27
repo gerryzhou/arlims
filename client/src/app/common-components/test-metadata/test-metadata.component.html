@@ -30,19 +30,9 @@
          {{test.note}}
       </div>
 
-      <div class="last-saved-stack">
-         <div class="last-saved-instant">Saved {{test.lastSavedInstant | date: 'MMM d h:mm a'}}</div>
-         <div class="last-saved-by">by <mat-icon>person</mat-icon>{{test.lastSavedByEmpShortName}}</div>
-      </div>
-
-      <div class="reviewed-stack" *ngIf="test.reviewedInstant">
-         <div class="reviewed-instant">Rev. {{test.reviewedInstant | date: 'MMM d h:mm a'}}</div>
-         <div class="reviewed-by">by <mat-icon>person</mat-icon>{{test.reviewedByEmpShortName}}</div>
-      </div>
-
-      <div class="saved-to-facts-stack" *ngIf="test.savedToFactsInstant">
-         <div>Synced to FACTS</div>
-         <div>{{test.savedToFactsInstant | date: 'MMM d h:mm a'}} <mat-icon class="saved-to-facts-icon">cloud_done</mat-icon></div>
+      <div class="last-test-status-action" *ngIf="testStatusActions.length > 0">
+         <div class="action-employee"><mat-icon>person</mat-icon>{{testStatusActions[0].employeeShortName}} {{testStatusActions[0].action}}</div>
+         <div class="action-instant">{{testStatusActions[0].timestamp | date: 'MMM d h:mm a'}}</div>
       </div>
 
    </div>

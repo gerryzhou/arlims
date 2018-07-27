@@ -314,6 +314,11 @@ public class JpaUserContextService implements UserContextService
             .flatMap(empId -> opt(usersById.get(empId)))
             .map(UserReference::getShortName);
 
+        Optional<String> savedToFactsByUserShortName =
+            opt(t.getSavedToFactsByEmpId())
+            .flatMap(empId -> opt(usersById.get(empId)))
+            .map(UserReference::getShortName);
+
         return
             new LabTestMetadata(
                 t.getId(),
@@ -333,7 +338,8 @@ public class JpaUserContextService implements UserContextService
                 opt(t.getStageStatusesJson()),
                 opt(t.getReviewed()),
                 reviewedByUserShortName,
-                opt(t.getSavedToFacts())
+                opt(t.getSavedToFacts()),
+                savedToFactsByUserShortName
             );
     }
 

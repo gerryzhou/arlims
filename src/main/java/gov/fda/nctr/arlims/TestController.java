@@ -34,7 +34,7 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        String fdaEmailAccountName = "stephen.harris"; // TODO: Verify user can access to this test.
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
 
         return testDataService.getVersionedTestData(testId);
     }
@@ -49,9 +49,9 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        String fdaEmailAccountName = "stephen.harris"; // TODO: Verify user can access this test.
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee is allowed to save test data.
 
-        boolean saved = testDataService.saveTestDataJson(testId, testDataJson, stageStatusesJson, previousMd5);
+        boolean saved = testDataService.saveTestDataJson(testId, testDataJson, stageStatusesJson, empId, previousMd5);
 
         if ( saved )
             return new OptimisticDataUpdateResult(true, Optional.empty());

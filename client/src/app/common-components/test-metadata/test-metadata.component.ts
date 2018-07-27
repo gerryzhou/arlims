@@ -16,6 +16,8 @@ export class TestMetadataComponent implements OnChanges {
 
    stageStatuses: TestStageStatus[];
 
+   testStatusActions: TestStatusAction[];
+
    @Output()
    stageClick = new EventEmitter<LabTestStageMetadata>();
 
@@ -26,6 +28,7 @@ export class TestMetadataComponent implements OnChanges {
 
    ngOnChanges() {
       this.stageStatuses = JSON.parse(this.test.stageStatusesJson);
+      this.testStatusActions = TestMetadataComponent.makeTestStatusActionsTimeDescending(this.test);
    }
 
    onStageClicked(stageName: string) {
@@ -36,14 +39,44 @@ export class TestMetadataComponent implements OnChanges {
       this.testClick.next(this.test);
    }
 
-   testDayNumber(): number | null {
-      if ( !this.test.beginDate ) {
-         return null;
+   private static makeTestStatusActionsTimeDescending(test: LabTestMetadata): TestStatusAction[] {
+      const actions: TestStatusAction[] = [];
+
+      if (test.lastSavedInstant) {
+         actions.push({
+            action: 'Saved',
+            timestamp: test.lastSavedInstant,
+            employeeShortName: test.lastSavedByEmpShortName,
+         });
       }
-      const millis_per_day = 1000 * 60 * 60 * 24;
-      // Convert beginning of day for the date string interpreted in local timezone to UTC instant (js Date).
-      const beginDate = parseISODateLocal(this.test.beginDate);
-      const now = new Date().getTime(); // now as UTC instant
-      return Math.round((now - beginDate.getTime()) / millis_per_day) + 1;
+      if (test.savedToFactsInstant) {
+         actions.push({
+            action: 'Synced to FACTS',
+            timestamp: test.savedToFactsInstant,
+            employeeShortName: test.savedToFactsByEmpShortName
+         });
+      }
+      if (test.reviewedInstant) {
+         actions.push({
+            action: 'Reviewed',
+            timestamp: test.reviewedInstant,
+            employeeShortName: test.reviewedByEmpShortName
+         });
+      }
+
+      actions.sort((a: TestStatusAction, b: TestStatusAction) =>
+         a.timestamp < b.timestamp ? -1 :
+         a.timestamp > b.timestamp ? 1 :
+         0
+      );
+
+      return actions;
    }
+}
+
+// Save, review, sync actions.
+interface TestStatusAction {
+   action: string;
+   timestamp: string;
+   employeeShortName: string;
 }
