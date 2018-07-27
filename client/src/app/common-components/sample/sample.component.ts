@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {LabTestMetadata, Sample} from '../../../generated/dto';
+import {LabTestMetadata, LabTestType, Sample} from '../../../generated/dto';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
+import {MatDialog} from '@angular/material';
+import {NewTestDialogComponent} from '../new-test-dialog/new-test-dialog.component';
 
 @Component({
   selector: 'app-sample',
@@ -13,19 +15,19 @@ export class SampleComponent implements OnChanges {
    sample: Sample;
 
    @Input()
-   showAssociatedItems: boolean;
+   showAssociatedItems = false;
 
    @Input()
-   showAssociatedItemsToggle = true;
-
-   @Input()
-   showAssociatedItemsSummaryInSampleMetadata = true;
+   showAssociatedItemsSummaryInSampleMetadata = false;
 
    @Input()
    showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
 
+   @Input()
+   newTestTypeChoices: LabTestType[] = [];
+
    @Output()
-   toggleAssociatedItems = new EventEmitter<boolean>();
+   headerClick = new EventEmitter<void>();
 
    @Output()
    testClick = new EventEmitter<LabTestMetadata>();
@@ -41,7 +43,7 @@ export class SampleComponent implements OnChanges {
 
    factsStatusCssClass: string;
 
-   constructor() { }
+   constructor(private dialogSvc: MatDialog) { }
 
    ngOnChanges() {
       this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
@@ -49,12 +51,11 @@ export class SampleComponent implements OnChanges {
          this.sample.associatedManagedResourceLists.length +
          this.sample.associatedUnmanagedResourceLists.length;
       this.hasExtendedSampleMetadata = !!this.sample.subject;
-      this.hasAssociatedItems =
-         this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
+      this.hasAssociatedItems = this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
    }
 
-   onAssociatedItemsToggleRequest() {
-      this.toggleAssociatedItems.next(!this.showAssociatedItems);
+   onHeaderClick() {
+      this.headerClick.next();
    }
 
    onTestClicked(test: LabTestMetadata) {
@@ -64,5 +65,24 @@ export class SampleComponent implements OnChanges {
    onTestStageClicked(testStage: LabTestStageMetadata) {
       this.testStageClick.next(testStage);
    }
+
+   promptCreateNewTest() {
+      const dlg = this.dialogSvc.open(NewTestDialogComponent, {
+         width: 'calc(75%)',
+         data: {
+            sample: this.sample,
+            availableTestTypes: this.newTestTypeChoices,
+            selectedTestType: null,
+            beginDate: null,
+         }
+      });
+
+      dlg.afterClosed().subscribe(result => {
+         console.log('The dialog was closed with result:');
+         console.log(result);
+         // TODO: Create the new test.  Get the date part by formatting Date object with date-only format in current timezone.
+      });
+   }
+
 
 }

@@ -1,0 +1,17 @@
+mat-dialog-content {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   .test-type {
+      margin: 20px;
+      padding: 5px;
+      height: auto;
+      min-width: 450px;
+   }
+}
+
+mat-dialog-actions {
+   justify-content: flex-end;
+}
+

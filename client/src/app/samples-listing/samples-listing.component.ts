@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LabGroupContents, LabTestMetadata, Sample} from '../../generated/dto';
+import {LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
 import {UserContextService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
 import {MatDialog} from '@angular/material';
@@ -16,6 +16,8 @@ export class SamplesListingComponent {
    private readonly userShortName: string;
 
    allSamples: SelectableSample[];
+
+   labGroupTestTypes: LabTestType[];
 
    // samples to be displayed, having survived filters and optionally undergone sorting
    visibleSampleIxs: number[];
@@ -35,12 +37,12 @@ export class SamplesListingComponent {
       };
 
    constructor(
-      userContextService: UserContextService,
+      usrCtxSvc: UserContextService,
       private activatedRoute: ActivatedRoute,
       private router: Router,
       private dialogSvc: MatDialog
    ) {
-      this.userShortName = userContextService.authenticatedUser.shortName;
+      this.userShortName = usrCtxSvc.authenticatedUser.shortName;
 
       const expandedSampleIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
       if (expandedSampleIdsStr) {
@@ -51,6 +53,7 @@ export class SamplesListingComponent {
       }
 
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
+      this.labGroupTestTypes = labGroupContents.supportedTestTypes;
       this.allSamples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
       this.applyFilters(this.defaultListingOptions);
    }
@@ -81,8 +84,8 @@ export class SamplesListingComponent {
       this.visibleSampleIxs = visibleIxs;
    }
 
-   setSampleExpanded(sampleId: number, expand: boolean) {
-      if (!expand) {
+   toggleSampleExpanded(sampleId: number) {
+      if (this.expandedSampleIds.has(sampleId)) {
          this.expandedSampleIds.delete(sampleId);
       } else {
          this.expandedSampleIds.add(sampleId);

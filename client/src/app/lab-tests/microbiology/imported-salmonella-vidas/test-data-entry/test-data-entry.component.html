@@ -4,13 +4,7 @@
       <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
    </div>
 
-   <app-sample
-      [sample]="sampleInTest.sample"
-      [showAssociatedItems]="false"
-      [showAssociatedItemsToggle]="false"
-      [showAssociatedItemsSummaryInSampleMetadata]="false"
-      [showExtendedSampleMetadataAlways]="false">
-   </app-sample>
+   <app-sample [sample]="sampleInTest.sample"></app-sample>
 
    <mat-slide-toggle *ngIf="stage" [(ngModel)]="showAllStages">
       Show all test stages

@@ -20,7 +20,9 @@
       <app-sample
          [sample]="allSamples[sampleIx].sample"
          [showAssociatedItems]="expandedSampleIds.has(allSamples[sampleIx].sample.id)"
-         (toggleAssociatedItems)="setSampleExpanded(allSamples[sampleIx].sample.id, $event)"
+         [showAssociatedItemsSummaryInSampleMetadata]="true"
+         [newTestTypeChoices]="labGroupTestTypes"
+         (headerClick)="toggleSampleExpanded(allSamples[sampleIx].sample.id)"
          (testClick)="navigateToTest($event)"
          (testStageClick)="navigateToTestStage($event)">
       </app-sample>

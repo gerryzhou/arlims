@@ -1,9 +1,11 @@
-samples listing
-  Only show latest of saved/reviewed/synced statuses on right side, maybe show all via popup.
+test metadata component
+  Remove some or all of the tooltips.
 
 TestsService.saveTestData
    Null value should be able to conflict with non-null value.
    Add form fields/methods to show conflicting values when auto-merging isn't possible.
+
+In sample listing, sample checkboxes should be aligned vertically to top of the sample, not the center.
 
 Add convenience buttons to allow filling sampling method values with those from the test config.
 
@@ -12,40 +14,35 @@ Finish forms.
 
 Make pdf of test data as part of "make package" function.
 
-Try numbered nav stage component or at least emulate its look for John.
+Try Material "Stepper" component to replace expansion panels for test data.
 
 Add ability to attach files to a sample and/or test.
 
 Add sorting and filtering capabilities to sample listing.
    Maybe add test view, maybe as table.
 
+Allow creating a new empty test of a given type in UI for selected sample(s).
+  Can add a "+ new test" next to the test count in the sample component.
+  Test data field and status fields should be null.
+  Should have to enter test begin date (TEST.BEGIN_DATE in db) from which day numbers are calculated.
+  +TestsService.createNewTest()
+
 
 test data entry component
 -------------------------
-  Can disable expansion panel header when only showing a single stage?
   Try alternate datepicker adapter using moment.js, see if getting actual dates is an option.
   Allow pasting resource codes to be automatically matched to form fields by type.
-  dialog to paste codes
   button to apply resources
     Highlight application points in the form.
     Distinguish applied resource codes from those that didn't match any form fields.
 
 
-Allow creating a new empty test of a given type in UI for selected sample(s).
-  Test data field and status fields should be null.
-  Should have to enter test begin date (TEST.BEGIN_DATE in db) from which day numbers are calculated.
-
 Decide how signatures in forms will be handled.
   They can't be handled like other form data, both components must be set automatically only when user passes an authentication test.
   Probably only the form stage should be signable as complete/correct and achieved outside the form?
 
-John: For now, don't use resource lists, just allow pasting directly to a form section after clicking on a test stage.
-      So, may not need multiple selection at all, for now.
-      If selection is needed, it would probably be selection of tests not samples, for example to apply some data to
-      multiple tests at once.
 
 [SL] Samples Listing
----------------
 
 [WB] Waterbath whiteboard
   Add general screen to display samples/tests and attach status notes.

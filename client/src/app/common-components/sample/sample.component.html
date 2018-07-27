@@ -1,6 +1,6 @@
 <mat-card class="sample">
 
-   <div class="sample-metadata">
+   <div class="sample-metadata" (click)="onHeaderClick()">
 
       <div class="sample-metadata-row">
 
@@ -58,11 +58,6 @@
             <span>{{sample.tests.length}} test{{sample.tests.length != 1 ? 's' : ''}}</span>
             <span>{{numAssociatedResourceLists}} resource list{{numAssociatedResourceLists != 1 ? 's' : ''}}</span>
          </div>
-
-         <button mat-button color="accent" *ngIf="(hasAssociatedItems || hasExtendedSampleMetadata) && showAssociatedItemsToggle"
-                 (click)="onAssociatedItemsToggleRequest()">
-            {{showAssociatedItems ? 'hide' : 'show'}} details
-         </button>
       </div> <!-- Ends first row of sample metadata. -->
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
@@ -77,7 +72,7 @@
    <!-- tests and associated lab resources area -->
    <div *ngIf="showAssociatedItems">
 
-      <div class="test-metadatas">
+      <div class="tests">
          <app-test-metadata *ngFor="let test of sample.tests"
             [test]="test"
             (testClick)="onTestClicked(test)"
@@ -93,6 +88,10 @@
                <span class="list-name">{{resourceList.listName}}</span>
             </mat-chip>
          </mat-chip-list>
+      </div>
+
+      <div class="sample-actions">
+         <span><button mat-mini-fab (click)="promptCreateNewTest()"><mat-icon>add</mat-icon></button> Create a new test</span>
       </div>
 
    </div>
