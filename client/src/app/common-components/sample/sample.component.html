@@ -54,19 +54,19 @@
 
          <div class="expanding-flex-space"></div>
 
-         <div *ngIf="showTestsAndResourcesSummaryInSampleMetadata" class="num-tests-and-resource-lists-stack">
+         <div *ngIf="showAssociatedItemsSummaryInSampleMetadata" class="nums-associated-items-stack">
             <span>{{sample.tests.length}} test{{sample.tests.length != 1 ? 's' : ''}}</span>
             <span>{{numAssociatedResourceLists}} resource list{{numAssociatedResourceLists != 1 ? 's' : ''}}</span>
          </div>
 
-         <button mat-button color="accent" *ngIf="(hasTestsOrResources || hasExtendedSampleMetadata) && showTestsAndResourcesToggle"
-                 (click)="onTestsAndResourcesToggleRequest()">
-            {{showTestsAndResources ? 'hide' : 'show'}} details
+         <button mat-button color="accent" *ngIf="(hasAssociatedItems || hasExtendedSampleMetadata) && showAssociatedItemsToggle"
+                 (click)="onAssociatedItemsToggleRequest()">
+            {{showAssociatedItems ? 'hide' : 'show'}} details
          </button>
       </div> <!-- Ends first row of sample metadata. -->
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
-      <div class="sample-metadata-row" *ngIf="hasExtendedSampleMetadata && (showTestsAndResources || showExtendedSampleMetadataAlways)">
+      <div class="sample-metadata-row" *ngIf="hasExtendedSampleMetadata && (showAssociatedItems || showExtendedSampleMetadataAlways)">
          <div *ngIf="sample.subject">
             <span class="field-label">subject: </span>
             <span class="field-value">{{sample.subject}}</span>
@@ -75,7 +75,7 @@
    </div>
 
    <!-- tests and associated lab resources area -->
-   <div *ngIf="showTestsAndResources">
+   <div *ngIf="showAssociatedItems">
 
       <div class="test-metadatas">
          <app-test-metadata *ngFor="let test of sample.tests"
@@ -98,4 +98,4 @@
    </div>
 
 </mat-card>
-<div *ngIf="showTestsAndResources" class="extra-bottom-spacing"></div>
+<div *ngIf="showAssociatedItems" class="extra-bottom-spacing"></div>

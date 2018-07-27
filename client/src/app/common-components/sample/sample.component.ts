@@ -13,19 +13,19 @@ export class SampleComponent implements OnChanges {
    sample: Sample;
 
    @Input()
-   showTestsAndResources: boolean;
+   showAssociatedItems: boolean;
 
    @Input()
-   showTestsAndResourcesToggle = true;
+   showAssociatedItemsToggle = true;
 
    @Input()
-   showTestsAndResourcesSummaryInSampleMetadata = true;
+   showAssociatedItemsSummaryInSampleMetadata = true;
 
    @Input()
    showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
 
    @Output()
-   toggleTestsAndResources = new EventEmitter<boolean>();
+   toggleAssociatedItems = new EventEmitter<boolean>();
 
    @Output()
    testClick = new EventEmitter<LabTestMetadata>();
@@ -35,7 +35,7 @@ export class SampleComponent implements OnChanges {
 
    // Sample "details" include tests or resource lists, and additional sample metadata.
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
-   hasTestsOrResources: boolean;
+   hasAssociatedItems: boolean;
 
    numAssociatedResourceLists: number;
 
@@ -49,12 +49,12 @@ export class SampleComponent implements OnChanges {
          this.sample.associatedManagedResourceLists.length +
          this.sample.associatedUnmanagedResourceLists.length;
       this.hasExtendedSampleMetadata = !!this.sample.subject;
-      this.hasTestsOrResources =
+      this.hasAssociatedItems =
          this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
    }
 
-   onTestsAndResourcesToggleRequest() {
-      this.toggleTestsAndResources.next(!this.showTestsAndResources);
+   onAssociatedItemsToggleRequest() {
+      this.toggleAssociatedItems.next(!this.showAssociatedItems);
    }
 
    onTestClicked(test: LabTestMetadata) {

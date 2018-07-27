@@ -1,4 +1,14 @@
-Do component init based on data bound properties in ngOnChanges, not ngOnInit.
+samples listing
+  Only show latest of saved/reviewed/synced statuses on right side, maybe show all via popup.
+
+sample
+  Change "TestsAndResources" to "AssociatedItems" everywhere.
+
+TestsService.saveTestData
+   Null value should be able to conflict with non-null value.
+   Add form fields/methods to show conflicting values when auto-merging isn't possible.
+
+Add convenience buttons to allow filling sampling method values with those from the test config.
 
 Finish forms.
   Add exceptions note field to sampling method subform.
@@ -13,10 +23,6 @@ Add sorting and filtering capabilities to sample listing.
    Maybe add test view, maybe as table.
 
 
-TestsService.saveTestData
-   Null value should be able to conflict with non-null value.
-   Add form fields/methods to show conflicting values when auto-merging isn't possible.
-
 test data entry component
 -------------------------
   Can disable expansion panel header when only showing a single stage?
@@ -27,7 +33,6 @@ test data entry component
     Highlight application points in the form.
     Distinguish applied resource codes from those that didn't match any form fields.
 
-Add convenience buttons to allow filling sampling method values with those from the test config.
 
 Allow creating a new empty test of a given type in UI for selected sample(s).
   Test data field and status fields should be null.
@@ -44,7 +49,6 @@ John: For now, don't use resource lists, just allow pasting directly to a form s
 
 [SL] Samples Listing
 ---------------
-Only show latest of saved/reviewed/synced statuses on right side, maybe show all via popup.
 
 [WB] Waterbath whiteboard
   Add general screen to display samples/tests and attach status notes.
