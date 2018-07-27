@@ -29,8 +29,7 @@ import {TruncateModule} from '@yellowspot/ng-truncate';
 
 import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
-import {LoadingIndicatorService, UserContextService} from './shared/services';
-import {LoadingIndicatorInterceptor} from './shared/services/loading-indicator/loading-indicator-interceptor';
+import {UserContextService, LoadingStatusService, LoadingStatusInterceptor} from './shared/services';
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
@@ -80,12 +79,12 @@ import {CommonComponentsModule} from './common-components/common-components.modu
    providers: [
       Location,
       DatePipe, // for use in JS
-      LoadingIndicatorService,
+      LoadingStatusService,
       {
          provide: HTTP_INTERCEPTORS,
-         useFactory: service => new LoadingIndicatorInterceptor(service),
+         useFactory: service => new LoadingStatusInterceptor(service),
          multi: true,
-         deps: [LoadingIndicatorService]
+         deps: [LoadingStatusService]
       },
      UserContextService,
      {

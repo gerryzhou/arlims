@@ -1,24 +1,26 @@
+Do component init based on data bound properties in ngOnChanges, not ngOnInit.
 
+Finish forms.
+  Add exceptions note field to sampling method subform.
 
-Commit Notes
-------------
-Make lab group contents access fully async in user context service.
-Provide richer resolved content (LabGroupTestData) to test data entry components.
-In test forms, if non-empty select list is available for a lab resource then provide select list, else text input.
+Make pdf of test data as part of "make package" function.
 
-Create a new type to represent data given to test data entry components, in addition to VersionedTestData.
-  Also add lab group resources by type.
+Try numbered nav stage component or at least emulate its look for John.
+
+Add ability to attach files to a sample and/or test.
+
+Add sorting and filtering capabilities to sample listing.
+   Maybe add test view, maybe as table.
+
 
 TestsService.saveTestData
    Null value should be able to conflict with non-null value.
    Add form fields/methods to show conflicting values when auto-merging isn't possible.
 
-Can disable expansion panel header when only showing a single stage?
-
-Try alternate datepicker adapter using moment.js, see if getting actual dates is an option.
-
 test data entry component
 -------------------------
+  Can disable expansion panel header when only showing a single stage?
+  Try alternate datepicker adapter using moment.js, see if getting actual dates is an option.
   Allow pasting resource codes to be automatically matched to form fields by type.
   dialog to paste codes
   button to apply resources

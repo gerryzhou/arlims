@@ -1,10 +1,11 @@
-import { EventEmitter, Injectable } from '@angular/core'
+import { Injectable } from '@angular/core';
 import { HttpRequest } from '@angular/common/http';
+import {Subject} from 'rxjs';
 
 @Injectable()
-export class LoadingIndicatorService {
+export class LoadingStatusService {
 
-   onLoadingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+   loadingStatus = new Subject<boolean>();
 
    private activeRequests: HttpRequest<any>[] = [];
 
@@ -22,7 +23,7 @@ export class LoadingIndicatorService {
    }
 
    private notify(): void {
-      this.onLoadingChanged.emit(this.activeRequests.length !== 0);
+      this.loadingStatus.next(this.activeRequests.length !== 0);
    }
 
 }
