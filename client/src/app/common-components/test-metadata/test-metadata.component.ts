@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {LabTestMetadata} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
 import {parseISODateLocal} from '../../shared/util/dates-and-times';
@@ -9,7 +9,7 @@ import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata'
   templateUrl: './test-metadata.component.html',
   styleUrls: ['./test-metadata.component.scss']
 })
-export class TestMetadataComponent implements OnInit {
+export class TestMetadataComponent implements OnChanges {
 
    @Input()
    test: LabTestMetadata;
@@ -24,7 +24,7 @@ export class TestMetadataComponent implements OnInit {
 
    constructor() { }
 
-   ngOnInit() {
+   ngOnChanges() {
       this.stageStatuses = JSON.parse(this.test.stageStatusesJson);
    }
 

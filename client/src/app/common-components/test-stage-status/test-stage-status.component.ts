@@ -1,15 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {TestStageStatus} from '../../lab-tests/test-stages';
 import {DatePipe} from '@angular/common';
-import {parseISOTimestampLocal} from '../../shared/util/dates-and-times';
-import {LabTestMetadata} from '../../../generated/dto';
 
 @Component({
   selector: 'app-test-stage-status',
   templateUrl: './test-stage-status.component.html',
   styleUrls: ['./test-stage-status.component.scss']
 })
-export class TestStageStatusComponent implements OnInit {
+export class TestStageStatusComponent implements OnChanges {
 
    @Output()
    click = new EventEmitter<null>();
@@ -21,7 +19,7 @@ export class TestStageStatusComponent implements OnInit {
 
    constructor(private datePipe: DatePipe) { }
 
-   ngOnInit() {
+   ngOnChanges() {
       switch ( this.status.fieldValuesStatus ) {
          case 'e': this.fieldValuesStatusText = 'empty'; break;
          case 'i': this.fieldValuesStatusText = 'incomplete'; break;

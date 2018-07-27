@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LabGroupContents, LabTestMetadata, Sample} from '../../generated/dto';
 import {UserContextService} from '../shared/services';
@@ -11,7 +11,7 @@ import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
   templateUrl: './samples-listing.component.html',
   styleUrls: ['./samples-listing.component.scss']
 })
-export class SamplesListingComponent implements OnInit {
+export class SamplesListingComponent {
 
    private readonly userShortName: string;
 
@@ -49,9 +49,7 @@ export class SamplesListingComponent implements OnInit {
             if (sampleId) { this.expandedSampleIds.add(sampleId); }
          }
       }
-   }
 
-   ngOnInit() {
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
       this.allSamples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
       this.applyFilters(this.defaultListingOptions);

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AlertMessageService, ApiUrlsService, TestsService, UserContextService} from '../../../../shared/services';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
@@ -13,7 +13,7 @@ import {LabResource, LabResourceType} from '../../../../../generated/dto';
    templateUrl: './test-data-entry.component.html',
    styleUrls: ['./test-data-entry.component.scss']
 })
-export class TestDataEntryComponent implements OnInit {
+export class TestDataEntryComponent {
 
    // The original test data and its md5 are needed for detecting and merging concurrent updates to the same data.
    originalTestData: TestData;
@@ -61,9 +61,6 @@ export class TestDataEntryComponent implements OnInit {
       this.incubators = labResources[TestDataEntryComponent.INCUBATOR_RESOURCE_TYPE];
       this.waterbaths = labResources[TestDataEntryComponent.WATERBATH_RESOURCE_TYPE];
       this.vidasMachines = labResources[TestDataEntryComponent.VIDAS_RESOURCE_TYPE];
-   }
-
-   ngOnInit() {
    }
 
    onFormSubmit() {

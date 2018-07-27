@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 @Component({
@@ -6,13 +6,13 @@ import {FormGroup} from '@angular/forms';
   templateUrl: './stage-prep.component.html',
   styleUrls: ['./stage-prep.component.scss']
 })
-export class StagePrepComponent implements OnInit {
+export class StagePrepComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
 
    constructor() { }
 
-   ngOnInit() {
+   ngOnChanges() {
    }
 }

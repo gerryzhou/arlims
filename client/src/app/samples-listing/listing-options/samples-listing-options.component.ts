@@ -1,13 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, OnChanges, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ListingOptions} from './listing-options';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-samples-listing-options',
   templateUrl: './samples-listing-options.component.html',
   styleUrls: ['./samples-listing-options.component.scss']
 })
-export class SamplesListingOptionsComponent implements OnInit {
+export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
 
    @Input()
    initialOptions: ListingOptions;
@@ -16,9 +17,11 @@ export class SamplesListingOptionsComponent implements OnInit {
 
    listingOptionsFormGroup: FormGroup;
 
+   private optsSubscription: Subscription;
+
    constructor() {}
 
-   ngOnInit() {
+   ngOnChanges() {
       this.listingOptionsFormGroup =
          new FormGroup({
             searchText: new FormControl(this.initialOptions.searchText),
@@ -26,7 +29,11 @@ export class SamplesListingOptionsComponent implements OnInit {
             limitSelectionToVisibleSamples: new FormControl(this.initialOptions.limitSelectionToVisibleSamples)
          });
 
-      this.listingOptionsFormGroup.valueChanges.subscribe(data => this.onFormChange(data));
+      this.optsSubscription = this.listingOptionsFormGroup.valueChanges.subscribe(data => this.onFormChange(data));
+   }
+
+   ngOnDestroy() {
+      this.optsSubscription.unsubscribe();
    }
 
    emitChangeEvent(data: ListingOptions) {

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {LabTestMetadata, Sample} from '../../../generated/dto';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 
@@ -7,7 +7,7 @@ import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata'
   templateUrl: './sample.component.html',
   styleUrls: ['./sample.component.scss']
 })
-export class SampleComponent implements OnInit {
+export class SampleComponent implements OnChanges {
 
    @Input()
    sample: Sample;
@@ -43,7 +43,7 @@ export class SampleComponent implements OnInit {
 
    constructor() { }
 
-   ngOnInit() {
+   ngOnChanges() {
       this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
       this.numAssociatedResourceLists =
          this.sample.associatedManagedResourceLists.length +

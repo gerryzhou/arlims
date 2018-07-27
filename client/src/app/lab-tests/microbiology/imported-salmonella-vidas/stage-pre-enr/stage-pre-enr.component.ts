@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {LabResource} from '../../../../../generated/dto';
 
@@ -7,7 +7,7 @@ import {LabResource} from '../../../../../generated/dto';
   templateUrl: './stage-pre-enr.component.html',
   styleUrls: ['./stage-pre-enr.component.scss']
 })
-export class StagePreEnrComponent implements OnInit {
+export class StagePreEnrComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
@@ -20,7 +20,7 @@ export class StagePreEnrComponent implements OnInit {
 
    constructor() { }
 
-   ngOnInit() {
+   ngOnChanges() {
    }
 
 }
