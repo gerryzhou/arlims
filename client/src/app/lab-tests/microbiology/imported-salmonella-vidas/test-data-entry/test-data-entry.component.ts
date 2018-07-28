@@ -100,7 +100,7 @@ export class TestDataEntryComponent {
 function makeTestDataFormGroup(testData: TestData): FormGroup {
    return new FormGroup({
       prepData: new FormGroup({
-         sampleReceived: new FormControl(testData.prepData.sampleReceived), // TODO: Add date validator.
+         sampleReceivedDate: new FormControl(testData.prepData.sampleReceivedDate),
          sampleReceivedFrom: new FormControl(testData.prepData.sampleReceivedFrom),
          descriptionMatchesCR: new FormControl(testData.prepData.descriptionMatchesCR),
          descriptionMatchesCRNotes: new FormControl(testData.prepData.descriptionMatchesCRNotes),

@@ -19,7 +19,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
    it('should yield all complete for complete test data', () => {
       const completeTestData: TestData = {
          prepData: {
-            sampleReceived: '3/12/2010',
+            sampleReceivedDate: '3/12/2010',
             sampleReceivedFrom: 'Scott',
             descriptionMatchesCR: true,
             // descriptionMatchesCRNotes (not required)
@@ -96,7 +96,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
    it('should yield mixed statuses for mixed status test data', () => {
       const partialTestData: TestData = {
          prepData: {
-            sampleReceived: '3/12/2010',
+            sampleReceivedDate: '3/12/2010',
             sampleReceivedFrom: 'Scott',
             descriptionMatchesCR: true,
             labelAttachmentType: 'NONE',

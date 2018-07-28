@@ -16,7 +16,7 @@ export interface TestData {
 }
 
 export interface PrepData {
-   sampleReceived?: string;
+   sampleReceivedDate?: string;
    sampleReceivedFrom?: string;
    descriptionMatchesCR?: boolean;
    descriptionMatchesCRNotes?: string;
@@ -128,7 +128,7 @@ const stages: Stage[] = [
 
 function prepStatusCode(data: PrepData): FieldValuesStatusCode {
    const reqStatus = statusForRequiredFieldValues([
-      data.sampleReceived,
+      data.sampleReceivedDate,
       data.sampleReceivedFrom,
       data.descriptionMatchesCR,
       // (descriptionMatchesCRNotes is not required)

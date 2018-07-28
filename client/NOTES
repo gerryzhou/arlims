@@ -1,6 +1,9 @@
+
+
+
 TestsService.saveTestData
-   Null value should be able to conflict with non-null value.
    Add form fields/methods to show conflicting values when auto-merging isn't possible.
+   Null value should be able to conflict with non-null value.
 
 In sample listing, sample checkboxes should be aligned vertically to top of the sample, not the center.
 

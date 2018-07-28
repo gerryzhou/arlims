@@ -2,12 +2,8 @@
 
    <div class="received">
       <mat-form-field>
-         <!--TODO: This should really be a date picker not a timestamp picker which this is (despite the name).
-                   It's taking 00:00 this today local time as an instant and converting it to UTC,
-                   e.g. 2018-07-24T05:00:00.000Z.
-         -->
-         <input matInput formControlName="sampleReceived" [matDatepicker]="datepicker"
-                placeholder="Sample received date" >
+         <input matInput formControlName="sampleReceivedDate" [matDatepicker]="datepicker"
+                placeholder="Sample received date">
          <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
          <mat-datepicker #datepicker></mat-datepicker>
       </mat-form-field>

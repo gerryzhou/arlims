@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
-import {ApiUrlsService} from './api-urls.service';
+import {Injectable} from '@angular/core';
 import {Observable, of as observable} from 'rxjs';
-import {DataModificationInfo, OptimisticDataUpdateResult, VersionedTestData} from '../../../generated/dto';
 import {HttpClient} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
+import {ApiUrlsService} from './api-urls.service';
+import {DataModificationInfo, OptimisticDataUpdateResult, VersionedTestData} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
-
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +30,7 @@ export class TestsService {
 
       formData.append('testDataJson',
          new Blob(
-            [JSON.stringify(testData)],
+            [JSON.stringify(testData, testDataJsonFieldFormatter)],
             { type: 'application/json' }
          )
       );
@@ -112,3 +111,23 @@ export class MergeResults {
    get hasConflicts(): boolean { return Object.keys(this.conflictingDbValues).length > 0; }
 }
 
+function testDataJsonFieldFormatter(key: string, value: any): any {
+   if (key.endsWith('Date') && value != null) {
+      if (typeof value === 'object') {
+         return stringifyDate(<Date>value);
+      } else if (typeof value === 'string') {
+         return timestampStringToDateString(value);
+      } else {
+         throw new Error('Unrecognized date type: ' + (typeof value));
+      }
+   }
+   return value;
+}
+
+function stringifyDate(date: Date): string {
+   return date.toISOString().split('T')[0];
+}
+
+function timestampStringToDateString(value: string) {
+   return value.split('T')[0];
+}

@@ -11,8 +11,8 @@ import {
    MatSlideToggleModule,
    MatButtonModule,
    MatDatepickerModule,
-   MatNativeDateModule,
 } from '@angular/material';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
 import {StagePrepComponent} from './stage-prep/stage-prep.component';
@@ -38,7 +38,7 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       MatSlideToggleModule,
       MatButtonModule,
       MatDatepickerModule,
-      MatNativeDateModule,
+      MatMomentDateModule,
       //
       CommonComponentsModule,
    ],
