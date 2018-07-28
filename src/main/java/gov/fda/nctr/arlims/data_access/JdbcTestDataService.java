@@ -4,16 +4,23 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import gov.fda.nctr.arlims.models.dto.DataModificationInfo;
+import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
 import gov.fda.nctr.arlims.models.dto.VersionedTestData;
 
 
@@ -22,9 +29,55 @@ public class JdbcTestDataService implements TestDataService
 {
     private final JdbcTemplate jdbc;
 
+    private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
+
     public JdbcTestDataService(JdbcTemplate jdbcTemplate)
     {
         this.jdbc = jdbcTemplate;
+    }
+
+    @Override
+    public long createTest
+        (
+            long empId,
+            long sampleId,
+            LabTestTypeCode testTypeCode,
+            String testBeginDate
+        )
+    {
+        java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+
+        String sql =
+            "insert into test " +
+                "(sample_id, test_type_id, lab_group_id, begin_date, test_data_md5," +
+                "created, created_by_emp_id, last_saved, last_saved_by_emp_id)\n" +
+            "values(" +
+                "?," +
+                "(select id from test_type where code = ?)," +
+                "(select lab_group_id from employee where id = ?)," +
+                "TO_DATE(?, 'YYYY-MM-DD')," + // begin_date
+                "'" + EMPTY_STRING_MD5 + "'," +
+                "?,?,?,?" + // created* and last_saved* fields
+            ")";
+
+        PreparedStatementCreator psc = conn -> {
+            final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
+            ps.setLong(1, sampleId);
+            ps.setString(2, testTypeCode.toString());
+            ps.setLong(3, empId);
+            ps.setString(4, testBeginDate);
+            ps.setTimestamp(5, now);
+            ps.setLong(6, empId);
+            ps.setTimestamp(7, now);
+            ps.setLong(8, empId);
+            return ps;
+        };
+
+        final KeyHolder holder = new GeneratedKeyHolder();
+
+        jdbc.update(psc, holder);
+
+        return holder.getKey().longValue();
     }
 
     @Override

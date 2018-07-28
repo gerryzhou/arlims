@@ -1,11 +1,18 @@
 import {Injectable} from '@angular/core';
 import {Observable, of as observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
 import {ApiUrlsService} from './api-urls.service';
-import {DataModificationInfo, OptimisticDataUpdateResult, VersionedTestData} from '../../../generated/dto';
+import {
+   CreatedTestMetadata,
+   DataModificationInfo,
+   LabTestTypeCode,
+   OptimisticDataUpdateResult,
+   VersionedTestData
+} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
+import {Moment} from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +21,18 @@ export class TestsService {
 
    constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) { }
 
+   createTest(sampleId: number, testTypeCode: LabTestTypeCode, testBeginDate: string): Observable<CreatedTestMetadata> {
+      const url = this.apiUrlsSvc.newTestUrl();
+      const body = new HttpParams()
+         .set('sampleId', sampleId.toString())
+         .set('testTypeCode', testTypeCode)
+         .set('testBeginDate', testBeginDate);
+      return this.httpClient.post<CreatedTestMetadata>(url, body);
+   }
+
    getVersionedTestData(testId: number): Observable<VersionedTestData> {
       return this.httpClient.get<VersionedTestData>(
-         this.apiUrlsSvc.versionedTestDataUrl(testId)
+         this.apiUrlsSvc.testDataUrl(testId)
       );
    }
 
@@ -44,7 +60,7 @@ export class TestsService {
 
       formData.append('previousMd5', prevTestDataMd5);
 
-      const url = this.apiUrlsSvc.versionedTestDataUrl(testId);
+      const url = this.apiUrlsSvc.testDataUrl(testId);
 
       return this.httpClient.post<OptimisticDataUpdateResult>(url, formData).pipe( // optimistic update attempt
          flatMap(optUpdRes => {
@@ -131,3 +147,4 @@ function stringifyDate(date: Date): string {
 function timestampStringToDateString(value: string) {
    return value.split('T')[0];
 }
+

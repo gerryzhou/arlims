@@ -76,7 +76,7 @@ export class TestDataEntryComponent {
       )
       .subscribe(saveResults => {
          if (saveResults.saved) {
-            this.usrCtxSvc.requestLabGroupContentsReload();
+            this.usrCtxSvc.loadLabGroupContents();
             // TODO: Clear conflictingTestData field.
             this.alertMessageSvc.alertSuccess('Test data saved.', true);
             this.router.navigate(['/samples', {expsmp: `${this.sampleInTest.sample.id}`}]);

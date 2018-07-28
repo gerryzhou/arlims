@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.TestDataService;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
-import gov.fda.nctr.arlims.models.dto.DataModificationInfo;
-import gov.fda.nctr.arlims.models.dto.OptimisticDataUpdateResult;
-import gov.fda.nctr.arlims.models.dto.VersionedTestData;
+import gov.fda.nctr.arlims.models.dto.*;
 
 
 @RestController
@@ -27,7 +25,22 @@ public class TestController
         this.testDataService = testDataService;
     }
 
-    @GetMapping("{testId}/data")
+    @PostMapping("new")
+    public CreatedTestMetadata createTest
+        (
+            @RequestParam("sampleId") long sampleId,
+            @RequestParam("testTypeCode") LabTestTypeCode testTypeCode,
+            @RequestParam("testBeginDate") String testBeginDate
+        )
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can create tests.
+
+        long createdTestId = testDataService.createTest(empId, sampleId, testTypeCode, testBeginDate);
+
+        return new CreatedTestMetadata(sampleId, createdTestId);
+    }
+
+    @GetMapping("data/{testId}")
     public VersionedTestData getTestDataJson
         (
             @PathVariable long testId,
@@ -39,7 +52,7 @@ public class TestController
         return testDataService.getVersionedTestData(testId);
     }
 
-    @PostMapping("{testId}/data")
+    @PostMapping("data/{testId}")
     public OptimisticDataUpdateResult saveTestDataJson
         (
             @PathVariable("testId") long testId,

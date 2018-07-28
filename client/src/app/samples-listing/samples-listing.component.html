@@ -16,13 +16,15 @@
 
 <div class="listing">
    <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
-      <mat-checkbox [(ngModel)]="allSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
+      <mat-checkbox [(ngModel)]="selectableSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
       <app-sample
-         [sample]="allSamples[sampleIx].sample"
-         [showAssociatedItems]="expandedSampleIds.has(allSamples[sampleIx].sample.id)"
+         [sample]="selectableSamples[sampleIx].sample"
+         [showAssociatedItems]="expandedSampleIds.has(selectableSamples[sampleIx].sample.id)"
          [showAssociatedItemsSummaryInSampleMetadata]="true"
          [newTestTypeChoices]="labGroupTestTypes"
-         (headerClick)="toggleSampleExpanded(allSamples[sampleIx].sample.id)"
+         (testCreated)="onNewTestCreated($event)"
+         (testCreationFailed)="onTestCreationFailed($event)"
+         (headerClick)="toggleSampleExpanded(selectableSamples[sampleIx].sample.id)"
          (testClick)="navigateToTest($event)"
          (testStageClick)="navigateToTestStage($event)">
       </app-sample>

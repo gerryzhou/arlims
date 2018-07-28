@@ -1,21 +1,22 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
-import {UserContextService} from '../shared/services';
+import {CreatedTestMetadata, LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
+import {AlertMessageService, UserContextService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
 import {MatDialog} from '@angular/material';
 import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-samples-listing',
   templateUrl: './samples-listing.component.html',
   styleUrls: ['./samples-listing.component.scss']
 })
-export class SamplesListingComponent {
+export class SamplesListingComponent implements OnDestroy {
 
    private readonly userShortName: string;
 
-   allSamples: SelectableSample[];
+   selectableSamples: SelectableSample[];
 
    labGroupTestTypes: LabTestType[];
 
@@ -28,18 +29,20 @@ export class SamplesListingComponent {
 
    hiddenSelectedCount = 0;
 
+   labGroupContentsSubscription: Subscription;
+
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
-   readonly defaultListingOptions: ListingOptions =
-      {
-         includeSamplesAssignedOnlyToOtherUsers: false,
-         limitSelectionToVisibleSamples: true
-      };
+   readonly defaultListingOptions: ListingOptions = {
+      includeSamplesAssignedOnlyToOtherUsers: false,
+      limitSelectionToVisibleSamples: true
+   };
 
    constructor(
-      usrCtxSvc: UserContextService,
+      private usrCtxSvc: UserContextService,
       private activatedRoute: ActivatedRoute,
       private router: Router,
+      private alertMessageSvc: AlertMessageService,
       private dialogSvc: MatDialog
    ) {
       this.userShortName = usrCtxSvc.authenticatedUser.shortName;
@@ -53,8 +56,12 @@ export class SamplesListingComponent {
       }
 
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
+      this.refeshFromLabGroupContents(labGroupContents);
+   }
+
+   refeshFromLabGroupContents(labGroupContents: LabGroupContents) {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
-      this.allSamples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
+      this.selectableSamples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
       this.applyFilters(this.defaultListingOptions);
    }
 
@@ -66,8 +73,8 @@ export class SamplesListingComponent {
    applyFilters(listingOptions: ListingOptions) {
       this.hiddenSelectedCount = 0;
       const visibleIxs: number[] = [];
-      for (let i = 0; i < this.allSamples.length; ++i) {
-         const selectableSample = this.allSamples[i];
+      for (let i = 0; i < this.selectableSamples.length; ++i) {
+         const selectableSample = this.selectableSamples[i];
          const passes =
             this.sampleSatisfiesSearchTextRequirement(selectableSample.sample, listingOptions) &&
             this.sampleSatisfiesUserAssignmentRequirement(selectableSample.sample, listingOptions);
@@ -97,7 +104,7 @@ export class SamplesListingComponent {
          this.expandedSampleIds.clear();
       } else {
          this.visibleSampleIxs.forEach(sampleIx =>
-            this.expandedSampleIds.add(this.allSamples[sampleIx].sample.id)
+            this.expandedSampleIds.add(this.selectableSamples[sampleIx].sample.id)
          );
       }
    }
@@ -125,7 +132,7 @@ export class SamplesListingComponent {
    get selectedVisibleSamples(): Sample[] {
       const selectedSamples: Sample[] = [];
       for (const sampleIx of this.visibleSampleIxs) {
-         const selectableSample = this.allSamples[sampleIx];
+         const selectableSample = this.selectableSamples[sampleIx];
          if (selectableSample.selected) {
             selectedSamples.push(selectableSample.sample);
          }
@@ -135,7 +142,7 @@ export class SamplesListingComponent {
 
    get selectedSamples(): Sample[] {
       const selectedSamples: Sample[] = [];
-      for (const selectableSample of this.allSamples) {
+      for (const selectableSample of this.selectableSamples) {
          if (selectableSample.selected) {
             selectedSamples.push(selectableSample.sample);
          }
@@ -153,13 +160,13 @@ export class SamplesListingComponent {
 
    selectAllVisible() {
       for (const sampleIx of this.visibleSampleIxs) {
-         this.allSamples[sampleIx].selected = true;
+         this.selectableSamples[sampleIx].selected = true;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
    unselectAllVisible() {
       for (const sampleIx of this.visibleSampleIxs) {
-         this.allSamples[sampleIx].selected = false;
+         this.selectableSamples[sampleIx].selected = false;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
@@ -172,7 +179,7 @@ export class SamplesListingComponent {
 
    countSelected(): number {
       let selectedCount = 0;
-      for (const selectableSample of this.allSamples) {
+      for (const selectableSample of this.selectableSamples) {
          if (selectableSample.selected) {
             ++selectedCount;
          }
@@ -180,6 +187,26 @@ export class SamplesListingComponent {
       return selectedCount;
    }
 
+   onNewTestCreated(createdTestMetadata: CreatedTestMetadata) {
+      if (this.labGroupContentsSubscription) {
+         this.labGroupContentsSubscription.unsubscribe();
+      }
+      this.labGroupContentsSubscription =
+         this.usrCtxSvc.loadLabGroupContents()
+            .subscribe(labGroupContents => {
+               this.refeshFromLabGroupContents(labGroupContents);
+            });
+   }
+
+   onTestCreationFailed(error: string) {
+      this.alertMessageSvc.alertDanger('Failed to create new test: ' + error);
+   }
+
+   ngOnDestroy(): void {
+      if (this.labGroupContentsSubscription) {
+         this.labGroupContentsSubscription.unsubscribe();
+      }
+   }
 }
 
 class SelectableSample {

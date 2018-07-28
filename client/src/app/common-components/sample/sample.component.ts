@@ -1,8 +1,10 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {LabTestMetadata, LabTestType, Sample} from '../../../generated/dto';
+import {CreatedTestMetadata, LabTestMetadata, LabTestType, Sample} from '../../../generated/dto';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 import {MatDialog} from '@angular/material';
 import {NewTestDialogComponent} from '../new-test-dialog/new-test-dialog.component';
+import {TestsService} from '../../shared/services';
+import {NewTestInfo} from '../new-test-dialog/new-test-info';
 
 @Component({
   selector: 'app-sample',
@@ -35,6 +37,12 @@ export class SampleComponent implements OnChanges {
    @Output()
    testStageClick = new EventEmitter<LabTestStageMetadata>();
 
+   @Output()
+   testCreated = new EventEmitter<CreatedTestMetadata>();
+
+   @Output()
+   testCreationFailed = new EventEmitter<string>();
+
    // Sample "details" include tests or resource lists, and additional sample metadata.
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasAssociatedItems: boolean;
@@ -43,7 +51,8 @@ export class SampleComponent implements OnChanges {
 
    factsStatusCssClass: string;
 
-   constructor(private dialogSvc: MatDialog) { }
+   constructor(private testsSvc: TestsService,
+               private dialogSvc: MatDialog) {}
 
    ngOnChanges() {
       this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
@@ -77,10 +86,20 @@ export class SampleComponent implements OnChanges {
          }
       });
 
-      dlg.afterClosed().subscribe(result => {
-         console.log('The dialog was closed with result:');
-         console.log(result);
-         // TODO: Create the new test.  Get the date part by formatting Date object with date-only format in current timezone.
+      dlg.afterClosed().subscribe((t: NewTestInfo) => {
+         if (t) {
+            const beginDate = t.beginDate.format('YYYY-MM-DD');
+            this.testsSvc.createTest(t.sample.id, t.selectedTestType, beginDate)
+               .subscribe(
+                  createdTestMd => {
+                     this.testCreated.next(createdTestMd);
+                  },
+                  err => {
+                     console.log('Test creation failed: ', err);
+                     this.testCreationFailed.next(err);
+                  }
+               );
+         }
       });
    }
 

@@ -25,8 +25,9 @@ export class UserContextService {
       return this.labGroupContents$;
    }
 
-   requestLabGroupContentsReload() {
+   loadLabGroupContents() {
       this.loadLabGroupContentsVia(this.fetchLabGroupContents());
+      return this.labGroupContents$;
    }
 
    getSampleInTest(testId: number): Observable<SampleInTest | undefined> {
