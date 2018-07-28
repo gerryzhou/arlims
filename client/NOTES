@@ -1,6 +1,3 @@
-test metadata component
-  Remove some or all of the tooltips.
-
 TestsService.saveTestData
    Null value should be able to conflict with non-null value.
    Add form fields/methods to show conflicting values when auto-merging isn't possible.

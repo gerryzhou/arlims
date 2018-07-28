@@ -2,12 +2,12 @@
 
    <div class="test-overview">
 
-      <div class="test-type" [matTooltip]="test.testTypeName"
+      <div class="test-type"
          (click)="onTestClicked()">
          {{test.testTypeShortName}}
       </div>
 
-      <div class="elapsed" [matTooltip]="'test begin date: ' + test.beginDate">
+      <div class="elapsed">
          <div class="day-icon-stack">
             <mat-icon>event</mat-icon>
             <span class="day-label">day</span>

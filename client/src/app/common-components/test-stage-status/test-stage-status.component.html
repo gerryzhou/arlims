@@ -3,13 +3,10 @@
    <div class="stage-name">{{status.stageName}}</div>
 
    <div class="status-measures">
-
       <div class="field-values-completion-gauge"
-           [ngClass]="'fields-' + status.fieldValuesStatus"
-           [matTooltip]="'view/edit ' + status.stageName + ' data (' + fieldValuesStatusText + ')'">
+           [ngClass]="'fields-' + status.fieldValuesStatus">
          <div class="completed-portion"></div>
       </div>
-
    </div>
 
 </div>
