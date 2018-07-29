@@ -1,7 +1,6 @@
 <form [formGroup]="form">
 
    <div class="received-fields">
-
       <span class="field-area" [class.conflicted]="conflicts.sampleReceivedDate !== undefined">
          <mat-form-field>
             <input matInput formControlName="sampleReceivedDate" [matDatepicker]="datepicker"
@@ -15,7 +14,6 @@
             (dismiss)="conflicts.sampleReceivedDate = undefined">
          </app-conflicting-field-value>
       </span>
-
       <span class="field-area" [class.conflicted]="conflicts.sampleReceivedFrom !== undefined">
          <mat-form-field>
             <input type="text" matInput placeholder="Received from" formControlName="sampleReceivedFrom">
@@ -27,55 +25,109 @@
          </app-conflicting-field-value>
       </span>
 
+      <div class="label-attachment-type field-area"
+           [class.conflicted]="conflicts.labelAttachmentType !== undefined">
+      <span>
+          <span class="label">Labeling </span>
+          <mat-radio-group formControlName="labelAttachmentType">
+             <mat-radio-button value="NONE">None available</mat-radio-button>
+             <mat-radio-button value="ATTACHED_ORIGINAL">Attached original</mat-radio-button>
+             <mat-radio-button value="ATTACHED_COPY">Attached copy</mat-radio-button>
+             <mat-radio-button value="SUBMITTED_ALONE">Submitted alone</mat-radio-button>
+          </mat-radio-group>
+      </span>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.labelAttachmentType"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.labelAttachmentType = undefined">
+         </app-conflicting-field-value>
+      </div>
    </div> <!-- received fields -->
 
-   <div class="label-attachment-type field-area"
-        [class.conflicted]="conflicts.sampleReceivedDate !== undefined">
-      <span class="label">Labeling </span>
-      <mat-radio-group formControlName="labelAttachmentType">
-         <mat-radio-button value="NONE">None available</mat-radio-button>
-         <mat-radio-button value="ATTACHED_ORIGINAL">Attached original</mat-radio-button>
-         <mat-radio-button value="ATTACHED_COPY">Attached copy</mat-radio-button>
-         <mat-radio-button value="SUBMITTED_ALONE">Submitted alone</mat-radio-button>
-      </mat-radio-group>
-   </div>
 
    <div class="cr-matching-grid">
-      <mat-radio-group formControlName="descriptionMatchesCR">
-         <div>Description matches CR</div>
-         <div>
-            <mat-radio-button [value]="true">Y</mat-radio-button>
-            <mat-radio-button [value]="false">N</mat-radio-button>
-            <mat-radio-button [value]="null">NA</mat-radio-button>
-         </div>
-      </mat-radio-group>
-      <mat-form-field class="notes">
-         <input type="text" matInput placeholder="Notes" formControlName="descriptionMatchesCRNotes">
-      </mat-form-field>
 
-      <mat-radio-group formControlName="containerMatchesCR">
-         <div>Container matches CR</div>
-         <div>
-            <mat-radio-button [value]="true">Y</mat-radio-button>
-            <mat-radio-button [value]="false">N</mat-radio-button>
-            <mat-radio-button [value]="null">NA</mat-radio-button>
-         </div>
-      </mat-radio-group>
-      <mat-form-field class="notes">
-         <input type="text" matInput placeholder="Notes" formControlName="containerMatchesCRNotes">
-      </mat-form-field>
+      <div class="field-area" [class.conflicted]="conflicts.descriptionMatchesCR !== undefined">
+         <mat-radio-group formControlName="descriptionMatchesCR">
+            <div>Description matches CR</div>
+            <div>
+               <mat-radio-button [value]="true">Y</mat-radio-button>
+               <mat-radio-button [value]="false">N</mat-radio-button>
+               <mat-radio-button [value]="null">NA</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.descriptionMatchesCR"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.descriptionMatchesCR = undefined">
+         </app-conflicting-field-value>
+      </div>
 
-      <mat-radio-group formControlName="codeMatchesCR">
-         <div>Code matches CR</div>
-         <div>
-            <mat-radio-button [value]="true">Y</mat-radio-button>
-            <mat-radio-button [value]="false">N</mat-radio-button>
-            <mat-radio-button [value]="null">NA</mat-radio-button>
-         </div>
-      </mat-radio-group>
-      <mat-form-field class="notes">
-         <input type="text" matInput placeholder="Notes" formControlName="codeMatchesCRNotes">
-      </mat-form-field>
+      <div class="field-area" [class.conflicted]="conflicts.descriptionMatchesCRNotes !== undefined">
+         <mat-form-field class="notes">
+            <input type="text" matInput placeholder="Notes"
+                   formControlName="descriptionMatchesCRNotes">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.descriptionMatchesCRNotes"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.descriptionMatchesCRNotes = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.containerMatchesCR !== undefined">
+         <mat-radio-group formControlName="containerMatchesCR">
+            <div>Container matches CR</div>
+            <div>
+               <mat-radio-button [value]="true">Y</mat-radio-button>
+               <mat-radio-button [value]="false">N</mat-radio-button>
+               <mat-radio-button [value]="null">NA</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.containerMatchesCR"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.containerMatchesCR = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.containerMatchesCRNotes !== undefined">
+         <mat-form-field class="notes">
+            <input type="text" matInput placeholder="Notes" formControlName="containerMatchesCRNotes">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.containerMatchesCRNotes"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.containerMatchesCRNotes = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.codeMatchesCR !== undefined">
+         <mat-radio-group formControlName="codeMatchesCR">
+            <div>Code matches CR</div>
+            <div>
+               <mat-radio-button [value]="true">Y</mat-radio-button>
+               <mat-radio-button [value]="false">N</mat-radio-button>
+               <mat-radio-button [value]="null">NA</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.codeMatchesCR"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.codeMatchesCR = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.codeMatchesCRNotes !== undefined">
+         <mat-form-field class="notes">
+            <input type="text" matInput placeholder="Notes" formControlName="codeMatchesCRNotes">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.codeMatchesCRNotes"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.codeMatchesCRNotes = undefined">
+         </app-conflicting-field-value>
+      </div>
    </div>
 
 </form>

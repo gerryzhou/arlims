@@ -1,6 +1,14 @@
-.field-area {
-   display: inline-flex;
+form {
+   display: flex;
    flex-flow: column nowrap;
+   align-items: flex-start;
+   margin: 10px 25px;
+}
+
+.field-area {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
    margin: 10px;
 
    &.conflicted {
@@ -12,28 +20,27 @@
 .received-fields {
    display: flex;
    align-items: center;
-   margin: 10px;
 }
 
 .label-attachment-type {
-   display: flex;
-   margin: 10px;
+   flex-grow: 0;
    mat-radio-button {
       margin-left: 20px;
    }
 }
 
 .cr-matching-grid {
-   margin: 20px 10px;
    display: grid;
    grid-template-columns: 1fr 5fr;
    align-items: center;
-   grid-gap: 7px;
+   grid-gap: 20px;
 
    mat-radio-button {
-      margin-left: 5px;
-      margin-right: 5px;
+      margin: 0 5px;
    }
 
+   mat-form-field.notes {
+      width: 100%;
+   }
 }
 
