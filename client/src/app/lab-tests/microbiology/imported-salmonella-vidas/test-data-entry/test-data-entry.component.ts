@@ -1,12 +1,15 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AlertMessageService, ApiUrlsService, TestsService, UserContextService} from '../../../../shared/services';
+import {AlertMessageService, ApiUrlsService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {emptyTestData, getTestStageStatuses, TestData} from '../test-data';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TestConfig} from '../test-config';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
 import {LabResource, LabResourceType} from '../../../../../generated/dto';
+import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
+import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
+import * as moment from 'moment';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-test-data-entry',
@@ -19,6 +22,13 @@ export class TestDataEntryComponent {
    originalTestData: TestData;
    originalTestDataMd5: string;
 
+   // The form group holds the edited state of the test data.
+   readonly testDataForm: FormGroup;
+
+   // After a failed save, we can temporarily show values from another user's conflicting edits.
+   conflictsTestData: TestData;
+   conflictsEmployeeTimestamp: EmployeeTimestamp | null;
+
    readonly stage: string | null;
    showAllStages: boolean;
 
@@ -26,12 +36,12 @@ export class TestDataEntryComponent {
 
    readonly testConfig: TestConfig;
 
-   readonly testDataForm: FormGroup;
-
    readonly balances: LabResource[] | undefined;
    readonly incubators: LabResource[] | undefined;
    readonly waterbaths: LabResource[] | undefined;
    readonly vidasMachines: LabResource[] | undefined;
+
+   jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter;
 
    private static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
    private static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
@@ -61,23 +71,31 @@ export class TestDataEntryComponent {
       this.incubators = labResources[TestDataEntryComponent.INCUBATOR_RESOURCE_TYPE];
       this.waterbaths = labResources[TestDataEntryComponent.WATERBATH_RESOURCE_TYPE];
       this.vidasMachines = labResources[TestDataEntryComponent.VIDAS_RESOURCE_TYPE];
+
+      // TODO: Remove these artificial conflicts after testing.
+      this.conflictsTestData = // emptyTestData();
+         Object.assign(
+            emptyTestData(),
+            { prepData: {sampleReceivedDate: '2017/09/01', sampleReceivedFrom: 'Someone else'} }
+         );
+      this.conflictsEmployeeTimestamp  = // null;
+         { employeeShortName: 'JD', timestamp: new Date() };
    }
 
    onFormSubmit() {
-      console.log('Saving test data:');
-      console.log(this.testDataForm.value);
-
+      console.log('Saving test data: ', this.testDataForm.value);
       this.testsSvc.saveTestData(
          this.sampleInTest.testMetadata.testId,
          this.testDataForm.value,
          this.originalTestData,
          this.originalTestDataMd5,
-         getTestStageStatuses
+         getTestStageStatuses,
+         this.jsonFieldFormatter
       )
       .subscribe(saveResults => {
          if (saveResults.saved) {
             this.usrCtxSvc.loadLabGroupContents();
-            // TODO: Clear conflictingTestData field.
+            this.clearConflictsData();
             this.alertMessageSvc.alertSuccess('Test data saved.', true);
             this.router.navigate(['/samples', {expsmp: `${this.sampleInTest.sample.id}`}]);
          } else {
@@ -88,13 +106,21 @@ export class TestDataEntryComponent {
             this.testDataForm.setValue(conflicts.mergedTestData);
             this.originalTestData = conflicts.dbTestData;
             this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
-            // TODO: Show conflicting values by setting conflictingTestData (new field).
+            this.conflictsTestData = copyWithMergedValuesFrom(emptyTestData(), conflicts.conflictingDbValues);
+            this.conflictsEmployeeTimestamp = {
+               employeeShortName: modInfo.savedByUserShortName,
+               timestamp: moment(modInfo.savedInstant, moment.ISO_8601).toDate(),
+            };
             this.alertMessageSvc.alertWarning(msg);
          }
       });
       // TODO: Catch observable errors, alert user via alert service that the save opearation failed and to try again.
    }
 
+   clearConflictsData() {
+      this.conflictsTestData = emptyTestData();
+      this.conflictsEmployeeTimestamp = null;
+   }
 }
 
 function makeTestDataFormGroup(testData: TestData): FormGroup {

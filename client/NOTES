@@ -1,4 +1,8 @@
-Finish implementing test creation.
+When a conflicting update exists, before comparison to find merge conflicts,
+must convert the form data to canonical form by stringifying with test's
+specific value formatter and then back to object to obtain its canonical form.
+This way e.g.  Moment/Date objects are converted to proper date (only) strings.
+
 
 TestsService.saveTestData
    Add form fields/methods to show conflicting values when auto-merging isn't possible.

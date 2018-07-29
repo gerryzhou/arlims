@@ -1,0 +1,11 @@
+<span class="conflict-area" *ngIf="conflictValue !== undefined">
+   <span class="conflict-value">"{{conflictValue}}"</span>
+   <mat-icon >person</mat-icon> {{conflictWhoWhen.employeeShortName}}
+   <span class="time">
+      {{conflictWhoWhen.timestamp | date: 'h:mm a'}}
+   </span>
+   <div class="expanding-flex-space"></div>
+   <button mat-icon-button (click)="onDismissClick()">
+      <mat-icon>close</mat-icon>
+   </button>
+</span>

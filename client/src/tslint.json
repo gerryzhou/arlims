@@ -1,6 +1,7 @@
 {
     "extends": "../tslint.json",
     "rules": {
+       "one-line": false,
        "member-ordering": false,
         "no-input-rename": false,
         "radix": false,

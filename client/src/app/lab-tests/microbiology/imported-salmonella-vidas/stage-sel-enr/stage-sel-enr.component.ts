@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {SelEnrData} from '../test-data';
 
 @Component({
   selector: 'app-stage-sel-enr',
@@ -10,6 +11,9 @@ export class StageSelEnrComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
+
+   @Input()
+   conflicts: SelEnrData;
 
    constructor() { }
 

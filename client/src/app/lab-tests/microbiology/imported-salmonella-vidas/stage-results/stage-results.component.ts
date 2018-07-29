@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, } from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {ResultsData} from '../test-data';
 
 @Component({
   selector: 'app-stage-results',
@@ -10,6 +11,9 @@ export class StageResultsComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
+
+   @Input()
+   conflicts: ResultsData;
 
    constructor() { }
 

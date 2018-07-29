@@ -17,6 +17,7 @@ import {
 import {MatIconModule} from '@angular/material/icon';
 import {DayNumberPipe} from './day-number.pipe';
 import {NewTestDialogComponent} from './new-test-dialog/new-test-dialog.component';
+import {ConflictingFieldValueComponent} from './conflicting-field-value/conflicting-field-value.component';
 
 @NgModule({
    imports: [
@@ -38,6 +39,7 @@ import {NewTestDialogComponent} from './new-test-dialog/new-test-dialog.componen
       TestStageStatusComponent,
       DayNumberPipe,
       NewTestDialogComponent,
+      ConflictingFieldValueComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
@@ -48,6 +50,7 @@ import {NewTestDialogComponent} from './new-test-dialog/new-test-dialog.componen
       TestMetadataComponent,
       TestStageStatusComponent,
       DayNumberPipe,
+      ConflictingFieldValueComponent,
    ],
 })
 export class CommonComponentsModule { }

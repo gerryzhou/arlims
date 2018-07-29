@@ -22,7 +22,10 @@
          </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <app-stage-prep [form]="testDataForm.get('prepData')"></app-stage-prep>
+      <app-stage-prep [form]="testDataForm.get('prepData')"
+                      [conflicts]="conflictsTestData.prepData"
+                      [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+      </app-stage-prep>
 
    </mat-expansion-panel>
 
@@ -33,6 +36,7 @@
       </mat-expansion-panel-header>
 
       <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"
+                         [conflicts]="conflictsTestData.preEnrData"
                          [balances]="balances"
                          [incubators]="incubators">
       </app-stage-pre-enr>
@@ -45,7 +49,9 @@
          SELECTIVE ENRICHMENT
       </mat-expansion-panel-header>
 
-      <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"></app-stage-sel-enr>
+      <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"
+                         [conflicts]="conflictsTestData.selEnrData">
+      </app-stage-sel-enr>
 
    </mat-expansion-panel>
 
@@ -55,7 +61,9 @@
          M BROTH
       </mat-expansion-panel-header>
 
-      <app-stage-m-broth [form]="testDataForm.get('mBrothData')"></app-stage-m-broth>
+      <app-stage-m-broth [form]="testDataForm.get('mBrothData')"
+                         [conflicts]="conflictsTestData.mBrothData">
+      </app-stage-m-broth>
 
    </mat-expansion-panel>
 
@@ -65,7 +73,9 @@
          VIDAS
       </mat-expansion-panel-header>
 
-      <app-stage-vidas [form]="testDataForm.get('vidasData')"></app-stage-vidas>
+      <app-stage-vidas [form]="testDataForm.get('vidasData')"
+                       [conflicts]="conflictsTestData.vidasData">
+      </app-stage-vidas>
 
    </mat-expansion-panel>
 
@@ -75,7 +85,9 @@
          CONTROLS
       </mat-expansion-panel-header>
 
-      <app-stage-controls [form]="testDataForm.get('controlsData')"></app-stage-controls>
+      <app-stage-controls [form]="testDataForm.get('controlsData')"
+                          [conflicts]="conflictsTestData.controlsData">
+      </app-stage-controls>
 
    </mat-expansion-panel>
 
@@ -85,7 +97,9 @@
          RESULTS
       </mat-expansion-panel-header>
 
-      <app-stage-results [form]="testDataForm.get('resultsData')"></app-stage-results>
+      <app-stage-results [form]="testDataForm.get('resultsData')"
+                         [conflicts]="conflictsTestData.resultsData">
+      </app-stage-results>
 
    </mat-expansion-panel>
 
@@ -95,8 +109,9 @@
          WRAPUP
       </mat-expansion-panel-header>
 
-      <app-stage-wrapup [form]="testDataForm.get('wrapupData')"></app-stage-wrapup>
-
+      <app-stage-wrapup [form]="testDataForm.get('wrapupData')"
+                        [conflicts]="conflictsTestData.wrapupData">
+      </app-stage-wrapup>
    </mat-expansion-panel>
 
    <div class="form-bottom-toolbar">

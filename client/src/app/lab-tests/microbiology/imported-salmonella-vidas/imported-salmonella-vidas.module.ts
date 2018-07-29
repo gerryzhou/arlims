@@ -11,6 +11,7 @@ import {
    MatSlideToggleModule,
    MatButtonModule,
    MatDatepickerModule,
+   MatIconModule,
 } from '@angular/material';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
@@ -39,6 +40,7 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       MatButtonModule,
       MatDatepickerModule,
       MatMomentDateModule,
+      MatIconModule,
       //
       CommonComponentsModule,
    ],

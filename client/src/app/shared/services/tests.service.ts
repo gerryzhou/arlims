@@ -40,13 +40,14 @@ export class TestsService {
                 testData: any,
                 prevTestData: any,
                 prevTestDataMd5: string,
-                stageStatusesFn: (any) => TestStageStatus[])
+                stageStatusesFn: (any) => TestStageStatus[],
+                jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter)
                 : Observable<SaveResult> {
       const formData: FormData = new FormData();
 
       formData.append('testDataJson',
          new Blob(
-            [JSON.stringify(testData, testDataJsonFieldFormatter)],
+            [JSON.stringify(testData, jsonFieldFormatter)],
             { type: 'application/json' }
          )
       );
@@ -70,7 +71,7 @@ export class TestsService {
 
             // There was a concurrent modification of this data, attempt auto-merge.
 
-            return this.mergeWithTestDataFromDatabase(testData, prevTestData, testId).pipe(
+            return this.mergeWithTestDataFromDatabase(testData, prevTestData, testId, jsonFieldFormatter).pipe(
                flatMap(mergeRes => {
                   return mergeRes.hasConflicts ?
                      // If conflicts exist, just report the conflicts without any further attempt to save.
@@ -89,19 +90,30 @@ export class TestsService {
       );
    }
 
-   private mergeWithTestDataFromDatabase(testData: any, origTestData: any, testId): Observable<MergeResults> {
+   private mergeWithTestDataFromDatabase
+      (
+         testData: any,
+         origTestData: any,
+         testId,
+         jsonFieldFormatter: (key: string, value: any) => string
+      )
+      : Observable<MergeResults>
+   {
       return this.getVersionedTestData(testId).pipe(
          map(dbVerTestData => {
             const dbModInfo = dbVerTestData.modificationInfo;
             const dbTestData = dbVerTestData.testDataJson ? JSON.parse(dbVerTestData.testDataJson) : {};
 
+            // Use normalized form of the test data, as it would be deserialized from db after storage, for comparisons.
+            const normdTestData = JSON.parse(JSON.stringify(testData, jsonFieldFormatter));
+
             const conflictPartitionedDbValues =
-               partitionLeftChangedAndNewValuesVsRefByConflictWithRights(dbTestData, testData, origTestData, true);
+               partitionLeftChangedAndNewValuesVsRefByConflictWithRights(dbTestData, normdTestData, origTestData, true);
 
             const mergeableDbValues = conflictPartitionedDbValues.nonConflictingValues;
             const conflictingDbValues = conflictPartitionedDbValues.conflictingValues;
 
-            const mergedTestData = copyWithMergedValuesFrom(testData, mergeableDbValues, true);
+            const mergedTestData = copyWithMergedValuesFrom(normdTestData, mergeableDbValues, true);
 
             return new MergeResults(mergedTestData, conflictingDbValues, dbTestData, dbModInfo);
          })
@@ -127,7 +139,7 @@ export class MergeResults {
    get hasConflicts(): boolean { return Object.keys(this.conflictingDbValues).length > 0; }
 }
 
-function testDataJsonFieldFormatter(key: string, value: any): any {
+export function defaultJsonFieldFormatter(key: string, value: any): any {
    if (key.endsWith('Date') && value != null) {
       if (typeof value === 'object') {
          return stringifyDate(<Date>value);

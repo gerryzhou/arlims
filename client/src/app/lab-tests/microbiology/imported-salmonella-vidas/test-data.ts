@@ -1,4 +1,4 @@
-// import {Signature} from '../../../shared/models/signature';
+// import {EmployeeTimestamp} from '../../../shared/models/signature';
 import {FieldValuesStatusCode, stageNameToTestDataFieldName, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SamplingMethod} from '../sampling-method';
 
@@ -23,10 +23,10 @@ export interface PrepData {
    labelAttachmentType?: LabelAttachmentType;
    containerMatchesCR?: boolean;
    containerMatchesCRNotes?: string;
-   // containerMatchesCRSignature?: Signature;
+   // containerMatchesCRSignature?: EmployeeTimestamp;
    codeMatchesCR?: boolean;
    codeMatchesCRNotes?: string;
-   // codeMatchesCRSignature?: Signature;
+   // codeMatchesCRSignature?: EmployeeTimestamp;
 }
 
 export interface PreEnrData {
@@ -40,7 +40,7 @@ export interface PreEnrData {
    incubatorId?: string;
    positiveControlGrowth?: boolean;
    mediumControlGrowth?: boolean;
-   // preenrichSignature?: Signature;
+   // preenrichSignature?: EmployeeTimestamp;
 }
 
 export interface SelEnrData {
@@ -49,13 +49,13 @@ export interface SelEnrData {
    bgBatchId?: string;
    l2KiBatchId?: string;
    rvttWaterBathId?: string;
-   // rvttSignature?: Signature;
+   // rvttSignature?: EmployeeTimestamp;
 }
 
 export interface MBrothData {
    mBrothBatchId?: string;
    mBrothWaterBathId?: string;
-   // mBrothSignature?: Signature;
+   // mBrothSignature?: EmployeeTimestamp;
 }
 
 export interface VidasData {
@@ -65,30 +65,30 @@ export interface VidasData {
    positiveControlDetection?: boolean;
    mediumControlDetection?: boolean;
    spikeDetection?: boolean;
-   // signature?: Signature;
+   // signature?: EmployeeTimestamp;
 }
 
 export interface ControlsData {
    systemControlsPositiveControlGrowth?: boolean;
    systemMediumPositiveControlGrowth?: boolean;
-   // systemControlsSignature?: Signature;
+   // systemControlsSignature?: EmployeeTimestamp;
    collectorControlsPositveControlGrowth?: boolean;
    collectorControlsMediumControlGrowth?: boolean;
-   // collectorControlsSignature?: Signature;
+   // collectorControlsSignature?: EmployeeTimestamp;
    bacterialControlsUsed?: boolean;
-   // bacterialControlsSignature?: Signature;
+   // bacterialControlsSignature?: EmployeeTimestamp;
 }
 
 export interface ResultsData {
    resultPositiveCompositesCount?: number;
-   // resultSignature?: Signature;
+   // resultSignature?: EmployeeTimestamp;
 }
 
 export interface WrapupData {
    reserveReserveSampleDisposition?: ReserveSampleDisposition;
    reserveSampleDestinations?: string;
    reserveSampleNote?: string;
-   // allCompletedSignature?: Signature;
+   // allCompletedSignature?: EmployeeTimestamp;
 }
 
 export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY' | 'SUBMITTED_ALONE';

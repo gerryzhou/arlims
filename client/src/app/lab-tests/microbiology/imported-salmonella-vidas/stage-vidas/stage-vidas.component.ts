@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {VidasData} from '../test-data';
 
 @Component({
   selector: 'app-stage-vidas',
@@ -10,6 +11,9 @@ export class StageVidasComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
+
+   @Input()
+   conflicts: VidasData;
 
    constructor() { }
 

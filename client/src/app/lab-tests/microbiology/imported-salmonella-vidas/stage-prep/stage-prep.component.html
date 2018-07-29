@@ -1,18 +1,36 @@
 <form [formGroup]="form">
 
-   <div class="received">
-      <mat-form-field>
-         <input matInput formControlName="sampleReceivedDate" [matDatepicker]="datepicker"
-                placeholder="Sample received date">
-         <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-         <mat-datepicker #datepicker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field>
-         <input type="text" matInput placeholder="Received from" formControlName="sampleReceivedFrom">
-      </mat-form-field>
-   </div>
+   <div class="received-fields">
 
-   <div class="label-attachment-type">
+      <span class="field-area" [class.conflicted]="conflicts.sampleReceivedDate !== undefined">
+         <mat-form-field>
+            <input matInput formControlName="sampleReceivedDate" [matDatepicker]="datepicker"
+                   placeholder="Sample received date">
+            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+            <mat-datepicker #datepicker></mat-datepicker>
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.sampleReceivedDate"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.sampleReceivedDate = undefined">
+         </app-conflicting-field-value>
+      </span>
+
+      <span class="field-area" [class.conflicted]="conflicts.sampleReceivedFrom !== undefined">
+         <mat-form-field>
+            <input type="text" matInput placeholder="Received from" formControlName="sampleReceivedFrom">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.sampleReceivedFrom"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.sampleReceivedFrom = undefined">
+         </app-conflicting-field-value>
+      </span>
+
+   </div> <!-- received fields -->
+
+   <div class="label-attachment-type field-area"
+        [class.conflicted]="conflicts.sampleReceivedDate !== undefined">
       <span class="label">Labeling </span>
       <mat-radio-group formControlName="labelAttachmentType">
          <mat-radio-button value="NONE">None available</mat-radio-button>

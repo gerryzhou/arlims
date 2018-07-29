@@ -1,10 +1,18 @@
-.received {
+.field-area {
+   display: inline-flex;
+   flex-flow: column nowrap;
+   margin: 10px;
+
+   &.conflicted {
+      border: 2px dashed orange;
+      padding: 7px;
+   }
+}
+
+.received-fields {
    display: flex;
    align-items: center;
    margin: 10px;
-   mat-form-field {
-      margin-right: 10px;
-   }
 }
 
 .label-attachment-type {
