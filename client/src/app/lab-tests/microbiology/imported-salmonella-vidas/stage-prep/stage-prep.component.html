@@ -47,7 +47,7 @@
 
    <div class="cr-matching-grid">
 
-      <div class="field-area" [class.conflicted]="conflicts.descriptionMatchesCR !== undefined">
+      <div class="field-area descr" [class.conflicted]="conflicts.descriptionMatchesCR !== undefined">
          <mat-radio-group formControlName="descriptionMatchesCR">
             <div>Description matches CR</div>
             <div>
@@ -63,7 +63,7 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.descriptionMatchesCRNotes !== undefined">
+      <div class="field-area descr-notes" [class.conflicted]="conflicts.descriptionMatchesCRNotes !== undefined">
          <mat-form-field class="notes">
             <input type="text" matInput placeholder="Notes"
                    formControlName="descriptionMatchesCRNotes">
@@ -75,7 +75,7 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.containerMatchesCR !== undefined">
+      <div class="field-area container" [class.conflicted]="conflicts.containerMatchesCR !== undefined">
          <mat-radio-group formControlName="containerMatchesCR">
             <div>Container matches CR</div>
             <div>
@@ -91,7 +91,7 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.containerMatchesCRNotes !== undefined">
+      <div class="field-area container-notes" [class.conflicted]="conflicts.containerMatchesCRNotes !== undefined">
          <mat-form-field class="notes">
             <input type="text" matInput placeholder="Notes" formControlName="containerMatchesCRNotes">
          </mat-form-field>
@@ -102,7 +102,7 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.codeMatchesCR !== undefined">
+      <div class="field-area code" [class.conflicted]="conflicts.codeMatchesCR !== undefined">
          <mat-radio-group formControlName="codeMatchesCR">
             <div>Code matches CR</div>
             <div>
@@ -118,7 +118,7 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.codeMatchesCRNotes !== undefined">
+      <div class="field-area code-notes" [class.conflicted]="conflicts.codeMatchesCRNotes !== undefined">
          <mat-form-field class="notes">
             <input type="text" matInput placeholder="Notes" formControlName="codeMatchesCRNotes">
          </mat-form-field>

@@ -1,39 +1,25 @@
-When a conflicting update exists, before comparison to find merge conflicts,
-must convert the form data to canonical form by stringifying with test's
-specific value formatter and then back to object to obtain its canonical form.
-This way e.g.  Moment/Date objects are converted to proper date (only) strings.
-
-
-TestsService.saveTestData
-   Add form fields/methods to show conflicting values when auto-merging isn't possible.
-   Null value should be able to conflict with non-null value.
-
 In sample listing, sample checkboxes should be aligned vertically to top of the sample, not the center.
 
 Add convenience buttons to allow filling sampling method values with those from the test config.
 
 Finish forms.
   Add exceptions note field to sampling method subform.
+  Try Material "Stepper" component to replace expansion panels for test data.
 
 Make pdf of test data as part of "make package" function.
 
-Try Material "Stepper" component to replace expansion panels for test data.
+TestsService.saveTestData
+   Make sure that null value can conflict with non-null value.
+
+Research API, try updating samples from FACTS.
 
 Add ability to attach files to a sample and/or test.
 
 Add sorting and filtering capabilities to sample listing.
    Maybe add test view, maybe as table.
 
-Allow creating a new empty test of a given type in UI for selected sample(s).
-  Can add a "+ new test" next to the test count in the sample component.
-  Test data field and status fields should be null.
-  Should have to enter test begin date (TEST.BEGIN_DATE in db) from which day numbers are calculated.
-  +TestsService.createNewTest()
-
-
 test data entry component
 -------------------------
-  Try alternate datepicker adapter using moment.js, see if getting actual dates is an option.
   Allow pasting resource codes to be automatically matched to form fields by type.
   button to apply resources
     Highlight application points in the form.

@@ -9,7 +9,7 @@ form {
    display: flex;
    flex-flow: column nowrap;
    align-items: center;
-   margin: 10px;
+   margin: 3px 10px;
 
    &.conflicted {
       border: 2px dashed orange;
@@ -32,8 +32,35 @@ form {
 .cr-matching-grid {
    display: grid;
    grid-template-columns: 1fr 5fr;
+
    align-items: center;
    grid-gap: 20px;
+
+   // IE 11 needs row and column specified explicitly for each grid item. Autoprefixer is handling minor fixups also.
+   .descr {
+      grid-row: 1;
+      grid-column: 1;
+   }
+   .descr-notes {
+      grid-row: 1;
+      grid-column: 2;
+   }
+   .container {
+      grid-row: 2;
+      grid-column: 1;
+   }
+   .container-notes {
+      grid-row: 2;
+      grid-column: 2;
+   }
+   .code {
+      grid-row: 3;
+      grid-column: 1;
+   }
+   .code-notes {
+      grid-row: 3;
+      grid-column: 2;
+   }
 
    mat-radio-button {
       margin: 0 5px;
