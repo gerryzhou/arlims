@@ -12,13 +12,17 @@
       margin: 0px 5px;
    }
 }
+
 .listing {
    .sample-container {
       display: flex;
       flex-flow: row nowrap;
-      align-items: center;
+      align-items: flex-start;
       app-sample {
          flex-grow: 1;
+      }
+      mat-checkbox {
+         margin-top: 23px; // puts checkbox approx even with product name
       }
    }
 }
