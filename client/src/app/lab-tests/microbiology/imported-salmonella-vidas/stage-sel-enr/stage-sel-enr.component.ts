@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {SelEnrData} from '../test-data';
+import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 
 @Component({
   selector: 'app-stage-sel-enr',
@@ -14,6 +15,9 @@ export class StageSelEnrComponent implements OnChanges {
 
    @Input()
    conflicts: SelEnrData;
+
+   @Input()
+   conflictsWhoWhen: EmployeeTimestamp;
 
    constructor() { }
 

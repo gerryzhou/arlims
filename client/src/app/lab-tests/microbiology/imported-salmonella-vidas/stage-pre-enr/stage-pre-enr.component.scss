@@ -1,17 +1,19 @@
+@import '../common-test-stage-styles';
+
 .area {
    margin: 10px 20px 10px 5px;
 }
 
 .sampling-method {
    display: flex;
+   flex-flow: row wrap;
    mat-form-field {
       margin-right: 20px;
    }
 }
 .resource-identifiers {
-   mat-form-field {
-      margin-right: 20px;
-   }
+   display: flex;
+   flex-flow: row wrap;
 }
 
 .spiking-and-controls {

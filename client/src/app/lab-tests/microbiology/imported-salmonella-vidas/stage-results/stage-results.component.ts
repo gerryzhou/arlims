@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {ResultsData} from '../test-data';
+import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 
 @Component({
   selector: 'app-stage-results',
@@ -14,6 +15,9 @@ export class StageResultsComponent implements OnChanges {
 
    @Input()
    conflicts: ResultsData;
+
+   @Input()
+   conflictsWhoWhen: EmployeeTimestamp;
 
    constructor() { }
 

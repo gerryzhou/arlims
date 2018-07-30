@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {MBrothData} from '../test-data';
+import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 
 @Component({
   selector: 'app-stage-m-broth',
@@ -14,6 +15,9 @@ export class StageMBrothComponent implements OnChanges {
 
    @Input()
    conflicts: MBrothData;
+
+   @Input()
+   conflictsWhoWhen: EmployeeTimestamp;
 
    constructor() { }
 

@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {WrapupData} from '../test-data';
+import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 
 @Component({
   selector: 'app-stage-wrapup',
@@ -14,6 +15,9 @@ export class StageWrapupComponent implements OnChanges {
 
    @Input()
    conflicts: WrapupData;
+
+   @Input()
+   conflictsWhoWhen: EmployeeTimestamp;
 
    constructor() { }
 

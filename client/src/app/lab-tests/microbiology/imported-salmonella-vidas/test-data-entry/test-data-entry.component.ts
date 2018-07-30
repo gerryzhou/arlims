@@ -73,10 +73,10 @@ export class TestDataEntryComponent {
       this.vidasMachines = labResources[TestDataEntryComponent.VIDAS_RESOURCE_TYPE];
 
       // TODO: Remove these artificial conflicts after testing.
-      this.conflictsTestData = emptyTestData();
-      // Object.assign(emptyTestData(), { prepData: {codeMatchesCR: 'Y', codeMatchesCRNotes: 'very different', sampleReceivedFrom: 'Someone else'} });
-      this.conflictsEmployeeTimestamp  = null;
-      // { employeeShortName: 'JD', timestamp: new Date() };
+      this.conflictsTestData = // emptyTestData();
+         Object.assign(emptyTestData(), {preEnrData: {mediumControlGrowth: 'a123'}});
+      this.conflictsEmployeeTimestamp  = // null;
+         { employeeShortName: 'JD', timestamp: new Date() };
    }
 
    onFormSubmit() {

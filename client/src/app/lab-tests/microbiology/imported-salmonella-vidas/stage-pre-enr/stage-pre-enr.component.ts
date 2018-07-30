@@ -2,6 +2,7 @@ import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {LabResource} from '../../../../../generated/dto';
 import {PreEnrData} from '../test-data';
+import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 
 @Component({
   selector: 'app-stage-pre-enr',
@@ -15,6 +16,9 @@ export class StagePreEnrComponent implements OnChanges {
 
    @Input()
    conflicts: PreEnrData;
+
+   @Input()
+   conflictsWhoWhen: EmployeeTimestamp;
 
    @Input()
    balances: LabResource[];
