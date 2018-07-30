@@ -16,9 +16,7 @@ export class SamplesListingComponent implements OnDestroy {
 
    private readonly userShortName: string;
 
-   selectableSamples: SelectableSample[];
-
-   labGroupTestTypes: LabTestType[];
+   selectableSamples: SelectableSample[]; // all samples in context, before any filtering or sorting
 
    // samples to be displayed, having survived filters and optionally undergone sorting
    visibleSampleIxs: number[];
@@ -29,6 +27,8 @@ export class SamplesListingComponent implements OnDestroy {
 
    hiddenSelectedCount = 0;
 
+   labGroupTestTypes: LabTestType[];
+
    labGroupContentsSubscription: Subscription;
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
@@ -38,20 +38,27 @@ export class SamplesListingComponent implements OnDestroy {
       limitSelectionToVisibleSamples: true
    };
 
-   constructor(
-      private usrCtxSvc: UserContextService,
-      private activatedRoute: ActivatedRoute,
-      private router: Router,
-      private alertMessageSvc: AlertMessageService,
-      private dialogSvc: MatDialog
-   ) {
+   constructor
+       (
+          private usrCtxSvc: UserContextService,
+          private activatedRoute: ActivatedRoute,
+          private router: Router,
+          private alertMessageSvc: AlertMessageService,
+          private dialogSvc: MatDialog
+       )
+   {
       this.userShortName = usrCtxSvc.authenticatedUser.shortName;
 
       const expandedSampleIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
-      if (expandedSampleIdsStr) {
-         for (const sampleIdStr of expandedSampleIdsStr.split(',')) {
+      if (expandedSampleIdsStr)
+      {
+         for (const sampleIdStr of expandedSampleIdsStr.split(','))
+         {
             const sampleId = +sampleIdStr;
-            if (sampleId) { this.expandedSampleIds.add(sampleId); }
+            if (sampleId)
+            {
+               this.expandedSampleIds.add(sampleId);
+            }
          }
       }
 
@@ -59,136 +66,174 @@ export class SamplesListingComponent implements OnDestroy {
       this.refeshFromLabGroupContents(labGroupContents);
    }
 
-   refeshFromLabGroupContents(labGroupContents: LabGroupContents) {
+   refeshFromLabGroupContents(labGroupContents: LabGroupContents)
+   {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
       this.selectableSamples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
       this.applyFilters(this.defaultListingOptions);
    }
 
-   listingOptionsChanged(listingOptions: ListingOptions) {
+   listingOptionsChanged(listingOptions: ListingOptions)
+   {
       this.limitSelectionToVisibleSamples = listingOptions.limitSelectionToVisibleSamples;
       this.applyFilters(listingOptions);
    }
 
-   applyFilters(listingOptions: ListingOptions) {
+   applyFilters(listingOptions: ListingOptions)
+   {
       this.hiddenSelectedCount = 0;
       const visibleIxs: number[] = [];
-      for (let i = 0; i < this.selectableSamples.length; ++i) {
+      for (let i = 0; i < this.selectableSamples.length; ++i)
+      {
          const selectableSample = this.selectableSamples[i];
-         const passes =
+         const passesFilters =
             this.sampleSatisfiesSearchTextRequirement(selectableSample.sample, listingOptions) &&
             this.sampleSatisfiesUserAssignmentRequirement(selectableSample.sample, listingOptions);
-         if ( passes ) {
+
+         if ( passesFilters )
+         {
             visibleIxs.push(i);
-         } else {
-            if (listingOptions.limitSelectionToVisibleSamples) {
-               selectableSample.selected = false;
-            } else {
-               if (selectableSample.selected) { this.hiddenSelectedCount++; }
-            }
+         }
+         else
+         {
+            if (listingOptions.limitSelectionToVisibleSamples) { selectableSample.selected = false; }
+            else if (selectableSample.selected) { this.hiddenSelectedCount++; }
          }
       }
       this.visibleSampleIxs = visibleIxs;
    }
 
-   toggleSampleExpanded(sampleId: number) {
-      if (this.expandedSampleIds.has(sampleId)) {
+   toggleSampleExpanded(sampleId: number)
+   {
+      if (this.expandedSampleIds.has(sampleId))
+      {
          this.expandedSampleIds.delete(sampleId);
-      } else {
+      }
+      else
+      {
          this.expandedSampleIds.add(sampleId);
       }
    }
 
-   expandOrContractAllSamples() {
-      if (this.expandedSampleIds.size > 0) {
+   expandOrContractAllSamples()
+   {
+      if (this.expandedSampleIds.size > 0)
+      {
          this.expandedSampleIds.clear();
-      } else {
+      }
+      else
+      {
          this.visibleSampleIxs.forEach(sampleIx =>
             this.expandedSampleIds.add(this.selectableSamples[sampleIx].sample.id)
          );
       }
    }
 
-   navigateToTest(test: LabTestMetadata) {
+   navigateToTest(test: LabTestMetadata)
+   {
       this.router.navigate(['test-data', test.testTypeCode, test.testId]);
    }
 
-   navigateToTestStage(testStage: LabTestStageMetadata) {
+   navigateToTestStage(testStage: LabTestStageMetadata)
+   {
       const test = testStage.labTestMetadata;
       this.router.navigate(['test-data', test.testTypeCode, test.testId, testStage.stageName]);
    }
 
 
-   private sampleSatisfiesSearchTextRequirement(sample: Sample, listingOptions: ListingOptions): boolean {
+   private sampleSatisfiesSearchTextRequirement(sample: Sample, listingOptions: ListingOptions): boolean
+   {
       return !listingOptions.searchText || listingOptions.searchText.trim().length === 0 ||
          sample.productName.toLowerCase().includes(listingOptions.searchText.toLowerCase());
    }
 
-   private sampleSatisfiesUserAssignmentRequirement(sample: Sample, listingOptions: ListingOptions): boolean {
+   private sampleSatisfiesUserAssignmentRequirement(sample: Sample, listingOptions: ListingOptions): boolean
+   {
       return listingOptions.includeSamplesAssignedOnlyToOtherUsers ||
          sample.assignments.findIndex(a => a.employeeShortName === this.userShortName) !== -1;
    }
 
-   get selectedVisibleSamples(): Sample[] {
+   get selectedVisibleSamples(): Sample[]
+   {
       const selectedSamples: Sample[] = [];
-      for (const sampleIx of this.visibleSampleIxs) {
+      for (const sampleIx of this.visibleSampleIxs)
+      {
          const selectableSample = this.selectableSamples[sampleIx];
-         if (selectableSample.selected) {
+         if (selectableSample.selected)
+         {
             selectedSamples.push(selectableSample.sample);
          }
       }
       return selectedSamples;
    }
 
-   get selectedSamples(): Sample[] {
+   get selectedSamples(): Sample[]
+   {
       const selectedSamples: Sample[] = [];
-      for (const selectableSample of this.selectableSamples) {
-         if (selectableSample.selected) {
+      for (const selectableSample of this.selectableSamples)
+      {
+         if (selectableSample.selected)
+         {
             selectedSamples.push(selectableSample.sample);
          }
       }
       return selectedSamples;
    }
 
-   selectOrUnselectVisible(select: boolean) {
-      if (select) {
+   selectOrUnselectVisible(select: boolean)
+   {
+      if (select)
+      {
          this.selectAllVisible();
-      } else {
+      }
+      else
+      {
          this.unselectAllVisible();
       }
    }
 
-   selectAllVisible() {
-      for (const sampleIx of this.visibleSampleIxs) {
+   selectAllVisible()
+   {
+      for (const sampleIx of this.visibleSampleIxs)
+      {
          this.selectableSamples[sampleIx].selected = true;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
-   unselectAllVisible() {
-      for (const sampleIx of this.visibleSampleIxs) {
+   unselectAllVisible()
+   {
+      for (const sampleIx of this.visibleSampleIxs)
+      {
          this.selectableSamples[sampleIx].selected = false;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
 
-   clearSelectAllCheckbox() {
-      if (this.selectAllNoneCheckbox.checked) {
+   clearSelectAllCheckbox()
+   {
+      if (this.selectAllNoneCheckbox.checked)
+      {
          this.selectAllNoneCheckbox.checked = false;
       }
    }
 
-   countSelected(): number {
+   countSelected(): number
+   {
       let selectedCount = 0;
-      for (const selectableSample of this.selectableSamples) {
-         if (selectableSample.selected) {
+      for (const selectableSample of this.selectableSamples)
+      {
+         if (selectableSample.selected)
+         {
             ++selectedCount;
          }
       }
       return selectedCount;
    }
 
-   onNewTestCreated(createdTestMetadata: CreatedTestMetadata) {
-      if (this.labGroupContentsSubscription) {
+   onNewTestCreated(createdTestMetadata: CreatedTestMetadata)
+   {
+      if (this.labGroupContentsSubscription)
+      {
          this.labGroupContentsSubscription.unsubscribe();
       }
       this.labGroupContentsSubscription =
@@ -198,12 +243,15 @@ export class SamplesListingComponent implements OnDestroy {
             });
    }
 
-   onTestCreationFailed(error: string) {
+   onTestCreationFailed(error: string)
+   {
       this.alertMessageSvc.alertDanger('Failed to create new test: ' + error);
    }
 
-   ngOnDestroy(): void {
-      if (this.labGroupContentsSubscription) {
+   ngOnDestroy(): void
+   {
+      if (this.labGroupContentsSubscription)
+      {
          this.labGroupContentsSubscription.unsubscribe();
       }
    }
@@ -213,7 +261,8 @@ class SelectableSample {
    sample: Sample;
    selected: boolean;
 
-   constructor(sample: Sample) {
+   constructor(sample: Sample)
+   {
       this.sample = sample;
       this.selected = false;
    }
