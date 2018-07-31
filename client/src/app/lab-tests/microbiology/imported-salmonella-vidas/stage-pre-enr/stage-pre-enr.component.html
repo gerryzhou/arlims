@@ -3,7 +3,8 @@
    <div class="sampling-method area">
 
       <h3>Sampling method</h3>
-      <div class="standard-method-choices">
+
+      <div class="standard-method-choices" *ngIf="samplingMethodChoices">
          Quick-fill with standard methods:
          <button mat-button *ngFor="let samplingMethod of samplingMethodChoices" (click)="onSamplingMethodClicked(samplingMethod)">
             {{samplingMethod.description}}
