@@ -6,11 +6,37 @@
 
 .sampling-method {
    display: flex;
-   flex-flow: row wrap;
-   mat-form-field {
-      margin-right: 20px;
+   flex-flow: column nowrap;
+   align-items: flex-start;
+   border: 2px solid #eee;
+   padding: 5px 10px;
+
+   .standard-method-choices {
+      margin: 0px 10px;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: flex-start;
+      button {
+         margin-left: 30px;
+      }
+   }
+
+   .sampling-method-numbers {
+      display: flex;
+      flex-flow: row wrap;
+      mat-form-field {
+         margin-right: 10px;
+      }
+   }
+   .exceptions {
+      width: 100%;
+      align-items: flex-start;
+      mat-form-field {
+         width: 97%;
+      }
    }
 }
+
 .resource-identifiers {
    display: flex;
    flex-flow: row wrap;

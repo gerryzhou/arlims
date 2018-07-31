@@ -148,6 +148,7 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
             numberOfSubs: new FormControl(testData.preEnrData.samplingMethod.numberOfSubs),
             compositeMassGrams: new FormControl(testData.preEnrData.samplingMethod.compositeMassGrams),
          }),
+         samplingMethodExceptionsNotes: new FormControl(testData.preEnrData.samplingMethodExceptionsNotes),
 
          balanceId: new FormControl(testData.preEnrData.balanceId),
          blenderJarId: new FormControl(testData.preEnrData.blenderJarId),

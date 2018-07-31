@@ -1,15 +1,14 @@
-Review stage status determinations.
+
+Add convenience buttons to allow filling sampling method values with those from the test config.
+  Add notes fields for deviation from specified sampling method.
+
 
 Allow toggling free-form entry of lab resources wherever a select list is presented.
   Present as small icon (maybe 'create' icon for text field and 'list_alt' icon for list) to the right of the select list.
   This should be easy to implement via an extra boolean per select list.
 
-Add convenience buttons to allow filling sampling method values with those from the test config.
-  Add notes fields for deviation from specified sampling method.
+Try Material "Stepper" component to contain test stages, replacing expansion panels.
 
-Finish forms.
-  Add exceptions note field to sampling method subform.
-  Try Material "Stepper" component to replace expansion panels for test data.
 
 Make pdf of test data as part of "make package" function.
 

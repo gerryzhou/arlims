@@ -1,64 +1,88 @@
 <form [formGroup]="form">
 
-   <div formGroupName="samplingMethod" class="sampling-method area">
+   <div class="sampling-method area">
 
-      <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfComposites !== undefined">
-         <mat-form-field>
-            <input formControlName="numberOfComposites" type="number" min="0" step="1" matInput
-                   placeholder="Number of composites">
-         </mat-form-field>
-         <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-            [conflictValue]="conflicts.samplingMethod.numberOfComposites"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.samplingMethod.numberOfComposites = undefined">
-         </app-conflicting-field-value>
+      <h3>Sampling method</h3>
+      <div class="standard-method-choices">
+         Quick-fill with standard methods:
+         <button mat-button *ngFor="let samplingMethod of samplingMethodChoices" (click)="onSamplingMethodClicked(samplingMethod)">
+            {{samplingMethod.description}}
+         </button>
+         or enter method data directly:
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubsPerComposite !== undefined">
-         <mat-form-field>
-            <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
-                   placeholder="Subs per composite">
-         </mat-form-field>
-         <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-            [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.samplingMethod.numberOfSubsPerComposite = undefined">
-         </app-conflicting-field-value>
-      </div>
+      <div formGroupName="samplingMethod" class="sampling-method-numbers">
+         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfComposites !== undefined">
+            <mat-form-field>
+               <input formControlName="numberOfComposites" type="number" min="0" step="1" matInput
+                      placeholder="Number of composites">
+            </mat-form-field>
+            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+               [conflictValue]="conflicts.samplingMethod.numberOfComposites"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.samplingMethod.numberOfComposites = undefined">
+            </app-conflicting-field-value>
+         </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
-         <mat-form-field>
-            <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
-                   placeholder="Sub mass, grams">
-         </mat-form-field>
-         <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-            [conflictValue]="conflicts.samplingMethod.extractedGramsPerSub"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.samplingMethod.extractedGramsPerSub = undefined">
-         </app-conflicting-field-value>
-      </div>
+         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubsPerComposite !== undefined">
+            <mat-form-field>
+               <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
+                      placeholder="Subs per composite">
+            </mat-form-field>
+            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+               [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.samplingMethod.numberOfSubsPerComposite = undefined">
+            </app-conflicting-field-value>
+         </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubs !== undefined">
-         <mat-form-field>
-            <input formControlName="numberOfSubs" type="number" min="0" step="1" matInput
-                   placeholder="Number of subs">
-         </mat-form-field>
-         <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-            [conflictValue]="conflicts.samplingMethod.numberOfSubs"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.samplingMethod.numberOfSubs = undefined">
-         </app-conflicting-field-value>
-      </div>
+         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
+            <mat-form-field>
+               <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
+                      placeholder="Extracted grams per sub">
+            </mat-form-field>
+            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+               [conflictValue]="conflicts.samplingMethod.extractedGramsPerSub"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.samplingMethod.extractedGramsPerSub = undefined">
+            </app-conflicting-field-value>
+         </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.compositeMassGrams !== undefined">
+         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubs !== undefined">
+            <mat-form-field>
+               <input formControlName="numberOfSubs" type="number" min="0" step="1" matInput
+                      placeholder="Number of subs">
+            </mat-form-field>
+            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+               [conflictValue]="conflicts.samplingMethod.numberOfSubs"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.samplingMethod.numberOfSubs = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.compositeMassGrams !== undefined">
+            <mat-form-field>
+               <input formControlName="compositeMassGrams" type="number" min="0" step="1" matInput
+                      placeholder="Composite mass, grams">
+            </mat-form-field>
+            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+               [conflictValue]="conflicts.samplingMethod.compositeMassGrams"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.samplingMethod.compositeMassGrams = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+      </div> <!-- sampling method numbers -->
+
+      <div class="field-area exceptions" [class.conflicted]="conflicts.samplingMethodExceptionsNotes !== undefined">
          <mat-form-field>
-            <input formControlName="compositeMassGrams" type="number" min="0" step="1" matInput
-                   placeholder="Composite mass, grams">
+            <input formControlName="samplingMethodExceptionsNotes" type="text" matInput
+                   placeholder="Sampling method exceptions">
          </mat-form-field>
-         <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-            [conflictValue]="conflicts.samplingMethod.compositeMassGrams"
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.samplingMethodExceptionsNotes"
             [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.samplingMethod.compositeMassGrams = undefined">
+            (dismiss)="conflicts.samplingMethodExceptionsNotes = undefined">
          </app-conflicting-field-value>
       </div>
 
@@ -146,34 +170,6 @@
 
    <div class="spiking-and-controls area">
 
-      <div class="field-area" [class.conflicted]="conflicts.sampleSpike !== undefined">
-         <mat-radio-group formControlName="sampleSpike">
-            <div>Sample spiking</div>
-            <div>
-               <mat-radio-button [value]="true">Y</mat-radio-button>
-               <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
-            </div>
-         </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.sampleSpike"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.sampleSpike = undefined">
-         </app-conflicting-field-value>
-      </div>
-
-      <div class="field-area" [class.conflicted]="conflicts.spikePlateCount !== undefined">
-         <mat-form-field>
-            <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput
-                   placeholder="Spike plate count">
-         </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.spikePlateCount"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.spikePlateCount = undefined">
-         </app-conflicting-field-value>
-      </div>
-
       <div class="field-area" [class.conflicted]="conflicts.positiveControlGrowth !== undefined">
          <mat-radio-group formControlName="positiveControlGrowth">
             <div>Positive control growth</div>
@@ -205,6 +201,35 @@
             (dismiss)="conflicts.mediumControlGrowth = undefined">
          </app-conflicting-field-value>
       </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.sampleSpike !== undefined">
+         <mat-radio-group formControlName="sampleSpike">
+            <div>Sample spiking</div>
+            <div>
+               <mat-radio-button [value]="true">Y</mat-radio-button>
+               <mat-radio-button [value]="false">N</mat-radio-button>
+               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.sampleSpike"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.sampleSpike = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.spikePlateCount !== undefined">
+         <mat-form-field>
+            <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput
+                   placeholder="Spike plate count">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.spikePlateCount"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.spikePlateCount = undefined">
+         </app-conflicting-field-value>
+      </div>
+
 
    </div> <!-- spiking and controls -->
 

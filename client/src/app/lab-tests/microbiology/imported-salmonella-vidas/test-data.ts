@@ -31,6 +31,7 @@ export interface PrepData {
 
 export interface PreEnrData {
    samplingMethod?: SamplingMethod;
+   samplingMethodExceptionsNotes?: string;
    balanceId?: string;
    blenderJarId?: string;
    bagId?: string;
