@@ -19,9 +19,30 @@ export class StageWrapupComponent implements OnChanges {
    @Input()
    conflictsWhoWhen: EmployeeTimestamp;
 
+   destinationsEnabled = false;
+   otherDescriptionEnabled = false;
+
    constructor() { }
 
-   ngOnChanges() {
+   updateControlEnablements() {
+      const reserveSampleDispositionCtrl = this.form.get('reserveSampleDisposition');
+      if (reserveSampleDispositionCtrl) {
+         this.destinationsEnabled = reserveSampleDispositionCtrl.value === 'ISOLATES_SENT';
+         this.otherDescriptionEnabled = reserveSampleDispositionCtrl.value === 'OTHER';
+
+         if (this.destinationsEnabled) this.form.get('reserveSampleDestinations').enable();
+         else this.form.get('reserveSampleDestinations').disable();
+
+         if (this.otherDescriptionEnabled) this.form.get('reserveSampleOtherDescription').enable();
+         else this.form.get('reserveSampleOtherDescription').disable();
+      }
    }
 
+   ngOnChanges() {
+      this.updateControlEnablements();
+   }
+
+   onReserveSampleDispositionChanged(change) {
+      this.updateControlEnablements();
+   }
 }

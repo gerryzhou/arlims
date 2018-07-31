@@ -1,3 +1,38 @@
-<p>
-  stage-m-broth works!
-</p>
+<form [formGroup]="form">
+
+   <div class="resource-identifiers">
+
+      <div class="field-area" [class.conflicted]="conflicts.mBrothBatchId !== undefined">
+         <mat-form-field>
+            <input formControlName="mBrothBatchId" type="text" matInput placeholder="M broth batch">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.mBrothBatchId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.mBrothBatchId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.mBrothWaterBathId !== undefined">
+         <mat-form-field>
+            <mat-select formControlName="mBrothWaterBathId" placeholder="Water bath" *ngIf="waterBaths; else textInputWaterBath">
+               <mat-option [value]="null"></mat-option>
+               <mat-option *ngFor="let labRsc of waterBaths" [value]="labRsc.code">
+                  {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+               </mat-option>
+            </mat-select>
+            <ng-template #textInputWaterBath>
+               <input formControlName="mBrothWaterBathId" type="text" matInput placeholder="Water bath">
+            </ng-template>
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.mBrothWaterBathId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.mBrothWaterBathId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+
+   </div> <!-- resource identifiers -->
+
+</form>

@@ -1,0 +1,66 @@
+@import '../common-test-stage-styles';
+
+.results {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: flex-start;
+
+   .growth-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      justify-items: start;
+      grid-gap: 5px;
+   }
+   // IE 11 needs row and column specified explicitly for each grid item. Autoprefixer is handling minor fixups also.
+   .pos-ctrl-col-lbl {
+      grid-row: 1;
+      grid-column: 2;
+      padding: 10px 5px;
+   }
+   .med-ctrl-col-lbl {
+      grid-row: 1;
+      grid-column: 3;
+      padding: 10px 5px;
+   }
+
+   .sys-ctrls-row-lbl {
+      grid-row: 2;
+      grid-column: 1;
+      padding: 10px 5px;
+   }
+   .sys-ctrls-pos-ctrl-growth {
+      grid-row: 2;
+      grid-column: 2;
+   }
+   .sys-ctrls-med-ctrl-growth {
+      grid-row: 2;
+      grid-column: 3;
+   }
+   .coll-ctrls-row-lbl {
+      grid-row: 3;
+      grid-column: 1;
+      padding: 10px 5px;
+   }
+   .coll-ctrls-pos-ctrl-growth {
+      grid-row: 3;
+      grid-column: 2;
+   }
+   .coll-ctrls-med-ctrl-growth {
+      grid-row: 3;
+      grid-column: 3;
+   }
+
+   mat-radio-group {
+      mat-radio-button {
+         margin: 3px 10px 3px 0;
+         .unset {
+            margin-left: 10px;
+         }
+      }
+   }
+
+   .bacterial-controls {
+      margin-top: 30px;
+   }
+}
+

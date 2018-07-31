@@ -1,3 +1,70 @@
-<p>
-  stage-sel-enr works!
-</p>
+<form [formGroup]="form">
+
+   <div class="resource-identifiers">
+
+      <div class="field-area" [class.conflicted]="conflicts.rvBatchId !== undefined">
+         <mat-form-field>
+            <input formControlName="rvBatchId" type="text" matInput placeholder="RV batch">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.rvBatchId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.rvBatchId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.ttBatchId !== undefined">
+         <mat-form-field>
+            <input formControlName="ttBatchId" type="text" matInput placeholder="TT batch">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.ttBatchId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.ttBatchId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.bgBatchId !== undefined">
+         <mat-form-field>
+            <input formControlName="bgBatchId" type="text" matInput placeholder="BG batch">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.bgBatchId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.bgBatchId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.i2kiBatchId !== undefined">
+         <mat-form-field>
+            <input formControlName="i2kiBatchId" type="text" matInput placeholder="I2KI batch">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.i2kiBatchId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.i2kiBatchId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.rvttWaterBathId !== undefined">
+         <mat-form-field>
+            <mat-select formControlName="rvttWaterBathId" placeholder="Water bath" *ngIf="waterBaths; else textInputWaterBath">
+               <mat-option [value]="null"></mat-option>
+               <mat-option *ngFor="let labRsc of waterBaths" [value]="labRsc.code">
+                  {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+               </mat-option>
+            </mat-select>
+            <ng-template #textInputWaterBath>
+               <input formControlName="rvttWaterBathId" type="text" matInput placeholder="Water bath">
+            </ng-template>
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.rvttWaterBathId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.rvttWaterBathId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+   </div>
+
+</form>

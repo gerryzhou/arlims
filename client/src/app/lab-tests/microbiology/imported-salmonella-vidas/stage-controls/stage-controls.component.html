@@ -1,3 +1,98 @@
-<p>
-  stage-controls works!
-</p>
+<form [formGroup]="form">
+
+   <div class="results">
+
+      <div class="growth-grid">
+
+         <div></div>
+         <h3 class="pos-ctrl-col-lbl">Positive Control</h3>
+         <h3 class="med-ctrl-col-lbl">Media Control</h3>
+
+         <h3 class="sys-ctrls-row-lbl">System Controls</h3>
+         <div class="field-area sys-ctrls-pos-ctrl-growth" [class.conflicted]="conflicts.systemControlsPositiveControlGrowth !== undefined">
+            <mat-radio-group formControlName="systemControlsPositiveControlGrowth">
+               <div>System controls positive control growth</div>
+               <div>
+                  <mat-radio-button [value]="true">growth</mat-radio-button>
+                  <mat-radio-button [value]="false">no growth</mat-radio-button>
+                  <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+               </div>
+            </mat-radio-group>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.systemControlsPositiveControlGrowth"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.systemControlsPositiveControlGrowth = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+         <div class="field-area sys-ctrls-med-ctrl-growth" [class.conflicted]="conflicts.systemControlsMediaControlGrowth !== undefined">
+            <mat-radio-group formControlName="systemControlsMediaControlGrowth">
+               <div>System controls media control growth</div>
+               <div>
+                  <mat-radio-button [value]="true">growth</mat-radio-button>
+                  <mat-radio-button [value]="false">no growth</mat-radio-button>
+                  <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+               </div>
+            </mat-radio-group>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.systemControlsMediaControlGrowth"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.systemControlsMediaControlGrowth = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+         <h3 class="coll-ctrls-row-lbl">Collector's Controls</h3>
+         <div class="field-area coll-ctrls-pos-ctrl-growth" [class.conflicted]="conflicts.collectorControlsPositiveControlGrowth !== undefined">
+            <mat-radio-group formControlName="collectorControlsPositiveControlGrowth">
+               <div>Collector's controls positive control growth</div>
+               <div>
+                  <mat-radio-button [value]="true">growth</mat-radio-button>
+                  <mat-radio-button [value]="false">no growth</mat-radio-button>
+                  <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+               </div>
+            </mat-radio-group>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.collectorControlsPositiveControlGrowth"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.collectorControlsPositiveControlGrowth = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+         <div class="field-area coll-ctrls-med-ctrl-growth" [class.conflicted]="conflicts.collectorControlsMediaControlGrowth !== undefined">
+            <mat-radio-group formControlName="collectorControlsMediaControlGrowth">
+               <div>Collector's controls media control growth</div>
+               <div>
+                  <mat-radio-button [value]="true">growth</mat-radio-button>
+                  <mat-radio-button [value]="false">no growth</mat-radio-button>
+                  <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+               </div>
+            </mat-radio-group>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.collectorControlsMediaControlGrowth"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.collectorControlsMediaControlGrowth = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+      </div> <!-- growth grid -->
+
+      <div class="field-area bacterial-controls" [class.conflicted]="conflicts.bacterialControlsUsed !== undefined">
+         <mat-radio-group formControlName="bacterialControlsUsed">
+            <div>Bacterial controls used</div>
+            <div>
+               <mat-radio-button [value]="true">Y</mat-radio-button>
+               <mat-radio-button [value]="false">N</mat-radio-button>
+               <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.bacterialControlsUsed"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.bacterialControlsUsed = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+   </div>
+
+</form>
+

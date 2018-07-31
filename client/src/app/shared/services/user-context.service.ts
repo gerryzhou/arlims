@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of as obsof, ReplaySubject} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
 import {UserContext, LabGroupContents, AuthenticatedUser, Sample, LabTestType, LabResource} from '../../../generated/dto';
 import {SampleInTest} from '../models/sample-in-test';
-import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UserContextService {
@@ -108,14 +108,19 @@ export class UserContextService {
       return m;
    }
 
-   private static groupLabResourcesByType(managedResources: LabResource[]) {
+   private static groupLabResourcesByType(managedResources: LabResource[])
+   {
       const m = new Map<string, LabResource[]>();
 
-      for (const labResource of managedResources) {
+      for (const labResource of managedResources)
+      {
          const resourcesOfType = m.get(labResource.resourceType);
-         if (!resourcesOfType) {
-            m[labResource.resourceType] = [labResource];
-         } else {
+         if (!resourcesOfType)
+         {
+            m.set(labResource.resourceType, [labResource]);
+         }
+         else
+         {
             resourcesOfType.push(labResource);
          }
       }

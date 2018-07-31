@@ -17,16 +17,12 @@
    <mat-expansion-panel *ngIf="stage === 'PREP' || showAllStages"
                         [expanded]="stage === 'PREP'">
       <mat-expansion-panel-header>
-         <mat-panel-title>
-            PREPARATION
-         </mat-panel-title>
+         PREPARATION
       </mat-expansion-panel-header>
-
       <app-stage-prep [form]="testDataForm.get('prepData')"
                       [conflicts]="conflictsTestData.prepData"
                       [conflictsWhoWhen]="conflictsEmployeeTimestamp">
       </app-stage-prep>
-
    </mat-expansion-panel>
 
    <mat-expansion-panel *ngIf="stage === 'PRE-ENR' || showAllStages"
@@ -34,14 +30,12 @@
       <mat-expansion-panel-header>
          PRE-ENRICHMENT
       </mat-expansion-panel-header>
-
       <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"
                          [conflicts]="conflictsTestData.preEnrData"
                          [conflictsWhoWhen]="conflictsEmployeeTimestamp"
                          [balances]="balances"
                          [incubators]="incubators">
       </app-stage-pre-enr>
-
    </mat-expansion-panel>
 
    <mat-expansion-panel *ngIf="stage === 'SEL-ENR' || showAllStages"
@@ -49,12 +43,11 @@
       <mat-expansion-panel-header>
          SELECTIVE ENRICHMENT
       </mat-expansion-panel-header>
-
       <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"
                          [conflicts]="conflictsTestData.selEnrData"
-                         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+                         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+                         [waterBaths]="waterBaths">
       </app-stage-sel-enr>
-
    </mat-expansion-panel>
 
    <mat-expansion-panel *ngIf="stage === 'M-BROTH' || showAllStages"
@@ -62,12 +55,11 @@
       <mat-expansion-panel-header>
          M BROTH
       </mat-expansion-panel-header>
-
       <app-stage-m-broth [form]="testDataForm.get('mBrothData')"
                          [conflicts]="conflictsTestData.mBrothData"
-                         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+                         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+                         [waterBaths]="waterBaths">
       </app-stage-m-broth>
-
    </mat-expansion-panel>
 
    <mat-expansion-panel *ngIf="stage === 'VIDAS' || showAllStages"
@@ -75,12 +67,11 @@
       <mat-expansion-panel-header>
          VIDAS
       </mat-expansion-panel-header>
-
       <app-stage-vidas [form]="testDataForm.get('vidasData')"
                        [conflicts]="conflictsTestData.vidasData"
-                       [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+                       [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+                       [vidasInstruments]="vidasInstruments">
       </app-stage-vidas>
-
    </mat-expansion-panel>
 
    <mat-expansion-panel *ngIf="stage === 'CONTROLS' || showAllStages"
@@ -88,12 +79,10 @@
       <mat-expansion-panel-header>
          CONTROLS
       </mat-expansion-panel-header>
-
       <app-stage-controls [form]="testDataForm.get('controlsData')"
                           [conflicts]="conflictsTestData.controlsData"
                           [conflictsWhoWhen]="conflictsEmployeeTimestamp">
       </app-stage-controls>
-
    </mat-expansion-panel>
 
    <mat-expansion-panel *ngIf="stage === 'RESULTS' || showAllStages"
@@ -101,12 +90,10 @@
       <mat-expansion-panel-header>
          RESULTS
       </mat-expansion-panel-header>
-
       <app-stage-results [form]="testDataForm.get('resultsData')"
                          [conflicts]="conflictsTestData.resultsData"
                          [conflictsWhoWhen]="conflictsEmployeeTimestamp">
       </app-stage-results>
-
    </mat-expansion-panel>
 
    <mat-expansion-panel *ngIf="stage === 'WRAPUP' || showAllStages"
@@ -114,7 +101,6 @@
       <mat-expansion-panel-header>
          WRAPUP
       </mat-expansion-panel-header>
-
       <app-stage-wrapup [form]="testDataForm.get('wrapupData')"
                         [conflicts]="conflictsTestData.wrapupData"
                         [conflictsWhoWhen]="conflictsEmployeeTimestamp">

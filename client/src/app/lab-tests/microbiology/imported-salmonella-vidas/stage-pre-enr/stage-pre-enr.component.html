@@ -113,7 +113,7 @@
       <div class="field-area" [class.conflicted]="conflicts.mediumBatchId !== undefined">
          <mat-form-field>
             <input formControlName="mediumBatchId" type="text" matInput
-                   placeholder="Medium Batch">
+                   placeholder="Medium batch">
          </mat-form-field>
          <app-conflicting-field-value
             [conflictValue]="conflicts.mediumBatchId"
@@ -152,7 +152,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null">NA</mat-radio-button>
+               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -168,7 +168,7 @@
                    placeholder="Spike plate count">
          </mat-form-field>
          <app-conflicting-field-value
-            [conflictValue]="conflicts.spikePlateCount "
+            [conflictValue]="conflicts.spikePlateCount"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.spikePlateCount = undefined">
          </app-conflicting-field-value>
@@ -178,13 +178,13 @@
          <mat-radio-group formControlName="positiveControlGrowth">
             <div>Positive control growth</div>
             <div>
-               <mat-radio-button [value]="true">Y</mat-radio-button>
-               <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null">NA</mat-radio-button>
+               <mat-radio-button [value]="true">growth</mat-radio-button>
+               <mat-radio-button [value]="false">no growth</mat-radio-button>
+               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
-            [conflictValue]="conflicts.positiveControlGrowth "
+            [conflictValue]="conflicts.positiveControlGrowth"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.positiveControlGrowth = undefined">
          </app-conflicting-field-value>
@@ -194,13 +194,13 @@
          <mat-radio-group formControlName="mediumControlGrowth">
             <div>Medium control growth</div>
             <div>
-               <mat-radio-button [value]="true">Y</mat-radio-button>
-               <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null">NA</mat-radio-button>
+               <mat-radio-button [value]="true">growth</mat-radio-button>
+               <mat-radio-button [value]="false">no growth</mat-radio-button>
+               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
-            [conflictValue]="conflicts.mediumControlGrowth "
+            [conflictValue]="conflicts.mediumControlGrowth"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.mediumControlGrowth = undefined">
          </app-conflicting-field-value>

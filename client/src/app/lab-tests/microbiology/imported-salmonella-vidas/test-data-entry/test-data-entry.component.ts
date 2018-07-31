@@ -1,15 +1,17 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AlertMessageService, ApiUrlsService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
-import {SampleInTest} from '../../../../shared/models/sample-in-test';
-import {emptyTestData, getTestStageStatuses, TestData} from '../test-data';
 import {FormControl, FormGroup} from '@angular/forms';
-import {TestConfig} from '../test-config';
+import * as moment from 'moment';
+
+import {AlertMessageService, ApiUrlsService, defaultJsonFieldFormatter,
+        TestsService, UserContextService} from '../../../../shared/services';
+import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
 import {LabResource, LabResourceType} from '../../../../../generated/dto';
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import * as moment from 'moment';
+import {emptyTestData, getTestStageStatuses, TestData} from '../test-data';
+import {TestConfig} from '../test-config';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-test-data-entry',
@@ -38,8 +40,8 @@ export class TestDataEntryComponent {
 
    readonly balances: LabResource[] | undefined;
    readonly incubators: LabResource[] | undefined;
-   readonly waterbaths: LabResource[] | undefined;
-   readonly vidasMachines: LabResource[] | undefined;
+   readonly waterBaths: LabResource[] | undefined;
+   readonly vidasInstruments: LabResource[] | undefined;
 
    jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter;
 
@@ -48,14 +50,16 @@ export class TestDataEntryComponent {
    private static readonly WATERBATH_RESOURCE_TYPE: LabResourceType = 'WAB';
    private static readonly VIDAS_RESOURCE_TYPE: LabResourceType = 'VID';
 
-   constructor(
-      private activatedRoute: ActivatedRoute,
-      private apiUrls: ApiUrlsService,
-      private testsSvc: TestsService,
-      private alertMessageSvc: AlertMessageService,
-      private router: Router,
-      private usrCtxSvc: UserContextService
-   ) {
+   constructor
+       (
+          private activatedRoute: ActivatedRoute,
+          private apiUrls: ApiUrlsService,
+          private testsSvc: TestsService,
+          private alertMessageSvc: AlertMessageService,
+          private router: Router,
+          private usrCtxSvc: UserContextService
+       )
+   {
       const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
       const verTestData = labGroupTestData.versionedTestData;
       this.originalTestData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
@@ -67,19 +71,20 @@ export class TestDataEntryComponent {
       this.testDataForm = makeTestDataFormGroup(this.originalTestData);
 
       const labResources = labGroupTestData.labResourcesByType;
-      this.balances = labResources[TestDataEntryComponent.BALANCE_RESOURCE_TYPE];
-      this.incubators = labResources[TestDataEntryComponent.INCUBATOR_RESOURCE_TYPE];
-      this.waterbaths = labResources[TestDataEntryComponent.WATERBATH_RESOURCE_TYPE];
-      this.vidasMachines = labResources[TestDataEntryComponent.VIDAS_RESOURCE_TYPE];
+      this.balances = labResources.get(TestDataEntryComponent.BALANCE_RESOURCE_TYPE);
+      this.incubators = labResources.get(TestDataEntryComponent.INCUBATOR_RESOURCE_TYPE);
+      this.waterBaths = labResources.get(TestDataEntryComponent.WATERBATH_RESOURCE_TYPE);
+      this.vidasInstruments = labResources.get(TestDataEntryComponent.VIDAS_RESOURCE_TYPE);
 
       // TODO: Remove these artificial conflicts after testing.
       this.conflictsTestData = // emptyTestData();
-         Object.assign(emptyTestData(), {preEnrData: {mediumControlGrowth: 'a123'}});
+         Object.assign(emptyTestData(), {controlsData: {bacterialControlsUsed: 'N'}});
       this.conflictsEmployeeTimestamp  = // null;
          { employeeShortName: 'JD', timestamp: new Date() };
    }
 
-   onFormSubmit() {
+   onFormSubmit()
+   {
       console.log('Saving test data: ', this.testDataForm.value);
       this.testsSvc.saveTestData(
          this.sampleInTest.testMetadata.testId,
@@ -114,13 +119,15 @@ export class TestDataEntryComponent {
       // TODO: Catch observable errors, alert user via alert service that the save opearation failed and to try again.
    }
 
-   clearConflictsData() {
+   clearConflictsData()
+   {
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;
    }
 }
 
-function makeTestDataFormGroup(testData: TestData): FormGroup {
+function makeTestDataFormGroup(testData: TestData): FormGroup
+{
    return new FormGroup({
       prepData: new FormGroup({
          sampleReceivedDate: new FormControl(testData.prepData.sampleReceivedDate),
@@ -158,7 +165,7 @@ function makeTestDataFormGroup(testData: TestData): FormGroup {
          rvBatchId: new FormControl(testData.selEnrData.rvBatchId),
          ttBatchId: new FormControl(testData.selEnrData.ttBatchId),
          bgBatchId: new FormControl(testData.selEnrData.bgBatchId),
-         l2KiBatchId: new FormControl(testData.selEnrData.l2KiBatchId),
+         i2kiBatchId: new FormControl(testData.selEnrData.i2kiBatchId),
          rvttWaterBathId: new FormControl(testData.selEnrData.rvttWaterBathId),
       }),
       mBrothData: new FormGroup({
@@ -175,18 +182,18 @@ function makeTestDataFormGroup(testData: TestData): FormGroup {
       }),
       controlsData: new FormGroup({
          systemControlsPositiveControlGrowth: new FormControl(testData.controlsData.systemControlsPositiveControlGrowth),
-         systemMediumPositiveControlGrowth: new FormControl(testData.controlsData.systemMediumPositiveControlGrowth),
-         collectorControlsPositveControlGrowth: new FormControl(testData.controlsData.collectorControlsPositveControlGrowth),
-         collectorControlsMediumControlGrowth: new FormControl(testData.controlsData.collectorControlsMediumControlGrowth),
+         systemControlsMediaControlGrowth: new FormControl(testData.controlsData.systemControlsMediaControlGrowth),
+         collectorControlsPositiveControlGrowth: new FormControl(testData.controlsData.collectorControlsPositiveControlGrowth),
+         collectorControlsMediaControlGrowth: new FormControl(testData.controlsData.collectorControlsMediaControlGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
       }),
       resultsData: new FormGroup({
-         resultPositiveCompositesCount: new FormControl(testData.resultsData.resultPositiveCompositesCount),
+         positiveCompositesCount: new FormControl(testData.resultsData.positiveCompositesCount),
       }),
       wrapupData: new FormGroup({
-         reserveReserveSampleDisposition: new FormControl(testData.wrapupData.reserveReserveSampleDisposition),
+         reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
-         reserveSampleNote: new FormControl(testData.wrapupData.reserveSampleNote),
+         reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
       }),
    });
 }

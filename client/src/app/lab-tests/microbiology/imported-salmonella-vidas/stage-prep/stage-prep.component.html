@@ -1,6 +1,7 @@
 <form [formGroup]="form">
 
    <div class="received-fields">
+
       <span class="field-area" [class.conflicted]="conflicts.sampleReceivedDate !== undefined">
          <mat-form-field>
             <input matInput formControlName="sampleReceivedDate" [matDatepicker]="datepicker"
@@ -14,6 +15,7 @@
             (dismiss)="conflicts.sampleReceivedDate = undefined">
          </app-conflicting-field-value>
       </span>
+
       <span class="field-area" [class.conflicted]="conflicts.sampleReceivedFrom !== undefined">
          <mat-form-field>
             <input type="text" matInput placeholder="Received from" formControlName="sampleReceivedFrom">
@@ -25,24 +27,26 @@
          </app-conflicting-field-value>
       </span>
 
-      <div class="label-attachment-type field-area"
-           [class.conflicted]="conflicts.labelAttachmentType !== undefined">
-      <span>
-          <span class="label">Labeling </span>
-          <mat-radio-group formControlName="labelAttachmentType">
-             <mat-radio-button value="NONE">None available</mat-radio-button>
-             <mat-radio-button value="ATTACHED_ORIGINAL">Attached original</mat-radio-button>
-             <mat-radio-button value="ATTACHED_COPY">Attached copy</mat-radio-button>
-             <mat-radio-button value="SUBMITTED_ALONE">Submitted alone</mat-radio-button>
-          </mat-radio-group>
-      </span>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.labelAttachmentType"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.labelAttachmentType = undefined">
-         </app-conflicting-field-value>
-      </div>
    </div> <!-- received fields -->
+
+   <div class="label-attachment-type field-area" [class.conflicted]="conflicts.labelAttachmentType !== undefined">
+      <span>
+         <span class="label">Labeling: </span>
+         <mat-radio-group formControlName="labelAttachmentType">
+            <mat-radio-button value="NONE">none available</mat-radio-button>
+            <mat-radio-button value="ATTACHED_ORIGINAL">attached original</mat-radio-button>
+            <mat-radio-button value="ATTACHED_COPY">attached copy</mat-radio-button>
+            <mat-radio-button value="SUBMITTED_ALONE">submitted alone</mat-radio-button>
+            <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+         </mat-radio-group>
+      </span>
+      <app-conflicting-field-value
+         [conflictValue]="conflicts.labelAttachmentType"
+         [conflictWhoWhen]="conflictsWhoWhen"
+         (dismiss)="conflicts.labelAttachmentType = undefined">
+      </app-conflicting-field-value>
+   </div>
+
 
 
    <div class="cr-matching-grid">
@@ -53,7 +57,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null">NA</mat-radio-button>
+               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -81,7 +85,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null">NA</mat-radio-button>
+               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -108,7 +112,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null">NA</mat-radio-button>
+               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -128,6 +132,7 @@
             (dismiss)="conflicts.codeMatchesCRNotes = undefined">
          </app-conflicting-field-value>
       </div>
+
    </div>
 
 </form>

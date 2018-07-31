@@ -47,7 +47,7 @@ export interface SelEnrData {
    rvBatchId?: string;
    ttBatchId?: string;
    bgBatchId?: string;
-   l2KiBatchId?: string;
+   i2kiBatchId?: string;
    rvttWaterBathId?: string;
    // rvttSignature?: EmployeeTimestamp;
 }
@@ -70,24 +70,24 @@ export interface VidasData {
 
 export interface ControlsData {
    systemControlsPositiveControlGrowth?: boolean;
-   systemMediumPositiveControlGrowth?: boolean;
+   systemControlsMediaControlGrowth?: boolean;
    // systemControlsSignature?: EmployeeTimestamp;
-   collectorControlsPositveControlGrowth?: boolean;
-   collectorControlsMediumControlGrowth?: boolean;
+   collectorControlsPositiveControlGrowth?: boolean;
+   collectorControlsMediaControlGrowth?: boolean;
    // collectorControlsSignature?: EmployeeTimestamp;
    bacterialControlsUsed?: boolean;
    // bacterialControlsSignature?: EmployeeTimestamp;
 }
 
 export interface ResultsData {
-   resultPositiveCompositesCount?: number;
+   positiveCompositesCount?: number;
    // resultSignature?: EmployeeTimestamp;
 }
 
 export interface WrapupData {
-   reserveReserveSampleDisposition?: ReserveSampleDisposition;
+   reserveSampleDisposition?: ReserveSampleDisposition;
    reserveSampleDestinations?: string;
-   reserveSampleNote?: string;
+   reserveSampleOtherDescription?: string;
    // allCompletedSignature?: EmployeeTimestamp;
 }
 
@@ -190,7 +190,7 @@ function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode {
       data.rvBatchId,
       data.ttBatchId,
       // data.bgBatchId,  TODO: Are these two required?
-      // data.l2KiBatchId,
+      // data.i2kiBatchId,
       data.rvttWaterBathId,
       // data.rvttSignature,
    ]);
@@ -219,10 +219,10 @@ function vidasStatusCode(data: VidasData): FieldValuesStatusCode {
 function controlsStatusCode(data: ControlsData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
       data.systemControlsPositiveControlGrowth,
-      data.systemMediumPositiveControlGrowth,
+      data.systemControlsMediaControlGrowth,
       // data.systemControlsSignature,
-      data.collectorControlsPositveControlGrowth,
-      data.collectorControlsMediumControlGrowth,
+      data.collectorControlsPositiveControlGrowth,
+      data.collectorControlsMediaControlGrowth,
       // data.collectorControlsSignature,
       data.bacterialControlsUsed,
       // data.bacterialControlsSignature,
@@ -231,14 +231,14 @@ function controlsStatusCode(data: ControlsData): FieldValuesStatusCode {
 
 function resultsStatusCode(data: ResultsData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
-      data.resultPositiveCompositesCount,
+      data.positiveCompositesCount,
       // data.resultSignature,
    ]);
 }
 
 function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode {
    return statusForRequiredFieldValues([
-      data.reserveReserveSampleDisposition,
+      data.reserveSampleDisposition,
       data.reserveSampleDestinations,
       // data.allCompletedSignature,
    ]);

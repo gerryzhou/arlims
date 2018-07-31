@@ -2,6 +2,7 @@ import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {VidasData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
+import {LabResource} from '../../../../../generated/dto';
 
 @Component({
   selector: 'app-stage-vidas',
@@ -18,6 +19,9 @@ export class StageVidasComponent implements OnChanges {
 
    @Input()
    conflictsWhoWhen: EmployeeTimestamp;
+
+   @Input()
+   vidasInstruments: LabResource[];
 
    constructor() { }
 

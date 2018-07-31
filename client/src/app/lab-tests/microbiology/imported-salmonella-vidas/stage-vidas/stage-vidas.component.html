@@ -1,3 +1,107 @@
-<p>
-  stage-vidas works!
-</p>
+<form [formGroup]="form">
+
+   <div class="resource-identifiers">
+
+      <div class="field-area" [class.conflicted]="conflicts.instrumentId !== undefined">
+         <mat-form-field>
+            <mat-select formControlName="instrumentId" *ngIf="vidasInstruments; else textInputVidasInstrument"
+                        placeholder="Vidas instrument">
+               <mat-option [value]="null"></mat-option>
+               <mat-option *ngFor="let labRsc of vidasInstruments" [value]="labRsc.code">
+                  {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+               </mat-option>
+            </mat-select>
+            <ng-template #textInputVidasInstrument>
+               <input formControlName="instrumentId" type="text" matInput placeholder="Vidas instrument">
+            </ng-template>
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.instrumentId"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.instrumentId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.kitIds !== undefined">
+         <mat-form-field>
+            <input formControlName="kitIds" type="text" matInput placeholder="Vidas kit ids">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.kitIds"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.kitIds = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+   </div> <!-- resource identifiers -->
+
+   <div class="results">
+
+      <div class="field-area" [class.conflicted]="conflicts.compositesDetection !== undefined">
+         <mat-radio-group formControlName="compositesDetection">
+            <div>Composites detection</div>
+            <div>
+               <mat-radio-button [value]="true">pos</mat-radio-button>
+               <mat-radio-button [value]="false">neg</mat-radio-button>
+               <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.compositesDetection"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.compositesDetection = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.positiveControlDetection !== undefined">
+         <mat-radio-group formControlName="positiveControlDetection">
+            <div>Positive control detection</div>
+            <div>
+               <mat-radio-button [value]="true">pos</mat-radio-button>
+               <mat-radio-button [value]="false">neg</mat-radio-button>
+               <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.positiveControlDetection"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.positiveControlDetection = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.mediumControlDetection !== undefined">
+         <mat-radio-group formControlName="mediumControlDetection">
+            <div>Medium control detection</div>
+            <div>
+               <mat-radio-button [value]="true">pos</mat-radio-button>
+               <mat-radio-button [value]="false">neg</mat-radio-button>
+               <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.mediumControlDetection"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.mediumControlDetection = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area" [class.conflicted]="conflicts.spikeDetection !== undefined">
+         <mat-radio-group formControlName="spikeDetection">
+            <div>Spike detection</div>
+            <div>
+               <mat-radio-button [value]="true">pos</mat-radio-button>
+               <mat-radio-button [value]="false">neg</mat-radio-button>
+               <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.spikeDetection"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.spikeDetection = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+   </div> <!-- results -->
+
+</form>
+

@@ -2,6 +2,7 @@
     "extends": "../tslint.json",
     "rules": {
        "one-line": false,
+       "curly": [true, "ignore-same-line"],
        "member-ordering": false,
         "no-input-rename": false,
         "radix": false,

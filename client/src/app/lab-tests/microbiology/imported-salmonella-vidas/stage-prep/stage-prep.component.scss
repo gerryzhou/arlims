@@ -2,13 +2,17 @@
 
 .received-fields {
    display: flex;
+   flex-flow: row wrap;
    align-items: center;
 }
 
 .label-attachment-type {
    flex-grow: 0;
    mat-radio-button {
-      margin-left: 20px;
+      margin-right: 20px;
+   }
+   .label {
+      font-weight: bold;
    }
 }
 

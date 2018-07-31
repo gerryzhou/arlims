@@ -49,7 +49,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             rvBatchId: 'x',
             ttBatchId: 'x',
             bgBatchId: 'x',
-            l2KiBatchId: 'x',
+            i2kiBatchId: 'x',
             rvttWaterBathId: 'x',
          },
          mBrothData: {
@@ -66,16 +66,16 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          },
          controlsData: {
             systemControlsPositiveControlGrowth: true,
-            systemMediumPositiveControlGrowth: false,
-            collectorControlsPositveControlGrowth: true,
-            collectorControlsMediumControlGrowth: false,
+            systemControlsMediaControlGrowth: false,
+            collectorControlsPositiveControlGrowth: true,
+            collectorControlsMediaControlGrowth: false,
             bacterialControlsUsed: false,
          },
          resultsData: {
-            resultPositiveCompositesCount: 1,
+            positiveCompositesCount: 1,
          },
          wrapupData: {
-            reserveReserveSampleDisposition: 'NO_RESERVE_SAMPLE',
+            reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
             reserveSampleDestinations: 'x',
          }
       };
@@ -135,16 +135,16 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          },
          controlsData: {
             systemControlsPositiveControlGrowth: true,
-            systemMediumPositiveControlGrowth: false,
-            collectorControlsPositveControlGrowth: true,
-            // collectorControlsMediumControlGrowth [required field omitted]
+            systemControlsMediaControlGrowth: false,
+            collectorControlsPositiveControlGrowth: true,
+            // collectorControlsMediaControlGrowth [required field omitted]
             bacterialControlsUsed: false,
          },
          resultsData: {
-            // resultPositiveCompositesCount [required field omitted]
+            // positiveCompositesCount [required field omitted]
          },
          wrapupData: {
-            reserveReserveSampleDisposition: 'NO_RESERVE_SAMPLE',
+            reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
             // reserveSampleDestinations [required field omitted]
          }
       };
