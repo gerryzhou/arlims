@@ -126,7 +126,8 @@ const stages: Stage[] = [
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 
-function prepStatusCode(data: PrepData): FieldValuesStatusCode {
+function prepStatusCode(data: PrepData): FieldValuesStatusCode
+{
    const reqStatus = statusForRequiredFieldValues([
       data.sampleReceivedDate,
       data.sampleReceivedFrom,
@@ -141,15 +142,12 @@ function prepStatusCode(data: PrepData): FieldValuesStatusCode {
       // data.codeMatchesCRSignature
    ]);
 
-   if (reqStatus === 'e') {
-      // Non-required fields could affect empty status.
-      return (data.descriptionMatchesCRNotes || data.containerMatchesCRNotes || data.codeMatchesCR) ? 'i' : 'e';
-   } else {
-      return reqStatus;
-   }
+   if (reqStatus === 'e') return (data.descriptionMatchesCRNotes || data.containerMatchesCRNotes || data.codeMatchesCR) ? 'i' : 'e';
+   else return reqStatus;
 }
 
-function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {
+function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode
+{
    // Check unconditional top-level fields.
    const uncondTopLevelFieldsStatus = statusForRequiredFieldValues([
       data.balanceId,
@@ -185,18 +183,20 @@ function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode {
    );
 }
 
-function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode {
+function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode
+{
    return statusForRequiredFieldValues([
       data.rvBatchId,
       data.ttBatchId,
-      // data.bgBatchId,  TODO: Are these two required?
-      // data.i2kiBatchId,
+      data.bgBatchId,
+      data.i2kiBatchId,
       data.rvttWaterBathId,
       // data.rvttSignature,
    ]);
 }
 
-function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode {
+function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode
+{
    return statusForRequiredFieldValues([
       data.mBrothBatchId,
       data.mBrothWaterBathId,
@@ -204,7 +204,8 @@ function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode {
    ]);
 }
 
-function vidasStatusCode(data: VidasData): FieldValuesStatusCode {
+function vidasStatusCode(data: VidasData): FieldValuesStatusCode
+{
    return statusForRequiredFieldValues([
       data.instrumentId,
       data.kitIds,
@@ -216,7 +217,8 @@ function vidasStatusCode(data: VidasData): FieldValuesStatusCode {
    ]);
 }
 
-function controlsStatusCode(data: ControlsData): FieldValuesStatusCode {
+function controlsStatusCode(data: ControlsData): FieldValuesStatusCode
+{
    return statusForRequiredFieldValues([
       data.systemControlsPositiveControlGrowth,
       data.systemControlsMediaControlGrowth,
@@ -229,19 +231,28 @@ function controlsStatusCode(data: ControlsData): FieldValuesStatusCode {
    ]);
 }
 
-function resultsStatusCode(data: ResultsData): FieldValuesStatusCode {
+function resultsStatusCode(data: ResultsData): FieldValuesStatusCode
+{
    return statusForRequiredFieldValues([
       data.positiveCompositesCount,
       // data.resultSignature,
    ]);
 }
 
-function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode {
-   return statusForRequiredFieldValues([
-      data.reserveSampleDisposition,
-      data.reserveSampleDestinations,
-      // data.allCompletedSignature,
-   ]);
+function isEmptyString(s: string)
+{
+   return !s || s.trim().length === 0;
+}
+
+function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode
+{
+   if (!data.reserveSampleDisposition) return 'e';
+
+   if (data.reserveSampleDisposition === 'OTHER' && isEmptyString(data.reserveSampleOtherDescription)) return 'i';
+
+   if (data.reserveSampleDisposition  === 'ISOLATES_SENT' && isEmptyString(data.reserveSampleDestinations)) return 'i';
+
+   return 'c';
 }
 
 export function getTestStageStatuses(testData: TestData): TestStageStatus[] {
