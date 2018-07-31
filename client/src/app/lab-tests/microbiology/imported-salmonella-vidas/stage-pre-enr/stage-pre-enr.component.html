@@ -93,17 +93,24 @@
    <div class="resource-identifiers area">
 
       <div class="field-area" [class.conflicted]="conflicts.balanceId !== undefined">
-         <mat-form-field>
-            <mat-select formControlName="balanceId" placeholder="Balance" *ngIf="balances; else textInputBalance">
-               <mat-option [value]="null"></mat-option>
-               <mat-option *ngFor="let labRsc of balances" [value]="labRsc.code">
-                  {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
-               </mat-option>
-            </mat-select>
-            <ng-template #textInputBalance>
-               <input formControlName="balanceId" type="text" matInput placeholder="Balance">
-            </ng-template>
-         </mat-form-field>
+         <span>
+            <mat-form-field>
+               <mat-select formControlName="balanceId" placeholder="Balance"
+                           *ngIf="balances && selectBalance; else textInputBalance">
+                  <mat-option [value]="null"></mat-option>
+                  <mat-option *ngFor="let labRsc of balances" [value]="labRsc.code">
+                     {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+                  </mat-option>
+               </mat-select>
+               <ng-template #textInputBalance>
+                  <input formControlName="balanceId" type="text" matInput placeholder="Balance">
+               </ng-template>
+            </mat-form-field>
+            <button *ngIf="balances" (click)="toggleSelectBalance()"
+                    mat-icon-button matTooltip="toggle between a select list and free-from text entry">
+               <mat-icon>create</mat-icon>
+            </button>
+         </span>
          <app-conflicting-field-value
             [conflictValue]="conflicts.balanceId"
             [conflictWhoWhen]="conflictsWhoWhen"
@@ -148,17 +155,24 @@
       </div>
 
       <div class="field-area" [class.conflicted]="conflicts.incubatorId !== undefined">
-         <mat-form-field>
-            <mat-select formControlName="incubatorId" placeholder="Incubator" *ngIf="incubators; else textInputIncubator">
-               <mat-option [value]="null"></mat-option>
-               <mat-option *ngFor="let labRsc of incubators" [value]="labRsc.code">
-                  {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
-               </mat-option>
-            </mat-select>
-            <ng-template #textInputIncubator>
-               <input formControlName="incubatorId" type="text" matInput placeholder="Incubator">
-            </ng-template>
-         </mat-form-field>
+         <span>
+            <mat-form-field>
+               <mat-select formControlName="incubatorId" placeholder="Incubator"
+                           *ngIf="incubators && selectIncubator; else textInputIncubator">
+                  <mat-option [value]="null"></mat-option>
+                  <mat-option *ngFor="let labRsc of incubators" [value]="labRsc.code">
+                     {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+                  </mat-option>
+               </mat-select>
+               <ng-template #textInputIncubator>
+                  <input formControlName="incubatorId" type="text" matInput placeholder="Incubator">
+               </ng-template>
+            </mat-form-field>
+            <button *ngIf="incubators" (click)="toggleSelectIncubator()"
+                    mat-icon-button matTooltip="toggle between a select list and free-from text entry">
+               <mat-icon>create</mat-icon>
+            </button>
+         </span>
          <app-conflicting-field-value
             [conflictValue]="conflicts.incubatorId"
             [conflictWhoWhen]="conflictsWhoWhen"

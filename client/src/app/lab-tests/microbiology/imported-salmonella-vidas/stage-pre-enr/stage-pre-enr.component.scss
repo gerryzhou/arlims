@@ -40,6 +40,9 @@
 .resource-identifiers {
    display: flex;
    flex-flow: row wrap;
+   mat-icon {
+      font-size: 90%;
+   }
 }
 
 .spiking-and-controls {

@@ -30,6 +30,10 @@ export class StagePreEnrComponent implements OnChanges {
    @Input()
    samplingMethodChoices: SamplingMethod[];
 
+   // These member allow the user to control how lab resources are entered, either via select field or free-form text input.
+   selectBalance = true;
+   selectIncubator = true;
+
    constructor() { }
 
    ngOnChanges()
@@ -56,5 +60,15 @@ export class StagePreEnrComponent implements OnChanges {
 
       const compMassCtrl = samplingMethodformGroup.get('compositeMassGrams');
       if (compMassCtrl) compMassCtrl.setValue(samplingMethod.compositeMassGrams);
+   }
+
+   toggleSelectBalance()
+   {
+      this.selectBalance = !this.selectBalance;
+   }
+
+   toggleSelectIncubator()
+   {
+      this.selectIncubator = !this.selectIncubator;
    }
 }
