@@ -4,6 +4,12 @@ import {LabResource} from '../../../../../generated/dto';
 import {PreEnrData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {SamplingMethod} from '../../sampling-method';
+import {ResourceControlAssignments} from '../../../resource-assignments';
+import {ResourceCodesDialogComponent} from '../../../../common-components/resource-codes-dialog/resource-codes-dialog.component';
+import {MatDialog} from '@angular/material';
+import {ResourceCodesDialogResult} from '../../../../common-components/resource-codes-dialog/resource-codes-dialog-result';
+import {AlertMessageService} from '../../../../shared/services/alerts';
+
 
 @Component({
   selector: 'app-stage-pre-enr',
@@ -30,15 +36,21 @@ export class StagePreEnrComponent implements OnChanges {
    @Input()
    samplingMethodChoices: SamplingMethod[];
 
-   // These member allow the user to control how lab resources are entered, either via select field or free-form text input.
+   // These allow the user to control how lab resources are entered, either via select field (when true) or else by free-form text input.
    selectBalance = true;
    selectIncubator = true;
+   allowTogglingSelects = true; // TODO: Retrieve from test configuration.
 
-   constructor() { }
+   resourceAssignments: ResourceControlAssignments;
+
+   constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
 
    ngOnChanges()
    {
-      console.log('sampling method choices: ', this.samplingMethodChoices);
+      this.resourceAssignments = new ResourceControlAssignments(
+         this.form,
+         new Map().set('blenderJarId', ['JAR']).set('bagId', ['BAG']).set('mediumBatchId', ['RV', 'TT', 'LAC'])
+      );
    }
 
    onSamplingMethodClicked(samplingMethod: SamplingMethod)
@@ -71,4 +83,43 @@ export class StagePreEnrComponent implements OnChanges {
    {
       this.selectIncubator = !this.selectIncubator;
    }
+
+   applyAssignedResource(resourceCode: string, controlName: string)
+   {
+      const ctrl = this.form.get(controlName);
+      if (ctrl)
+      {
+         ctrl.setValue(resourceCode);
+         this.resourceAssignments.removeAllAssignedResourceCodesForControl(controlName);
+      }
+   }
+
+   removeAssignedResource(resourceCode: string, controlName: string)
+   {
+      this.resourceAssignments.removeAssignedResourceCodeForControl(resourceCode, controlName);
+   }
+
+   promptApplyResources()
+   {
+      const dlg = this.dialogSvc.open(ResourceCodesDialogComponent, {width: 'calc(80%)'});
+
+      dlg.afterClosed().subscribe((result: ResourceCodesDialogResult) => {
+         this.resourceAssignments.assignResourceCodes(result.resourceCodes);
+         const unassigned = this.resourceAssignments.unassignedResourceCodes;
+         if (unassigned.size > 0)
+         {
+            this.alertMsgSvc.alertWarning(
+               `${unassigned.size} resource codes were not matched to any fields:`,
+               Array.from(unassigned)
+            );
+         }
+      });
+   }
+
+   removeAllForControl(controlName: string)
+   {
+      this.resourceAssignments.removeAllForControl(controlName);
+
+   }
 }
+

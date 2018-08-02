@@ -40,8 +40,13 @@
 .resource-identifiers {
    display: flex;
    flex-flow: row wrap;
+   align-items: flex-start;
+
    mat-icon {
       font-size: 90%;
+   }
+   app-field-assigned-resources {
+      width: 100%;
    }
 }
 
@@ -56,3 +61,7 @@ mat-radio-button {
    margin-right: 5px;
 }
 
+.bottom-bar {
+   display: flex;
+   flex-flow: row nowrap;
+}

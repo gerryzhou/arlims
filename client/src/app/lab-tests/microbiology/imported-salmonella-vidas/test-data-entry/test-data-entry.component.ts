@@ -76,11 +76,8 @@ export class TestDataEntryComponent {
       this.waterBaths = labResources.get(TestDataEntryComponent.WATERBATH_RESOURCE_TYPE);
       this.vidasInstruments = labResources.get(TestDataEntryComponent.VIDAS_RESOURCE_TYPE);
 
-      // TODO: Remove these artificial conflicts after testing.
-      this.conflictsTestData = // emptyTestData();
-         Object.assign(emptyTestData(), {controlsData: {bacterialControlsUsed: 'N'}});
-      this.conflictsEmployeeTimestamp  = // null;
-         { employeeShortName: 'JD', timestamp: new Date() };
+      this.conflictsTestData = emptyTestData();
+      this.conflictsEmployeeTimestamp = null;
    }
 
    onFormSubmit()

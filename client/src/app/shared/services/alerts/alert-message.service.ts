@@ -29,24 +29,24 @@ export class AlertMessageService {
       return this.subject.asObservable();
    }
 
-   alertSuccess(message: string, persistThroughNavigation = false) {
+   alertSuccess(message: string, detailLines = null, persistThroughNavigation = false) {
       this.persistThroughNavigation = persistThroughNavigation;
-      this.subject.next({ type: 'success', text: message });
+      this.subject.next({ type: 'success', text: message, detailLines });
    }
 
-   alertInfo(message: string, persistThroughNavigation = false) {
+   alertInfo(message: string, detailLines = null, persistThroughNavigation = false) {
       this.persistThroughNavigation = persistThroughNavigation;
-      this.subject.next({ type: 'info', text: message });
+      this.subject.next({ type: 'info', text: message, detailLines });
    }
 
-   alertWarning(message: string, persistThroughNavigation = false) {
+   alertWarning(message: string, detailLines = null, persistThroughNavigation = false) {
       this.persistThroughNavigation = persistThroughNavigation;
-      this.subject.next({ type: 'warning', text: message });
+      this.subject.next({ type: 'warning', text: message, detailLines });
    }
 
-   alertDanger(message: string, persistThroughNavigation = false) {
+   alertDanger(message: string, detailLines = null, persistThroughNavigation = false) {
       this.persistThroughNavigation = persistThroughNavigation;
-      this.subject.next({ type: 'danger', text: message });
+      this.subject.next({ type: 'danger', text: message, detailLines });
    }
 
 }

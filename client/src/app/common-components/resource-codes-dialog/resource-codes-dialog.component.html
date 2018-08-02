@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Paste/Send Resource Codes</h2>
+
+<mat-dialog-content>
+   <div class="resources-area">
+      <h3>Associated Resources</h3>
+      <mat-form-field>
+         <mat-chip-list #resourceCodesChipList>
+            <mat-chip *ngFor="let resourceCode of data.resourceCodes; let i = index"
+                      [selectable]="false" [removable]="true"
+                      (removed)="removeResourceCodeAt(i)">
+               {{resourceCode}}
+               <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Paste resource codes..." cdkFocusInitial
+                   [matChipInputFor]="resourceCodesChipList"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="addResourceCodes($event)"
+                   (input)="addResourceCodesForInput($event)">
+         </mat-chip-list>
+      </mat-form-field>
+   </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+   <button mat-button mat-dialog-close>Cancel</button>
+   <button mat-button [mat-dialog-close]="data" [disabled]="data.resourceCodes.length === 0">
+      Apply Resources
+   </button>
+</mat-dialog-actions>
+

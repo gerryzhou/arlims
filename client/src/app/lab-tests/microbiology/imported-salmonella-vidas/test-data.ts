@@ -2,8 +2,6 @@
 import {FieldValuesStatusCode, stageNameToTestDataFieldName, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SamplingMethod} from '../sampling-method';
 
-// TODO: Remove signature fields (commented out) if signatures will be kept outside of the test data.
-
 export interface TestData {
    prepData:     PrepData;
    preEnrData:   PreEnrData;
@@ -16,80 +14,70 @@ export interface TestData {
 }
 
 export interface PrepData {
-   sampleReceivedDate?: string;
-   sampleReceivedFrom?: string;
-   descriptionMatchesCR?: boolean;
-   descriptionMatchesCRNotes?: string;
-   labelAttachmentType?: LabelAttachmentType;
-   containerMatchesCR?: boolean;
-   containerMatchesCRNotes?: string;
-   // containerMatchesCRSignature?: EmployeeTimestamp;
-   codeMatchesCR?: boolean;
-   codeMatchesCRNotes?: string;
-   // codeMatchesCRSignature?: EmployeeTimestamp;
+   sampleReceivedDate?: string | null;
+   sampleReceivedFrom?: string | null;
+   descriptionMatchesCR?: boolean | null;
+   descriptionMatchesCRNotes?: string | null;
+   labelAttachmentType?: LabelAttachmentType | null;
+   containerMatchesCR?: boolean | null;
+   containerMatchesCRNotes?: string | null;
+   codeMatchesCR?: boolean | null;
+   codeMatchesCRNotes?: string | null;
 }
 
 export interface PreEnrData {
-   samplingMethod?: SamplingMethod;
-   samplingMethodExceptionsNotes?: string;
-   balanceId?: string;
-   blenderJarId?: string;
-   bagId?: string;
-   sampleSpike?: boolean;
-   spikePlateCount?: number;
-   mediumBatchId?: string;
-   incubatorId?: string;
-   positiveControlGrowth?: boolean;
-   mediumControlGrowth?: boolean;
-   // preenrichSignature?: EmployeeTimestamp;
+   samplingMethod?: SamplingMethod | null;
+   samplingMethodExceptionsNotes?: string | null;
+   balanceId?: string | null;
+   blenderJarId?: string | null;
+   bagId?: string | null;
+   sampleSpike?: boolean | null;
+   spikePlateCount?: number | null;
+   mediumBatchId?: string | null;
+   incubatorId?: string | null;
+   positiveControlGrowth?: boolean | null;
+   mediumControlGrowth?: boolean | null;
 }
 
 export interface SelEnrData {
-   rvBatchId?: string;
-   ttBatchId?: string;
-   bgBatchId?: string;
-   i2kiBatchId?: string;
-   rvttWaterBathId?: string;
-   // rvttSignature?: EmployeeTimestamp;
+   rvBatchId?: string | null;
+   ttBatchId?: string | null;
+   bgBatchId?: string | null;
+   i2kiBatchId?: string | null;
+   rvttWaterBathId?: string | null;
 }
 
 export interface MBrothData {
-   mBrothBatchId?: string;
-   mBrothWaterBathId?: string;
-   // mBrothSignature?: EmployeeTimestamp;
+   mBrothBatchId?: string | null;
+   mBrothWaterBathId?: string | null;
 }
 
 export interface VidasData {
-   instrumentId?: string;
-   kitIds?: string;
-   compositesDetection?: boolean;
-   positiveControlDetection?: boolean;
-   mediumControlDetection?: boolean;
-   spikeDetection?: boolean;
+   instrumentId?: string | null;
+   kitIds?: string | null;
+   compositesDetection?: boolean | null;  // TODO: May need an array of detection status by composite #.
+   positiveControlDetection?: boolean | null;
+   mediumControlDetection?: boolean | null;
+   spikeDetection?: boolean | null;
    // signature?: EmployeeTimestamp;
 }
 
 export interface ControlsData {
-   systemControlsPositiveControlGrowth?: boolean;
-   systemControlsMediaControlGrowth?: boolean;
-   // systemControlsSignature?: EmployeeTimestamp;
-   collectorControlsPositiveControlGrowth?: boolean;
-   collectorControlsMediaControlGrowth?: boolean;
-   // collectorControlsSignature?: EmployeeTimestamp;
-   bacterialControlsUsed?: boolean;
-   // bacterialControlsSignature?: EmployeeTimestamp;
+   systemControlsPositiveControlGrowth?: boolean | null;
+   systemControlsMediaControlGrowth?: boolean | null;
+   collectorControlsPositiveControlGrowth?: boolean | null;
+   collectorControlsMediaControlGrowth?: boolean | null;
+   bacterialControlsUsed?: boolean | null;
 }
 
 export interface ResultsData {
-   positiveCompositesCount?: number;
-   // resultSignature?: EmployeeTimestamp;
+   positiveCompositesCount?: number | null;
 }
 
 export interface WrapupData {
-   reserveSampleDisposition?: ReserveSampleDisposition;
-   reserveSampleDestinations?: string;
-   reserveSampleOtherDescription?: string;
-   // allCompletedSignature?: EmployeeTimestamp;
+   reserveSampleDisposition?: ReserveSampleDisposition | null;
+   reserveSampleDestinations?: string | null;
+   reserveSampleOtherDescription?: string | null;
 }
 
 export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY' | 'SUBMITTED_ALONE';
@@ -137,10 +125,8 @@ function prepStatusCode(data: PrepData): FieldValuesStatusCode
       data.labelAttachmentType,
       data.containerMatchesCR,
       // (containerMatchesCRNotes is not required)
-      // data.containerMatchesCRSignature,
       data.codeMatchesCR,
       // (codeMatchesCRNotes is not required)
-      // data.codeMatchesCRSignature
    ]);
 
    if (reqStatus === 'e') return (data.descriptionMatchesCRNotes || data.containerMatchesCRNotes || data.codeMatchesCR) ? 'i' : 'e';
@@ -159,7 +145,6 @@ function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode
       data.incubatorId,
       data.positiveControlGrowth,
       data.mediumControlGrowth,
-      // data.preenrichSignature
    ]);
 
    // Check nested sampling method fields.
@@ -192,7 +177,6 @@ function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode
       data.bgBatchId,
       data.i2kiBatchId,
       data.rvttWaterBathId,
-      // data.rvttSignature,
    ]);
 }
 
@@ -201,7 +185,6 @@ function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode
    return statusForRequiredFieldValues([
       data.mBrothBatchId,
       data.mBrothWaterBathId,
-      // data.mBrothSignature,
    ]);
 }
 
@@ -210,7 +193,7 @@ function vidasStatusCode(data: VidasData): FieldValuesStatusCode
    return statusForRequiredFieldValues([
       data.instrumentId,
       data.kitIds,
-      data.compositesDetection, // TODO: May need an array of detection status by composite #.
+      data.compositesDetection,
       data.positiveControlDetection,
       data.mediumControlDetection,
       data.spikeDetection,
@@ -223,12 +206,9 @@ function controlsStatusCode(data: ControlsData): FieldValuesStatusCode
    return statusForRequiredFieldValues([
       data.systemControlsPositiveControlGrowth,
       data.systemControlsMediaControlGrowth,
-      // data.systemControlsSignature,
       data.collectorControlsPositiveControlGrowth,
       data.collectorControlsMediaControlGrowth,
-      // data.collectorControlsSignature,
       data.bacterialControlsUsed,
-      // data.bacterialControlsSignature,
    ]);
 }
 
@@ -236,11 +216,10 @@ function resultsStatusCode(data: ResultsData): FieldValuesStatusCode
 {
    return statusForRequiredFieldValues([
       data.positiveCompositesCount,
-      // data.resultSignature,
    ]);
 }
 
-function isEmptyString(s: string)
+export function isEmptyString(s: string)
 {
    return !s || s.trim().length === 0;
 }
@@ -256,7 +235,8 @@ function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode
    return 'c';
 }
 
-export function getTestStageStatuses(testData: TestData): TestStageStatus[] {
+export function getTestStageStatuses(testData: TestData): TestStageStatus[]
+{
    return stages.map(stage => {
       const stageFieldName = stageNameToTestDataFieldName(stage.name);
       const stageData = testData[stageFieldName];

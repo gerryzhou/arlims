@@ -1,5 +1,7 @@
 // Styles that are common to all test stages.
 
+@import '../../../../styles';
+
 form {
    display: flex;
    flex-flow: column nowrap;
@@ -18,6 +20,11 @@ form {
 
    &.conflicted {
       border: 2px dashed orange;
+      padding: 7px;
+   }
+
+   &.batch-resource-matched {
+      border: 2px dashed $batch-resource-background-color;
       padding: 7px;
    }
 }

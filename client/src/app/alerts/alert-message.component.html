@@ -1,7 +1,12 @@
-<mat-card  *ngIf="message">
-   <div [ngClass]="message.type">
-      {{message.text}}
+<mat-card *ngIf="message">
+   <div class="main-message-row">
+       <div [ngClass]="message.type">
+          {{message.text}}
+       </div>
+       <div class="expanding-flex-space"></div>
+       <button class="close-btn" mat-icon-button (click)="clear()"><mat-icon>close</mat-icon></button>
    </div>
-   <div class="expanding-flex-space"></div>
-   <button class="close-btn" mat-icon-button (click)="clear()"><mat-icon>close</mat-icon></button>
+   <div class="details-area" *ngIf="message.detailLines">
+      <span *ngFor="let detailLine of message.detailLines">{{detailLine}}</span><br>
+   </div>
 </mat-card>

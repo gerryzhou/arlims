@@ -1,6 +1,7 @@
-Try Material "Stepper" component to contain test stages, replacing expansion panels.
 
 Make pdf of test data as part of "make package" function.
+
+Try Material "Stepper" component to contain test stages, replacing expansion panels.
 
 TestsService.saveTestData
    Make sure that null value can conflict with non-null value.
@@ -67,3 +68,14 @@ Barcode Scanners
 ----------------
 Wedge utility for Zebra DS6707
 https://www.zebra.com/us/en/support-downloads/software/utilities/cordless-scantoconnect.html
+
+Test Resource Codes
+-------------------
+BAG-123
+JAR-123456
+JAR-23456
+RV-7361256
+TT-228181
+XX-112
+XX-113
+

@@ -1,0 +1,13 @@
+@import '../../../styles';
+
+.resources-area {
+
+   mat-form-field {
+      width: 100%;
+   }
+
+   mat-chip {
+      background-color: $batch-resource-background-color;
+      color: $batch-resource-text-color;
+   }
+}
