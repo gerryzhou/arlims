@@ -9,15 +9,6 @@
    display: flex;
    flex-flow: row wrap;
    margin-top: 15px;
-
-   mat-radio-group {
-      mat-radio-button {
-         margin: 3px 10px 3px 0;
-         .unset {
-            margin-left: 10px;
-         }
-      }
-   }
 }
 
 .field-area {

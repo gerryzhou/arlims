@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {LabTestMetadata} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
-import {parseISODateLocal} from '../../shared/util/dates-and-times';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 
 @Component({

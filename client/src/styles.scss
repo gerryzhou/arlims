@@ -42,7 +42,7 @@ $batch-resource-text-color: lightyellow;
 
 // Horizontal stepper customization - use less space vertically, use more of horizontal space for actual content.
 div.mat-horizontal-stepper-header-container {
-  margin: 5px 5px 0px 5px;
+  margin: 5px 5px 0 5px;
 }
 .mat-horizontal-stepper-header {
    padding: unset !important;
@@ -53,11 +53,21 @@ div.mat-horizontal-stepper-header-container {
 mat-step-header {
    height: unset !important;
 }
+// Eliminate horizontal padding of stepper content.
+mat-horizontal-stepper > .mat-horizontal-content-container {
+   padding: 0 !important;
+}
 
 // Let menu items have their full requested width.
 .mat-menu-panel {
    max-width: unset !important;
 }
 
-
+// Make toolbar thinner.
+mat-toolbar-row {
+   height: unset !important;
+}
+.mat-toolbar-multiple-rows {
+   min-height: unset !important;
+}
 

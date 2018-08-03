@@ -29,7 +29,19 @@ form {
    }
 }
 
-mat-radio-button.unset {
-   font-size: smaller;
-   color: #aaa;
+mat-radio-group {
+
+   mat-radio-button {
+      margin: 5px 10px 5px 0;
+      .unset {
+         margin-left: 10px;
+      }
+   }
+
+   mat-radio-button.unset {
+      font-size: smaller;
+      color: #aaa;
+   }
 }
+
+

@@ -10,6 +10,10 @@
 
    .test-type {
       cursor: pointer;
+      &:hover {
+         color: blue;
+         text-decoration: underline;
+      }
    }
 
    .elapsed {

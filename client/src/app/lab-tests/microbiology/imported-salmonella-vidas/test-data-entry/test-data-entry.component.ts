@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
@@ -12,13 +12,22 @@ import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
 import {TestConfig} from '../test-config';
+import {MatStepper} from '@angular/material';
+import {StagePrepComponent} from '../stage-prep/stage-prep.component';
+import {StagePreEnrComponent} from '../stage-pre-enr/stage-pre-enr.component';
+import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
+import {StageMBrothComponent} from '../stage-m-broth/stage-m-broth.component';
+import {StageVidasComponent} from '../stage-vidas/stage-vidas.component';
+import {StageControlsComponent} from '../stage-controls/stage-controls.component';
+import {StageResultsComponent} from '../stage-results/stage-results.component';
+import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-test-data-entry',
    templateUrl: './test-data-entry.component.html',
    styleUrls: ['./test-data-entry.component.scss']
 })
-export class TestDataEntryComponent {
+export class TestDataEntryComponent implements OnInit {
 
    // The original test data and its md5 are needed for detecting and merging concurrent updates to the same data.
    originalTestData: TestData;
@@ -44,6 +53,18 @@ export class TestDataEntryComponent {
    readonly vidasInstruments: LabResource[] | undefined;
 
    jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter;
+
+   // Keep component refs for stepper and individual test stages to dispatch hotkeys to functions on the currently selected component.
+   @ViewChild('testStageStepper') testStageStepper: MatStepper;
+   @ViewChild(StagePrepComponent)     prepComp: StagePrepComponent;
+   @ViewChild(StagePreEnrComponent)   preEnrComp: StagePreEnrComponent;
+   @ViewChild(StageSelEnrComponent)   selEnrComp: StageSelEnrComponent;
+   @ViewChild(StageMBrothComponent)   mBrothComp: StageMBrothComponent;
+   @ViewChild(StageVidasComponent)    vidasComp: StageVidasComponent;
+   @ViewChild(StageControlsComponent) controlsComp: StageControlsComponent;
+   @ViewChild(StageResultsComponent)  resultsComp: StageResultsComponent;
+   @ViewChild(StageWrapupComponent)   wrapupComp: StageWrapupComponent;
+   stageComps: any[];
 
    private static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
    private static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
@@ -82,6 +103,20 @@ export class TestDataEntryComponent {
 
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;
+   }
+
+   ngOnInit()
+   {
+      this.stageComps = [
+         this.prepComp,
+         this.preEnrComp,
+         this.selEnrComp,
+         this.mBrothComp,
+         this.vidasComp,
+         this.controlsComp,
+         this.resultsComp,
+         this.wrapupComp
+      ];
    }
 
    onFormSubmit()
@@ -124,6 +159,16 @@ export class TestDataEntryComponent {
    {
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;
+   }
+
+   @HostListener('window:keydown.F1')
+   promptApplyResourcesInCurrentTestStage()
+   {
+      const selIx = this.testStageStepper.selectedIndex;
+      if (selIx && selIx >= 0)
+      {
+         if (this.stageComps[selIx].promptApplyResources) this.stageComps[selIx].promptApplyResources();
+      }
    }
 }
 
@@ -199,3 +244,4 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
       }),
    });
 }
+

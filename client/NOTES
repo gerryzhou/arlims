@@ -1,12 +1,8 @@
-
-
-RESULTS stage
-  Placeholder/label text doesn't fit in text input.
-  Probably should combine this stage into WRAPUP.
-
-Make app toolbar much smaller and create service to set a title in its center (maybe switch to grid layout).
-
 Make pdf of test data as part of "make package" function.
+
+Add filters to samples listing.
+
+Create service used by app component to set a title in center of toolbar (maybe switch to grid layout).
 
 
 TestsService.saveTestData

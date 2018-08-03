@@ -104,6 +104,7 @@ export class StagePreEnrComponent implements OnChanges {
       const dlg = this.dialogSvc.open(ResourceCodesDialogComponent, {width: 'calc(80%)'});
 
       dlg.afterClosed().subscribe((result: ResourceCodesDialogResult) => {
+         if (!result) return;
          this.resourceAssignments.assignResourceCodes(result.resourceCodes);
          const unassigned = this.resourceAssignments.unassignedResourceCodes;
          if (unassigned.size > 0)

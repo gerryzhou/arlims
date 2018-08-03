@@ -7,8 +7,16 @@
    }
 }
 
+.test-stage {
+   margin: 25px 5px 5px 5px;
+}
+
 .form-bottom-toolbar {
    display: flex;
-   justify-content: center;
+   justify-content: flex-end;
    margin: 10px 20px;
+}
+
+form {
+   margin: 5px;
 }

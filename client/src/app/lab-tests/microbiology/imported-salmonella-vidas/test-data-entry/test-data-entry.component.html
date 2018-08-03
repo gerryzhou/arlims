@@ -13,67 +13,75 @@
    </div>
 
 
-   <mat-horizontal-stepper [selectedIndex]="stageIndex">
+   <mat-horizontal-stepper [selectedIndex]="stageIndex" #testStageStepper>
 
       <mat-step label="PREP">
-         <app-stage-prep [form]="testDataForm.get('prepData')"
-                         [conflicts]="conflictsTestData.prepData"
-                         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         <app-stage-prep class="test-stage"
+            [form]="testDataForm.get('prepData')"
+            [conflicts]="conflictsTestData.prepData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
          </app-stage-prep>
       </mat-step>
 
       <mat-step label="PRE-ENR">
-         <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"
-                            [conflicts]="conflictsTestData.preEnrData"
-                            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                            [balances]="balances"
-                            [incubators]="incubators"
-                            [samplingMethodChoices]="testConfig.samplingMethodChoices">
+         <app-stage-pre-enr class="test-stage"
+            [form]="testDataForm.get('preEnrData')"
+            [conflicts]="conflictsTestData.preEnrData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [balances]="balances"
+            [incubators]="incubators"
+            [samplingMethodChoices]="testConfig.samplingMethodChoices">
          </app-stage-pre-enr>
       </mat-step>
 
       <mat-step label="SEL-ENR">
-         <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"
-                            [conflicts]="conflictsTestData.selEnrData"
-                            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                            [waterBaths]="waterBaths">
+         <app-stage-sel-enr class="test-stage"
+            [form]="testDataForm.get('selEnrData')"
+            [conflicts]="conflictsTestData.selEnrData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [waterBaths]="waterBaths">
          </app-stage-sel-enr>
       </mat-step>
 
       <mat-step label="M-BROTH">
-         <app-stage-m-broth [form]="testDataForm.get('mBrothData')"
-                            [conflicts]="conflictsTestData.mBrothData"
-                            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                            [waterBaths]="waterBaths">
+         <app-stage-m-broth class="test-stage"
+            [form]="testDataForm.get('mBrothData')"
+            [conflicts]="conflictsTestData.mBrothData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [waterBaths]="waterBaths">
          </app-stage-m-broth>
       </mat-step>
 
       <mat-step label="VIDAS">
-         <app-stage-vidas [form]="testDataForm.get('vidasData')"
-                          [conflicts]="conflictsTestData.vidasData"
-                          [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                          [vidasInstruments]="vidasInstruments">
+         <app-stage-vidas class="test-stage"
+            [form]="testDataForm.get('vidasData')"
+            [conflicts]="conflictsTestData.vidasData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [vidasInstruments]="vidasInstruments">
          </app-stage-vidas>
       </mat-step>
 
       <mat-step label="CONTROLS">
-         <app-stage-controls [form]="testDataForm.get('controlsData')"
-                             [conflicts]="conflictsTestData.controlsData"
-                             [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         <app-stage-controls class="test-stage"
+            [form]="testDataForm.get('controlsData')"
+            [conflicts]="conflictsTestData.controlsData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
          </app-stage-controls>
       </mat-step>
 
       <mat-step label="RESULTS">
-         <app-stage-results [form]="testDataForm.get('resultsData')"
-                            [conflicts]="conflictsTestData.resultsData"
-                            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         <app-stage-results class="test-stage"
+            [form]="testDataForm.get('resultsData')"
+            [conflicts]="conflictsTestData.resultsData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
          </app-stage-results>
       </mat-step>
 
       <mat-step label="WRAPUP">
-         <app-stage-wrapup [form]="testDataForm.get('wrapupData')"
-                           [conflicts]="conflictsTestData.wrapupData"
-                           [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         <app-stage-wrapup class="test-stage"
+            [form]="testDataForm.get('wrapupData')"
+            [conflicts]="conflictsTestData.wrapupData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
          </app-stage-wrapup>
       </mat-step>
 

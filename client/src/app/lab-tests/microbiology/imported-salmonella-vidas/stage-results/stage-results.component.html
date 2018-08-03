@@ -1,7 +1,7 @@
 <form [formGroup]="form">
 
    <div class="field-area" [class.conflicted]="conflicts.positiveCompositesCount !== undefined">
-      <mat-form-field>
+      <mat-form-field class="pos-comps" >
          <input formControlName="positiveCompositesCount" type="number" min="0" step="1" matInput
                 placeholder="Positive composites count">
       </mat-form-field>
