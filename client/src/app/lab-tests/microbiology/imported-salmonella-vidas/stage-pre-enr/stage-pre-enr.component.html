@@ -2,15 +2,20 @@
 
    <div class="sampling-method area">
 
-      <h3>Sampling method</h3>
-
-      <div class="standard-method-choices" *ngIf="samplingMethodChoices">
-         Quick-fill with standard methods:
-         <button mat-button *ngFor="let samplingMethod of samplingMethodChoices" (click)="onSamplingMethodClicked(samplingMethod)">
-            {{samplingMethod.description}}
+      <span class="title-row">
+         <span class="title">Sampling method</span>
+         <mat-menu #samplingMethodMenu="matMenu">
+            <button mat-menu-item *ngFor="let samplingMethod of samplingMethodChoices"
+                    class="standard-sampling-method-btn"
+                    (click)="onSamplingMethodClicked(samplingMethod)">
+               {{samplingMethod.description}}
+            </button>
+         </mat-menu>
+         <button mat-button [matMenuTriggerFor]="samplingMethodMenu">
+            Select a standard method <mat-icon>more_vert</mat-icon>
          </button>
-         or enter method data directly:
-      </div>
+         <span class="hint-text"> or enter method data manually below</span>
+      </span>
 
       <div formGroupName="samplingMethod" class="sampling-method-numbers">
 
@@ -107,7 +112,7 @@
                   <input formControlName="balanceId" type="text" matInput placeholder="Balance">
                </ng-template>
             </mat-form-field>
-            <button *ngIf="balances && allowTogglingSelects" (click)="toggleSelectBalance()"
+            <button *ngIf="balances && allowTogglingSelects" (click)="toggleSelectBalance()" class="toggle-select"
                     mat-icon-button matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
             </button>
@@ -202,6 +207,10 @@
          </app-conflicting-field-value>
       </div>
 
+      <button mat-icon-button color="accent" (click)="promptApplyResources()" class="apply-resources-btn">
+         <mat-icon>flash_on</mat-icon>
+      </button>
+
    </div> <!-- resource-identifiers  -->
 
 
@@ -268,10 +277,6 @@
       </div>
 
    </div> <!-- spiking and controls -->
-
-   <div class="stage-bottom-bar">
-      <button mat-button (click)="promptApplyResources()">Apply resource codes</button>
-   </div>
 
 </form>
 

@@ -10,7 +10,7 @@ import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
 import {LabResource, LabResourceType} from '../../../../../generated/dto';
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import {emptyTestData, getTestStageStatuses, TestData} from '../test-data';
+import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
 import {TestConfig} from '../test-config';
 
 @Component({
@@ -32,7 +32,7 @@ export class TestDataEntryComponent {
    conflictsEmployeeTimestamp: EmployeeTimestamp | null;
 
    readonly stage: string | null;
-   showAllStages: boolean;
+   readonly stageIndex: number | null;
 
    readonly sampleInTest: SampleInTest;
 
@@ -64,8 +64,12 @@ export class TestDataEntryComponent {
       const verTestData = labGroupTestData.versionedTestData;
       this.originalTestData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
-      this.stage = activatedRoute.snapshot.paramMap.get('stage') || null;
-      this.showAllStages = !this.stage;
+
+      const stageParamValue = activatedRoute.snapshot.paramMap.get('stage');
+      this.stage = stageParamValue ? stageParamValue : (firstNonCompleteTestStageName(this.originalTestData) || 'WRAPUP');
+      const stageIx = TEST_STAGES.findIndex(ts => ts.name === this.stage);
+      this.stageIndex = stageIx !== -1 ? stageIx : null;
+
       this.sampleInTest = labGroupTestData.sampleInTest;
       this.testConfig = labGroupTestData.labGroupTestConfig;
       this.testDataForm = makeTestDataFormGroup(this.originalTestData);

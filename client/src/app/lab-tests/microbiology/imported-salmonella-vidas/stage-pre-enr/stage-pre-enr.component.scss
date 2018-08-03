@@ -1,7 +1,7 @@
 @import '../common-test-stage-styles';
 
 .area {
-   margin: 10px 20px 10px 5px;
+   margin: 5px 20px 5px 5px;
 }
 
 .sampling-method {
@@ -11,13 +11,15 @@
    border: 2px solid #eee;
    padding: 5px 10px;
 
-   .standard-method-choices {
-      margin: 0px 10px;
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: flex-start;
-      button {
-         margin-left: 30px;
+   .title-row {
+      .title {
+         font-weight: bold;
+         font-size: 110%;
+         margin-right: 30px;
+      }
+      .title-hint-text {
+         font-size: smaller;
+         font-weight: lighter;
       }
    }
 
@@ -40,14 +42,23 @@
 .resource-identifiers {
    display: flex;
    flex-flow: row wrap;
-   align-items: flex-start;
+   align-items: center;
 
-   mat-icon {
-      font-size: 90%;
+   button.toggle-select {
+      mat-icon {
+         font-size: smaller;
+      }
    }
+
+   .apply-resources-btn {
+      background-color: $batch-resource-background-color;
+      margin-left: 20px;
+   }
+
    app-field-assigned-resources {
       width: 100%;
    }
+
 }
 
 .spiking-and-controls {

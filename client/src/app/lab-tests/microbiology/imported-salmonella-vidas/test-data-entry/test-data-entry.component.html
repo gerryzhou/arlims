@@ -1,112 +1,83 @@
-<div class="sample-information">
-
-   <div class="test-type-stages-toggle-stack">
-      <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
-   </div>
-
-   <app-sample [sample]="sampleInTest.sample"></app-sample>
-
-   <mat-slide-toggle *ngIf="stage" [(ngModel)]="showAllStages">
-      Show all test stages
-   </mat-slide-toggle>
-
-</div>
-
 <form [formGroup]="testDataForm" (ngSubmit)="onFormSubmit()">
 
-   <mat-expansion-panel *ngIf="stage === 'PREP' || showAllStages"
-                        [expanded]="stage === 'PREP'">
-      <mat-expansion-panel-header>
-         PREPARATION
-      </mat-expansion-panel-header>
-      <app-stage-prep [form]="testDataForm.get('prepData')"
-                      [conflicts]="conflictsTestData.prepData"
-                      [conflictsWhoWhen]="conflictsEmployeeTimestamp">
-      </app-stage-prep>
-   </mat-expansion-panel>
+   <div class="sample-information">
 
-   <mat-expansion-panel *ngIf="stage === 'PRE-ENR' || showAllStages"
-                        [expanded]="stage === 'PRE-ENR'">
-      <mat-expansion-panel-header>
-         PRE-ENRICHMENT
-      </mat-expansion-panel-header>
-      <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"
-                         [conflicts]="conflictsTestData.preEnrData"
-                         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                         [balances]="balances"
-                         [incubators]="incubators"
-                         [samplingMethodChoices]="testConfig.samplingMethodChoices">
-      </app-stage-pre-enr>
-   </mat-expansion-panel>
+      <div class="test-type-stages-toggle-stack">
+         <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
+      </div>
 
-   <mat-expansion-panel *ngIf="stage === 'SEL-ENR' || showAllStages"
-                        [expanded]="stage === 'SEL-ENR'">
-      <mat-expansion-panel-header>
-         SELECTIVE ENRICHMENT
-      </mat-expansion-panel-header>
-      <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"
-                         [conflicts]="conflictsTestData.selEnrData"
-                         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                         [waterBaths]="waterBaths">
-      </app-stage-sel-enr>
-   </mat-expansion-panel>
+      <app-sample [sample]="sampleInTest.sample"></app-sample>
 
-   <mat-expansion-panel *ngIf="stage === 'M-BROTH' || showAllStages"
-                        [expanded]="stage === 'M-BROTH'">
-      <mat-expansion-panel-header>
-         M BROTH
-      </mat-expansion-panel-header>
-      <app-stage-m-broth [form]="testDataForm.get('mBrothData')"
-                         [conflicts]="conflictsTestData.mBrothData"
-                         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                         [waterBaths]="waterBaths">
-      </app-stage-m-broth>
-   </mat-expansion-panel>
+      <button mat-button type="submit">Save</button>
 
-   <mat-expansion-panel *ngIf="stage === 'VIDAS' || showAllStages"
-                        [expanded]="stage === 'VIDAS'">
-      <mat-expansion-panel-header>
-         VIDAS
-      </mat-expansion-panel-header>
-      <app-stage-vidas [form]="testDataForm.get('vidasData')"
-                       [conflicts]="conflictsTestData.vidasData"
-                       [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-                       [vidasInstruments]="vidasInstruments">
-      </app-stage-vidas>
-   </mat-expansion-panel>
+   </div>
 
-   <mat-expansion-panel *ngIf="stage === 'CONTROLS' || showAllStages"
-                        [expanded]="stage === 'CONTROLS'">
-      <mat-expansion-panel-header>
-         CONTROLS
-      </mat-expansion-panel-header>
-      <app-stage-controls [form]="testDataForm.get('controlsData')"
-                          [conflicts]="conflictsTestData.controlsData"
-                          [conflictsWhoWhen]="conflictsEmployeeTimestamp">
-      </app-stage-controls>
-   </mat-expansion-panel>
 
-   <mat-expansion-panel *ngIf="stage === 'RESULTS' || showAllStages"
-                        [expanded]="stage === 'RESULTS'">
-      <mat-expansion-panel-header>
-         RESULTS
-      </mat-expansion-panel-header>
-      <app-stage-results [form]="testDataForm.get('resultsData')"
-                         [conflicts]="conflictsTestData.resultsData"
+   <mat-horizontal-stepper [selectedIndex]="stageIndex">
+
+      <mat-step label="PREP">
+         <app-stage-prep [form]="testDataForm.get('prepData')"
+                         [conflicts]="conflictsTestData.prepData"
                          [conflictsWhoWhen]="conflictsEmployeeTimestamp">
-      </app-stage-results>
-   </mat-expansion-panel>
+         </app-stage-prep>
+      </mat-step>
 
-   <mat-expansion-panel *ngIf="stage === 'WRAPUP' || showAllStages"
-                        [expanded]="stage === 'WRAPUP'">
-      <mat-expansion-panel-header>
-         WRAPUP
-      </mat-expansion-panel-header>
-      <app-stage-wrapup [form]="testDataForm.get('wrapupData')"
-                        [conflicts]="conflictsTestData.wrapupData"
-                        [conflictsWhoWhen]="conflictsEmployeeTimestamp">
-      </app-stage-wrapup>
-   </mat-expansion-panel>
+      <mat-step label="PRE-ENR">
+         <app-stage-pre-enr [form]="testDataForm.get('preEnrData')"
+                            [conflicts]="conflictsTestData.preEnrData"
+                            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+                            [balances]="balances"
+                            [incubators]="incubators"
+                            [samplingMethodChoices]="testConfig.samplingMethodChoices">
+         </app-stage-pre-enr>
+      </mat-step>
+
+      <mat-step label="SEL-ENR">
+         <app-stage-sel-enr [form]="testDataForm.get('selEnrData')"
+                            [conflicts]="conflictsTestData.selEnrData"
+                            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+                            [waterBaths]="waterBaths">
+         </app-stage-sel-enr>
+      </mat-step>
+
+      <mat-step label="M-BROTH">
+         <app-stage-m-broth [form]="testDataForm.get('mBrothData')"
+                            [conflicts]="conflictsTestData.mBrothData"
+                            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+                            [waterBaths]="waterBaths">
+         </app-stage-m-broth>
+      </mat-step>
+
+      <mat-step label="VIDAS">
+         <app-stage-vidas [form]="testDataForm.get('vidasData')"
+                          [conflicts]="conflictsTestData.vidasData"
+                          [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+                          [vidasInstruments]="vidasInstruments">
+         </app-stage-vidas>
+      </mat-step>
+
+      <mat-step label="CONTROLS">
+         <app-stage-controls [form]="testDataForm.get('controlsData')"
+                             [conflicts]="conflictsTestData.controlsData"
+                             [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         </app-stage-controls>
+      </mat-step>
+
+      <mat-step label="RESULTS">
+         <app-stage-results [form]="testDataForm.get('resultsData')"
+                            [conflicts]="conflictsTestData.resultsData"
+                            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         </app-stage-results>
+      </mat-step>
+
+      <mat-step label="WRAPUP">
+         <app-stage-wrapup [form]="testDataForm.get('wrapupData')"
+                           [conflicts]="conflictsTestData.wrapupData"
+                           [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         </app-stage-wrapup>
+      </mat-step>
+
+   </mat-horizontal-stepper>
 
    <div class="form-bottom-toolbar">
       <button mat-button type="submit" color="primary">Save</button>

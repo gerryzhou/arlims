@@ -104,7 +104,7 @@ interface Stage {
    statusCodeFn: (any) => FieldValuesStatusCode;
 }
 
-const stages: Stage[] = [
+export const TEST_STAGES: Stage[] = [
    {name: 'PREP',     statusCodeFn: prepStatusCode},
    {name: 'PRE-ENR',  statusCodeFn: preEnrStatusCode},
    {name: 'SEL-ENR',  statusCodeFn: selEnrStatusCode},
@@ -237,7 +237,7 @@ function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode
 
 export function getTestStageStatuses(testData: TestData): TestStageStatus[]
 {
-   return stages.map(stage => {
+   return TEST_STAGES.map(stage => {
       const stageFieldName = stageNameToTestDataFieldName(stage.name);
       const stageData = testData[stageFieldName];
       return {
@@ -247,3 +247,14 @@ export function getTestStageStatuses(testData: TestData): TestStageStatus[]
    });
 }
 
+export function firstNonCompleteTestStageName(testData: TestData): string | null
+{
+   for (const stage of TEST_STAGES)
+   {
+      const stageFieldName = stageNameToTestDataFieldName(stage.name);
+      const stageData = testData[stageFieldName];
+      const status = stage.statusCodeFn(stageData);
+      if (status !== 'c') return stage.name;
+   }
+   return null;
+}
