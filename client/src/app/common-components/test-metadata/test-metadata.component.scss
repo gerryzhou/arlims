@@ -8,6 +8,10 @@
    align-items: stretch;
    justify-content: flex-start;
 
+   .test-type {
+      cursor: pointer;
+   }
+
    .elapsed {
       flex-grow: 0;
       display: flex;
