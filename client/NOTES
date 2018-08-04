@@ -1,4 +1,11 @@
-Make pdf of test data as part of "make package" function.
+Make docx of test data as part of "make package" function.
+  Handled all on server side.
+  @PostMapping
+  <BinaryContent> generateTestDataReport(testData: Json, reportName)
+    If report name ends with "docx", do generic merge of json data into docx content.
+      For each leaf data item, substitute its value for "${/path/to/data/item}" strings.
+    applyDataToDocx(<docx rep>, Json)
+      https://github.com/thombergs/docx-stamper
 
 Add filters to samples listing.
 

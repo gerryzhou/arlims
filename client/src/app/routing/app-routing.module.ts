@@ -5,7 +5,7 @@ import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/co
 import {environment} from '../../environments/environment';
 import {SamplesListingComponent} from '../samples-listing/samples-listing.component';
 import {LabGroupContentsResolver} from './lab-group-contents.resolver';
-import {TestDataEntryComponent as MicroImpSalVidasTestDataComponent} from '../lab-tests/microbiology/imported-salmonella-vidas/test-data-entry/test-data-entry.component';
+import {StagedTestDataEntryComponent as MicroImpSalVidasTestDataComponent} from '../lab-tests/microbiology/imported-salmonella-vidas/staged-test-data-entry/staged-test-data-entry.component';
 import {LabGroupTestDataResolver} from './lab-group-test-data.resolver';
 
 const routes: Routes = [

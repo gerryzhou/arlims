@@ -19,7 +19,7 @@ import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
 import {StagePrepComponent} from './stage-prep/stage-prep.component';
-import {TestDataEntryComponent} from './test-data-entry/test-data-entry.component';
+import {StagedTestDataEntryComponent} from './staged-test-data-entry/staged-test-data-entry.component';
 import {StagePreEnrComponent} from './stage-pre-enr/stage-pre-enr.component';
 import {StageSelEnrComponent} from './stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
@@ -49,7 +49,7 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       CommonComponentsModule,
    ],
    declarations: [
-      TestDataEntryComponent,
+      StagedTestDataEntryComponent,
       StagePrepComponent,
       StagePreEnrComponent,
       StageSelEnrComponent,
@@ -60,7 +60,7 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       StageWrapupComponent
    ],
    exports: [
-      TestDataEntryComponent,
+      StagedTestDataEntryComponent,
    ]
 })
 export class ImportedSalmonellaVidasModule { }

@@ -23,11 +23,11 @@ import {StageResultsComponent} from '../stage-results/stage-results.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 
 @Component({
-   selector: 'app-micro-imp-slm-vidas-test-data-entry',
-   templateUrl: './test-data-entry.component.html',
-   styleUrls: ['./test-data-entry.component.scss']
+   selector: 'app-micro-imp-slm-vidas-staged-test-data-entry',
+   templateUrl: './staged-test-data-entry.component.html',
+   styleUrls: ['./staged-test-data-entry.component.scss']
 })
-export class TestDataEntryComponent implements OnInit {
+export class StagedTestDataEntryComponent implements OnInit {
 
    // The original test data and its md5 are needed for detecting and merging concurrent updates to the same data.
    originalTestData: TestData;
@@ -96,10 +96,10 @@ export class TestDataEntryComponent implements OnInit {
       this.testDataForm = makeTestDataFormGroup(this.originalTestData);
 
       const labResources = labGroupTestData.labResourcesByType;
-      this.balances = labResources.get(TestDataEntryComponent.BALANCE_RESOURCE_TYPE);
-      this.incubators = labResources.get(TestDataEntryComponent.INCUBATOR_RESOURCE_TYPE);
-      this.waterBaths = labResources.get(TestDataEntryComponent.WATERBATH_RESOURCE_TYPE);
-      this.vidasInstruments = labResources.get(TestDataEntryComponent.VIDAS_RESOURCE_TYPE);
+      this.balances = labResources.get(StagedTestDataEntryComponent.BALANCE_RESOURCE_TYPE);
+      this.incubators = labResources.get(StagedTestDataEntryComponent.INCUBATOR_RESOURCE_TYPE);
+      this.waterBaths = labResources.get(StagedTestDataEntryComponent.WATERBATH_RESOURCE_TYPE);
+      this.vidasInstruments = labResources.get(StagedTestDataEntryComponent.VIDAS_RESOURCE_TYPE);
 
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;
