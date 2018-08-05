@@ -1,15 +1,21 @@
 package gov.fda.nctr.arlims;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.TestDataService;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
+import gov.fda.nctr.arlims.reports.Report;
+import gov.fda.nctr.arlims.reports.TestDataReportService;
 
 
 @RestController
@@ -17,12 +23,18 @@ import gov.fda.nctr.arlims.models.dto.*;
 public class TestController
 {
     private final TestDataService testDataService;
+    private final TestDataReportService reportService;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public TestController(TestDataService testDataService)
+    public TestController
+        (
+            TestDataService testDataService,
+            TestDataReportService reportService
+        )
     {
         this.testDataService = testDataService;
+        this.reportService = reportService;
     }
 
     @PostMapping("new")
@@ -77,6 +89,39 @@ public class TestController
 
             return new OptimisticDataUpdateResult(false, maybeMod);
         }
+    }
+
+    @GetMapping("report/{testId}/{reportName}")
+    public ResponseEntity<InputStreamResource>  getTestDataReport
+        (
+            @PathVariable long testId,
+            @PathVariable String reportName,
+            @RequestHeader HttpHeaders httpHeaders
+        )
+        throws IOException
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
+
+        log.info("Generating " + reportName + " test data report for test " + testId + ".");
+
+        VersionedTestData testData = testDataService.getVersionedTestData(testId);
+
+        String testDataJson = testData.getTestDataJson().orElseThrow(() ->
+            new ResourceNotFoundException("no test data exists for test " + testId)
+        );
+
+        LabTestMetadata testMetadata = testDataService.getLabTestMetadata(testId);
+
+        Report report = reportService.makeReport(reportName, testDataJson, testMetadata);
+
+        log.info("Report " + reportName + " generated for test " + testId + ".");
+
+        return
+            ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment;filename=" + report.getSuggestedFileName())
+            .contentLength(report.getReportFile().toFile().length())
+            .body(new InputStreamResource(Files.newInputStream(report.getReportFile())));
     }
 
 }

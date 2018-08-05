@@ -1,3 +1,11 @@
+Try making an pdf containing acroform, which can be filled from Java like so:
+  https://pdfbox.apache.org/
+
+
+Test data service should walk the json structure and add dotted field values for each leaf node.
+
+curl http://localhost:8080/api/test/report/1/imp_slm_vidas.pdf
+
 
 Data Access
 -----------

@@ -1,7 +1,16 @@
+
+
+Test data questions
+-------------------
+Missing something in pre-enr "Media/QC Batch", where type of batch is not captured?
+  (Lactose, TSB, Other)
+  Maybe add type field for this?
+
 Make docx of test data as part of "make package" function.
   Handled all on server side.
+    Also send testMetadata { sampleNumber, productName }
   @PostMapping
-  <BinaryContent> generateTestDataReport(testData: Json, reportName)
+  <BinaryContent> generateTestDataReport(testData: Json, testMetadata, reportName)
     If report name ends with "docx", do generic merge of json data into docx content.
       For each leaf data item, substitute its value for "${/path/to/data/item}" strings.
     applyDataToDocx(<docx rep>, Json)

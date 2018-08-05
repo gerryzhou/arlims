@@ -4,10 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -20,6 +20,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import gov.fda.nctr.arlims.models.dto.DataModificationInfo;
+import gov.fda.nctr.arlims.models.dto.LabTestMetadata;
 import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
 import gov.fda.nctr.arlims.models.dto.VersionedTestData;
 
@@ -156,6 +157,51 @@ public class JdbcTestDataService implements TestDataService
             case 1: return Optional.of(maybeMod.get(0));
             default: throw new RuntimeException("Expected at most one test record for a test id.");
         }
+    }
+
+    @Override
+    public LabTestMetadata getLabTestMetadata(long testId)
+    {
+        String sql =
+            "select " +
+            "t.sample_id, s.sample_num, s.pac, s.product_name, tt.code, tt.name, " +
+            "tt.short_name, t.created, ce.short_name created_by_emp, t.last_saved, " +
+            "se.short_name last_saved_emp, TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date, " +
+            "t.note, t.stage_statuses_json, t.reviewed, re.short_name reviewed_by_emp, " +
+            "t.saved_to_facts, fe.short_name saved_to_facts_by_emp\n" +
+            "from Test t\n" +
+            "join Sample s on t.sample_id = s.id\n" +
+            "join Test_Type tt on t.test_type_id = tt.id\n" +
+            "join Employee ce on ce.id = t.created_by_emp_id\n" +
+            "join Employee se on se.id = t.last_saved_by_emp_id\n" +
+            "left join Employee re on re.id = t.reviewed_by_emp_id\n" +
+            "left join employee fe on fe.id = t.last_saved_by_emp_id\n" +
+            "where t.id = ?";
+
+        RowMapper<LabTestMetadata> rowMapper = (row, rowNum) ->
+            new LabTestMetadata(
+                testId,
+                row.getLong(1),
+                row.getString(2),
+                row.getString(3),
+                Optional.ofNullable(row.getString(4)),
+                LabTestTypeCode.valueOf(row.getString(5)),
+                row.getString(6),
+                row.getString(7),
+                row.getTimestamp(8).toInstant(),
+                row.getString(9),
+                row.getTimestamp(10).toInstant(),
+                row.getString(11),
+                Optional.ofNullable(row.getString(12)).map(LocalDate::parse),
+                Optional.ofNullable(row.getString(13)),
+                Optional.ofNullable(row.getString(14)),
+                Optional.ofNullable(row.getTimestamp(15)).map(Timestamp::toInstant),
+                Optional.ofNullable(row.getString(16)), // reviewed by emp
+                Optional.ofNullable(row.getTimestamp(17)).map(Timestamp::toInstant),
+                Optional.ofNullable(row.getString(18)) // saved to facts by emp
+            );
+
+        return jdbc.queryForObject(sql, rowMapper, testId);
     }
 
     private static String md5(byte[] data)

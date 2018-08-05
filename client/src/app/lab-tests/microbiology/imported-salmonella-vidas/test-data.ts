@@ -34,6 +34,7 @@ export interface PreEnrData {
    sampleSpike?: boolean | null;
    spikePlateCount?: number | null;
    mediumBatchId?: string | null;
+   // TODO: Maybe need medium type here ('Lactose', 'TSB', ...).
    incubatorId?: string | null;
    positiveControlGrowth?: boolean | null;
    mediumControlGrowth?: boolean | null;
