@@ -7,19 +7,19 @@
 
    .growth-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       justify-items: start;
-      grid-gap: 5px;
+      margin-top: -30px;
    }
    // IE 11 needs row and column specified explicitly for each grid item. Autoprefixer is handling minor fixups also.
    .pos-ctrl-col-lbl {
       grid-row: 1;
-      grid-column: 2;
+      grid-column: 3;
       padding: 10px 5px;
    }
    .med-ctrl-col-lbl {
       grid-row: 1;
-      grid-column: 3;
+      grid-column: 4;
       padding: 10px 5px;
    }
 
@@ -28,13 +28,23 @@
       grid-column: 1;
       padding: 10px 5px;
    }
-   .sys-ctrls-pos-ctrl-growth {
+
+   .sys-ctrl-types {
       grid-row: 2;
       grid-column: 2;
    }
-   .sys-ctrls-med-ctrl-growth {
+   .coll-ctrl-types {
+      grid-row: 3;
+      grid-column: 2;
+   }
+
+   .sys-ctrls-pos-ctrl-growth {
       grid-row: 2;
       grid-column: 3;
+   }
+   .sys-ctrls-med-ctrl-growth {
+      grid-row: 2;
+      grid-column: 4;
    }
    .coll-ctrls-row-lbl {
       grid-row: 3;
@@ -43,15 +53,25 @@
    }
    .coll-ctrls-pos-ctrl-growth {
       grid-row: 3;
-      grid-column: 2;
+      grid-column: 3;
    }
    .coll-ctrls-med-ctrl-growth {
       grid-row: 3;
-      grid-column: 3;
+      grid-column: 4;
    }
 
    .bacterial-controls {
       margin-top: 30px;
+   }
+
+   .ctrl-types-predefined-inputs {
+      display: flex;
+      flex-flow: row wrap;
+      margin-top: -5px;
+      button {
+         margin-right: 5px;
+         color: lightgray;
+      }
    }
 }
 

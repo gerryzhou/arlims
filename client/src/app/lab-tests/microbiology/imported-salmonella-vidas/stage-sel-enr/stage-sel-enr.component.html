@@ -46,6 +46,18 @@
          </app-conflicting-field-value>
       </div>
 
+      <div class="field-area" [class.conflicted]="conflicts.spikePlateCount !== undefined">
+         <mat-form-field>
+            <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput
+                   placeholder="Spike plate count">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.spikePlateCount"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.spikePlateCount = undefined">
+         </app-conflicting-field-value>
+      </div>
+
       <div class="field-area" [class.conflicted]="conflicts.rvttWaterBathId !== undefined">
          <mat-form-field>
             <mat-select formControlName="rvttWaterBathId" placeholder="Water bath" *ngIf="waterBaths; else textInputWaterBath">

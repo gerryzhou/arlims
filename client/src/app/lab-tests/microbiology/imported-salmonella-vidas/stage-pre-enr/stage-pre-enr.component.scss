@@ -52,11 +52,28 @@
 
    .apply-resources-btn {
       background-color: $batch-resource-background-color;
-      margin-left: 20px;
+      margin-left: 10px;
    }
 
    app-field-assigned-resources {
       width: 100%;
+   }
+
+   .field-area {
+      font-size: 90%;
+      .mat-form-field {
+         width: 150px !important;
+      }
+      &.medium-type {
+         margin-right: 0;
+      }
+   }
+
+   .medium-type-predefined-inputs {
+      display: flex;
+      flex-flow: column nowrap;
+      margin: 0 10px 0 0;
+      font-size: smaller;
    }
 
 }

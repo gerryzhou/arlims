@@ -200,11 +200,10 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
          blenderJarId: new FormControl(testData.preEnrData.blenderJarId),
          bagId: new FormControl(testData.preEnrData.bagId),
          mediumBatchId: new FormControl(testData.preEnrData.mediumBatchId),
+         mediumType: new FormControl(testData.preEnrData.mediumType),
          incubatorId: new FormControl(testData.preEnrData.incubatorId),
 
          sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
-         spikePlateCount: new FormControl(testData.preEnrData.spikePlateCount),
-
          positiveControlGrowth: new FormControl(testData.preEnrData.positiveControlGrowth),
          mediumControlGrowth: new FormControl(testData.preEnrData.mediumControlGrowth),
       }),
@@ -213,6 +212,7 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
          ttBatchId: new FormControl(testData.selEnrData.ttBatchId),
          bgBatchId: new FormControl(testData.selEnrData.bgBatchId),
          i2kiBatchId: new FormControl(testData.selEnrData.i2kiBatchId),
+         spikePlateCount: new FormControl(testData.selEnrData.spikePlateCount),
          rvttWaterBathId: new FormControl(testData.selEnrData.rvttWaterBathId),
       }),
       mBrothData: new FormGroup({
@@ -228,8 +228,10 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
          spikeDetection: new FormControl(testData.vidasData.spikeDetection),
       }),
       controlsData: new FormGroup({
+         systemControlTypes: new FormControl(testData.controlsData.systemControlTypes),
          systemControlsPositiveControlGrowth: new FormControl(testData.controlsData.systemControlsPositiveControlGrowth),
          systemControlsMediaControlGrowth: new FormControl(testData.controlsData.systemControlsMediaControlGrowth),
+         collectorControlTypes: new FormControl(testData.controlsData.collectorControlTypes),
          collectorControlsPositiveControlGrowth: new FormControl(testData.controlsData.collectorControlsPositiveControlGrowth),
          collectorControlsMediaControlGrowth: new FormControl(testData.controlsData.collectorControlsMediaControlGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),

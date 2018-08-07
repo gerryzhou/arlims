@@ -37,6 +37,15 @@ $batch-resource-text-color: lightyellow;
    font-weight: bold;
 }
 
+button.link {
+   background:none!important;
+   color: blue;
+   border:none;
+   padding:0!important;
+   font: inherit;
+   cursor: pointer;
+}
+
 //////////////////////////////////////////////////////////////
 // Angular Material customizations
 

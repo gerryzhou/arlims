@@ -39,8 +39,8 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             blenderJarId: 'x',
             bagId: 'x',
             sampleSpike: true,
-            spikePlateCount: 1,
             mediumBatchId: 'x',
+            mediumType: 'x',
             incubatorId: 'x',
             positiveControlGrowth: true,
             mediumControlGrowth: true,
@@ -50,6 +50,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             ttBatchId: 'x',
             bgBatchId: 'x',
             i2kiBatchId: 'x',
+            spikePlateCount: 1,
             rvttWaterBathId: 'x',
          },
          mBrothData: {
@@ -65,8 +66,10 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             spikeDetection: false,
          },
          controlsData: {
+            systemControlTypes: 'x',
             systemControlsPositiveControlGrowth: true,
             systemControlsMediaControlGrowth: false,
+            collectorControlTypes: 'x',
             collectorControlsPositiveControlGrowth: true,
             collectorControlsMediaControlGrowth: false,
             bacterialControlsUsed: false,
@@ -115,8 +118,8 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             // blenderJarId // required field omitted
             bagId: 'x',
             sampleSpike: true,
-            spikePlateCount: 1,
             mediumBatchId: 'x',
+            mediumType: 'x',
             incubatorId: 'x',
             positiveControlGrowth: true,
             mediumControlGrowth: true,
@@ -124,6 +127,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          selEnrData: {
             rvBatchId: 'x',
             ttBatchId: 'x',
+            spikePlateCount: 1,
             // rvttWaterBathId [required field omitted]
          },
          mBrothData: {
@@ -134,8 +138,10 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             // [all required fields omitted]
          },
          controlsData: {
+            systemControlTypes: 'x',
             systemControlsPositiveControlGrowth: true,
             systemControlsMediaControlGrowth: false,
+            collectorControlTypes: 'x',
             collectorControlsPositiveControlGrowth: true,
             // collectorControlsMediaControlGrowth [required field omitted]
             bacterialControlsUsed: false,

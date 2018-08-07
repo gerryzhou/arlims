@@ -1,5 +1,4 @@
-// import {EmployeeTimestamp} from '../../../shared/models/signature';
-import {FieldValuesStatusCode, stageNameToTestDataFieldName, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
+import {FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SamplingMethod} from '../sampling-method';
 
 export interface TestData {
@@ -32,9 +31,8 @@ export interface PreEnrData {
    blenderJarId?: string | null;
    bagId?: string | null;
    sampleSpike?: boolean | null;
-   spikePlateCount?: number | null;
    mediumBatchId?: string | null;
-   // TODO: Maybe need medium type here ('Lactose', 'TSB', ...).
+   mediumType?: string | null;
    incubatorId?: string | null;
    positiveControlGrowth?: boolean | null;
    mediumControlGrowth?: boolean | null;
@@ -45,6 +43,7 @@ export interface SelEnrData {
    ttBatchId?: string | null;
    bgBatchId?: string | null;
    i2kiBatchId?: string | null;
+   spikePlateCount?: number | null;
    rvttWaterBathId?: string | null;
 }
 
@@ -64,8 +63,10 @@ export interface VidasData {
 }
 
 export interface ControlsData {
+   systemControlTypes?: string | null;
    systemControlsPositiveControlGrowth?: boolean | null;
    systemControlsMediaControlGrowth?: boolean | null;
+   collectorControlTypes?: string | null;
    collectorControlsPositiveControlGrowth?: boolean | null;
    collectorControlsMediaControlGrowth?: boolean | null;
    bacterialControlsUsed?: boolean | null;
@@ -102,7 +103,7 @@ export function emptyTestData(): TestData {
 
 interface Stage {
    name: string;
-   statusCodeFn: (any) => FieldValuesStatusCode;
+   statusCodeFn: (TestData) => FieldValuesStatusCode;
 }
 
 export const TEST_STAGES: Stage[] = [
@@ -116,8 +117,10 @@ export const TEST_STAGES: Stage[] = [
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 
-function prepStatusCode(data: PrepData): FieldValuesStatusCode
+function prepStatusCode(testData: TestData): FieldValuesStatusCode
 {
+   const data = testData.prepData;
+
    const reqStatus = statusForRequiredFieldValues([
       data.sampleReceivedDate,
       data.sampleReceivedFrom,
@@ -134,8 +137,10 @@ function prepStatusCode(data: PrepData): FieldValuesStatusCode
    else return reqStatus;
 }
 
-function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode
+function preEnrStatusCode(testData: TestData): FieldValuesStatusCode
 {
+   const data = testData.preEnrData;
+
    // Check unconditional top-level fields.
    const uncondTopLevelFieldsStatus = statusForRequiredFieldValues([
       data.balanceId,
@@ -143,6 +148,7 @@ function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode
       data.bagId,
       data.sampleSpike,
       data.mediumBatchId,
+      data.mediumType,
       data.incubatorId,
       data.positiveControlGrowth,
       data.mediumControlGrowth,
@@ -159,38 +165,49 @@ function preEnrStatusCode(data: PreEnrData): FieldValuesStatusCode
             data.samplingMethod.extractedGramsPerSub,
          ]);
 
-   // Spike count is conditional on sampleSpike field.
-   const spikeCountMissing = !!data.sampleSpike && !data.spikePlateCount;
-
    return (
       uncondTopLevelFieldsStatus === 'i' || samplingMethodFieldsStatus === 'i' ? 'i'
-         : uncondTopLevelFieldsStatus === 'c' && (samplingMethodFieldsStatus !== 'c' || spikeCountMissing) ? 'i'
-         : uncondTopLevelFieldsStatus === 'e' && (samplingMethodFieldsStatus !== 'e' || data.spikePlateCount) ? 'i'
+         : uncondTopLevelFieldsStatus === 'c' && (samplingMethodFieldsStatus !== 'c') ? 'i'
+         : uncondTopLevelFieldsStatus === 'e' && (samplingMethodFieldsStatus !== 'e') ? 'i'
          : uncondTopLevelFieldsStatus
    );
 }
 
-function selEnrStatusCode(data: SelEnrData): FieldValuesStatusCode
+function selEnrStatusCode(testData: TestData): FieldValuesStatusCode
 {
-   return statusForRequiredFieldValues([
+   const data = testData.selEnrData;
+
+   const uncondTopLevelFieldsStatus = statusForRequiredFieldValues([
       data.rvBatchId,
       data.ttBatchId,
       data.bgBatchId,
       data.i2kiBatchId,
       data.rvttWaterBathId,
    ]);
+
+   const spiking = testData.preEnrData && !!testData.preEnrData.sampleSpike;
+   const spikeCountPresent = !!data.spikePlateCount;
+
+   return (
+      uncondTopLevelFieldsStatus === 'i' ? 'i'
+         : uncondTopLevelFieldsStatus === 'c' && spiking && !spikeCountPresent ? 'i'
+         : uncondTopLevelFieldsStatus === 'e' && spikeCountPresent ? 'i'
+            : uncondTopLevelFieldsStatus
+   );
 }
 
-function mBrothStatusCode(data: MBrothData): FieldValuesStatusCode
+function mBrothStatusCode(testData: TestData): FieldValuesStatusCode
 {
+   const data = testData.mBrothData;
    return statusForRequiredFieldValues([
       data.mBrothBatchId,
       data.mBrothWaterBathId,
    ]);
 }
 
-function vidasStatusCode(data: VidasData): FieldValuesStatusCode
+function vidasStatusCode(testData: TestData): FieldValuesStatusCode
 {
+   const data = testData.vidasData;
    return statusForRequiredFieldValues([
       data.instrumentId,
       data.kitIds,
@@ -202,31 +219,32 @@ function vidasStatusCode(data: VidasData): FieldValuesStatusCode
    ]);
 }
 
-function controlsStatusCode(data: ControlsData): FieldValuesStatusCode
+function controlsStatusCode(testData: TestData): FieldValuesStatusCode
 {
+   const data = testData.controlsData;
    return statusForRequiredFieldValues([
+      data.systemControlTypes,
       data.systemControlsPositiveControlGrowth,
       data.systemControlsMediaControlGrowth,
+      data.collectorControlTypes,
       data.collectorControlsPositiveControlGrowth,
       data.collectorControlsMediaControlGrowth,
       data.bacterialControlsUsed,
    ]);
 }
 
-function resultsStatusCode(data: ResultsData): FieldValuesStatusCode
+function resultsStatusCode(testData: TestData): FieldValuesStatusCode
 {
+   const data = testData.resultsData;
    return statusForRequiredFieldValues([
       data.positiveCompositesCount,
    ]);
 }
 
-export function isEmptyString(s: string)
+function wrapupStatusCode(testData: TestData): FieldValuesStatusCode
 {
-   return !s || s.trim().length === 0;
-}
+   const data = testData.wrapupData;
 
-function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode
-{
    if (!data.reserveSampleDisposition) return 'e';
 
    if (data.reserveSampleDisposition === 'OTHER' && isEmptyString(data.reserveSampleOtherDescription)) return 'i';
@@ -238,24 +256,23 @@ function wrapupStatusCode(data: WrapupData): FieldValuesStatusCode
 
 export function getTestStageStatuses(testData: TestData): TestStageStatus[]
 {
-   return TEST_STAGES.map(stage => {
-      const stageFieldName = stageNameToTestDataFieldName(stage.name);
-      const stageData = testData[stageFieldName];
-      return {
+   return TEST_STAGES.map(stage => ({
          stageName: stage.name,
-         fieldValuesStatus: stageData ? stage.statusCodeFn(stageData) : 'e'
-      };
-   });
+         fieldValuesStatus: stage.statusCodeFn(testData)
+   }));
 }
 
 export function firstNonCompleteTestStageName(testData: TestData): string | null
 {
    for (const stage of TEST_STAGES)
    {
-      const stageFieldName = stageNameToTestDataFieldName(stage.name);
-      const stageData = testData[stageFieldName];
-      const status = stage.statusCodeFn(stageData);
-      if (status !== 'c') return stage.name;
+      if (stage.statusCodeFn(testData) !== 'c') return stage.name;
    }
    return null;
 }
+
+export function isEmptyString(s: string)
+{
+   return !s || s.trim().length === 0;
+}
+

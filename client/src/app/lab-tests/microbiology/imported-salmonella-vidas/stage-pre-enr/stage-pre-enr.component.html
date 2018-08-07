@@ -181,6 +181,23 @@
          </app-conflicting-field-value>
       </div>
 
+      <div class="field-area medium-type"
+           [class.conflicted]="conflicts.mediumType !== undefined"
+           [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('mediumType')">
+         <mat-form-field>
+            <input formControlName="mediumType" type="text" matInput placeholder="Medium type">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.mediumType"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.mediumType = undefined">
+         </app-conflicting-field-value>
+      </div>
+      <div class="medium-type-predefined-inputs">
+         <button class="link" (click)="form.get('mediumType').setValue('Lactose');">Lactose</button>
+         <button class="link" (click)="form.get('mediumType').setValue('TSB');">TSB</button>
+      </div>
+
       <div class="field-area" [class.conflicted]="conflicts.incubatorId !== undefined">
          <span>
             <mat-form-field>
@@ -261,18 +278,6 @@
             [conflictValue]="conflicts.sampleSpike"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.sampleSpike = undefined">
-         </app-conflicting-field-value>
-      </div>
-
-      <div class="field-area" [class.conflicted]="conflicts.spikePlateCount !== undefined">
-         <mat-form-field>
-            <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput
-                   placeholder="Spike plate count">
-         </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.spikePlateCount"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.spikePlateCount = undefined">
          </app-conflicting-field-value>
       </div>
 

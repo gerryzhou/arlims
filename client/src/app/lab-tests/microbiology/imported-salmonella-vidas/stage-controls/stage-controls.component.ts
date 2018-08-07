@@ -24,4 +24,19 @@ export class StageControlsComponent implements OnChanges {
    ngOnChanges() {
    }
 
+   appendSystemControlType(ctrlType: string)
+   {
+      const formCtrl = this.form.get('systemControlTypes');
+      const origValue = formCtrl.value || '';
+      const newValue = origValue.length === 0 ? ctrlType :  origValue + ', ' + ctrlType;
+      formCtrl.setValue(newValue);
+   }
+
+   appendCollectorControlType(ctrlType: string)
+   {
+      const formCtrl = this.form.get('collectorControlTypes');
+      const origValue = formCtrl.value || '';
+      const newValue = origValue.length === 0 ? ctrlType :  origValue + ', ' + ctrlType;
+      formCtrl.setValue(newValue);
+   }
 }

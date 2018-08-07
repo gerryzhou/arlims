@@ -9,6 +9,23 @@
          <h3 class="med-ctrl-col-lbl">Media Control</h3>
 
          <h3 class="sys-ctrls-row-lbl">System Controls</h3>
+
+         <div class="field-area sys-ctrl-types" [class.conflicted]="conflicts.systemControlTypes!== undefined">
+            <mat-form-field>
+               <input formControlName="systemControlTypes" type="text" matInput placeholder="System control types">
+            </mat-form-field>
+            <div class="ctrl-types-predefined-inputs">
+               <button class="link" (click)="appendSystemControlType('knife')">knife</button>
+               <button class="link" (click)="appendSystemControlType('spoon');">spoon</button>
+               <button class="link" (click)="appendSystemControlType('spatula');">spatula</button>
+            </div>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.systemControlTypes"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.systemControlTypes = undefined">
+            </app-conflicting-field-value>
+         </div>
+
          <div class="field-area sys-ctrls-pos-ctrl-growth" [class.conflicted]="conflicts.systemControlsPositiveControlGrowth !== undefined">
             <mat-radio-group formControlName="systemControlsPositiveControlGrowth">
                <div>System controls positive control growth</div>
@@ -24,6 +41,7 @@
                (dismiss)="conflicts.systemControlsPositiveControlGrowth = undefined">
             </app-conflicting-field-value>
          </div>
+
 
          <div class="field-area sys-ctrls-med-ctrl-growth" [class.conflicted]="conflicts.systemControlsMediaControlGrowth !== undefined">
             <mat-radio-group formControlName="systemControlsMediaControlGrowth">
@@ -42,6 +60,21 @@
          </div>
 
          <h3 class="coll-ctrls-row-lbl">Collector's Controls</h3>
+
+         <div class="field-area coll-ctrl-types" [class.conflicted]="conflicts.collectorControlTypes!== undefined">
+            <mat-form-field>
+               <input formControlName="collectorControlTypes" type="text" matInput placeholder="Collector control types">
+            </mat-form-field>
+            <div class="ctrl-types-predefined-inputs">
+               <!--<button class="link" (click)="appendCollectorControlType('knife')">knife</button>-->
+            </div>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.collectorControlTypes"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.collectorControlTypes = undefined">
+            </app-conflicting-field-value>
+         </div>
+
          <div class="field-area coll-ctrls-pos-ctrl-growth" [class.conflicted]="conflicts.collectorControlsPositiveControlGrowth !== undefined">
             <mat-radio-group formControlName="collectorControlsPositiveControlGrowth">
                <div>Collector's controls positive control growth</div>

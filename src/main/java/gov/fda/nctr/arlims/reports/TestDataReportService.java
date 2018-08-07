@@ -5,7 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
@@ -23,6 +27,8 @@ import gov.fda.nctr.arlims.models.dto.LabTestMetadata;
 public class TestDataReportService
 {
     private final ObjectReader jsonReader;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public TestDataReportService()
     {
@@ -54,7 +60,7 @@ public class TestDataReportService
         )
         throws IOException
     {
-        Path reportFile = Files.createTempFile("arlims-report-" + testMetadata.getTestId(), ".someext");
+        Path reportFile = Files.createTempFile("arlims-report-" + testMetadata.getTestId(), ".pdf");
 
         JsonNode testDataJsonNode = this.jsonReader.readTree(testDataJson);
 
@@ -66,10 +72,14 @@ public class TestDataReportService
             PDDocumentCatalog docCatalog = templateDoc.getDocumentCatalog();
             PDAcroForm acroForm = docCatalog.getAcroForm();
 
-            acroForm.getField("testmd.sampleNum").setValue(testMetadata.getSampleNum());
-            acroForm.getField("testmd.productName").setValue(testMetadata.getProductName().orElse(""));
+            PDField sampleNumField = acroForm.getField("testmd_sampleNum");
+            if ( sampleNumField != null) sampleNumField.setValue(testMetadata.getSampleNum());
 
-            // TODO: Set acroform field values from test data.
+            PDField productNameField = acroForm.getField("testmd_productName");
+            if ( productNameField != null) productNameField.setValue(testMetadata.getProductName().orElse(""));
+
+            // TODO: Set acroform field values from test data. For checkbox fields set values as "Yes"/"Off".
+            setTestDataFields(acroForm, testDataJsonNode, "");
 
             templateDoc.save(os);
         }
@@ -79,6 +89,61 @@ public class TestDataReportService
             "application/pdf",
             testMetadata.getTestTypeCode() +"-" + testMetadata.getSampleNum() + ".pdf"
         );
+    }
+
+    private void setTestDataFields(PDAcroForm acroForm, JsonNode testDataJsonNode, String fieldName) throws IOException
+    {
+        switch(testDataJsonNode.getNodeType())
+        {
+            case STRING:
+            {
+                PDField acroField = acroForm.getField(fieldName);
+                if ( acroField != null ) acroField.setValue(testDataJsonNode.textValue());
+                break;
+            }
+            case NUMBER:
+            case ARRAY:
+            {
+                PDField acroField = acroForm.getField(fieldName);
+                if ( acroField != null ) acroField.setValue(testDataJsonNode.toString());
+                break;
+            }
+            case BOOLEAN:
+            {
+                PDField acroField = acroForm.getField(fieldName);
+                if ( acroField != null )
+                {
+                    if ( "Tx".equals(acroField.getFieldType()) )
+                        acroField.setValue(testDataJsonNode.booleanValue() ? "Y" : "N");
+                    else
+                        acroField.setValue(testDataJsonNode.booleanValue() ? "Yes" : "Off");
+                }
+                break;
+            }
+            case OBJECT:
+            {
+                Iterator<String> jsonFieldsIter = testDataJsonNode.fieldNames();
+                while ( jsonFieldsIter.hasNext() )
+                {
+                    String jsonFieldName = jsonFieldsIter.next();
+                    JsonNode jsonFieldValue = testDataJsonNode.get(jsonFieldName);
+                    setTestDataFields(acroForm, jsonFieldValue, appendFieldNameComponent(fieldName, jsonFieldName));
+                }
+                break;
+            }
+            case NULL:
+            case MISSING:
+                // Nothing to do.
+                break;
+            default: // BINARY, POJO
+                throw new RuntimeException("unsupported type in test data for field " + fieldName);
+        }
+    }
+
+    private String appendFieldNameComponent(String fieldName, String component)
+    {
+        if ( fieldName.isEmpty() ) return component;
+        else return fieldName + "_" + component;
     }
 
 }

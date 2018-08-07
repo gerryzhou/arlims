@@ -1,5 +1,19 @@
 
 
+Imp SLM Vidas test data changes
+  preEnrData
+    +mediumType
+  selEnrData
+    +spikeCount (move from preEnr) (Y - Wen)
+  controlsData
+    +system control types    (either free-form entry or checkboxes of types determined by the lab group test customization)
+    +collector control types "
+    ?bacterialControlsUsed checkbox necessary?
+
+Each test needs to be able to allow free-form entry of "continuation page".
+
+Find out whether Vidas machines have access to general internet, for potential use of Box.com for file exchange.
+
 Test data questions
 -------------------
 Missing something in pre-enr "Media/QC Batch", where type of batch is not captured?
@@ -27,9 +41,6 @@ TestsService.saveTestData
 Research API, try updating samples from FACTS.
 
 Add ability to attach files to a sample and/or test.
-
-Add sorting and filtering capabilities to sample listing.
-   Maybe add test view, maybe as table.
 
 test data entry component
 -------------------------
