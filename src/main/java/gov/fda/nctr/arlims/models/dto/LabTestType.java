@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.models.dto;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -12,6 +13,7 @@ public class LabTestType
     private String shortName;
     private Optional<String> description;
     private Optional<String> configJson;
+    private List<String> reportNames;
 
     public LabTestType
         (
@@ -20,7 +22,8 @@ public class LabTestType
             String name,
             String shortName,
             Optional<String> description,
-            Optional<String> configurationJson
+            Optional<String> configurationJson,
+            List<String> reportNames
         )
     {
         this.id = id;
@@ -29,6 +32,7 @@ public class LabTestType
         this.shortName = shortName;
         this.description = description;
         this.configJson = configurationJson;
+        this.reportNames = reportNames;
     }
 
     public long getId() { return id; }
@@ -42,4 +46,6 @@ public class LabTestType
     public Optional<String> getDescription() { return description; }
 
     public Optional<String> getConfigurationJson() { return configJson; }
+
+    public List<String> getReportNames() { return reportNames; }
 }

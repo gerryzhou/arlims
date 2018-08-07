@@ -1,7 +1,3 @@
-Pdf report
-  Make adjustments for data model changes.
-  Finish testing.
-  Add to ui.
 
 How to properly represent individual composite results?
   Maybe as input field accepting comma-separated list of positive composite numbers?

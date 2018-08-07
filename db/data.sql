@@ -38,7 +38,7 @@ insert into lab_resource(code, resource_type, lab_group_id, description)
 insert into test_type(code, short_name, name)
   values('MICRO_IMP_SAL_VIDAS', 'IMP SLM VIDAS', 'Imported Salmonella - Vidas');
 
-insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_json)
+insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_json, report_names_bar_sep)
   values(
     (select id from lab_group where name = 'ARL-MICRO'),
     (select id from test_type where code='MICRO_IMP_SAL_VIDAS'),
@@ -63,7 +63,8 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
         ' "numberOfSubsPerComposite": 15' ||
         '}' ||
       ']' ||
-    '}'
+    '}',
+    'imp_slm_vidas.pdf'
   );
 
 ----------------------------

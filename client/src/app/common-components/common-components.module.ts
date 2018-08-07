@@ -12,7 +12,7 @@ import {
    MatButtonModule,
    MatSelectModule,
    MatDialogModule,
-   MatInputModule, MatDatepickerModule
+   MatInputModule, MatDatepickerModule, MatMenuModule
 } from '@angular/material';
 import {MatIconModule} from '@angular/material/icon';
 import {DayNumberPipe} from './day-number.pipe';
@@ -34,6 +34,7 @@ import { ResourceCodesDialogComponent } from './resource-codes-dialog/resource-c
       MatInputModule,
       MatDialogModule,
       MatDatepickerModule,
+      MatMenuModule,
    ],
    declarations: [
       SampleComponent,

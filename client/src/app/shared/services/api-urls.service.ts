@@ -19,4 +19,8 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/test/data/${testId}`);
    }
 
+   reportUrl(testId: number, reportName: string): string {
+      return this.location.prepareExternalUrl(`/api/test/${testId}/report/${reportName}`);
+   }
+
 }

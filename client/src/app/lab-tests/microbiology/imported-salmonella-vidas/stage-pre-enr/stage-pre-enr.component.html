@@ -6,7 +6,6 @@
          <span class="title">Sampling method</span>
          <mat-menu #samplingMethodMenu="matMenu">
             <button mat-menu-item *ngFor="let samplingMethod of samplingMethodChoices"
-                    class="standard-sampling-method-btn"
                     (click)="onSamplingMethodClicked(samplingMethod)">
                {{samplingMethod.description}}
             </button>

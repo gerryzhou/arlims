@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {LabTestMetadata} from '../../../generated/dto';
+import {LabTestMetadata, LabTestType} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 
@@ -13,6 +13,11 @@ export class TestMetadataComponent implements OnChanges {
    @Input()
    test: LabTestMetadata;
 
+   @Input()
+   labGroupTestTypes: LabTestType[] = [];
+
+   reportNames: string[] = [];
+
    stageStatuses: TestStageStatus[];
 
    testStatusActions: TestStatusAction[];
@@ -23,11 +28,17 @@ export class TestMetadataComponent implements OnChanges {
    @Output()
    testClick = new EventEmitter<LabTestMetadata>();
 
+   @Output()
+   reportClick = new EventEmitter<string>();
+
    constructor() { }
 
    ngOnChanges() {
       this.stageStatuses = JSON.parse(this.test.stageStatusesJson);
       this.testStatusActions = TestMetadataComponent.makeTestStatusActionsTimeDescending(this.test);
+
+      const lgtt = this.labGroupTestTypes.find(tt => tt.code === this.test.testTypeCode);
+      this.reportNames = lgtt ? lgtt.reportNames : [];
    }
 
    onStageClicked(stageName: string) {
@@ -36,6 +47,11 @@ export class TestMetadataComponent implements OnChanges {
 
    onTestClicked() {
       this.testClick.next(this.test);
+   }
+
+   onReportClicked(reportName: string)
+   {
+      this.reportClick.next(reportName);
    }
 
    private static makeTestStatusActionsTimeDescending(test: LabTestMetadata): TestStatusAction[] {

@@ -3,6 +3,7 @@ package gov.fda.nctr.arlims.data_access;
 import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -35,6 +36,8 @@ public class JpaUserContextService implements UserContextService
     private final TestRepository testRepo;
     private final LabResourceRepository labResourceRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    private final Pattern barPattern = Pattern.compile("\\|");
 
     private static List<String> ACTIVE_SAMPLE_STATUSES = Arrays.asList("Assigned", "In-progress", "Original complete");
 
@@ -270,10 +273,19 @@ public class JpaUserContextService implements UserContextService
                     lgtt.getTestType().getName(),
                     lgtt.getTestType().getShortName(),
                     opt(lgtt.getTestType().getDescription()),
-                    opt(lgtt.getTestConfigurationJson())
+                    opt(lgtt.getTestConfigurationJson()),
+                    parseReportNames(lgtt.getReportNamesBarSeparated())
                 )
             )
             .collect(toList());
+    }
+
+    private List<String> parseReportNames(String namesBarSeparated)
+    {
+        if ( namesBarSeparated == null )
+            return Collections.emptyList();
+        else
+            return Arrays.asList(barPattern.split(namesBarSeparated));
     }
 
     private List<UserReference> getLabGroupUsers(LabGroup labGroup)

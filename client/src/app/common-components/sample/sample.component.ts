@@ -26,7 +26,7 @@ export class SampleComponent implements OnChanges {
    showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
 
    @Input()
-   newTestTypeChoices: LabTestType[] = [];
+   labGroupTestTypes: LabTestType[] = [];
 
    @Output()
    headerClick = new EventEmitter<void>();
@@ -36,6 +36,9 @@ export class SampleComponent implements OnChanges {
 
    @Output()
    testStageClick = new EventEmitter<LabTestStageMetadata>();
+
+   @Output()
+   testReportClick = new EventEmitter<[number, string]>();
 
    @Output()
    testCreated = new EventEmitter<CreatedTestMetadata>();
@@ -75,12 +78,17 @@ export class SampleComponent implements OnChanges {
       this.testStageClick.next(testStage);
    }
 
+   onTestReportClicked(testId: number, reportName: string)
+   {
+      this.testReportClick.next([testId, reportName]);
+   }
+
    promptCreateNewTest() {
       const dlg = this.dialogSvc.open(NewTestDialogComponent, {
          width: 'calc(75%)',
          data: {
             sample: this.sample,
-            availableTestTypes: this.newTestTypeChoices,
+            availableTestTypes: this.labGroupTestTypes,
             selectedTestType: null,
             beginDate: null,
          }
@@ -102,6 +110,5 @@ export class SampleComponent implements OnChanges {
          }
       });
    }
-
 
 }

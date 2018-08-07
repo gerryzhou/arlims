@@ -75,8 +75,10 @@
       <div class="tests">
          <app-test-metadata *ngFor="let test of sample.tests"
             [test]="test"
+            [labGroupTestTypes]="labGroupTestTypes"
             (testClick)="onTestClicked(test)"
-            (stageClick)="onTestStageClicked($event)">
+            (stageClick)="onTestStageClicked($event)"
+            (reportClick)="onTestReportClicked(test.testId, $event)">
          </app-test-metadata>
       </div>
 

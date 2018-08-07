@@ -32,19 +32,24 @@ public class LabGroupTestType
     @Lob @Basic(fetch = FetchType.LAZY)
     private String testConfigurationJson;
 
+    @Column(length=4000)
+    private String reportNamesBarSep;
+
     protected LabGroupTestType() {}
 
     public LabGroupTestType
         (
             @NotNull LabGroup labGroup,
             @NotNull TestType testType,
-            String json
+            String testConfigurationJson,
+            String reportNamesBarSep
         )
     {
         this.labGroup = labGroup;
         this.labGroupId = labGroup.getId();
         this.testType = testType;
-        this.testConfigurationJson = json;
+        this.testConfigurationJson = testConfigurationJson;
+        this.reportNamesBarSep = reportNamesBarSep;
     }
 
     public Long getId() { return id; }
@@ -57,4 +62,7 @@ public class LabGroupTestType
 
     public String getTestConfigurationJson() { return testConfigurationJson; }
     public void setTestConfigurationJson(String json) { this.testConfigurationJson = json; }
+
+    public String getReportNamesBarSeparated() { return reportNamesBarSep; }
+    public void setReportNamesBarSeparated(String reportNamesBarSep) { this.reportNamesBarSep = reportNamesBarSep; }
 }

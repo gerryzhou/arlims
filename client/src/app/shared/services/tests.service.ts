@@ -12,7 +12,6 @@ import {
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
-import {Moment} from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,8 @@ export class TestsService {
 
    constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) { }
 
-   createTest(sampleId: number, testTypeCode: LabTestTypeCode, testBeginDate: string): Observable<CreatedTestMetadata> {
+   createTest(sampleId: number, testTypeCode: LabTestTypeCode, testBeginDate: string): Observable<CreatedTestMetadata>
+   {
       const url = this.apiUrlsSvc.newTestUrl();
       const body = new HttpParams()
          .set('sampleId', sampleId.toString())
@@ -30,19 +30,24 @@ export class TestsService {
       return this.httpClient.post<CreatedTestMetadata>(url, body);
    }
 
-   getVersionedTestData(testId: number): Observable<VersionedTestData> {
+   getVersionedTestData(testId: number): Observable<VersionedTestData>
+   {
       return this.httpClient.get<VersionedTestData>(
          this.apiUrlsSvc.testDataUrl(testId)
       );
    }
 
-   saveTestData(testId: number,
-                testData: any,
-                prevTestData: any,
-                prevTestDataMd5: string,
-                stageStatusesFn: (any) => TestStageStatus[],
-                jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter)
-                : Observable<SaveResult> {
+   saveTestData
+      (
+         testId: number,
+         testData: any,
+         prevTestData: any,
+         prevTestDataMd5: string,
+         stageStatusesFn: (any) => TestStageStatus[],
+         jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter
+      )
+      : Observable<SaveResult>
+   {
       const formData: FormData = new FormData();
 
       formData.append('testDataJson',
@@ -129,34 +134,36 @@ export class SaveResult {
 
 export class MergeResults {
 
-   constructor(
-      public mergedTestData: any,      // Test data with local changes plus non-conflicting db changes.
-      public conflictingDbValues: any, // Lack of conflicts is represented by an empty object here.
-      public dbTestData: any,
-      public dbModificationInfo: DataModificationInfo,
-   ) {}
+   constructor
+       (
+          public mergedTestData: any,      // Test data with local changes plus non-conflicting db changes.
+          public conflictingDbValues: any, // Lack of conflicts is represented by an empty object here.
+          public dbTestData: any,
+          public dbModificationInfo: DataModificationInfo,
+       )
+   {}
 
    get hasConflicts(): boolean { return Object.keys(this.conflictingDbValues).length > 0; }
 }
 
-export function defaultJsonFieldFormatter(key: string, value: any): any {
-   if (key.endsWith('Date') && value != null) {
-      if (typeof value === 'object') {
-         return stringifyDate(<Date>value);
-      } else if (typeof value === 'string') {
-         return timestampStringToDateString(value);
-      } else {
-         throw new Error('Unrecognized date type: ' + (typeof value));
-      }
+export function defaultJsonFieldFormatter(key: string, value: any): any
+{
+   if (key.endsWith('Date') && value != null)
+   {
+      if (typeof value === 'object') return stringifyDate(<Date>value);
+      else if (typeof value === 'string') return timestampStringToDateString(value);
+      else throw new Error('Unrecognized date type: ' + (typeof value));
    }
    return value;
 }
 
-function stringifyDate(date: Date): string {
+function stringifyDate(date: Date): string
+{
    return date.toISOString().split('T')[0];
 }
 
-function timestampStringToDateString(value: string) {
+function timestampStringToDateString(value: string)
+{
    return value.split('T')[0];
 }
 

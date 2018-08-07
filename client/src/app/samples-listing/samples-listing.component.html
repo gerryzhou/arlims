@@ -21,12 +21,13 @@
          [sample]="selectableSamples[sampleIx].sample"
          [showAssociatedItems]="expandedSampleIds.has(selectableSamples[sampleIx].sample.id)"
          [showAssociatedItemsSummaryInSampleMetadata]="true"
-         [newTestTypeChoices]="labGroupTestTypes"
+         [labGroupTestTypes]="labGroupTestTypes"
          (testCreated)="onNewTestCreated($event)"
          (testCreationFailed)="onTestCreationFailed($event)"
          (headerClick)="toggleSampleExpanded(selectableSamples[sampleIx].sample.id)"
          (testClick)="navigateToTest($event)"
-         (testStageClick)="navigateToTestStage($event)">
+         (testStageClick)="navigateToTestStage($event)"
+         (testReportClick)="initiateReportDownload($event)">
       </app-sample>
    </div>
 </div>

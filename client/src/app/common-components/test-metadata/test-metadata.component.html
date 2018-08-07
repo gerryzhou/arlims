@@ -24,6 +24,17 @@
 
       <div class="expanding-flex-space"></div>
 
+      <div *ngIf="reportNames.length > 0">
+         <mat-menu #reportsMenu="matMenu">
+            <button mat-menu-item *ngFor="let reportName of reportNames" (click)="onReportClicked(reportName)">
+               {{reportName}}
+            </button>
+         </mat-menu>
+         <button mat-button [matMenuTriggerFor]="reportsMenu">
+            Reports <mat-icon>more_vert</mat-icon>
+         </button>
+      </div>
+
       <div *ngIf="test.note" class="note">
          <mat-icon>comment</mat-icon>
          <!--TODO: Truncate the note if longer than ~10 chars, with clickable "..." button to view the full note. -->

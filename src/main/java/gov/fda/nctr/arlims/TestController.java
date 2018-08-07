@@ -91,7 +91,7 @@ public class TestController
         }
     }
 
-    @GetMapping("report/{testId}/{reportName}")
+    @GetMapping("{testId}/report/{reportName}")
     public ResponseEntity<InputStreamResource>  getTestDataReport
         (
             @PathVariable long testId,
@@ -102,8 +102,6 @@ public class TestController
     {
         long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
 
-        log.info("Generating " + reportName + " test data report for test " + testId + ".");
-
         VersionedTestData testData = testDataService.getVersionedTestData(testId);
 
         String testDataJson = testData.getTestDataJson().orElseThrow(() ->
@@ -113,8 +111,6 @@ public class TestController
         LabTestMetadata testMetadata = testDataService.getLabTestMetadata(testId);
 
         Report report = reportService.makeReport(reportName, testDataJson, testMetadata);
-
-        log.info("Report " + reportName + " generated for test " + testId + ".");
 
         return
             ResponseEntity.ok()

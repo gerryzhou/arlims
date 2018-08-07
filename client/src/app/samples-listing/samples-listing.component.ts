@@ -1,7 +1,7 @@
 import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CreatedTestMetadata, LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
-import {AlertMessageService, UserContextService} from '../shared/services';
+import {AlertMessageService, ApiUrlsService, UserContextService, WindowService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
 import {MatDialog} from '@angular/material';
 import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
@@ -44,6 +44,8 @@ export class SamplesListingComponent implements OnDestroy {
           private activatedRoute: ActivatedRoute,
           private router: Router,
           private alertMessageSvc: AlertMessageService,
+          private windowSvc: WindowService,
+          private apiUrlsSvc: ApiUrlsService,
           private dialogSvc: MatDialog
        )
    {
@@ -140,6 +142,10 @@ export class SamplesListingComponent implements OnDestroy {
       this.router.navigate(['test-data', test.testTypeCode, test.testId, testStage.stageName]);
    }
 
+   initiateReportDownload([testId, reportName]: [number, string])
+   {
+      this.windowSvc.getWindow().open(this.apiUrlsSvc.reportUrl(testId, reportName));
+   }
 
    private sampleSatisfiesSearchTextRequirement(sample: Sample, listingOptions: ListingOptions): boolean
    {
@@ -255,6 +261,7 @@ export class SamplesListingComponent implements OnDestroy {
          this.labGroupContentsSubscription.unsubscribe();
       }
    }
+
 }
 
 class SelectableSample {
