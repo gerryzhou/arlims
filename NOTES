@@ -1,6 +1,7 @@
 
 
-curl http://localhost:8080/api/test/report/1/imp_slm_vidas.pdf
+curl http://localhost:8080/alis/api/test/report/1/imp_slm_vidas.pdf > ~/tmp/report.pdf
+
 
 
 Data Access

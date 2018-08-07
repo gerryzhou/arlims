@@ -1,39 +1,16 @@
+Pdf report
+  Make adjustments for data model changes.
+  Finish testing.
+  Add to ui.
 
-
-Imp SLM Vidas test data changes
-  preEnrData
-    +mediumType
-  selEnrData
-    +spikeCount (move from preEnr) (Y - Wen)
-  controlsData
-    +system control types    (either free-form entry or checkboxes of types determined by the lab group test customization)
-    +collector control types "
-    ?bacterialControlsUsed checkbox necessary?
+How to properly represent individual composite results?
+  Maybe as input field accepting comma-separated list of positive composite numbers?
 
 Each test needs to be able to allow free-form entry of "continuation page".
-
-Find out whether Vidas machines have access to general internet, for potential use of Box.com for file exchange.
-
-Test data questions
--------------------
-Missing something in pre-enr "Media/QC Batch", where type of batch is not captured?
-  (Lactose, TSB, Other)
-  Maybe add type field for this?
-
-Make docx of test data as part of "make package" function.
-  Handled all on server side.
-    Also send testMetadata { sampleNumber, productName }
-  @PostMapping
-  <BinaryContent> generateTestDataReport(testData: Json, testMetadata, reportName)
-    If report name ends with "docx", do generic merge of json data into docx content.
-      For each leaf data item, substitute its value for "${/path/to/data/item}" strings.
-    applyDataToDocx(<docx rep>, Json)
-      https://github.com/thombergs/docx-stamper
 
 Add filters to samples listing.
 
 Create service used by app component to set a title in center of toolbar (maybe switch to grid layout).
-
 
 TestsService.saveTestData
    Make sure that null value can conflict with non-null value.
