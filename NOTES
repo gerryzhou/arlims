@@ -1,4 +1,11 @@
 
+test_file
+  id
+  name
+  tag
+  data
+
+
 
 curl http://localhost:8080/alis/api/test/report/1/imp_slm_vidas.pdf > ~/tmp/report.pdf
 
