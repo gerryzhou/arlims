@@ -139,9 +139,9 @@ export class StagedTestDataEntryComponent implements OnInit {
          } else {
             const conflicts = saveResults.mergeConflicts;
             const modInfo = conflicts.dbModificationInfo;
-            const msg = `Changes not saved: conflicting changes were made by ${modInfo.savedByUserShortName}: ` +
-                        `${JSON.stringify(conflicts.conflictingDbValues)}.  Please incorporate changes and save again.`;
-            this.testDataForm.setValue(conflicts.mergedTestData);
+            const msg = `Changes were not saved due to conflicting changes made by ${modInfo.savedByUserShortName}, ` +
+                        'which should be highlighted below. Please adjust field values as necessary and save again.';
+            this.testDataForm.patchValue(conflicts.mergedTestData);
             this.originalTestData = conflicts.dbTestData;
             this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
             this.conflictsTestData = copyWithMergedValuesFrom(emptyTestData(), conflicts.conflictingDbValues);
