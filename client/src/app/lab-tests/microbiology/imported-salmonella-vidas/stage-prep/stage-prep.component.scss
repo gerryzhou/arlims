@@ -19,8 +19,7 @@
 .cr-matching-grid {
    display: grid;
    grid-template-columns: 1fr 5fr;
-
-   align-items: center;
+   justify-items: start;
    grid-gap: 20px;
 
    // IE 11 needs row and column specified explicitly for each grid item. Autoprefixer is handling minor fixups also.
