@@ -1,10 +1,8 @@
 <form [formGroup]="testDataForm" (ngSubmit)="onFormSubmit()">
 
-   <div class="sample-information">
+   <div class="sample-in-test-information">
 
-      <div class="test-type-stages-toggle-stack">
-         <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
-      </div>
+      <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
 
       <app-sample [sample]="sampleInTest.sample"></app-sample>
 
