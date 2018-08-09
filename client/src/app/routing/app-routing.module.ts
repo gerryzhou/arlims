@@ -22,12 +22,12 @@ const routes: Routes = [
       resolve: { testAttachedFiles: TestAttachedFilesResolver }
    },
    {
-      path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId',
+      path: 'test/:testId/data/MICRO_IMP_SAL_VIDAS',
       component: MicroImpSalVidasTestDataComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver }
    },
    {
-      path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId/:stage',
+      path: 'test/:testId/data/MICRO_IMP_SAL_VIDAS/:stage',
       component: MicroImpSalVidasTestDataComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver }
    },

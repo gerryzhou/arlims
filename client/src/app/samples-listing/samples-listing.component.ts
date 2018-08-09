@@ -133,13 +133,13 @@ export class SamplesListingComponent implements OnDestroy {
 
    navigateToTest(test: LabTestMetadata)
    {
-      this.router.navigate(['test-data', test.testTypeCode, test.testId]);
+      this.router.navigate(['test', test.testId, 'data', test.testTypeCode]);
    }
 
    navigateToTestStage(testStage: LabTestStageMetadata)
    {
       const test = testStage.labTestMetadata;
-      this.router.navigate(['test-data', test.testTypeCode, test.testId, testStage.stageName]);
+      this.router.navigate(['test', test.testId, 'data', test.testTypeCode, testStage.stageName]);
    }
 
    initiateReportDownload([testId, reportName]: [number, string])
