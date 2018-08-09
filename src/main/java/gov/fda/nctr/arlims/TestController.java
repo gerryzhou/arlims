@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import gov.fda.nctr.arlims.data_access.TestDataService;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
@@ -19,7 +21,7 @@ import gov.fda.nctr.arlims.reports.TestDataReportService;
 
 
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/api/tests")
 public class TestController
 {
     private final TestDataService testDataService;
@@ -52,7 +54,7 @@ public class TestController
         return new CreatedTestMetadata(sampleId, createdTestId);
     }
 
-    @GetMapping("data/{testId}")
+    @GetMapping("{testId:\\d+}/data")
     public VersionedTestData getTestDataJson
         (
             @PathVariable long testId,
@@ -64,7 +66,7 @@ public class TestController
         return testDataService.getVersionedTestData(testId);
     }
 
-    @PostMapping("data/{testId}")
+    @PostMapping("{testId:\\d+}/data")
     public OptimisticDataUpdateResult saveTestDataJson
         (
             @PathVariable("testId") long testId,
@@ -91,6 +93,64 @@ public class TestController
         }
     }
 
+    @GetMapping("{testId:\\d+}/attached-file-metadatas")
+    public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas
+        (
+            @PathVariable long testId,
+            @RequestHeader HttpHeaders httpHeaders
+        )
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
+
+        return testDataService.getTestAttachedFileMetadatas(testId);
+    }
+
+    @PostMapping("{testId:\\d+}/attached-files/new")
+    public CreatedTestAttachedFile createTestAttachedFile
+        (
+            @PathVariable long testId,
+            @RequestPart("role") Optional<String> role,
+            @RequestPart("name") String name,
+            @RequestPart("file") MultipartFile file,
+            @RequestHeader HttpHeaders httpHeaders
+        )
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
+
+        long attachedFileId = testDataService.createTestAttachedFile(testId, role, name, file);
+
+        return new CreatedTestAttachedFile(attachedFileId, testId);
+    }
+
+    @PostMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}")
+    public void updateTestAttachedFile
+        (
+            @PathVariable long attachedFileId,
+            @PathVariable long testId,
+            @RequestPart("role") Optional<String> role,
+            @RequestPart("name") String name,
+            @RequestPart("file") MultipartFile file,
+            @RequestHeader HttpHeaders httpHeaders
+        )
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
+
+        testDataService.updateTestAttachedFile(attachedFileId, testId, role, name, file);
+    }
+
+    @DeleteMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}")
+    public void deleteTestAttachedFile
+        (
+            @PathVariable long attachedFileId,
+            @PathVariable long testId,
+            @RequestHeader HttpHeaders httpHeaders
+        )
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
+
+        testDataService.deleteTestAttachedFile(attachedFileId, testId);
+    }
+
     @GetMapping("{testId}/report/{reportName}")
     public ResponseEntity<InputStreamResource>  getTestDataReport
         (
@@ -108,7 +168,7 @@ public class TestController
             new ResourceNotFoundException("no test data exists for test " + testId)
         );
 
-        LabTestMetadata testMetadata = testDataService.getLabTestMetadata(testId);
+        LabTestMetadata testMetadata = testDataService.getTestMetadata(testId);
 
         Report report = reportService.makeReport(reportName, testDataJson, testMetadata);
 

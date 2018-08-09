@@ -1,5 +1,8 @@
 package gov.fda.nctr.arlims.data_access;
 
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -17,12 +20,11 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import gov.fda.nctr.arlims.models.dto.DataModificationInfo;
-import gov.fda.nctr.arlims.models.dto.LabTestMetadata;
-import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
-import gov.fda.nctr.arlims.models.dto.VersionedTestData;
+import gov.fda.nctr.arlims.models.dto.*;
 
 
 @Service
@@ -160,13 +162,15 @@ public class JdbcTestDataService implements TestDataService
     }
 
     @Override
-    public LabTestMetadata getLabTestMetadata(long testId)
+    public LabTestMetadata getTestMetadata(long testId)
     {
         String sql =
             "select " +
             "t.sample_id, s.sample_num, s.pac, s.product_name, tt.code, tt.name, " +
             "tt.short_name, t.created, ce.short_name created_by_emp, t.last_saved, " +
-            "se.short_name last_saved_emp, TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date, " +
+            "se.short_name last_saved_emp, " +
+            "(select count(*) from test_file tf where tf.test_id = t.id) attached_files_count," +
+            "TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date, " +
             "t.note, t.stage_statuses_json, t.reviewed, re.short_name reviewed_by_emp, " +
             "t.saved_to_facts, fe.short_name saved_to_facts_by_emp\n" +
             "from Test t\n" +
@@ -192,16 +196,132 @@ public class JdbcTestDataService implements TestDataService
                 row.getString(9),
                 row.getTimestamp(10).toInstant(),
                 row.getString(11),
-                Optional.ofNullable(row.getString(12)).map(LocalDate::parse),
-                Optional.ofNullable(row.getString(13)),
+                row.getInt(12),
+                Optional.ofNullable(row.getString(13)).map(LocalDate::parse),
                 Optional.ofNullable(row.getString(14)),
-                Optional.ofNullable(row.getTimestamp(15)).map(Timestamp::toInstant),
-                Optional.ofNullable(row.getString(16)), // reviewed by emp
-                Optional.ofNullable(row.getTimestamp(17)).map(Timestamp::toInstant),
-                Optional.ofNullable(row.getString(18)) // saved to facts by emp
+                Optional.ofNullable(row.getString(15)),
+                Optional.ofNullable(row.getTimestamp(16)).map(Timestamp::toInstant),
+                Optional.ofNullable(row.getString(17)), // reviewed by emp
+                Optional.ofNullable(row.getTimestamp(18)).map(Timestamp::toInstant),
+                Optional.ofNullable(row.getString(19)) // saved to facts by emp
             );
 
         return jdbc.queryForObject(sql, rowMapper, testId);
+    }
+
+    @Override
+    public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId)
+    {
+        String sql = "select tf.id, tf.role, tf.name, length(tf.data) from test_file tf where tf.test_id = ?";
+
+        RowMapper<TestAttachedFileMetadata> rowMapper = (row, rowNum) ->
+            new TestAttachedFileMetadata(
+                row.getLong(1),
+                testId,
+                Optional.ofNullable(row.getString(2)),
+                row.getString(3),
+                row.getLong(4)
+            );
+
+        return jdbc.query(sql, rowMapper, testId);
+    }
+
+    @Override
+    public long createTestAttachedFile
+        (
+            long testId,
+            Optional<String> role,
+            String name,
+            MultipartFile file
+        )
+    {
+        try
+        {
+            String sql = "insert into test_file(test_id, role, name, data) values(?, ?, ?, ?)";
+
+            InputStream is = file.getInputStream();
+
+            PreparedStatementCreator psc = conn -> {
+                final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
+                ps.setLong(1, testId);
+                ps.setString(2, role.orElse(null));
+                ps.setString(3, name);
+                DefaultLobHandler lobHandler = new DefaultLobHandler();
+                lobHandler.getLobCreator().setBlobAsBinaryStream(ps, 4, is, -1);
+                return ps;
+            };
+
+            final KeyHolder holder = new GeneratedKeyHolder();
+
+            jdbc.update(psc, holder);
+
+            return holder.getKey().longValue();
+        }
+        catch(IOException e)
+        {
+            throw new IOError(e);
+        }
+    }
+
+
+    @Override
+    public void updateTestAttachedFile
+        (
+            long attachedFileId,
+            long testId,
+            Optional<String> role,
+            String name,
+            MultipartFile file
+        )
+    {
+        try
+        {
+            String sql = "update test_file set name = ?, role = ?, data = ? where id = ? and test_id = ?";
+
+            InputStream is = file.getInputStream();
+
+            PreparedStatementCreator psc = conn -> {
+                final PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, name);
+                ps.setString(2, role.orElse(null));
+                ps.setBinaryStream(3, is, file.getSize());
+                ps.setLong(4, attachedFileId);
+                ps.setLong(5, testId);
+                return ps;
+            };
+
+            int affectedCount = jdbc.update(psc);
+
+            switch (affectedCount)
+            {
+                case 1: return;
+                case 0: throw new RuntimeException("Attached file data not updated: no record found for given attached file id and test id.");
+                default: throw new RuntimeException("Attached file update unexpectedly reported " + affectedCount + " rows as updated.");
+            }
+        }
+        catch(IOException e)
+        {
+            throw new IOError(e);
+        }
+    }
+
+    @Override
+    public void deleteTestAttachedFile
+        (
+            long attachedFileId,
+            long testId
+        )
+    {
+        String sql = "delete from test_file where id = ? and test_id = ?";
+
+        int affectedCount = jdbc.update(sql, attachedFileId, testId);
+
+        switch (affectedCount)
+        {
+            case 1: return;
+            case 0: throw new RuntimeException("Attached file data not deleted: no record found for given attached file id and test id.");
+            default: throw new RuntimeException("Attached file delete unexpectedly reported " + affectedCount + " rows as affected.");
+        }
     }
 
     private static String md5(byte[] data)

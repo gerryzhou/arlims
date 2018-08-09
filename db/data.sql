@@ -119,38 +119,3 @@ insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resour
 insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resource_code, resource_type)
   values(2, 1, 'shrimp media - Jul 3, 2018', 'TT-345678', 'MED');
 
-insert into test
-  (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
-   last_saved, last_saved_by_emp_id, reviewed_by_emp_id, saved_to_facts, test_data_md5)
-  values(1, 1, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, null, null, 'd41d8cd98f00b204e9800998ecf8427e');
-insert into test
-  (lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
-   last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts, test_data_md5)
-  values(1, 1, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'for JM', null, null, 'd41d8cd98f00b204e9800998ecf8427e');
-insert into test
-(lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
- last_saved, last_saved_by_emp_id, reviewed, reviewed_by_emp_id, saved_to_facts, test_data_md5)
-  values(1, 2, 1, CURRENT_DATE - 2, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 'd41d8cd98f00b204e9800998ecf8427e');
-insert into test
-(lab_group_id, test_type_id, sample_id, begin_date, created, created_by_emp_id,
- last_saved, last_saved_by_emp_id, note, reviewed_by_emp_id, saved_to_facts, test_data_md5)
-  values(1, 2, 2, CURRENT_DATE - 3, CURRENT_TIMESTAMP - 2, 1, CURRENT_TIMESTAMP - 2, 1, 'X', null, null, 'd41d8cd98f00b204e9800998ecf8427e');
-
-update test set stage_statuses_json =
-  '[{"stageName": "PREP", "fieldValuesStatus": "e"},' ||
-  '{"stageName": "PRE-ENR", "fieldValuesStatus": "e"},' ||
-  '{"stageName": "SEL-ENR", "fieldValuesStatus": "e"},' ||
-  '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
-  where id = 1;
-
-update test set stage_statuses_json =
-  '[{"stageName": "PREP", "fieldValuesStatus": "c"},' ||
-  '{"stageName": "PRE-ENR", "fieldValuesStatus": "c"},' ||
-  '{"stageName": "SEL-ENR", "fieldValuesStatus": "i"},' ||
-  '{"stageName": "VIDAS", "fieldValuesStatus": "e"}]'
-  where id = 2;
-update test set stage_statuses_json =
-  '[{"stageName": "PREP", "fieldValuesStatus": "c"},' ||
-  '{"stageName": "ENR", "fieldValuesStatus": "c"},' ||
-  '{"stageName": "VIDAS", "fieldValuesStatus": "c"}]'
-  where id = 3;

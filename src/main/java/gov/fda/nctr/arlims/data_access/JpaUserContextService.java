@@ -1,6 +1,7 @@
 package gov.fda.nctr.arlims.data_access;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -13,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import javax.transaction.Transactional;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -129,6 +131,9 @@ public class JpaUserContextService implements UserContextService
         Map<Long, List<Test>> testsBySampleId =
             getTestsBySampleId(sampleIds);
 
+        Map<Long, Integer> attachedFileCountsByTestId =
+            getAttachedFileCountsByTestId(sampleIds);
+
         return
             dbSamples.stream()
             .map(dbSample -> {
@@ -139,7 +144,10 @@ public class JpaUserContextService implements UserContextService
 
                 List<LabTestMetadata> tests =
                     testsBySampleId.getOrDefault(sampleId, emptyList()).stream()
-                    .map(test -> makeLabTestMetadata(test, dbSample, usersById))
+                    .map(test -> {
+                        int numAttachedFiles = attachedFileCountsByTestId.getOrDefault(test.getId(),0);
+                        return makeLabTestMetadata(test, dbSample, numAttachedFiles, usersById);
+                    })
                     .collect(toList());
 
                 List<LabResourceListMetadata> unmanagedResourceLists =
@@ -169,6 +177,26 @@ public class JpaUserContextService implements UserContextService
                     );
             })
             .collect(toList());
+    }
+
+    private Map<Long, Integer> getAttachedFileCountsByTestId(List<Long> testSampleIds)
+    {
+        Map<Long, Integer> res = new HashMap();
+
+        String sql =
+            "select tf.test_id, count(*) files\n" +
+            "from test_file tf\n" +
+            "where tf.test_id in (select t.id from test t where t.sample_id in (:sampleIds))\n" +
+            "group by tf.test_id";
+
+        Map<String,Object> params = new HashMap();
+        params.put("sampleIds", testSampleIds);
+
+        jdbcTemplate.query(sql, params, rs -> {
+            res.put(rs.getLong(1), rs.getInt(2));
+        });
+
+        return res;
     }
 
     private Map<Long, List<Test>> getTestsBySampleId(List<Long> sampleIds)
@@ -308,6 +336,7 @@ public class JpaUserContextService implements UserContextService
         (
             Test t,
             gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample s,
+            int attachedFilesCount,
             Map<Long, UserReference> usersById
         )
     {
@@ -345,6 +374,7 @@ public class JpaUserContextService implements UserContextService
                 createdByUserShortName,
                 t.getLastSaved(),
                 lastSavedByUserShortName,
+                attachedFilesCount,
                 opt(t.getBeginDate()),
                 opt(t.getNote()),
                 opt(t.getStageStatusesJson()),

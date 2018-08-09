@@ -35,6 +35,7 @@ import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {ImportedSalmonellaVidasModule} from './lab-tests/microbiology/imported-salmonella-vidas/imported-salmonella-vidas.module';
 import {CommonComponentsModule} from './common-components/common-components.module';
+import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
 
 @NgModule({
    declarations: [
@@ -42,6 +43,7 @@ import {CommonComponentsModule} from './common-components/common-components.modu
       AlertMessageComponent,
       SamplesListingComponent,
       SamplesListingOptionsComponent,
+      TestAttachedFilesComponent,
    ],
    entryComponents: [
      // (dialog components here)

@@ -1,13 +1,32 @@
 
-test_file
-  id
-  name
-  tag
-  data
+Audit logging of all test data changes, per field.
+  Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
+
+Attach files to some fields.
+  Maybe specify via role like "field_attachment:<field-path>".
+
+Multiple-sample editing(?)
+
+Allow locking sections.
+
+Results
+  Negative controls at top.
+  More detailed representation of composites, as grid.
+    Should be able to add composites/results dynamically to the grid.
+      See Vidas results output.
+    Should be automated pull from Vidas machine, eventually.
+  Positive controls at bottom.
+
+Remove resource lists.
+
+Multiuser
+  SSO (ask Leidos) or user/password as temporary measure.
+
+Continuation pages
+
+Sorting and filtering of samples list (vs. tests?)
 
 
-
-curl http://localhost:8080/alis/api/test/report/1/imp_slm_vidas.pdf > ~/tmp/report.pdf
 
 
 

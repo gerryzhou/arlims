@@ -19,6 +19,7 @@ public class LabTestMetadata
     private String createdByEmpShortName;
     private Instant lastSavedInstant;
     private String lastSavedByEmpShortName;
+    private int attachedFilesCount;
     private Optional<LocalDate> beginDate;
     private Optional<String> note;
     private Optional<String> stageStatusesJson;
@@ -42,6 +43,7 @@ public class LabTestMetadata
             String createdByEmpShortName,
             Instant lastSavedInstant,
             String lastSavedByEmpShortName,
+            int attachedFilesCount,
             Optional<LocalDate> beginDate,
             Optional<String> note,
             Optional<String> stageStatusesJson,
@@ -63,6 +65,7 @@ public class LabTestMetadata
         this.createdByEmpShortName = createdByEmpShortName;
         this.lastSavedInstant = lastSavedInstant;
         this.lastSavedByEmpShortName = lastSavedByEmpShortName;
+        this.attachedFilesCount = attachedFilesCount;
         this.beginDate = beginDate;
         this.note = note;
         this.stageStatusesJson = stageStatusesJson;
@@ -95,6 +98,8 @@ public class LabTestMetadata
     public Instant getLastSavedInstant() { return lastSavedInstant; }
 
     public String getLastSavedByEmpShortName() { return lastSavedByEmpShortName; }
+
+    public int getAttachedFilesCount() { return attachedFilesCount; }
 
     public Optional<LocalDate> getBeginDate() { return beginDate; }
 

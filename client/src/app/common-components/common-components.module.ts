@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 
 import {SampleComponent} from './sample/sample.component';
 import {TestMetadataComponent} from './test-metadata/test-metadata.component';
@@ -25,6 +26,7 @@ import { ResourceCodesDialogComponent } from './resource-codes-dialog/resource-c
    imports: [
       CommonModule,
       FormsModule,
+      RouterModule,
       MatCardModule,
       MatButtonModule,
       MatIconModule,

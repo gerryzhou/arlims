@@ -8,7 +8,7 @@ import {
    CreatedTestMetadata,
    DataModificationInfo,
    LabTestTypeCode,
-   OptimisticDataUpdateResult,
+   OptimisticDataUpdateResult, TestAttachedFileMetadata,
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
@@ -35,6 +35,40 @@ export class TestsService {
       return this.httpClient.get<VersionedTestData>(
          this.apiUrlsSvc.testDataUrl(testId)
       );
+   }
+
+   getTestAttachedFileMetadatas(testId: number): Observable<TestAttachedFileMetadata[]>
+   {
+      return this.httpClient.get<TestAttachedFileMetadata[]>(
+         this.apiUrlsSvc.testAttachedFileMetadatasUrl(testId)
+      );
+   }
+
+   createTestAttachedFile(testId: number, role: string|null, name: string, file: File)
+   {
+      const formData: FormData = new FormData();
+
+      formData.append('role', role);
+      formData.append('name', name);
+      formData.append('file', file, file.name);
+
+      return this.httpClient.post(this.apiUrlsSvc.newTestAttachedFileUrl(testId), formData);
+   }
+
+   updateTestAttachedFile(attachedFileId: number, testId: number, role: string|null, name: string, file: File)
+   {
+      const formData: FormData = new FormData();
+
+      formData.append('role', role);
+      formData.append('name', name);
+      formData.append('file', file, file.name);
+
+      return this.httpClient.post(this.apiUrlsSvc.testAttachedFileUrl(attachedFileId, testId), formData);
+   }
+
+   deleteTestAttachedFile(attachedFileId: number, testId: number)
+   {
+      return this.httpClient.delete(this.apiUrlsSvc.testAttachedFileUrl(attachedFileId, testId));
    }
 
    saveTestData

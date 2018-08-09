@@ -15,5 +15,6 @@ public interface TestRepository extends JpaRepository<Test,Long>
 {
     @Query(value = "SELECT t FROM Test t JOIN FETCH t.testType where t.sampleId in (:sampleIds)")
     List<Test> findBySampleIdIn(@Param("sampleIds") List<Long> sampleIds);
+
 }
 

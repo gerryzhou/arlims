@@ -1,7 +1,11 @@
 
 
+Attached Files
+--------------
+Finish impl.
+
 How to properly represent individual composite results?
-  Maybe as input field accepting comma-separated list of positive composite numbers?
+  John: As grid.
 
 Each test needs to be able to allow free-form entry of "continuation page".
 

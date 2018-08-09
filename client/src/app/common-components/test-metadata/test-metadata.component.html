@@ -24,15 +24,21 @@
 
       <div class="expanding-flex-space"></div>
 
-      <div *ngIf="reportNames.length > 0">
-         <mat-menu #reportsMenu="matMenu">
-            <button mat-menu-item *ngFor="let reportName of reportNames" (click)="onReportClicked(reportName)">
-               {{reportName}}
+      <div class="reports-and-files">
+         <div class="reports" *ngIf="testType.reportNames.length > 0">
+            <mat-menu #reportsMenu="matMenu">
+               <button mat-menu-item *ngFor="let reportName of testType.reportNames" (click)="onReportClicked(reportName)">
+                  {{reportName}}
+               </button>
+            </mat-menu>
+            <button class="link" [matMenuTriggerFor]="reportsMenu">
+               Reports <mat-icon>more_vert</mat-icon>
             </button>
-         </mat-menu>
-         <button mat-button [matMenuTriggerFor]="reportsMenu">
-            Reports <mat-icon>more_vert</mat-icon>
-         </button>
+         </div>
+         <span class="files">
+            <a [routerLink]="['/test', test.testId, 'attached-files']">{{test.attachedFilesCount}} files</a>
+            <mat-icon>attach_file</mat-icon>
+         </span>
       </div>
 
       <div *ngIf="test.note" class="note">

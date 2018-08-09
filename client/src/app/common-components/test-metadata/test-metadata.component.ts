@@ -16,7 +16,7 @@ export class TestMetadataComponent implements OnChanges {
    @Input()
    labGroupTestTypes: LabTestType[] = [];
 
-   reportNames: string[] = [];
+   testType: LabTestType;
 
    stageStatuses: TestStageStatus[];
 
@@ -37,8 +37,7 @@ export class TestMetadataComponent implements OnChanges {
       this.stageStatuses = JSON.parse(this.test.stageStatusesJson);
       this.testStatusActions = TestMetadataComponent.makeTestStatusActionsTimeDescending(this.test);
 
-      const lgtt = this.labGroupTestTypes.find(tt => tt.code === this.test.testTypeCode);
-      this.reportNames = lgtt ? lgtt.reportNames : [];
+      this.testType = this.labGroupTestTypes.find(tt => tt.code === this.test.testTypeCode);
    }
 
    onStageClicked(stageName: string) {

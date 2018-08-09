@@ -2,23 +2,23 @@
 select 'drop table ' || table_name || ' cascade constraints purge;' drop_command
 from user_tables
 ;
-
-drop table TEST_UNMANAGED_RESOURCE cascade constraints purge;
-drop table TEST_TYPE cascade constraints purge;
-drop table TEST_MANAGED_RESOURCE cascade constraints purge;
-drop table TEST cascade constraints purge;
-drop table SAMPLE_UNMANAGED_RESOURCE cascade constraints purge;
-drop table SAMPLE_MANAGED_RESOURCE cascade constraints purge;
-drop table SAMPLE_LIST_SAMPLE cascade constraints purge;
-drop table SAMPLE_LIST cascade constraints purge;
-drop table SAMPLE_ASSIGNMENT cascade constraints purge;
-drop table SAMPLE cascade constraints purge;
-drop table ROLE cascade constraints purge;
-drop table LAB_RESOURCE cascade constraints purge;
-drop table LAB_GROUP_TEST_TYPE cascade constraints purge;
-drop table LAB_GROUP cascade constraints purge;
-drop table EMPLOYEE_ROLE cascade constraints purge;
 drop table EMPLOYEE cascade constraints purge;
+drop table EMPLOYEE_ROLE cascade constraints purge;
+drop table LAB_GROUP cascade constraints purge;
+drop table LAB_GROUP_TEST_TYPE cascade constraints purge;
+drop table LAB_RESOURCE cascade constraints purge;
+drop table ROLE cascade constraints purge;
+drop table SAMPLE cascade constraints purge;
+drop table SAMPLE_ASSIGNMENT cascade constraints purge;
+drop table SAMPLE_LIST cascade constraints purge;
+drop table SAMPLE_LIST_SAMPLE cascade constraints purge;
+drop table SAMPLE_MANAGED_RESOURCE cascade constraints purge;
+drop table SAMPLE_UNMANAGED_RESOURCE cascade constraints purge;
+drop table TEST cascade constraints purge;
+drop table TEST_FILE cascade constraints purge;
+drop table TEST_MANAGED_RESOURCE cascade constraints purge;
+drop table TEST_TYPE cascade constraints purge;
+drop table TEST_UNMANAGED_RESOURCE cascade constraints purge;
 
 purge recyclebin;
 */
@@ -399,6 +399,23 @@ create index IX_TST_SAVEDTOFACTSEMPID
 
 create index IX_TST_TESTDATAMD5
   on TEST (TEST_DATA_MD5)
+/
+
+create table TEST_FILE
+(
+  ID      NUMBER(19) generated as identity
+    primary key,
+  DATA    BLOB               not null,
+  NAME    VARCHAR2(200 char) not null,
+  ROLE    VARCHAR2(50 char),
+  TEST_ID NUMBER(19)
+    constraint FK_TSTFILE_TST
+    references TEST
+)
+/
+
+create index IX_TSTFILE_TSTID
+  on TEST_FILE (TEST_ID)
 /
 
 create table TEST_MANAGED_RESOURCE

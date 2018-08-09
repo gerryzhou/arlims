@@ -1,11 +1,11 @@
 package gov.fda.nctr.arlims.data_access;
 
+import java.util.List;
 import java.util.Optional;
 
-import gov.fda.nctr.arlims.models.dto.DataModificationInfo;
-import gov.fda.nctr.arlims.models.dto.LabTestMetadata;
-import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
-import gov.fda.nctr.arlims.models.dto.VersionedTestData;
+import org.springframework.web.multipart.MultipartFile;
+
+import gov.fda.nctr.arlims.models.dto.*;
 
 
 public interface TestDataService
@@ -18,5 +18,13 @@ public interface TestDataService
 
     Optional<DataModificationInfo> getTestDataModificationInfo(long testId);
 
-    LabTestMetadata getLabTestMetadata(long testId);
+    LabTestMetadata getTestMetadata(long testId);
+
+    List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId);
+
+    long createTestAttachedFile(long testId, Optional<String> role, String name, MultipartFile file);
+
+    void updateTestAttachedFile(long attachedFileId, long testId, Optional<String> role, String name, MultipartFile file);
+
+    void deleteTestAttachedFile(long attachedFileId, long testId);
 }

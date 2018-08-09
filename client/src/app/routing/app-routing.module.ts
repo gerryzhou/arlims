@@ -7,12 +7,19 @@ import {SamplesListingComponent} from '../samples-listing/samples-listing.compon
 import {LabGroupContentsResolver} from './lab-group-contents.resolver';
 import {StagedTestDataEntryComponent as MicroImpSalVidasTestDataComponent} from '../lab-tests/microbiology/imported-salmonella-vidas/staged-test-data-entry/staged-test-data-entry.component';
 import {LabGroupTestDataResolver} from './lab-group-test-data.resolver';
+import {TestAttachedFilesComponent} from '../test-attached-files/test-attached-files.component';
+import {TestAttachedFilesResolver} from './test-attached-files.resolver';
 
 const routes: Routes = [
    {
       path: 'samples',
       component: SamplesListingComponent,
       resolve: { labGroupContents: LabGroupContentsResolver }
+   },
+   {
+      path: 'test/:testId/attached-files',
+      component: TestAttachedFilesComponent,
+      resolve: { testAttachedFiles: TestAttachedFilesResolver }
    },
    {
       path: 'test-data/MICRO_IMP_SAL_VIDAS/:testId',

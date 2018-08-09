@@ -39,6 +39,19 @@
       }
    }
 
+   .reports-and-files {
+      display: flex;
+      flex-flow: column nowrap;
+      .reports .link {
+         display: flex;
+         align-items: center;
+      }
+      .files {
+         display: flex;
+         align-items: center;
+      }
+   }
+
    .last-test-status-action {
       flex-grow: 0;
       text-align: center;
