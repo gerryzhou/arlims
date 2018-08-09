@@ -11,7 +11,7 @@
                <mat-radio-button value="SAMPLE_DISCARDED_AFTER_ANALYSIS">sample discarded after analysis</mat-radio-button>
                <mat-radio-button value="ISOLATES_SENT">isolates sent (enter destination below)</mat-radio-button>
                <mat-radio-button value="OTHER">other (describe below)</mat-radio-button>
-               <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
             </mat-radio-group>
          </span>
          <app-conflicting-field-value

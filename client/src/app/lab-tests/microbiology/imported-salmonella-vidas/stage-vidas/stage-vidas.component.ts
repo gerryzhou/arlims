@@ -23,6 +23,8 @@ export class StageVidasComponent implements OnChanges {
    @Input()
    vidasInstruments: LabResource[];
 
+   showUnsetAffordances = false;
+
    constructor() { }
 
    ngOnChanges() {

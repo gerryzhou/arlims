@@ -41,6 +41,8 @@ export class StagePreEnrComponent implements OnChanges {
    selectIncubator = true;
    allowTogglingSelects = true; // TODO: Retrieve from test configuration.
 
+   showUnsetAffordances = false;
+
    resourceAssignments: ResourceControlAssignments;
 
    constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}

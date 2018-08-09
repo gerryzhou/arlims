@@ -238,7 +238,7 @@
             <div>
                <mat-radio-button [value]="true">growth</mat-radio-button>
                <mat-radio-button [value]="false">no growth</mat-radio-button>
-               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -254,7 +254,7 @@
             <div>
                <mat-radio-button [value]="true">growth</mat-radio-button>
                <mat-radio-button [value]="false">no growth</mat-radio-button>
-               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -270,7 +270,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value

@@ -37,7 +37,7 @@
             <mat-radio-button value="ATTACHED_ORIGINAL">attached original</mat-radio-button>
             <mat-radio-button value="ATTACHED_COPY">attached copy</mat-radio-button>
             <mat-radio-button value="SUBMITTED_ALONE">submitted alone</mat-radio-button>
-            <mat-radio-button class="unset" [value]="null">unset</mat-radio-button>
+            <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
          </mat-radio-group>
       </span>
       <app-conflicting-field-value
@@ -57,7 +57,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -85,7 +85,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
@@ -112,7 +112,7 @@
             <div>
                <mat-radio-button [value]="true">Y</mat-radio-button>
                <mat-radio-button [value]="false">N</mat-radio-button>
-               <mat-radio-button [value]="null" class="unset">unset</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
          <app-conflicting-field-value
