@@ -21,7 +21,7 @@ export class TestAttachedFilesResolver implements Resolve<TestAttachedFiles> {
       const testId = +route.paramMap.get('testId');
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
-      const attachedFiles$ = this.testsService.getTestAttachedFileMetadatas(testId);
+      const attachedFiles$ = this.testsService.getTestAttachedFilesMetadatas(testId);
       const sampleInTest$ = this.usrCtxSvc.getSampleInTest(testId);
 
       return zip(attachedFiles$, sampleInTest$).pipe(

@@ -75,8 +75,8 @@ import {TestAttachedFilesComponent} from './test-attached-files/test-attached-fi
       TruncateModule,
       // app modules
       CommonComponentsModule,
-      ImportedSalmonellaVidasModule,
       AppRoutingModule,
+      ImportedSalmonellaVidasModule,
    ],
    providers: [
       Location,

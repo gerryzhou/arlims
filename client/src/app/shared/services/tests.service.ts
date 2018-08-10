@@ -5,6 +5,7 @@ import {flatMap, map} from 'rxjs/operators';
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
 import {ApiUrlsService} from './api-urls.service';
 import {
+   CreatedTestAttachedFiles,
    CreatedTestMetadata,
    DataModificationInfo,
    LabTestTypeCode,
@@ -37,33 +38,32 @@ export class TestsService {
       );
    }
 
-   getTestAttachedFileMetadatas(testId: number): Observable<TestAttachedFileMetadata[]>
+   getTestAttachedFilesMetadatas(testId: number): Observable<TestAttachedFileMetadata[]>
    {
       return this.httpClient.get<TestAttachedFileMetadata[]>(
-         this.apiUrlsSvc.testAttachedFileMetadatasUrl(testId)
+         this.apiUrlsSvc.testAttachedFilesMetadatasUrl(testId)
       );
    }
 
-   createTestAttachedFile(testId: number, role: string|null, name: string, file: File)
+   attachFilesToTest(testId: number, files: File[], role: string|null): Observable<CreatedTestAttachedFiles>
    {
       const formData: FormData = new FormData();
 
       formData.append('role', role);
-      formData.append('name', name);
-      formData.append('file', file, file.name);
 
-      return this.httpClient.post(this.apiUrlsSvc.newTestAttachedFileUrl(testId), formData);
+      files.forEach(file => formData.append('files', file, file.name));
+
+      return this.httpClient.post<CreatedTestAttachedFiles>(this.apiUrlsSvc.newTestAttachedFilesUrl(testId), formData);
    }
 
-   updateTestAttachedFile(attachedFileId: number, testId: number, role: string|null, name: string, file: File)
+   updateTestAttachedFileMetadata(attachedFileId: number, testId: number, role: string|null, name: string)
    {
       const formData: FormData = new FormData();
 
       formData.append('role', role);
       formData.append('name', name);
-      formData.append('file', file, file.name);
 
-      return this.httpClient.post(this.apiUrlsSvc.testAttachedFileUrl(attachedFileId, testId), formData);
+      return this.httpClient.post(this.apiUrlsSvc.testAttachedFileMetadataUrl(attachedFileId, testId), formData);
    }
 
    deleteTestAttachedFile(attachedFileId: number, testId: number)

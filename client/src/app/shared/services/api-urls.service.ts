@@ -7,31 +7,43 @@ export class ApiUrlsService {
 
    constructor(private location: Location) {}
 
-   userContextUrl(): string {
+   userContextUrl(): string
+   {
       return this.location.prepareExternalUrl('/api/user/context');
    }
 
-   newTestUrl(): string {
+   newTestUrl(): string
+   {
       return this.location.prepareExternalUrl('/api/tests/new');
    }
 
-   testDataUrl(testId: number): string {
+   testDataUrl(testId: number): string
+   {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/data`);
    }
 
-   testAttachedFileMetadatasUrl(testId: number): string {
-      return this.location.prepareExternalUrl(`/api/tests/${testId}/attached-file-metadatas`);
+   testAttachedFilesMetadatasUrl(testId: number): string
+   {
+      return this.location.prepareExternalUrl(`/api/tests/${testId}/attached-files/metadatas`);
    }
 
-   newTestAttachedFileUrl(testId: number): string {
+   testAttachedFileMetadataUrl(attachedFileId: number, testId: number): string
+   {
+      return this.location.prepareExternalUrl(`/api/tests/${testId}/attached-files/${attachedFileId}/metadata`);
+   }
+
+   newTestAttachedFilesUrl(testId: number): string
+   {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/attached-files/new`);
    }
 
-   testAttachedFileUrl(attachedFileId: number, testId: number): string {
+   testAttachedFileUrl(attachedFileId: number, testId: number): string
+   {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/attached-files/${attachedFileId}`);
    }
 
-   reportUrl(testId: number, reportName: string): string {
+   reportUrl(testId: number, reportName: string): string
+   {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${reportName}`);
    }
 

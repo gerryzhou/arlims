@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.models.dto;
 
+import java.time.Instant;
 import java.util.Optional;
 
 
@@ -10,6 +11,7 @@ public class TestAttachedFileMetadata
     private final Optional<String> role;
     private final String name;
     private final long size;
+    private final Instant uploadedInstant;
 
     public TestAttachedFileMetadata
         (
@@ -17,7 +19,8 @@ public class TestAttachedFileMetadata
             long testId,
             Optional<String> role,
             String name,
-            long size
+            long size,
+            Instant uploadedInstant
         )
     {
         this.attachedFileId = attachedFileId;
@@ -25,6 +28,7 @@ public class TestAttachedFileMetadata
         this.role = role;
         this.name = name;
         this.size = size;
+        this.uploadedInstant = uploadedInstant;
     }
 
     public long getAttachedFileId() { return attachedFileId; }
@@ -36,4 +40,6 @@ public class TestAttachedFileMetadata
     public String getName() { return name; }
 
     public long getSize() { return size; }
+
+    public Instant getUploadedInstant() { return uploadedInstant; }
 }

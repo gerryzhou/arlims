@@ -6,3 +6,46 @@
       flex: 1 0 auto;
    }
 }
+
+h2 {
+   text-align: center;
+}
+
+.content-stack {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: flex-start;
+
+   .table-container {
+      th, td {
+         padding: 0 20px;
+      }
+   }
+
+   .no-files-message {
+      display: flex;
+      min-width: 200px;
+      justify-content: center;
+      margin: 15px;
+
+      span {
+         color: white;
+         background-color: darkgray;
+         padding: 10px;
+      }
+   }
+
+   .new-attachments-area {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      margin-left: 20px;
+
+      form {
+         * {
+            margin: 0 10px;
+         }
+      }
+   }
+
+}

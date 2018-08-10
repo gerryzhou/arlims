@@ -21,6 +21,7 @@ import {NewTestDialogComponent} from './new-test-dialog/new-test-dialog.componen
 import {ConflictingFieldValueComponent} from './conflicting-field-value/conflicting-field-value.component';
 import {FieldAssignedResourcesComponent} from './field-assigned-resources/field-assigned-resources.component';
 import { ResourceCodesDialogComponent } from './resource-codes-dialog/resource-codes-dialog.component';
+import {FilesSelectorComponent} from './files-selector/files-selector.component';
 
 @NgModule({
    imports: [
@@ -47,6 +48,7 @@ import { ResourceCodesDialogComponent } from './resource-codes-dialog/resource-c
       ConflictingFieldValueComponent,
       FieldAssignedResourcesComponent,
       ResourceCodesDialogComponent,
+      FilesSelectorComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
@@ -60,6 +62,7 @@ import { ResourceCodesDialogComponent } from './resource-codes-dialog/resource-c
       DayNumberPipe,
       ConflictingFieldValueComponent,
       FieldAssignedResourcesComponent,
+      FilesSelectorComponent,
    ],
 })
 export class CommonComponentsModule { }

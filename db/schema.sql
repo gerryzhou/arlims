@@ -2,23 +2,6 @@
 select 'drop table ' || table_name || ' cascade constraints purge;' drop_command
 from user_tables
 ;
-drop table EMPLOYEE cascade constraints purge;
-drop table EMPLOYEE_ROLE cascade constraints purge;
-drop table LAB_GROUP cascade constraints purge;
-drop table LAB_GROUP_TEST_TYPE cascade constraints purge;
-drop table LAB_RESOURCE cascade constraints purge;
-drop table ROLE cascade constraints purge;
-drop table SAMPLE cascade constraints purge;
-drop table SAMPLE_ASSIGNMENT cascade constraints purge;
-drop table SAMPLE_LIST cascade constraints purge;
-drop table SAMPLE_LIST_SAMPLE cascade constraints purge;
-drop table SAMPLE_MANAGED_RESOURCE cascade constraints purge;
-drop table SAMPLE_UNMANAGED_RESOURCE cascade constraints purge;
-drop table TEST cascade constraints purge;
-drop table TEST_FILE cascade constraints purge;
-drop table TEST_MANAGED_RESOURCE cascade constraints purge;
-drop table TEST_TYPE cascade constraints purge;
-drop table TEST_UNMANAGED_RESOURCE cascade constraints purge;
 
 purge recyclebin;
 */
@@ -303,7 +286,9 @@ create table LAB_GROUP_TEST_TYPE
     constraint FK_LGRPTSTT_LABGROUP
     references LAB_GROUP,
   REPORT_NAMES_BAR_SEP    VARCHAR2(4000 char),
-  TEST_CONFIGURATION_JSON CLOB,
+  TEST_CONFIGURATION_JSON CLOB
+    constraint CK_LGRPTSTT_TSTOPTSJSON_ISJSON
+    check (test_configuration_json is json format json strict),
   TEST_TYPE_ID            NUMBER(19) not null
     constraint FK_LGRPTSTT_LABTESTTYPE
     references TEST_TYPE,
@@ -344,8 +329,12 @@ create table TEST
   SAVED_TO_FACTS_BY_EMP_ID NUMBER(19)
     constraint FK_TST_EMP_SAVEDTOFACTS
     references EMPLOYEE,
-  STAGE_STATUSES_JSON      VARCHAR2(4000 char),
-  TEST_DATA_JSON           CLOB,
+  STAGE_STATUSES_JSON      VARCHAR2(4000 char)
+    constraint CK_TEST_STAGESTATUSJSON_ISJSON
+    check (stage_statuses_json is json format json strict),
+  TEST_DATA_JSON           CLOB
+    constraint CK_TEST_TESTDATAJSON_ISJSON
+    check (test_data_json is json format json strict),
   TEST_DATA_MD5            VARCHAR2(32 char) not null,
   TEST_TYPE_ID             NUMBER(19)        not null
     constraint FK_TST_TSTT
@@ -403,14 +392,15 @@ create index IX_TST_TESTDATAMD5
 
 create table TEST_FILE
 (
-  ID      NUMBER(19) generated as identity
+  ID       NUMBER(19) generated as identity
     primary key,
-  DATA    BLOB               not null,
-  NAME    VARCHAR2(200 char) not null,
-  ROLE    VARCHAR2(50 char),
-  TEST_ID NUMBER(19)
+  DATA     BLOB               not null,
+  NAME     VARCHAR2(200 char) not null,
+  ROLE     VARCHAR2(50 char),
+  TEST_ID  NUMBER(19)
     constraint FK_TSTFILE_TST
-    references TEST
+    references TEST,
+  UPLOADED TIMESTAMP(6)       not null
 )
 /
 
@@ -466,4 +456,5 @@ create index IX_TSTUNMRSC_RSCCD
 create index IX_TSTUNMRSC_RSCT
   on TEST_UNMANAGED_RESOURCE (RESOURCE_TYPE)
 /
+
 

@@ -1,0 +1,46 @@
+#files-drag-area {
+   min-width: 350px;
+   min-height: 100px;
+   margin: 20px;
+   padding: 0 15px;
+
+   .drag-area-header {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      margin-top: 10px;
+   }
+
+   .drag-message {
+      font-size: 200%;
+      font-weight: lighter;
+      color: #888;
+   }
+
+   .selected-files-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: lighter;
+      .clear-files-btn {
+         margin: 5px 10px;
+      }
+   }
+
+   .selected-files {
+      margin: 5px 20px 20px 20px;
+      mat-chip.file-name {
+         background-color: lightblue;
+      }
+   }
+}
+
+.dragarea {
+   border: 10px dashed #999;
+   background-color: #eee;
+}
+
+.dragarea-dragover {
+   border: 10px dashed #9e9;
+   background-color: #fff;
+}

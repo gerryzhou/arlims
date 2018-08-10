@@ -11,10 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 
+import org.apache.xpath.operations.Mult;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -212,7 +214,10 @@ public class JdbcTestDataService implements TestDataService
     @Override
     public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId)
     {
-        String sql = "select tf.id, tf.role, tf.name, length(tf.data) from test_file tf where tf.test_id = ?";
+        String sql =
+            "select tf.id, tf.role, tf.name, length(tf.data), tf.uploaded " +
+            "from test_file tf " +
+            "where tf.test_id = ?";
 
         RowMapper<TestAttachedFileMetadata> rowMapper = (row, rowNum) ->
             new TestAttachedFileMetadata(
@@ -220,42 +225,52 @@ public class JdbcTestDataService implements TestDataService
                 testId,
                 Optional.ofNullable(row.getString(2)),
                 row.getString(3),
-                row.getLong(4)
+                row.getLong(4),
+                row.getTimestamp(5).toInstant()
             );
 
         return jdbc.query(sql, rowMapper, testId);
     }
 
     @Override
-    public long createTestAttachedFile
+    public List<Long> createTestAttachedFiles
         (
             long testId,
-            Optional<String> role,
-            String name,
-            MultipartFile file
+            List<MultipartFile> files,
+            Optional<String> role
         )
     {
+        java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+
         try
         {
-            String sql = "insert into test_file(test_id, role, name, data) values(?, ?, ?, ?)";
+            String sql = "insert into test_file(test_id, role, name, uploaded, data) values(?, ?, ?, ?, ?)";
 
-            InputStream is = file.getInputStream();
+            List<Long> createdIds = new ArrayList<>(files.size());
 
-            PreparedStatementCreator psc = conn -> {
-                final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
-                ps.setLong(1, testId);
-                ps.setString(2, role.orElse(null));
-                ps.setString(3, name);
-                DefaultLobHandler lobHandler = new DefaultLobHandler();
-                lobHandler.getLobCreator().setBlobAsBinaryStream(ps, 4, is, -1);
-                return ps;
-            };
+            for ( MultipartFile file: files )
+            {
+                InputStream is = file.getInputStream();
 
-            final KeyHolder holder = new GeneratedKeyHolder();
+                PreparedStatementCreator psc = conn -> {
+                    final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
+                    ps.setLong(1, testId);
+                    ps.setString(2, role.orElse(null));
+                    ps.setString(3, file.getOriginalFilename());
+                    ps.setTimestamp(4, now);
+                    DefaultLobHandler lobHandler = new DefaultLobHandler();
+                    lobHandler.getLobCreator().setBlobAsBinaryStream(ps, 5, is, -1);
+                    return ps;
+                };
 
-            jdbc.update(psc, holder);
+                final KeyHolder holder = new GeneratedKeyHolder();
 
-            return holder.getKey().longValue();
+                jdbc.update(psc, holder);
+
+                createdIds.add(holder.getKey().longValue());
+            }
+
+            return createdIds;
         }
         catch(IOException e)
         {
@@ -265,44 +280,43 @@ public class JdbcTestDataService implements TestDataService
 
 
     @Override
-    public void updateTestAttachedFile
+    public void updateTestAttachedFileMetadata
         (
             long attachedFileId,
             long testId,
             Optional<String> role,
-            String name,
-            MultipartFile file
+            String name
         )
     {
-        try
+        String sql = "update test_file set name = ?, role = ? where id = ? and test_id = ?";
+
+        int affectedCount = jdbc.update(sql, name, role, attachedFileId, testId);
+
+        switch (affectedCount)
         {
-            String sql = "update test_file set name = ?, role = ?, data = ? where id = ? and test_id = ?";
-
-            InputStream is = file.getInputStream();
-
-            PreparedStatementCreator psc = conn -> {
-                final PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, name);
-                ps.setString(2, role.orElse(null));
-                ps.setBinaryStream(3, is, file.getSize());
-                ps.setLong(4, attachedFileId);
-                ps.setLong(5, testId);
-                return ps;
-            };
-
-            int affectedCount = jdbc.update(psc);
-
-            switch (affectedCount)
-            {
-                case 1: return;
-                case 0: throw new RuntimeException("Attached file data not updated: no record found for given attached file id and test id.");
-                default: throw new RuntimeException("Attached file update unexpectedly reported " + affectedCount + " rows as updated.");
-            }
+            case 1: return;
+            case 0: throw new RuntimeException("Attached file data not updated: no record found for given attached file id and test id.");
+            default: throw new RuntimeException("Attached file update unexpectedly reported " + affectedCount + " rows as updated.");
         }
-        catch(IOException e)
-        {
-            throw new IOError(e);
-        }
+    }
+
+    @Override
+    public TestAttachedFileContents getTestAttachedFileContents
+        (
+            long attachedFileId,
+            long testId
+        )
+    {
+        String sql = "select name, length(data), data from test_file where id = ? and test_id = ?";
+
+        RowMapper<TestAttachedFileContents> rowMapper = (row, rowNum) ->
+            new TestAttachedFileContents(
+                row.getString(1),
+                row.getLong(2),
+                row.getBinaryStream(3)
+            );
+
+        return jdbc.queryForObject(sql, rowMapper, attachedFileId, testId);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -28,6 +29,9 @@ public class TestFile
 
     @Column(name = "NAME", nullable = false) @Size(max = 200)
     private String name;
+
+    @Column(nullable = false)
+    private Instant uploaded;
 
     @Lob() @Basic(fetch = FetchType.LAZY) @NotNull
     private byte[] data;

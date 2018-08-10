@@ -1,0 +1,22 @@
+<input type="file" #filesInput multiple (change)="addFiles($event.target.files)" style="display:none" />
+
+<div draggable="true" id="files-drag-area" ngClass="{{dragAreaClass}}">
+
+   <div class="drag-area-header">
+      <button type="button" mat-button (click)="filesInput.click()">Select files to attach...</button>
+      <span class="drag-message">...or drag files here</span>
+   </div>
+
+   <div class="selected-files">
+      <div class="selected-files-header" *ngIf="selectedFiles.length > 0">
+         <span>{{selectedFiles.length}} file{{selectedFiles.length === 1 ? '' : 's'}} pending attachment</span>
+         <button type="button" mat-button class="clear-files-btn" (click)="clearFiles()">Clear</button>
+      </div>
+      <mat-chip-list class="mat-chip-list-stacked" aria-orientation="vertical">
+         <mat-chip *ngFor="let file of selectedFiles" class="file-name" >
+            {{file.name}}
+         </mat-chip>
+      </mat-chip-list>
+   </div>
+
+</div>

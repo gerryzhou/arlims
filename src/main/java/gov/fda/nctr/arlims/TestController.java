@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import gov.fda.nctr.arlims.data_access.TestAttachedFileContents;
 import gov.fda.nctr.arlims.data_access.TestDataService;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
@@ -93,7 +95,7 @@ public class TestController
         }
     }
 
-    @GetMapping("{testId:\\d+}/attached-file-metadatas")
+    @GetMapping("{testId:\\d+}/attached-files/metadatas")
     public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas
         (
             @PathVariable long testId,
@@ -105,37 +107,56 @@ public class TestController
         return testDataService.getTestAttachedFileMetadatas(testId);
     }
 
-    @PostMapping("{testId:\\d+}/attached-files/new")
-    public CreatedTestAttachedFile createTestAttachedFile
-        (
-            @PathVariable long testId,
-            @RequestPart("role") Optional<String> role,
-            @RequestPart("name") String name,
-            @RequestPart("file") MultipartFile file,
-            @RequestHeader HttpHeaders httpHeaders
-        )
-    {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
-        long attachedFileId = testDataService.createTestAttachedFile(testId, role, name, file);
-
-        return new CreatedTestAttachedFile(attachedFileId, testId);
-    }
-
-    @PostMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}")
-    public void updateTestAttachedFile
+    @PostMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}/metadata")
+    public void updateTestAttachedFileMetadata
         (
             @PathVariable long attachedFileId,
             @PathVariable long testId,
             @RequestPart("role") Optional<String> role,
             @RequestPart("name") String name,
-            @RequestPart("file") MultipartFile file,
             @RequestHeader HttpHeaders httpHeaders
         )
     {
         long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
 
-        testDataService.updateTestAttachedFile(attachedFileId, testId, role, name, file);
+        testDataService.updateTestAttachedFileMetadata(attachedFileId, testId, role, name);
+    }
+
+
+    @PostMapping("{testId:\\d+}/attached-files/new")
+    public CreatedTestAttachedFiles createTestAttachedFiles
+        (
+            @PathVariable long testId,
+            @RequestPart("files") MultipartFile[] files,
+            @RequestPart("role") Optional<String> role,
+            @RequestHeader HttpHeaders httpHeaders
+        )
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
+
+        List<Long> attachedFileIds = testDataService.createTestAttachedFiles(testId, Arrays.asList(files), role);
+
+        return new CreatedTestAttachedFiles(testId, attachedFileIds);
+    }
+
+    @GetMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}")
+    public ResponseEntity<InputStreamResource>  getTestAttachedFileContents
+        (
+            @PathVariable long attachedFileId,
+            @PathVariable long testId,
+            @RequestHeader HttpHeaders httpHeaders
+        )
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
+
+        TestAttachedFileContents tafc = testDataService.getTestAttachedFileContents(attachedFileId, testId);
+
+        return
+            ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+            "attachment;filename=" + tafc.getFileName())
+            .contentLength(tafc.getContentsLength())
+            .body(new InputStreamResource(tafc.getContentsStream()));
     }
 
     @DeleteMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}")
@@ -152,7 +173,7 @@ public class TestController
     }
 
     @GetMapping("{testId}/report/{reportName}")
-    public ResponseEntity<InputStreamResource>  getTestDataReport
+    public ResponseEntity<InputStreamResource> getTestDataReport
         (
             @PathVariable long testId,
             @PathVariable String reportName,

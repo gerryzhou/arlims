@@ -22,9 +22,11 @@ public interface TestDataService
 
     List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId);
 
-    long createTestAttachedFile(long testId, Optional<String> role, String name, MultipartFile file);
+    List<Long> createTestAttachedFiles(long testId, List<MultipartFile> files, Optional<String> role);
 
-    void updateTestAttachedFile(long attachedFileId, long testId, Optional<String> role, String name, MultipartFile file);
+    void updateTestAttachedFileMetadata(long attachedFileId, long testId, Optional<String> role, String name);
+
+    TestAttachedFileContents getTestAttachedFileContents(long attachedFileId, long testId);
 
     void deleteTestAttachedFile(long attachedFileId, long testId);
 }
