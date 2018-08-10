@@ -1,9 +1,3 @@
-Add content-uploaded timestamp to test_file.
-  Allow sorting by this column.
-
-Attached Files
---------------
-Finish impl.
 
 How to properly represent individual composite results?
   John: As grid.
