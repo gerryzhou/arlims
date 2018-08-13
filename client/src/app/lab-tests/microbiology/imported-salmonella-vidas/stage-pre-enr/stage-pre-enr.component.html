@@ -21,7 +21,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
             <mat-form-field>
                <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
-                      placeholder="Extracted grams per sub">
+                      placeholder="Grams / sub">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                                          [conflictValue]="conflicts.samplingMethod.extractedGramsPerSub"
@@ -33,7 +33,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubs !== undefined">
             <mat-form-field>
                <input formControlName="numberOfSubs" type="number" min="0" step="1" matInput
-                      placeholder="Number of subs">
+                      placeholder="Subs">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                                          [conflictValue]="conflicts.samplingMethod.numberOfSubs"
@@ -45,7 +45,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfComposites !== undefined">
             <mat-form-field>
                <input formControlName="numberOfComposites" type="number" min="0" step="1" matInput
-                      placeholder="Number of composites">
+                      placeholder="Composites">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                [conflictValue]="conflicts.samplingMethod.numberOfComposites"
@@ -57,7 +57,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.compositeMassGrams !== undefined">
             <mat-form-field>
                <input formControlName="compositeMassGrams" type="number" min="0" step="1" matInput
-                      placeholder="Composite mass, grams">
+                      placeholder="Grams / composite">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                                          [conflictValue]="conflicts.samplingMethod.compositeMassGrams"
@@ -69,7 +69,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubsPerComposite !== undefined">
             <mat-form-field>
                <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
-                      placeholder="Subs per composite">
+                      placeholder="Subs / composite">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"
