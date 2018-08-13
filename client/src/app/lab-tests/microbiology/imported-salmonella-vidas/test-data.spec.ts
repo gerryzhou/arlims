@@ -56,6 +56,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          mBrothData: {
             mBrothBatchId: 'x',
             mBrothWaterBathId: 'x',
+            mBrothStartTime: 'x',
          },
          vidasData: {
             instrumentId: 'x',

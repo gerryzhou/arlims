@@ -50,6 +50,7 @@ export interface SelEnrData {
 export interface MBrothData {
    mBrothBatchId?: string | null;
    mBrothWaterBathId?: string | null;
+   mBrothStartTime?: string | null;
 }
 
 export interface VidasData {
@@ -59,7 +60,6 @@ export interface VidasData {
    positiveControlDetection?: boolean | null;
    mediumControlDetection?: boolean | null;
    spikeDetection?: boolean | null;
-   // signature?: EmployeeTimestamp;
 }
 
 export interface ControlsData {
@@ -202,6 +202,7 @@ function mBrothStatusCode(testData: TestData): FieldValuesStatusCode
    return statusForRequiredFieldValues([
       data.mBrothBatchId,
       data.mBrothWaterBathId,
+      data.mBrothStartTime
    ]);
 }
 
@@ -215,7 +216,6 @@ function vidasStatusCode(testData: TestData): FieldValuesStatusCode
       data.positiveControlDetection,
       data.mediumControlDetection,
       data.spikeDetection,
-      // data.signature,
    ]);
 }
 

@@ -1,6 +1,6 @@
 <form [formGroup]="form">
 
-   <div class="resource-identifiers">
+   <div class="fields-row">
 
       <div class="field-area" [class.conflicted]="conflicts.mBrothBatchId !== undefined">
          <mat-form-field>
@@ -32,7 +32,20 @@
          </app-conflicting-field-value>
       </div>
 
+      <div class="field-area" [class.conflicted]="conflicts.mBrothStartTime !== undefined">
+         <span>
+            <mat-form-field>
+               <input formControlName="mBrothStartTime" type="text" matInput placeholder="Start time hh(0-24):mm">
+            </mat-form-field>
+            <button class="link now-time" (click)="setStartTimeNow()">now</button>
+         </span>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.mBrothStartTime"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.mBrothStartTime = undefined">
+         </app-conflicting-field-value>
+      </div>
 
-   </div> <!-- resource identifiers -->
+   </div>
 
 </form>

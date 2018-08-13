@@ -218,6 +218,7 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
       mBrothData: new FormGroup({
          mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
          mBrothWaterBathId: new FormControl(testData.mBrothData.mBrothWaterBathId),
+         mBrothStartTime: new FormControl(testData.mBrothData.mBrothStartTime), // TODO: Add HH:MM regex validator.
       }),
       vidasData: new FormGroup({
          instrumentId: new FormControl(testData.vidasData.instrumentId),

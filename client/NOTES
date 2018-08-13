@@ -1,3 +1,11 @@
+Commit Notes
+------------
+
+
+
+
+--------------------
+In controls section there should be only systemControlsGrowth and collectorsControlsGrowth fields (media and positive controls don't apply).
 
 How to properly represent individual composite results?
   John: As grid.

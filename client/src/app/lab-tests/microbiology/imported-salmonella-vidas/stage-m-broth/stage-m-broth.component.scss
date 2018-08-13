@@ -1,7 +1,11 @@
 @import '../common-test-stage-styles';
 
-.resource-identifiers {
+.fields-row {
    display: flex;
    flex-flow: row wrap;
+
+   .now-time {
+      margin-left: 10px;
+   }
 }
 

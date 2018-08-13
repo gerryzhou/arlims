@@ -3,6 +3,7 @@ import {FormGroup} from '@angular/forms';
 import {MBrothData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {LabResource} from '../../../../../generated/dto';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-stage-m-broth',
@@ -28,4 +29,9 @@ export class StageMBrothComponent implements OnChanges {
    ngOnChanges() {
    }
 
+   setStartTimeNow()
+   {
+      const nowTime = moment().format('HH:mm');
+      this.form.get('mBrothStartTime').setValue(nowTime);
+   }
 }
