@@ -1,3 +1,5 @@
+Results Stage
+   Introduce individual results for any number of test units (samples/composites).
 
 
 Commit Notes
@@ -5,16 +7,12 @@ Commit Notes
 
 
 
-
+Report Customization
 --------------------
-Allow customizing the test data on server before invoking generic field value injection into pdf.
-  Replace boolean values for growth with appropriate strings.
+Allow customizing the test data on client side before invoking generic field value injection into pdf.
+  E.g., replace boolean values for growth with appropriate strings.
   Build a string for the composites results, or figure out how to display an array of values.
 
-
-
-How to properly represent individual composite results?
-  John: As grid.
 
 Each test needs to be able to allow free-form entry of "continuation page".
 

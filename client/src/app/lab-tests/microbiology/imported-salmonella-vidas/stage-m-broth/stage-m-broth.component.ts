@@ -24,6 +24,9 @@ export class StageMBrothComponent implements OnChanges {
    @Input()
    conflictsWhoWhen: EmployeeTimestamp;
 
+   @Input()
+   showUnsetAffordances = false;
+
    constructor() { }
 
    ngOnChanges() {

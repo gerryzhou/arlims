@@ -36,12 +36,14 @@ export class StagePreEnrComponent implements OnChanges {
    @Input()
    samplingMethodChoices: SamplingMethod[];
 
+   @Input()
+   showUnsetAffordances = false;
+
    // These allow the user to control how lab resources are entered, either via select field (when true) or else by free-form text input.
    selectBalance = true;
    selectIncubator = true;
    allowTogglingSelects = true; // TODO: Retrieve from test configuration.
 
-   showUnsetAffordances = false;
 
    resourceAssignments: ResourceControlAssignments;
 

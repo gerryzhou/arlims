@@ -23,6 +23,9 @@ export class StageSelEnrComponent implements OnChanges {
    @Input()
    waterBaths: LabResource[];
 
+   @Input()
+   showUnsetAffordances = false;
+
    constructor() { }
 
    ngOnChanges() {

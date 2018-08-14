@@ -19,10 +19,10 @@ export class StagePrepComponent implements OnChanges {
    @Input()
    conflictsWhoWhen: EmployeeTimestamp;
 
+   @Input()
    showUnsetAffordances = false;
 
-   constructor() { }
+   constructor() {}
 
-   ngOnChanges() {
-   }
+   ngOnChanges() {}
 }

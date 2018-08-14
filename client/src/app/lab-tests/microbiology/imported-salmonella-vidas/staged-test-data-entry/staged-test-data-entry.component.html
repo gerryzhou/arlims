@@ -17,7 +17,8 @@
          <app-stage-prep class="test-stage"
             [form]="testDataForm.get('prepData')"
             [conflicts]="conflictsTestData.prepData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-prep>
       </mat-step>
 
@@ -28,7 +29,8 @@
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [balances]="balances"
             [incubators]="incubators"
-            [samplingMethodChoices]="testConfig.samplingMethodChoices">
+            [samplingMethodChoices]="testConfig.samplingMethodChoices"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-pre-enr>
       </mat-step>
 
@@ -37,7 +39,8 @@
             [form]="testDataForm.get('selEnrData')"
             [conflicts]="conflictsTestData.selEnrData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [waterBaths]="waterBaths">
+            [waterBaths]="waterBaths"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-sel-enr>
       </mat-step>
 
@@ -46,7 +49,8 @@
             [form]="testDataForm.get('mBrothData')"
             [conflicts]="conflictsTestData.mBrothData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [waterBaths]="waterBaths">
+            [waterBaths]="waterBaths"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-m-broth>
       </mat-step>
 
@@ -55,7 +59,8 @@
             [form]="testDataForm.get('vidasData')"
             [conflicts]="conflictsTestData.vidasData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [vidasInstruments]="vidasInstruments">
+            [vidasInstruments]="vidasInstruments"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-vidas>
       </mat-step>
 
@@ -63,7 +68,8 @@
          <app-stage-controls class="test-stage"
             [form]="testDataForm.get('controlsData')"
             [conflicts]="conflictsTestData.controlsData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-controls>
       </mat-step>
 
@@ -71,7 +77,8 @@
          <app-stage-results class="test-stage"
             [form]="testDataForm.get('resultsData')"
             [conflicts]="conflictsTestData.resultsData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-results>
       </mat-step>
 
@@ -79,13 +86,22 @@
          <app-stage-wrapup class="test-stage"
             [form]="testDataForm.get('wrapupData')"
             [conflicts]="conflictsTestData.wrapupData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-wrapup>
       </mat-step>
 
    </mat-horizontal-stepper>
 
    <div class="form-bottom-toolbar">
+      <div>
+         <mat-menu #optionsMenu="matMenu">
+            <button type="button" mat-menu-item  (click)="toggleShowUnsetAffordances()">Toggle showing 'unset' option for supporting fields</button>
+         </mat-menu>
+         <button mat-button type="button" [matMenuTriggerFor]="optionsMenu">
+            Options <mat-icon>more_vert</mat-icon>
+         </button>
+      </div>
       <button mat-button type="submit" color="primary">Save</button>
    </div>
 

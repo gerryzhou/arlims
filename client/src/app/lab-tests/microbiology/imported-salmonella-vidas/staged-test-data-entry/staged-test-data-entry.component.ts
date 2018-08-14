@@ -12,7 +12,7 @@ import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
 import {TestConfig} from '../test-config';
-import {MatStepper} from '@angular/material';
+import {MatSlideToggleChange, MatStepper} from '@angular/material';
 import {StagePrepComponent} from '../stage-prep/stage-prep.component';
 import {StagePreEnrComponent} from '../stage-pre-enr/stage-pre-enr.component';
 import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
@@ -39,6 +39,8 @@ export class StagedTestDataEntryComponent implements OnInit {
    // After a failed save, we can temporarily show values from another user's conflicting edits.
    conflictsTestData: TestData;
    conflictsEmployeeTimestamp: EmployeeTimestamp | null;
+
+   showUnsetAffordances = false;
 
    readonly stage: string | null;
    readonly stageIndex: number | null;
@@ -161,7 +163,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.conflictsEmployeeTimestamp = null;
    }
 
-   @HostListener('window:keydown.F1')
+   @HostListener('window:keydown.F4')
    promptApplyResourcesInCurrentTestStage()
    {
       const selIx = this.testStageStepper.selectedIndex;
@@ -169,6 +171,11 @@ export class StagedTestDataEntryComponent implements OnInit {
       {
          if (this.stageComps[selIx].promptApplyResources) this.stageComps[selIx].promptApplyResources();
       }
+   }
+
+   toggleShowUnsetAffordances()
+   {
+      this.showUnsetAffordances = !this.showUnsetAffordances;
    }
 }
 

@@ -19,6 +19,7 @@ export class StageWrapupComponent implements OnChanges {
    @Input()
    conflictsWhoWhen: EmployeeTimestamp;
 
+   @Input()
    showUnsetAffordances = false;
 
    destinationsEnabled = false;
