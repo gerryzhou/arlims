@@ -1,3 +1,5 @@
+
+
 Commit Notes
 ------------
 
@@ -5,7 +7,11 @@ Commit Notes
 
 
 --------------------
-In controls section there should be only systemControlsGrowth and collectorsControlsGrowth fields (media and positive controls don't apply).
+Allow customizing the test data on server before invoking generic field value injection into pdf.
+  Replace boolean values for growth with appropriate strings.
+  Build a string for the composites results, or figure out how to display an array of values.
+
+
 
 How to properly represent individual composite results?
   John: As grid.

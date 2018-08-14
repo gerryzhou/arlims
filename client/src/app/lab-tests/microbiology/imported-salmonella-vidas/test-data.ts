@@ -50,7 +50,7 @@ export interface SelEnrData {
 export interface MBrothData {
    mBrothBatchId?: string | null;
    mBrothWaterBathId?: string | null;
-   mBrothStartTime?: string | null;
+   waterBathStarted?: string | null;
 }
 
 export interface VidasData {
@@ -63,12 +63,12 @@ export interface VidasData {
 }
 
 export interface ControlsData {
+   systemControlsUsed?: boolean | null;
    systemControlTypes?: string | null;
-   systemControlsPositiveControlGrowth?: boolean | null;
-   systemControlsMediaControlGrowth?: boolean | null;
+   systemControlsGrowth?: boolean | null;
+   collectorControlsUsed?: boolean | null;
    collectorControlTypes?: string | null;
-   collectorControlsPositiveControlGrowth?: boolean | null;
-   collectorControlsMediaControlGrowth?: boolean | null;
+   collectorControlsGrowth?: boolean | null;
    bacterialControlsUsed?: boolean | null;
 }
 
@@ -202,7 +202,7 @@ function mBrothStatusCode(testData: TestData): FieldValuesStatusCode
    return statusForRequiredFieldValues([
       data.mBrothBatchId,
       data.mBrothWaterBathId,
-      data.mBrothStartTime
+      data.waterBathStarted,
    ]);
 }
 
@@ -222,15 +222,33 @@ function vidasStatusCode(testData: TestData): FieldValuesStatusCode
 function controlsStatusCode(testData: TestData): FieldValuesStatusCode
 {
    const data = testData.controlsData;
-   return statusForRequiredFieldValues([
-      data.systemControlTypes,
-      data.systemControlsPositiveControlGrowth,
-      data.systemControlsMediaControlGrowth,
-      data.collectorControlTypes,
-      data.collectorControlsPositiveControlGrowth,
-      data.collectorControlsMediaControlGrowth,
+
+   const usageFieldsStatus = statusForRequiredFieldValues([
+      data.systemControlsUsed,
+      data.collectorControlsUsed,
       data.bacterialControlsUsed,
    ]);
+
+   switch ( usageFieldsStatus  )
+   {
+      case 'i': return 'i';
+      case 'e': return 'e';
+      case 'c':
+      {
+         if (data.systemControlsUsed &&
+            (!data.systemControlTypes || data.systemControlTypes.trim().length === 0 || data.systemControlsGrowth == null))
+         {
+            return 'i';
+         }
+         if (data.collectorControlsUsed &&
+            (!data.collectorControlTypes || data.collectorControlTypes.trim().length === 0 || data.collectorControlsGrowth == null))
+         {
+            return 'i';
+         }
+
+         return 'c';
+      }
+   }
 }
 
 function resultsStatusCode(testData: TestData): FieldValuesStatusCode

@@ -21,7 +21,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
             <mat-form-field>
                <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
-                      placeholder="Grams / sub">
+                      placeholder="Grams per sub">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                                          [conflictValue]="conflicts.samplingMethod.extractedGramsPerSub"
@@ -57,7 +57,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.compositeMassGrams !== undefined">
             <mat-form-field>
                <input formControlName="compositeMassGrams" type="number" min="0" step="1" matInput
-                      placeholder="Grams / composite">
+                      placeholder="Grams per composite">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                                          [conflictValue]="conflicts.samplingMethod.compositeMassGrams"
@@ -69,7 +69,7 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubsPerComposite !== undefined">
             <mat-form-field>
                <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
-                      placeholder="Subs / composite">
+                      placeholder="Subs per composite">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"

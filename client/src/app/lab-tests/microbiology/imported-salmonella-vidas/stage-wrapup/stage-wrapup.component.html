@@ -6,7 +6,7 @@
            [class.conflicted]="conflicts.reserveSampleDisposition !== undefined">
          <span>
             <span class="label">Reserve sample: </span>
-            <mat-radio-group formControlName="reserveSampleDisposition" (change)="onReserveSampleDispositionChanged($event)">
+            <mat-radio-group formControlName="reserveSampleDisposition" (change)="onReserveSampleDispositionChanged()">
                <mat-radio-button value="NO_RESERVE_SAMPLE">none</mat-radio-button>
                <mat-radio-button value="SAMPLE_DISCARDED_AFTER_ANALYSIS">sample discarded after analysis</mat-radio-button>
                <mat-radio-button value="ISOLATES_SENT">isolates sent (enter destination below)</mat-radio-button>

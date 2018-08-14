@@ -1,4 +1,6 @@
 
+Remove sample and test associations with managed and unmanaged resources (resource lists), at least from the loading queries for lab group contents.
+
 Audit logging of all test data changes, per field.
   Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
 

@@ -218,7 +218,7 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
       mBrothData: new FormGroup({
          mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
          mBrothWaterBathId: new FormControl(testData.mBrothData.mBrothWaterBathId),
-         mBrothStartTime: new FormControl(testData.mBrothData.mBrothStartTime), // TODO: Add HH:MM regex validator.
+         waterBathStarted: new FormControl(testData.mBrothData.waterBathStarted), // TODO: Add ISO timestamp validator.
       }),
       vidasData: new FormGroup({
          instrumentId: new FormControl(testData.vidasData.instrumentId),
@@ -229,12 +229,12 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
          spikeDetection: new FormControl(testData.vidasData.spikeDetection),
       }),
       controlsData: new FormGroup({
+         systemControlsUsed: new FormControl(testData.controlsData.systemControlsUsed),
          systemControlTypes: new FormControl(testData.controlsData.systemControlTypes),
-         systemControlsPositiveControlGrowth: new FormControl(testData.controlsData.systemControlsPositiveControlGrowth),
-         systemControlsMediaControlGrowth: new FormControl(testData.controlsData.systemControlsMediaControlGrowth),
+         systemControlsGrowth: new FormControl(testData.controlsData.systemControlsGrowth),
+         collectorControlsUsed: new FormControl(testData.controlsData.collectorControlsUsed),
          collectorControlTypes: new FormControl(testData.controlsData.collectorControlTypes),
-         collectorControlsPositiveControlGrowth: new FormControl(testData.controlsData.collectorControlsPositiveControlGrowth),
-         collectorControlsMediaControlGrowth: new FormControl(testData.controlsData.collectorControlsMediaControlGrowth),
+         collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
       }),
       resultsData: new FormGroup({

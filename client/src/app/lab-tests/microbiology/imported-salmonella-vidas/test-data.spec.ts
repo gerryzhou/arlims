@@ -56,7 +56,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          mBrothData: {
             mBrothBatchId: 'x',
             mBrothWaterBathId: 'x',
-            mBrothStartTime: 'x',
+            waterBathStarted: 'x',
          },
          vidasData: {
             instrumentId: 'x',
@@ -67,12 +67,12 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             spikeDetection: false,
          },
          controlsData: {
+            systemControlsUsed: true,
             systemControlTypes: 'x',
-            systemControlsPositiveControlGrowth: true,
-            systemControlsMediaControlGrowth: false,
+            systemControlsGrowth: true,
+            collectorControlsUsed: true,
             collectorControlTypes: 'x',
-            collectorControlsPositiveControlGrowth: true,
-            collectorControlsMediaControlGrowth: false,
+            collectorControlsGrowth: true,
             bacterialControlsUsed: false,
          },
          resultsData: {
@@ -139,12 +139,12 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             // [all required fields omitted]
          },
          controlsData: {
+            systemControlsUsed: true,
             systemControlTypes: 'x',
-            systemControlsPositiveControlGrowth: true,
-            systemControlsMediaControlGrowth: false,
+            systemControlsGrowth: true,
+            collectorControlsUsed: true,
             collectorControlTypes: 'x',
-            collectorControlsPositiveControlGrowth: true,
-            // collectorControlsMediaControlGrowth [required field omitted]
+            // collectorControlsGrowth: true, [required field omitted]
             bacterialControlsUsed: false,
          },
          resultsData: {

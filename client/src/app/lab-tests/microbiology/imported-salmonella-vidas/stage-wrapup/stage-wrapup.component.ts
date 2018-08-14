@@ -44,7 +44,7 @@ export class StageWrapupComponent implements OnChanges {
       this.updateControlEnablements();
    }
 
-   onReserveSampleDispositionChanged(change) {
+   onReserveSampleDispositionChanged() {
       this.updateControlEnablements();
    }
 }

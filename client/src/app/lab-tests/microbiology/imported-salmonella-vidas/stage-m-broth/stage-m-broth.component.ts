@@ -31,7 +31,7 @@ export class StageMBrothComponent implements OnChanges {
 
    setStartTimeNow()
    {
-      const nowTime = moment().format('HH:mm');
-      this.form.get('mBrothStartTime').setValue(nowTime);
+      const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
+      this.form.get('waterBathStarted').setValue(nowTime);
    }
 }
