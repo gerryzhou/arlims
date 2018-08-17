@@ -1,9 +1,18 @@
-Results Stage
-   Introduce individual results for any number of test units (samples/composites).
+Vidas Stage
+   Tweak position highlighting of media, positive, spike detection controls.
+      Negative controls at top.
+      Positive controls at bottom.
+   Sample detections
+      Allow pasting in results or loading from file (see Vidas results output).
 
+Find problem with conflicts merge causing "won't replace non-atomic value with atomic value".
+  Maybe just do away with that check since there may be valid cases for it (moment obj vs date string maybe).
+  When merge is fixed, make sure that if #subs/composites changes because of auto-merge, then the proper change events
+  are fired so that the number of vidas detection controls is updated.
 
 Commit Notes
 ------------
+Represent vidas detection results as array of values.
 
 
 
@@ -13,6 +22,8 @@ Allow customizing the test data on client side before invoking generic field val
   E.g., replace boolean values for growth with appropriate strings.
   Build a string for the composites results, or figure out how to display an array of values.
 
+Add BAM link in each test.
+  Add links popup menu button in bottom toolbar.
 
 Each test needs to be able to allow free-form entry of "continuation page".
 

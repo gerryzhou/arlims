@@ -61,7 +61,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          vidasData: {
             instrumentId: 'x',
             kitIds: 'x',
-            compositesDetection: true,
+            testUnitDetections: [true],
             positiveControlDetection: true,
             mediumControlDetection: false,
             spikeDetection: false,

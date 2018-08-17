@@ -21,16 +21,14 @@ export function stageTestDataFieldNameToStageName(testDataFieldName: string): st
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2').toUpperCase();
 }
 
-export function statusForRequiredFieldValues(fieldValues: any[]): FieldValuesStatusCode {
+export function statusForRequiredFieldValues(fieldValues: any[], allowEmptyArraysAsValue = false): FieldValuesStatusCode {
    let valueFound = false;
    let nonValueFound = false;
 
-   for (const v of fieldValues) {
-      if (v === undefined || v === null || v === '') {
-         nonValueFound = true;
-      } else {
-         valueFound = true;
-      }
+   for (const v of fieldValues)
+   {
+      if (v === undefined || v === null || v === '' || (!allowEmptyArraysAsValue && v === [])) nonValueFound = true;
+      else valueFound = true;
    }
 
    if (!valueFound) {

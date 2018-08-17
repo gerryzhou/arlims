@@ -1,6 +1,6 @@
 import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 
 import {AlertMessageService, ApiUrlsService, defaultJsonFieldFormatter,
@@ -12,7 +12,7 @@ import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
 import {TestConfig} from '../test-config';
-import {MatSlideToggleChange, MatStepper} from '@angular/material';
+import {MatStepper} from '@angular/material';
 import {StagePrepComponent} from '../stage-prep/stage-prep.component';
 import {StagePreEnrComponent} from '../stage-pre-enr/stage-pre-enr.component';
 import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
@@ -21,6 +21,7 @@ import {StageVidasComponent} from '../stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from '../stage-controls/stage-controls.component';
 import {StageResultsComponent} from '../stage-results/stage-results.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
+import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-staged-test-data-entry',
@@ -41,6 +42,9 @@ export class StagedTestDataEntryComponent implements OnInit {
    conflictsEmployeeTimestamp: EmployeeTimestamp | null;
 
    showUnsetAffordances = false;
+
+   sampleTestUnitsCount: number | null;
+   sampleTestUnitsType: string | null;
 
    readonly stage: string | null;
    readonly stageIndex: number | null;
@@ -96,6 +100,11 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.sampleInTest = labGroupTestData.sampleInTest;
       this.testConfig = labGroupTestData.labGroupTestConfig;
       this.testDataForm = makeTestDataFormGroup(this.originalTestData);
+
+      const sm = this.originalTestData.preEnrData.samplingMethod;
+      const sampleTestUnits = makeSampleTestUnits(sm.numberOfSubs, sm.numberOfComposites);
+      this.sampleTestUnitsCount = sampleTestUnits.testUnitsCount;
+      this.sampleTestUnitsType = sampleTestUnits.testUnitsType;
 
       const labResources = labGroupTestData.labResourcesByType;
       this.balances = labResources.get(StagedTestDataEntryComponent.BALANCE_RESOURCE_TYPE);
@@ -155,6 +164,12 @@ export class StagedTestDataEntryComponent implements OnInit {
          }
       });
       // TODO: Catch observable errors, alert user via alert service that the save opearation failed and to try again.
+   }
+
+   onSampleTestUnitsChanged(testUnitsChange: SampleTestUnits)
+   {
+      this.sampleTestUnitsCount = testUnitsChange.testUnitsCount;
+      this.sampleTestUnitsType = testUnitsChange.testUnitsType;
    }
 
    clearConflictsData()
@@ -230,7 +245,9 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
       vidasData: new FormGroup({
          instrumentId: new FormControl(testData.vidasData.instrumentId),
          kitIds: new FormControl(testData.vidasData.kitIds),
-         compositesDetection: new FormControl(testData.vidasData.compositesDetection),
+         testUnitDetections: new FormArray(
+            (testData.vidasData.testUnitDetections || [null]).map(detected => new FormControl(detected))
+         ),
          positiveControlDetection: new FormControl(testData.vidasData.positiveControlDetection),
          mediumControlDetection: new FormControl(testData.vidasData.mediumControlDetection),
          spikeDetection: new FormControl(testData.vidasData.spikeDetection),

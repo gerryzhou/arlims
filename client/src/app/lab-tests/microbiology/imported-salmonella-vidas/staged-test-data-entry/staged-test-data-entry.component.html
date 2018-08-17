@@ -30,7 +30,8 @@
             [balances]="balances"
             [incubators]="incubators"
             [samplingMethodChoices]="testConfig.samplingMethodChoices"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [showUnsetAffordances]="showUnsetAffordances"
+            (sampleTestUnitsChange)="onSampleTestUnitsChanged($event)">
          </app-stage-pre-enr>
       </mat-step>
 
@@ -60,7 +61,10 @@
             [conflicts]="conflictsTestData.vidasData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [vidasInstruments]="vidasInstruments"
+            [sampleTestUnitsCount]="sampleTestUnitsCount"
+            [sampleTestUnitsType]="sampleTestUnitsType"
             [showUnsetAffordances]="showUnsetAffordances">
+
          </app-stage-vidas>
       </mat-step>
 

@@ -1,4 +1,4 @@
-import {SamplingMethod} from '../sampling-method';
+import {SamplingMethod} from '../sampling-methods';
 
 export interface TestConfig {
 

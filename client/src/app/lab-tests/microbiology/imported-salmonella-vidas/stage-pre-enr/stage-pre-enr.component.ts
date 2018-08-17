@@ -1,9 +1,9 @@
-import {Component, Input, OnChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {LabResource} from '../../../../../generated/dto';
 import {PreEnrData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import {SamplingMethod} from '../../sampling-method';
+import {makeSampleTestUnits, SampleTestUnits, SamplingMethod} from '../../sampling-methods';
 import {ResourceControlAssignments} from '../../../resource-assignments';
 import {ResourceCodesDialogComponent} from '../../../../common-components/resource-codes-dialog/resource-codes-dialog.component';
 import {MatDialog} from '@angular/material';
@@ -38,6 +38,9 @@ export class StagePreEnrComponent implements OnChanges {
 
    @Input()
    showUnsetAffordances = false;
+
+   @Output()
+   sampleTestUnitsChange = new EventEmitter<SampleTestUnits>();
 
    // These allow the user to control how lab resources are entered, either via select field (when true) or else by free-form text input.
    selectBalance = true;
@@ -76,6 +79,15 @@ export class StagePreEnrComponent implements OnChanges {
 
       const compMassCtrl = samplingMethodformGroup.get('compositeMassGrams');
       if (compMassCtrl) compMassCtrl.setValue(samplingMethod.compositeMassGrams);
+   }
+
+   onSampleTestUnitsFieldChanged()
+   {
+      const samplingMethodformGroup = this.form.get('samplingMethod');
+      const numSubs = +samplingMethodformGroup.get('numberOfSubs').value;
+      const numComps = +samplingMethodformGroup.get('numberOfComposites').value;
+
+      this.sampleTestUnitsChange.emit(makeSampleTestUnits(numSubs, numComps));
    }
 
    toggleSelectBalance()

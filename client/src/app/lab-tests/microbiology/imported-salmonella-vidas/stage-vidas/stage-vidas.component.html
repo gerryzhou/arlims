@@ -1,107 +1,144 @@
 <form [formGroup]="form">
 
-   <div class="resource-identifiers">
+   <div class="content-stack">
 
-      <div class="field-area" [class.conflicted]="conflicts.instrumentId !== undefined">
-         <mat-form-field>
-            <mat-select formControlName="instrumentId" *ngIf="vidasInstruments; else textInputVidasInstrument"
-                        placeholder="Vidas instrument">
-               <mat-option [value]="null"></mat-option>
-               <mat-option *ngFor="let labRsc of vidasInstruments" [value]="labRsc.code">
-                  {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
-               </mat-option>
-            </mat-select>
-            <ng-template #textInputVidasInstrument>
-               <input formControlName="instrumentId" type="text" matInput placeholder="Vidas instrument">
-            </ng-template>
-         </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.instrumentId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.instrumentId = undefined">
-         </app-conflicting-field-value>
-      </div>
+      <div class="row">
 
-      <div class="field-area" [class.conflicted]="conflicts.kitIds !== undefined">
-         <mat-form-field>
-            <input formControlName="kitIds" type="text" matInput placeholder="Vidas kit ids">
-         </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.kitIds"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.kitIds = undefined">
-         </app-conflicting-field-value>
-      </div>
+         <div class="field-area" [class.conflicted]="conflicts.instrumentId !== undefined">
+            <mat-form-field>
+               <mat-select formControlName="instrumentId" *ngIf="vidasInstruments; else textInputVidasInstrument"
+                           placeholder="Vidas instrument">
+                  <mat-option [value]="null"></mat-option>
+                  <mat-option *ngFor="let labRsc of vidasInstruments" [value]="labRsc.code">
+                     {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
+                  </mat-option>
+               </mat-select>
+               <ng-template #textInputVidasInstrument>
+                  <input formControlName="instrumentId" type="text" matInput placeholder="Vidas instrument">
+               </ng-template>
+            </mat-form-field>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.instrumentId"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.instrumentId = undefined">
+            </app-conflicting-field-value>
+         </div>
 
-   </div> <!-- resource identifiers -->
+         <div class="field-area" [class.conflicted]="conflicts.kitIds !== undefined">
+            <mat-form-field>
+               <input formControlName="kitIds" type="text" matInput placeholder="Vidas kit ids">
+            </mat-form-field>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.kitIds"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.kitIds = undefined">
+            </app-conflicting-field-value>
+         </div>
 
-   <div class="results">
+         <div class="expanding-flex-space"></div>
 
-      <div class="field-area" [class.conflicted]="conflicts.compositesDetection !== undefined">
-         <mat-radio-group formControlName="compositesDetection">
-            <div>Composites detection</div>
-            <div>
-               <mat-radio-button [value]="true">pos</mat-radio-button>
-               <mat-radio-button [value]="false">neg</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+         <div class="field-area medium-control"
+              [class.conflicted]="conflicts.mediumControlDetection !== undefined"
+              [class.pos]="mediumControlDetectionControl().value === true"
+              [class.neg]="mediumControlDetectionControl().value === false">
+            <mat-radio-group formControlName="mediumControlDetection">
+               <div>Medium control detection</div>
+               <div>
+                  <mat-radio-button [value]="true">pos</mat-radio-button>
+                  <mat-radio-button [value]="false">neg</mat-radio-button>
+                  <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+               </div>
+            </mat-radio-group>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.mediumControlDetection"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.mediumControlDetection = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+      </div> <!-- top row -->
+
+      <!-- main (test unit) detection results -->
+      <div class="field-area sample-test-unit-detections" [class.conflicted]="conflicts.testUnitDetections !== undefined">
+         <h3>{{(sampleTestUnitsType || 'sample') | titlecase}} detections</h3>
+         <div class="detection-controls-warning" *ngIf="excessSampleTestUnitControlsCount">
+            Too many detection choices exist here vs. the <b></b> sample test units specified in
+            the pre-enrichment stage. Please
+            <button class="link" (click)="removeSampleDetectionControls(excessSampleTestUnitControlsCount)">delete</button>
+            the {{excessSampleTestUnitControlsCount}} excess detection choices, or adjust the numbers in the
+            pre-enrichment stage.
+         </div>
+         <div class="detection-controls-warning" *ngIf="sampleTestUnitsCount == null">
+            The number of sample test units (subs or composites being tested) is currently not defined. Please define the
+            number of subsamples and composites in the pre-enrichment stage prior to entering results here.
+         </div>
+         <div class="sample-test-unit-detections-array" formArrayName="testUnitDetections">
+            <div class="sample-test-unit-detection"
+                 *ngFor="let ctrl of getSampleTestUnitDetectionControls(); let i = index;"
+                 [ngClass]="{'pos': ctrl.value === true, 'neg': ctrl.value === false}">
+               <span class="test-unit-number">{{i+1}}</span>
+               <mat-radio-group [formControlName]="i">
+                  <mat-radio-button [value]="true">pos</mat-radio-button>
+                  <mat-radio-button [value]="false">neg</mat-radio-button>
+                  <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+               </mat-radio-group>
+               <button class="close" *ngIf="excessSampleTestUnitControlsCount && excessSampleTestUnitControlsCount > 0"
+                       mat-icon-button (click)="removeTestUnitControlAtIndex(i)">
+                  <mat-icon>close</mat-icon>
+               </button>
             </div>
-         </mat-radio-group>
+         </div>
          <app-conflicting-field-value
-            [conflictValue]="conflicts.compositesDetection"
+            [conflictValue]="conflicts.testUnitDetections"
             [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.compositesDetection = undefined">
+            (dismiss)="conflicts.testUnitDetections = undefined">
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.positiveControlDetection !== undefined">
-         <mat-radio-group formControlName="positiveControlDetection">
-            <div>Positive control detection</div>
-            <div>
-               <mat-radio-button [value]="true">pos</mat-radio-button>
-               <mat-radio-button [value]="false">neg</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-            </div>
-         </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.positiveControlDetection"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.positiveControlDetection = undefined">
-         </app-conflicting-field-value>
+      <div class="row">
+
+         <div class="field-area spike-control"
+              [class.conflicted]="conflicts.spikeDetection !== undefined"
+              [class.pos]="spikeDetectionControl().value === true"
+              [class.neg]="spikeDetectionControl().value === false">
+            <mat-radio-group formControlName="spikeDetection">
+               <div>Spike detection</div>
+               <div>
+                  <mat-radio-button [value]="true">pos</mat-radio-button>
+                  <mat-radio-button [value]="false">neg</mat-radio-button>
+                  <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+               </div>
+            </mat-radio-group>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.spikeDetection"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.spikeDetection = undefined">
+            </app-conflicting-field-value>
+         </div>
+
+         <div class="expanding-flex-space"></div>
+
+         <div class="field-area positive-control"
+              [class.conflicted]="conflicts.positiveControlDetection !== undefined"
+              [class.pos]="positiveControlDetectionControl().value === true"
+              [class.neg]="positiveControlDetectionControl().value === false">
+            <mat-radio-group formControlName="positiveControlDetection">
+               <div>Positive control detection</div>
+               <div>
+                  <mat-radio-button [value]="true">pos</mat-radio-button>
+                  <mat-radio-button [value]="false">neg</mat-radio-button>
+                  <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+               </div>
+            </mat-radio-group>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.positiveControlDetection"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.positiveControlDetection = undefined">
+            </app-conflicting-field-value>
+         </div>
+
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.mediumControlDetection !== undefined">
-         <mat-radio-group formControlName="mediumControlDetection">
-            <div>Medium control detection</div>
-            <div>
-               <mat-radio-button [value]="true">pos</mat-radio-button>
-               <mat-radio-button [value]="false">neg</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-            </div>
-         </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.mediumControlDetection"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.mediumControlDetection = undefined">
-         </app-conflicting-field-value>
-      </div>
-
-      <div class="field-area" [class.conflicted]="conflicts.spikeDetection !== undefined">
-         <mat-radio-group formControlName="spikeDetection">
-            <div>Spike detection</div>
-            <div>
-               <mat-radio-button [value]="true">pos</mat-radio-button>
-               <mat-radio-button [value]="false">neg</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-            </div>
-         </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.spikeDetection"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.spikeDetection = undefined">
-         </app-conflicting-field-value>
-      </div>
-
-   </div> <!-- results -->
-
+   </div>
 </form>
 

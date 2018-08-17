@@ -1,5 +1,5 @@
 import {FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
-import {SamplingMethod} from '../sampling-method';
+import {SampleTestUnits, SamplingMethod} from '../sampling-methods';
 
 export interface TestData {
    prepData:     PrepData;
@@ -56,7 +56,7 @@ export interface MBrothData {
 export interface VidasData {
    instrumentId?: string | null;
    kitIds?: string | null;
-   compositesDetection?: boolean | null;  // TODO: May need an array of detection status by composite #.
+   testUnitDetections?: boolean[] | null;
    positiveControlDetection?: boolean | null;
    mediumControlDetection?: boolean | null;
    spikeDetection?: boolean | null;
@@ -212,11 +212,11 @@ function vidasStatusCode(testData: TestData): FieldValuesStatusCode
    return statusForRequiredFieldValues([
       data.instrumentId,
       data.kitIds,
-      data.compositesDetection,
+      data.testUnitDetections,
       data.positiveControlDetection,
       data.mediumControlDetection,
       data.spikeDetection,
-   ]);
+   ], false);
 }
 
 function controlsStatusCode(testData: TestData): FieldValuesStatusCode

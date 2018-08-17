@@ -11,13 +11,7 @@ Multiple-sample editing(?)
 
 Allow locking sections.
 
-Results
-  Negative controls at top.
-  More detailed representation of composites, as grid.
-    Should be able to add composites/results dynamically to the grid.
-      See Vidas results output.
-    Should be automated pull from Vidas machine, eventually.
-  Positive controls at bottom.
+
 
 Remove resource lists.
 
