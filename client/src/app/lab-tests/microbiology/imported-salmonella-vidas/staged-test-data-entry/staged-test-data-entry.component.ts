@@ -8,7 +8,7 @@ import {AlertMessageService, ApiUrlsService, defaultJsonFieldFormatter,
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
 import {LabResource, LabResourceType} from '../../../../../generated/dto';
-import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
+import {cloneDataObject, copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
 import {TestConfig} from '../test-config';
@@ -133,6 +133,7 @@ export class StagedTestDataEntryComponent implements OnInit {
    onFormSubmit()
    {
       console.log('Saving test data: ', this.testDataForm.value);
+
       this.testsSvc.saveTestData(
          this.sampleInTest.testMetadata.testId,
          this.testDataForm.value,
