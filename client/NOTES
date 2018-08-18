@@ -1,10 +1,6 @@
 
 
-
-Find problem with conflicts merge causing "won't replace non-atomic value with atomic value".j
-  Maybe just do away with that check since there may be valid cases for it (moment obj vs date string maybe).
-  When merge is fixed, make sure that if #subs/composites changes because of auto-merge, then the proper change events
-  are fired so that the number of vidas detection controls is updated.
+Rename WRAPUP to DISP.
 
 Add ability to delete tests.
 

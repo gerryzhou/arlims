@@ -11,7 +11,6 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             {stageName: 'M-BROTH', fieldValuesStatus: 'e'},
             {stageName: 'VIDAS', fieldValuesStatus: 'e'},
             {stageName: 'CONTROLS', fieldValuesStatus: 'e'},
-            {stageName: 'RESULTS', fieldValuesStatus: 'e'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'e'},
          ]);
    });
@@ -75,9 +74,6 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             collectorControlsGrowth: true,
             bacterialControlsUsed: false,
          },
-         resultsData: {
-            positiveCompositesCount: 1,
-         },
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
             reserveSampleDestinations: 'x',
@@ -92,7 +88,6 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             {stageName: 'M-BROTH', fieldValuesStatus: 'c'},
             {stageName: 'VIDAS', fieldValuesStatus: 'c'},
             {stageName: 'CONTROLS', fieldValuesStatus: 'c'},
-            {stageName: 'RESULTS', fieldValuesStatus: 'c'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
          ]);
    });
@@ -147,9 +142,6 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             // collectorControlsGrowth: true, [required field omitted]
             bacterialControlsUsed: false,
          },
-         resultsData: {
-            // positiveCompositesCount [required field omitted]
-         },
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
          }
@@ -163,7 +155,6 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             {stageName: 'M-BROTH', fieldValuesStatus: 'i'},
             {stageName: 'VIDAS', fieldValuesStatus: 'e'},
             {stageName: 'CONTROLS', fieldValuesStatus: 'i'},
-            {stageName: 'RESULTS', fieldValuesStatus: 'e'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
          ]);
    });

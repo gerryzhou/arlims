@@ -19,7 +19,6 @@ import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from '../stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from '../stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from '../stage-controls/stage-controls.component';
-import {StageResultsComponent} from '../stage-results/stage-results.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
 
@@ -68,7 +67,6 @@ export class StagedTestDataEntryComponent implements OnInit {
    @ViewChild(StageMBrothComponent)   mBrothComp: StageMBrothComponent;
    @ViewChild(StageVidasComponent)    vidasComp: StageVidasComponent;
    @ViewChild(StageControlsComponent) controlsComp: StageControlsComponent;
-   @ViewChild(StageResultsComponent)  resultsComp: StageResultsComponent;
    @ViewChild(StageWrapupComponent)   wrapupComp: StageWrapupComponent;
    stageComps: any[];
 
@@ -125,7 +123,6 @@ export class StagedTestDataEntryComponent implements OnInit {
          this.mBrothComp,
          this.vidasComp,
          this.controlsComp,
-         this.resultsComp,
          this.wrapupComp
       ];
    }
@@ -261,9 +258,6 @@ function makeTestDataFormGroup(testData: TestData): FormGroup
          collectorControlTypes: new FormControl(testData.controlsData.collectorControlTypes),
          collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
-      }),
-      resultsData: new FormGroup({
-         positiveCompositesCount: new FormControl(testData.resultsData.positiveCompositesCount),
       }),
       wrapupData: new FormGroup({
          reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),

@@ -8,7 +8,6 @@ export interface TestData {
    mBrothData:   MBrothData;
    vidasData:    VidasData;
    controlsData: ControlsData;
-   resultsData:  ResultsData;
    wrapupData:   WrapupData;
 }
 
@@ -72,10 +71,6 @@ export interface ControlsData {
    bacterialControlsUsed?: boolean | null;
 }
 
-export interface ResultsData {
-   positiveCompositesCount?: number | null;
-}
-
 export interface WrapupData {
    reserveSampleDisposition?: ReserveSampleDisposition | null;
    reserveSampleDestinations?: string | null;
@@ -96,7 +91,6 @@ export function emptyTestData(): TestData {
       mBrothData: {},
       vidasData: {},
       controlsData: {},
-      resultsData: {},
       wrapupData: {},
    };
 }
@@ -113,7 +107,6 @@ export const TEST_STAGES: Stage[] = [
    {name: 'M-BROTH',  statusCodeFn: mBrothStatusCode},
    {name: 'VIDAS',    statusCodeFn: vidasStatusCode},
    {name: 'CONTROLS', statusCodeFn: controlsStatusCode},
-   {name: 'RESULTS',  statusCodeFn: resultsStatusCode},
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 
@@ -249,14 +242,6 @@ function controlsStatusCode(testData: TestData): FieldValuesStatusCode
          return 'c';
       }
    }
-}
-
-function resultsStatusCode(testData: TestData): FieldValuesStatusCode
-{
-   const data = testData.resultsData;
-   return statusForRequiredFieldValues([
-      data.positiveCompositesCount,
-   ]);
 }
 
 function wrapupStatusCode(testData: TestData): FieldValuesStatusCode

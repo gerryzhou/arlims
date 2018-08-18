@@ -25,7 +25,6 @@ import {StageSelEnrComponent} from './stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from './stage-controls/stage-controls.component';
-import {StageResultsComponent} from './stage-results/stage-results.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
 
 @NgModule({
@@ -56,7 +55,6 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       StageMBrothComponent,
       StageVidasComponent,
       StageControlsComponent,
-      StageResultsComponent,
       StageWrapupComponent
    ],
    exports: [

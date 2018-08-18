@@ -77,15 +77,6 @@
          </app-stage-controls>
       </mat-step>
 
-      <mat-step label="RESULTS">
-         <app-stage-results class="test-stage"
-            [form]="testDataForm.get('resultsData')"
-            [conflicts]="conflictsTestData.resultsData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
-         </app-stage-results>
-      </mat-step>
-
       <mat-step label="WRAPUP">
          <app-stage-wrapup class="test-stage"
             [form]="testDataForm.get('wrapupData')"
