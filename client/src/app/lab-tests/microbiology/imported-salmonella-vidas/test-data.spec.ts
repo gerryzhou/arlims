@@ -152,7 +152,6 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          },
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
-            // reserveSampleDestinations [required field omitted]
          }
       };
 
@@ -165,7 +164,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             {stageName: 'VIDAS', fieldValuesStatus: 'e'},
             {stageName: 'CONTROLS', fieldValuesStatus: 'i'},
             {stageName: 'RESULTS', fieldValuesStatus: 'e'},
-            {stageName: 'WRAPUP', fieldValuesStatus: 'i'},
+            {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
          ]);
    });
 
