@@ -33,7 +33,6 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubs !== undefined">
             <mat-form-field>
                <input formControlName="numberOfSubs" type="number" min="0" step="1" matInput
-                      (change)="onSampleTestUnitsFieldChanged()"
                       placeholder="Subs">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
@@ -46,7 +45,6 @@
          <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfComposites !== undefined">
             <mat-form-field>
                <input formControlName="numberOfComposites" type="number" min="0" step="1" matInput
-                      (change)="onSampleTestUnitsFieldChanged()"
                       placeholder="Composites">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"

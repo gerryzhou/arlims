@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {merge, Subscription} from 'rxjs';
+
 import {LabResource} from '../../../../../generated/dto';
 import {PreEnrData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
@@ -47,6 +49,7 @@ export class StagePreEnrComponent implements OnChanges {
    selectIncubator = true;
    allowTogglingSelects = true; // TODO: Retrieve from test configuration.
 
+   sampleTestUnitsChangeSubcription: Subscription;
 
    resourceAssignments: ResourceControlAssignments;
 
@@ -58,6 +61,24 @@ export class StagePreEnrComponent implements OnChanges {
          this.form,
          new Map().set('blenderJarId', ['JAR']).set('bagId', ['BAG']).set('mediumBatchId', ['RV', 'TT', 'LAC'])
       );
+
+      this.subscribeToSampleTestUnitChanges();
+   }
+
+   private subscribeToSampleTestUnitChanges()
+   {
+      if (this.sampleTestUnitsChangeSubcription)
+         this.sampleTestUnitsChangeSubcription.unsubscribe();
+
+      const samplingMethodformGroup = this.form.get('samplingMethod');
+      const numSubsCtrl = samplingMethodformGroup.get('numberOfSubs');
+      const numCompsCtrl = samplingMethodformGroup.get('numberOfComposites');
+
+      this.sampleTestUnitsChangeSubcription =
+         merge(numSubsCtrl.valueChanges, numCompsCtrl.valueChanges)
+            .subscribe(() => {
+               this.onSampleTestUnitsFieldChanged();
+            });
    }
 
    onSamplingMethodClicked(samplingMethod: SamplingMethod)
