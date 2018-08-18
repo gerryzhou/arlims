@@ -1,10 +1,15 @@
 
-export function cloneDataObject<T>(obj: T): T {
+export function cloneDataObject<T>(obj: T): T
+{
    const clone = <T>{};
-   for (const k of Object.keys(obj)) {
-      if (obj[k] != null &&  typeof(obj[k]) === 'object') {
+   for (const k of Object.keys(obj))
+   {
+      if (obj[k] != null &&  isObject(obj[k]))
+      {
          clone[k] = cloneDataObject(obj[k]);
-      } else {
+      }
+      else
+      {
          clone[k] = copyAtomicValue(obj[k]);
       }
    }
@@ -170,28 +175,41 @@ export function copyWithMergedValuesFrom(toObj, fromObj, allowReplacingExistingA
    return res;
 }
 
-export function mergeValues(toObj, fromObj, allowReplacingExistingAtomicValues = false) {
-   for (const k of Object.keys(fromObj)) {
+export function mergeValues(toObj, fromObj, allowReplacingExistingAtomicValues = false)
+{
+   for (const k of Object.keys(fromObj))
+   {
       const fromVal = fromObj[k];
 
-      if (isAtomicValue(fromVal)) {
-         if (toObj[k] !== undefined ) {
-            if (!isAtomicValue(toObj[k])) {
-               throw new MergeError('Will not replace a non-atomic value with an atomic value in merge operation.');
+      if (isAtomicValue(fromVal))
+      {
+         if (toObj[k] !== undefined )
+         {
+            if (!isAtomicValue(toObj[k]))
+            {
+               console.log('Merge error: ', fromVal , '===>|', toObj[k]);
+               throw new MergeError(`Will not replace a non-atomic value ${toObj[k]} with an atomic value ${fromVal} in merge operation.`);
             }
-            if (!allowReplacingExistingAtomicValues) {
+            if (!allowReplacingExistingAtomicValues)
+            {
                console.dir(toObj);
                console.dir(fromObj);
                throw new MergeError(`Merge operation would have overwritten an existing atomic value for key '${k}'.`);
             }
          }
          toObj[k] = copyAtomicValue(fromVal);
-      } else { // from value is a container (Object)
-         if (toObj[k] === undefined) {
+      }
+      else // from value is a container (Object)
+      {
+         if (toObj[k] === undefined)
+         {
             toObj[k] = {};
-         } else if (isAtomicValue(toObj[k])) {
+         }
+         else if (isAtomicValue(toObj[k]))
+         {
             throw new MergeError('Will not replace an atomic value with a non-atomic value in merge operation.');
          }
+
          mergeValues(toObj[k], fromVal, allowReplacingExistingAtomicValues);
       }
    }

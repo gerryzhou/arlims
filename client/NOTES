@@ -1,18 +1,29 @@
-Vidas Stage
-   Tweak position highlighting of media, positive, spike detection controls.
-      Negative controls at top.
-      Positive controls at bottom.
-   Sample detections
-      Allow pasting in results or loading from file (see Vidas results output).
 
-Find problem with conflicts merge causing "won't replace non-atomic value with atomic value".
+
+
+In pre-enr component, subscribe to value changes of the num subs/comps controls directly,
+not through ui. That way changes that were not made through the ui will not be missed.
+
+
+When auto-merging during save attempt changes number of subs or composites (due to no conflict
+for the particular field(s)), the change events are not fired so the main test component is not
+notified of the change and the number of vidas detection controls is not changed.
+
+
+Test unit detections are being saved as an object with the array's numeric index keys.
+  Probably as a result of the merge operation.
+
+Find problem with conflicts merge causing "won't replace non-atomic value with atomic value".j
   Maybe just do away with that check since there may be valid cases for it (moment obj vs date string maybe).
   When merge is fixed, make sure that if #subs/composites changes because of auto-merge, then the proper change events
   are fired so that the number of vidas detection controls is updated.
 
+Vidas Stage
+   Sample detections
+      Allow pasting in results or loading from file (see Vidas results output).
+
 Commit Notes
 ------------
-Represent vidas detection results as array of values.
 
 
 

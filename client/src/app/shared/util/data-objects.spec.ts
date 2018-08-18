@@ -1,8 +1,11 @@
 import {
    copySharedAtomicDataPathsFromLeft,
-   copyUnsharedAtomicDataPathsFromLeft, copyWithMergedValuesFrom,
-   copyWithoutUnchangedAtomicDataVsReference, MergeError,
-   partitionLeftChangedAndNewValuesVsRefByConflictWithRights
+   copyUnsharedAtomicDataPathsFromLeft,
+   copyWithMergedValuesFrom,
+   copyWithoutUnchangedAtomicDataVsReference,
+   MergeError,
+   partitionLeftChangedAndNewValuesVsRefByConflictWithRights,
+   cloneDataObject,
 } from './data-objects';
 
 
@@ -414,6 +417,18 @@ describe('copyWithMergedValuesFrom function', () => {
          .toThrowError(MergeError);
    });
 
+});
+
+describe('cloneDataObject function', () => {
+
+   it('should yield empty object for empty input', () => {
+      expect(cloneDataObject({})).toEqual({});
+   });
+
+   it('should clone top-level array members properly', () => {
+      const a = {a: [1, 2]};
+      expect(cloneDataObject(a)).toEqual({a: [1, 2]});
+   });
 });
 
 /*
