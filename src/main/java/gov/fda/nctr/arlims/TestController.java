@@ -56,6 +56,14 @@ public class TestController
         return new CreatedTestMetadata(sampleId, createdTestId);
     }
 
+    @DeleteMapping("{testId:\\d+}")
+    public void deleteTest(@PathVariable("testId") long testId)
+    {
+        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can create tests.
+
+        testDataService.deleteTest(testId);
+    }
+
     @GetMapping("{testId:\\d+}/data")
     public VersionedTestData getTestDataJson
         (

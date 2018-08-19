@@ -85,6 +85,18 @@ public class JdbcTestDataService implements TestDataService
         return holder.getKey().longValue();
     }
 
+    @Transactional @Override
+    public void deleteTest(long testId)
+    {
+        jdbc.update("delete from test_file where test_id = ?", testId);
+        jdbc.update("delete from test_managed_resource where test_id = ?", testId);
+        jdbc.update("delete from test_unmanaged_resource where test_id = ?", testId);
+        int updateCount = jdbc.update("delete from test where id = ?", testId);
+
+        if ( updateCount == 0 )
+            throw new RuntimeException("delete failed: no test with id " + testId + " was found");
+    }
+
     @Override
     public VersionedTestData getVersionedTestData(long testId)
     {

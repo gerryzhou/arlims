@@ -73,13 +73,19 @@
    <div *ngIf="showAssociatedItems">
 
       <div class="tests">
-         <app-test-metadata *ngFor="let test of sample.tests"
-            [test]="test"
-            [labGroupTestTypes]="labGroupTestTypes"
-            (testClick)="onTestClicked(test)"
-            (stageClick)="onTestStageClicked($event)"
-            (reportClick)="onTestReportClicked(test.testId, $event)">
-         </app-test-metadata>
+         <div class="test-area" *ngFor="let test of sample.tests">
+            <button mat-icon-button *ngIf="showTestDeleteButtons"
+               (click)="onDeleteTestClicked(test)">
+               <mat-icon>remove_circle_outline</mat-icon>
+            </button>
+            <app-test-metadata
+               [test]="test"
+               [labGroupTestTypes]="labGroupTestTypes"
+               (testClick)="onTestClicked(test)"
+               (stageClick)="onTestStageClicked($event)"
+               (reportClick)="onTestReportClicked(test.testId, $event)">
+            </app-test-metadata>
+         </div>
       </div>
 
       <div class="associated-lab-resource-lists" *ngIf="numAssociatedResourceLists > 0">

@@ -26,7 +26,8 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
          new FormGroup({
             searchText: new FormControl(this.initialOptions.searchText),
             includeSamplesAssignedOnlyToOtherUsers: new FormControl(this.initialOptions.includeSamplesAssignedOnlyToOtherUsers),
-            limitSelectionToVisibleSamples: new FormControl(this.initialOptions.limitSelectionToVisibleSamples)
+            limitSelectionToVisibleSamples: new FormControl(this.initialOptions.limitSelectionToVisibleSamples),
+            showTestDeleteButtons: new FormControl(this.initialOptions.showTestDeleteButtons),
          });
 
       this.optsSubscription = this.listingOptionsFormGroup.valueChanges.subscribe(data => this.onFormChange(data));

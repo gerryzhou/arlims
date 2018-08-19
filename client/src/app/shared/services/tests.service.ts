@@ -31,6 +31,12 @@ export class TestsService {
       return this.httpClient.post<CreatedTestMetadata>(url, body);
    }
 
+   deleteTest(testId: number): Observable<void>
+   {
+      const url = this.apiUrlsSvc.testUrl(testId);
+      return this.httpClient.delete<void>(url);
+   }
+
    getVersionedTestData(testId: number): Observable<VersionedTestData>
    {
       return this.httpClient.get<VersionedTestData>(

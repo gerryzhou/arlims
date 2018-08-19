@@ -123,10 +123,10 @@ public class JpaUserContextService implements UserContextService
             getSampleAssignmentsBySampleId(sampleIds, usersById);
 
         Map<Long, List<LabResourceListMetadata>> unmanagedResourceListsBySampleId =
-            getUnmanagedResourceListsBySampleId(sampleIds);
+            new HashMap<>(); // getUnmanagedResourceListsBySampleId(sampleIds);
 
         Map<Long, List<LabResourceListMetadata>> managedResourceListsBySampleId =
-            getManagedResourceListsBySampleId(sampleIds);
+            new HashMap<>(); // getManagedResourceListsBySampleId(sampleIds);
 
         Map<Long, List<Test>> testsBySampleId =
             getTestsBySampleId(sampleIds);

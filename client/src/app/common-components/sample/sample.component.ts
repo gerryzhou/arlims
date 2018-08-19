@@ -28,6 +28,9 @@ export class SampleComponent implements OnChanges {
    @Input()
    labGroupTestTypes: LabTestType[] = [];
 
+   @Input()
+   showTestDeleteButtons = true;
+
    @Output()
    headerClick = new EventEmitter<void>();
 
@@ -46,6 +49,15 @@ export class SampleComponent implements OnChanges {
    @Output()
    testCreationFailed = new EventEmitter<string>();
 
+   @Output()
+   testDeleted = new EventEmitter<LabTestMetadata>();
+
+   @Output()
+   testDeleteFailed = new EventEmitter<string>();
+
+   @Output()
+   testDeletionFailed = new EventEmitter<string>();
+
    // Sample "details" include tests or resource lists, and additional sample metadata.
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasAssociatedItems: boolean;
@@ -57,7 +69,8 @@ export class SampleComponent implements OnChanges {
    constructor(private testsSvc: TestsService,
                private dialogSvc: MatDialog) {}
 
-   ngOnChanges() {
+   ngOnChanges()
+   {
       this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
       this.numAssociatedResourceLists =
          this.sample.associatedManagedResourceLists.length +
@@ -66,15 +79,18 @@ export class SampleComponent implements OnChanges {
       this.hasAssociatedItems = this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
    }
 
-   onHeaderClick() {
+   onHeaderClick()
+   {
       this.headerClick.next();
    }
 
-   onTestClicked(test: LabTestMetadata) {
+   onTestClicked(test: LabTestMetadata)
+   {
       this.testClick.next(test);
    }
 
-   onTestStageClicked(testStage: LabTestStageMetadata) {
+   onTestStageClicked(testStage: LabTestStageMetadata)
+   {
       this.testStageClick.next(testStage);
    }
 
@@ -83,7 +99,8 @@ export class SampleComponent implements OnChanges {
       this.testReportClick.next([testId, reportName]);
    }
 
-   promptCreateNewTest() {
+   promptCreateNewTest()
+   {
       const dlg = this.dialogSvc.open(NewTestDialogComponent, {
          width: 'calc(75%)',
          data: {
@@ -95,20 +112,30 @@ export class SampleComponent implements OnChanges {
       });
 
       dlg.afterClosed().subscribe((t: NewTestInfo) => {
-         if (t) {
+         if (t)
+         {
             const beginDate = t.beginDate.format('YYYY-MM-DD');
-            this.testsSvc.createTest(t.sample.id, t.selectedTestType, beginDate)
-               .subscribe(
-                  createdTestMd => {
-                     this.testCreated.next(createdTestMd);
-                  },
-                  err => {
-                     console.log('Test creation failed: ', err);
-                     this.testCreationFailed.next(err);
-                  }
-               );
+            this.testsSvc.createTest(t.sample.id, t.selectedTestType, beginDate).subscribe(
+               createdTestMd => {
+                  this.testCreated.next(createdTestMd);
+               },
+               err => {
+                  this.testCreationFailed.next(err);
+               }
+            );
          }
       });
    }
 
+   onDeleteTestClicked(test: LabTestMetadata)
+   {
+      this.testsSvc.deleteTest(test.testId).subscribe(
+        () => {
+           this.testDeleted.next(test);
+        },
+        err => {
+           this.testDeleteFailed.next(err);
+        }
+     );
+   }
 }

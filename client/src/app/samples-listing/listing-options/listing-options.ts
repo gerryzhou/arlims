@@ -7,4 +7,5 @@ export interface ListingOptions {
 
    limitSelectionToVisibleSamples: boolean;
 
+   showTestDeleteButtons: boolean;
 }

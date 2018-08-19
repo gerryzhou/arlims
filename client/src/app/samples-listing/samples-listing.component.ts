@@ -23,6 +23,8 @@ export class SamplesListingComponent implements OnDestroy {
 
    limitSelectionToVisibleSamples: boolean;
 
+   showTestDeleteButtons: boolean;
+
    expandedSampleIds = new Set<number>();
 
    hiddenSelectedCount = 0;
@@ -35,7 +37,8 @@ export class SamplesListingComponent implements OnDestroy {
 
    readonly defaultListingOptions: ListingOptions = {
       includeSamplesAssignedOnlyToOtherUsers: false,
-      limitSelectionToVisibleSamples: true
+      limitSelectionToVisibleSamples: true,
+      showTestDeleteButtons: false,
    };
 
    constructor
@@ -78,6 +81,7 @@ export class SamplesListingComponent implements OnDestroy {
    listingOptionsChanged(listingOptions: ListingOptions)
    {
       this.limitSelectionToVisibleSamples = listingOptions.limitSelectionToVisibleSamples;
+      this.showTestDeleteButtons = listingOptions.showTestDeleteButtons;
       this.applyFilters(listingOptions);
    }
 
@@ -238,20 +242,34 @@ export class SamplesListingComponent implements OnDestroy {
 
    onNewTestCreated(createdTestMetadata: CreatedTestMetadata)
    {
-      if (this.labGroupContentsSubscription)
-      {
-         this.labGroupContentsSubscription.unsubscribe();
-      }
-      this.labGroupContentsSubscription =
-         this.usrCtxSvc.loadLabGroupContents()
-            .subscribe(labGroupContents => {
-               this.refeshFromLabGroupContents(labGroupContents);
-            });
+      this.reload();
    }
 
    onTestCreationFailed(error: string)
    {
       this.alertMessageSvc.alertDanger('Failed to create new test: ' + error);
+   }
+
+   onTestDeleted(deletedTestMetadata: LabTestMetadata)
+   {
+      this.reload();
+   }
+
+   onTestDeleteFailed(error: string)
+   {
+      this.alertMessageSvc.alertDanger('Failed to delete test: ' + error);
+   }
+
+   private reload()
+   {
+      if (this.labGroupContentsSubscription)
+         this.labGroupContentsSubscription.unsubscribe();
+
+      this.labGroupContentsSubscription =
+         this.usrCtxSvc.loadLabGroupContents()
+            .subscribe(labGroupContents => {
+               this.refeshFromLabGroupContents(labGroupContents);
+            });
    }
 
    ngOnDestroy(): void

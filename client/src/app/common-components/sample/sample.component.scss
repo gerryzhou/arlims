@@ -103,6 +103,18 @@
 
 .tests {
    padding: 5px 5px 5px 10px;
+
+   .test-area {
+      display: flex;
+      flex-flow: row nowrap;
+      button {
+         flex-grow: 0;
+         color: red;
+      }
+      app-test-metadata {
+         flex-grow: 1;
+      }
+   }
 }
 
 .sample-actions {

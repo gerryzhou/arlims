@@ -12,6 +12,8 @@ public interface TestDataService
 {
     long createTest(long empId, long sampleId, LabTestTypeCode testTypeCode, String testBeginDate);
 
+    void deleteTest(long testId);
+
     VersionedTestData getVersionedTestData(long testId);
 
     boolean saveTestDataJson(long testId, String testDataJson, String stageStatusesJson, long empId, String previousMd5);

@@ -17,6 +17,11 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl('/api/tests/new');
    }
 
+   testUrl(testId: number): string
+   {
+      return this.location.prepareExternalUrl(`/api/tests/${testId}`);
+   }
+
    testDataUrl(testId: number): string
    {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/data`);

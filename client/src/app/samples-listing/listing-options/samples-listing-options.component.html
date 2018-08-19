@@ -6,23 +6,29 @@
 -->
 <form [formGroup]="listingOptionsFormGroup">
    <div class="options-panel">
-      <div class="option search">
+      <div class="option-group search">
          <mat-icon>search</mat-icon>
          <mat-form-field>
             <input formControlName="searchText" matInput placeholder="Search">
          </mat-form-field>
       </div>
-      <div class="option">
+      <div class="option-group">
          <mat-slide-toggle formControlName="includeSamplesAssignedOnlyToOtherUsers">
             Include samples assigned to others
          </mat-slide-toggle>
       </div>
-      <!-- TODO: This option should go in an "advanced" menu.
-      <div class="option">
-         <mat-slide-toggle formControlName="limitSelectionToVisibleSamples">
-            Limit selections to search results
-         </mat-slide-toggle>
+      <div class="option-group">
+         <mat-menu #otherOptionsMenu="matMenu">
+            <mat-slide-toggle formControlName="limitSelectionToVisibleSamples">
+               Limit selections to search results
+            </mat-slide-toggle>
+            <mat-slide-toggle formControlName="showTestDeleteButtons">
+               Show test delete buttons
+            </mat-slide-toggle>
+         </mat-menu>
+         <button mat-button type="button" [matMenuTriggerFor]="otherOptionsMenu">
+            <mat-icon>settings</mat-icon>
+         </button>
       </div>
-      -->
    </div>
 </form>
