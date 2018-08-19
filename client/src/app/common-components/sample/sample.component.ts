@@ -5,6 +5,7 @@ import {MatDialog} from '@angular/material';
 import {NewTestDialogComponent} from '../new-test-dialog/new-test-dialog.component';
 import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
+import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-sample',
@@ -129,14 +130,28 @@ export class SampleComponent implements OnChanges {
 
    onDeleteTestClicked(test: LabTestMetadata)
    {
-      // TODO: Prompt user to confirm.
-      this.testsSvc.deleteTest(test.testId).subscribe(
-        () => {
-           this.testDeleted.next(test);
-        },
-        err => {
-           this.testDeleteFailed.next(err);
-        }
-     );
+      const confirmDlg = this.dialogSvc.open(ConfirmDialogComponent,
+         {
+            data: {
+               titleSubject: 'Delete',
+               confirmMessage: 'Are you sure you want to delete this test?',
+            },
+            disableClose: false
+         }
+      );
+
+      confirmDlg.afterClosed().subscribe(accepted => {
+         if (accepted)
+         {
+            this.testsSvc.deleteTest(test.testId).subscribe(
+               () => {
+                  this.testDeleted.next(test);
+               },
+               err => {
+                  this.testDeleteFailed.next(err);
+               }
+            );
+         }
+      });
    }
 }

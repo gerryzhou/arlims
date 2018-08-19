@@ -22,6 +22,7 @@ import {ConflictingFieldValueComponent} from './conflicting-field-value/conflict
 import {FieldAssignedResourcesComponent} from './field-assigned-resources/field-assigned-resources.component';
 import { ResourceCodesDialogComponent } from './resource-codes-dialog/resource-codes-dialog.component';
 import {FilesSelectorComponent} from './files-selector/files-selector.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
    imports: [
@@ -49,10 +50,12 @@ import {FilesSelectorComponent} from './files-selector/files-selector.component'
       FieldAssignedResourcesComponent,
       ResourceCodesDialogComponent,
       FilesSelectorComponent,
+      ConfirmDialogComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
       ResourceCodesDialogComponent,
+      ConfirmDialogComponent,
       // (dialog components here as well as in declarations)
    ],
    exports: [
