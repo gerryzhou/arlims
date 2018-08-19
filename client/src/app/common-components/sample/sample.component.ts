@@ -129,6 +129,7 @@ export class SampleComponent implements OnChanges {
 
    onDeleteTestClicked(test: LabTestMetadata)
    {
+      // TODO: Prompt user to confirm.
       this.testsSvc.deleteTest(test.testId).subscribe(
         () => {
            this.testDeleted.next(test);

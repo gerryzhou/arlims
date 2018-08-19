@@ -3,15 +3,15 @@
       (change)="selectOrUnselectVisible($event.checked)"
       matTooltip="select/unselect all visible samples">
    </mat-checkbox>
-   <app-samples-listing-options
-      [initialOptions]="defaultListingOptions"
-      (optionsChanged)="listingOptionsChanged($event)">
-   </app-samples-listing-options>
    <div class="selected-count-message">
       {{countSelected()}} selected
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
    <button mat-button (click)="expandOrContractAllSamples()">{{expandedSampleIds.size > 0 ? 'collapse samples' : 'expand samples'}}</button>
+   <app-samples-listing-options
+      [initialOptions]="defaultListingOptions"
+      (optionsChanged)="listingOptionsChanged($event)">
+   </app-samples-listing-options>
 </div>
 
 <div class="listing">
