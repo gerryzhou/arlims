@@ -80,9 +80,36 @@
 
 .spiking-and-controls {
    display: flex;
+   width: 100%;
    mat-radio-group, mat-form-field {
       margin-right: 15px;
    }
+
+   .positive-control-growth {
+      padding: 5px;
+      border: 5px dotted lightgray;
+      &.growth {
+         border: 5px solid darkgreen;
+         background-color: #eeffee;
+      }
+      &.no-growth {
+         border: 5px solid darkred;
+         background-color: #ffeeee;
+      }
+   }
+   .medium-control-growth {
+      padding: 5px;
+      border: 5px dotted lightgray;
+      &.growth {
+         border: 5px solid darkred;
+         background-color: #ffeeee;
+      }
+      &.no-growth {
+         border: 5px solid darkgreen;
+         background-color: #eeffee;
+      }
+   }
+
 }
 
 .bottom-bar {
