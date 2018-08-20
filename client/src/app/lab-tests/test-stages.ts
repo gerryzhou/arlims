@@ -10,24 +10,37 @@ export type FieldValuesStatusCode =
    | 'c'  // required fields complete
 ;
 
-export function stageNameToTestDataFieldName(stageName: string): string {
+export function stageNameToTestDataFieldName(stageName: string): string
+{
    return stageName.toLowerCase()
       .replace(/-(.)/g, (match, group1) => group1.toUpperCase()) + 'Data';
 }
 
-export function stageTestDataFieldNameToStageName(testDataFieldName: string): string {
+export function stageTestDataFieldNameToStageName(testDataFieldName: string): string
+{
    return testDataFieldName
       .replace(/Data$/g, '')
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2').toUpperCase();
 }
 
-export function statusForRequiredFieldValues(fieldValues: any[], allowEmptyArraysAsValue = false): FieldValuesStatusCode {
+export function statusForRequiredFieldValues
+   (
+      fieldValues: any[],
+      allowEmptyArrayAsValue = false,
+   )
+   : FieldValuesStatusCode
+{
    let valueFound = false;
    let nonValueFound = false;
 
    for (const v of fieldValues)
    {
-      if (v === undefined || v === null || v === '' || (!allowEmptyArraysAsValue && v === [])) nonValueFound = true;
+      if ( v === undefined || v === null || v === '' ) nonValueFound = true;
+      else if ( Array.isArray(v) )
+      {
+            valueFound = v.some((item) => item != null);
+            nonValueFound = (!allowEmptyArrayAsValue && v.length === 0) || v.some((item) => item == null);
+      }
       else valueFound = true;
    }
 

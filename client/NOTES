@@ -5,6 +5,7 @@ Report Customization
 Allow customizing the test data on client side before invoking generic field value injection into pdf.
   E.g., replace boolean values for growth with appropriate strings.
   Build a string for the composites results, or figure out how to display an array of values.
+  How to invoke module-specific transformation of test data for the report?
 
 Q: What sort of medium type codes will be the prefix for BG, I2KI batches?
 

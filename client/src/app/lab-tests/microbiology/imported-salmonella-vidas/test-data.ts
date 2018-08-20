@@ -209,7 +209,7 @@ function vidasStatusCode(testData: TestData): FieldValuesStatusCode
       data.positiveControlDetection,
       data.mediumControlDetection,
       data.spikeDetection,
-   ], false);
+   ]);
 }
 
 function controlsStatusCode(testData: TestData): FieldValuesStatusCode
