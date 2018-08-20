@@ -1,3 +1,6 @@
+PDF Report
+  Customize data for the report before sending on client side.
+
 Audit logging of all test data changes, per field.
   Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
 
@@ -9,17 +12,12 @@ Multiple-sample editing(?)
 Allow locking sections.
 
 
-
-Remove resource lists.
-
 Multiuser
   SSO (ask Leidos) or user/password as temporary measure.
 
 Continuation pages
 
 Sorting and filtering of samples list (vs. tests?)
-
-
 
 
 
