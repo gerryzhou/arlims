@@ -81,9 +81,8 @@
 .stage-statuses {
    display: flex;
    align-items: center;
-   border: 2px solid lightgray;
-   border-right-width: 5px;
-   border-left-width: 5px;
+   border-top: 2px solid lightgray;
+   border-bottom: 2px solid lightgray;
    margin: 0 5px;
 
    app-test-stage-status {
