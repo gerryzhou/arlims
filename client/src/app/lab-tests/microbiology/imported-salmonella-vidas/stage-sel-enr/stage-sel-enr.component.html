@@ -2,10 +2,18 @@
 
    <div class="row">
 
-      <div class="field-area" [class.conflicted]="conflicts.rvBatchId !== undefined">
+      <div class="field-area"
+           [class.conflicted]="conflicts.rvBatchId !== undefined"
+           [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('rvBatchId')">
          <mat-form-field>
             <input formControlName="rvBatchId" type="text" matInput placeholder="RV batch">
          </mat-form-field>
+         <app-field-assigned-resources
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('rvBatchId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'rvBatchId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'rvBatchId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('rvBatchId')">
+         </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.rvBatchId"
             [conflictWhoWhen]="conflictsWhoWhen"
@@ -13,10 +21,18 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.ttBatchId !== undefined">
+      <div class="field-area"
+           [class.conflicted]="conflicts.ttBatchId !== undefined"
+           [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('ttBatchId')">
          <mat-form-field>
             <input formControlName="ttBatchId" type="text" matInput placeholder="TT batch">
          </mat-form-field>
+         <app-field-assigned-resources
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('ttBatchId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'ttBatchId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'ttBatchId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('ttBatchId')">
+         </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.ttBatchId"
             [conflictWhoWhen]="conflictsWhoWhen"
@@ -24,10 +40,18 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.bgBatchId !== undefined">
+      <div class="field-area"
+           [class.conflicted]="conflicts.bgBatchId !== undefined"
+           [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('bgBatchId')">
          <mat-form-field>
             <input formControlName="bgBatchId" type="text" matInput placeholder="BG batch">
          </mat-form-field>
+         <app-field-assigned-resources
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('bgBatchId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'bgBatchId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'bgBatchId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('bgBatchId')">
+         </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.bgBatchId"
             [conflictWhoWhen]="conflictsWhoWhen"
@@ -35,16 +59,32 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.i2kiBatchId !== undefined">
+      <div class="field-area"
+           [class.conflicted]="conflicts.i2kiBatchId !== undefined"
+           [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('i2kiBatchId')">
          <mat-form-field>
             <input formControlName="i2kiBatchId" type="text" matInput placeholder="I2KI batch">
          </mat-form-field>
+         <app-field-assigned-resources
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('i2kiBatchId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'i2kiBatchId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'i2kiBatchId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('i2kiBatchId')">
+         </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.i2kiBatchId"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.i2kiBatchId = undefined">
          </app-conflicting-field-value>
       </div>
+
+      <button mat-icon-button color="accent" (click)="promptApplyResources()" class="apply-resources-btn">
+         <mat-icon>flash_on</mat-icon>
+      </button>
+
+   </div>
+
+   <div class="row">
 
       <div class="field-area" [class.conflicted]="conflicts.spikePlateCount !== undefined">
          <mat-form-field>

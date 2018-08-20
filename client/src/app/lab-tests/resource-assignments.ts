@@ -1,5 +1,11 @@
 import {FormGroup} from '@angular/forms';
 import {isEmptyString} from './microbiology/imported-salmonella-vidas/test-data';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {TemplateRef} from '@angular/core';
+import {ComponentType} from '@angular/cdk/portal';
+import {ResourceCodesDialogResult} from '../common-components/resource-codes-dialog/resource-codes-dialog-result';
+import {AlertMessageService} from '../shared/services/alerts';
+import {ResourceCodesDialogComponent} from '../common-components/resource-codes-dialog/resource-codes-dialog.component';
 
 
 export class ResourceControlAssignments {
@@ -19,12 +25,53 @@ export class ResourceControlAssignments {
       this.unassignedResourceCodes = new Set();
    }
 
+   promptAssignResources
+      (
+         dialogSvc: MatDialog,
+         alertMsgSvc: AlertMessageService,
+         dialogConfig?: MatDialogConfig,
+      )
+   {
+      const dlg = dialogSvc.open(ResourceCodesDialogComponent, dialogConfig || {width: 'calc(80%)'});
+
+      dlg.afterClosed().subscribe((result: ResourceCodesDialogResult) => {
+         if (!result) return;
+         this.assignResourceCodes(result.resourceCodes);
+         const unassigned = this.unassignedResourceCodes;
+         console.log('Unassigned: ', unassigned.size, ', message svc: ', alertMsgSvc);
+         if ( unassigned.size > 0 && alertMsgSvc )
+         {
+            console.log('sending alert about unassigned');
+            alertMsgSvc.alertWarning(
+               `${unassigned.size} resource codes were not matched to any fields:`,
+               Array.from(unassigned)
+            );
+         }
+      });
+   }
+
+   applyAssignedResourceToControl(resourceCode: string, controlName: string)
+   {
+      const ctrl = this.formGroup.get(controlName);
+      if ( ctrl )
+      {
+         ctrl.setValue(resourceCode);
+         this.removeAllAssignedResourceCodesForControl(controlName);
+      }
+   }
+
+   removeAllResourceAssignmentsForControl(controlName: string)
+   {
+      this.assignedResourceCodesByTargetControlName.delete(controlName);
+   }
+
+
    hasAssignedOrAppliedResources(controlName: string): boolean
    {
       return this.assignedResourceCodesByTargetControlName.has(controlName);
    }
 
-   getAssignedResourceCodes(controlName: string): Set<string>
+   getAssignedResourceCodesForControl(controlName: string): Set<string>
    {
       return this.assignedResourceCodesByTargetControlName.get(controlName);
    }
@@ -71,11 +118,6 @@ export class ResourceControlAssignments {
          codes.delete(resourceCode);
          if (codes.size === 0) this.assignedResourceCodesByTargetControlName.delete(controlName);
       }
-   }
-
-   removeAllForControl(controlName: string)
-   {
-      this.assignedResourceCodesByTargetControlName.delete(controlName);
    }
 
    // Assign the given resource codes to available (empty) target controls by their registered resource types.

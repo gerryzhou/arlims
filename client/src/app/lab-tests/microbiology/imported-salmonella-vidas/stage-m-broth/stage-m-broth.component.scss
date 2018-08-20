@@ -1,6 +1,6 @@
 @import '../common-test-stage-styles';
 
-.fields-row {
+.row {
    display: flex;
    flex-flow: row wrap;
 
@@ -15,3 +15,7 @@
    }
 }
 
+.apply-resources-btn {
+   background-color: $batch-resource-background-color;
+   margin-left: 10px;
+}

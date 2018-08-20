@@ -4,6 +4,9 @@ import {MBrothData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {LabResource} from '../../../../../generated/dto';
 import * as moment from 'moment';
+import {ResourceControlAssignments} from '../../../resource-assignments';
+import {MatDialog} from '@angular/material';
+import {AlertMessageService} from '../../../../shared/services/alerts';
 
 @Component({
    selector: 'app-stage-m-broth',
@@ -28,14 +31,27 @@ export class StageMBrothComponent implements OnChanges {
    @Input()
    showUnsetAffordances = false;
 
-   constructor() { }
+   resourceAssignments: ResourceControlAssignments;
 
-   ngOnChanges() {
+   constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
+
+   ngOnChanges()
+   {
+      this.resourceAssignments = new ResourceControlAssignments(
+         this.form,
+         new Map()
+            .set('mBrothBatchId', ['MB'])
+      );
    }
 
    setStartTimeNow()
    {
       const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
       this.form.get('waterBathStarted').setValue(nowTime);
+   }
+
+   promptApplyResources()
+   {
+      this.resourceAssignments.promptAssignResources(this.dialogSvc, this.alertMsgSvc);
    }
 }

@@ -1,17 +1,33 @@
 <form [formGroup]="form">
 
-   <div class="fields-row">
+   <div class="row">
 
-      <div class="field-area" [class.conflicted]="conflicts.mBrothBatchId !== undefined">
+      <div class="field-area"
+           [class.conflicted]="conflicts.mBrothBatchId !== undefined"
+           [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('mBrothBatchId')">
          <mat-form-field>
             <input formControlName="mBrothBatchId" type="text" matInput placeholder="M broth batch">
          </mat-form-field>
+         <app-field-assigned-resources
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('mBrothBatchId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'mBrothBatchId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'mBrothBatchId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('mBrothBatchId')">
+         </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.mBrothBatchId"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.mBrothBatchId = undefined">
          </app-conflicting-field-value>
       </div>
+
+      <button mat-icon-button color="accent" (click)="promptApplyResources()" class="apply-resources-btn">
+         <mat-icon>flash_on</mat-icon>
+      </button>
+
+   </div>
+
+   <div class="row">
 
       <div class="field-area" [class.conflicted]="conflicts.mBrothWaterBathId !== undefined">
          <mat-form-field>

@@ -1,4 +1,8 @@
+Alert messages not showing after resources are applied in PRE-ENR.
 
+Add pasted resources support in SEL-ENR.
+
+Q: What sort of medium type codes will be the prefix for BG, I2KI batches?
 
 Rename WRAPUP to RES-SAMP?
 
@@ -96,6 +100,8 @@ JAR-123456
 JAR-23456
 RV-7361256
 TT-228181
+BG-7718281
+I2KI-7948490
 XX-112
 XX-113
-
+MB-12312312

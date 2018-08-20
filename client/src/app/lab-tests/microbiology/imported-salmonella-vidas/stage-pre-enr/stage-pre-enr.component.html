@@ -130,10 +130,10 @@
             <input formControlName="blenderJarId" type="text" matInput placeholder="Blender jar">
          </mat-form-field>
          <app-field-assigned-resources
-            [resourceCodes]="resourceAssignments.getAssignedResourceCodes('blenderJarId')"
-            (select)="applyAssignedResource($event, 'blenderJarId')"
-            (remove)="removeAssignedResource($event, 'blenderJarId')"
-            (removeAll)="removeAllForControl('blenderJarId')">
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('blenderJarId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'blenderJarId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'blenderJarId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('blenderJarId')">
          </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.blenderJarId"
@@ -149,10 +149,10 @@
             <input formControlName="bagId" type="text" matInput placeholder="Bag">
          </mat-form-field>
          <app-field-assigned-resources
-            [resourceCodes]="resourceAssignments.getAssignedResourceCodes('bagId')"
-            (select)="applyAssignedResource($event, 'bagId')"
-            (remove)="removeAssignedResource($event, 'bagId')"
-            (removeAll)="removeAllForControl('bagId')">
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('bagId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'bagId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'bagId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('bagId')">
          </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.bagId"
@@ -168,10 +168,10 @@
             <input formControlName="mediumBatchId" type="text" matInput placeholder="Medium batch">
          </mat-form-field>
          <app-field-assigned-resources
-            [resourceCodes]="resourceAssignments.getAssignedResourceCodes('mediumBatchId')"
-            (select)="applyAssignedResource($event, 'mediumBatchId')"
-            (remove)="removeAssignedResource($event, 'mediumBatchId')"
-            (removeAll)="removeAllForControl('mediumBatchId')">
+            [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('mediumBatchId')"
+            (select)="resourceAssignments.applyAssignedResourceToControl($event, 'mediumBatchId')"
+            (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'mediumBatchId')"
+            (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('mediumBatchId')">
          </app-field-assigned-resources>
          <app-conflicting-field-value
             [conflictValue]="conflicts.mediumBatchId"

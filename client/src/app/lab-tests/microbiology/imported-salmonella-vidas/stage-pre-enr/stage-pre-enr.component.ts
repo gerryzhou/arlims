@@ -66,7 +66,10 @@ export class StagePreEnrComponent implements OnChanges {
 
       this.resourceAssignments = new ResourceControlAssignments(
          this.form,
-         new Map().set('blenderJarId', ['JAR']).set('bagId', ['BAG']).set('mediumBatchId', ['RV', 'TT', 'LAC'])
+         new Map()
+            .set('blenderJarId', ['JAR'])
+            .set('bagId', ['BAG'])
+            .set('mediumBatchId', ['RV', 'TT', 'LAC'])
       );
 
       this.subscribeToSampleTestUnitChanges();
@@ -128,43 +131,10 @@ export class StagePreEnrComponent implements OnChanges {
       this.selectIncubator = !this.selectIncubator;
    }
 
-   applyAssignedResource(resourceCode: string, controlName: string)
-   {
-      const ctrl = this.form.get(controlName);
-      if (ctrl)
-      {
-         ctrl.setValue(resourceCode);
-         this.resourceAssignments.removeAllAssignedResourceCodesForControl(controlName);
-      }
-   }
-
-   removeAssignedResource(resourceCode: string, controlName: string)
-   {
-      this.resourceAssignments.removeAssignedResourceCodeForControl(resourceCode, controlName);
-   }
-
    promptApplyResources()
    {
-      const dlg = this.dialogSvc.open(ResourceCodesDialogComponent, {width: 'calc(80%)'});
-
-      dlg.afterClosed().subscribe((result: ResourceCodesDialogResult) => {
-         if (!result) return;
-         this.resourceAssignments.assignResourceCodes(result.resourceCodes);
-         const unassigned = this.resourceAssignments.unassignedResourceCodes;
-         if (unassigned.size > 0)
-         {
-            this.alertMsgSvc.alertWarning(
-               `${unassigned.size} resource codes were not matched to any fields:`,
-               Array.from(unassigned)
-            );
-         }
-      });
+      this.resourceAssignments.promptAssignResources(this.dialogSvc, this.alertMsgSvc);
    }
 
-   removeAllForControl(controlName: string)
-   {
-      this.resourceAssignments.removeAllForControl(controlName);
-
-   }
 }
 

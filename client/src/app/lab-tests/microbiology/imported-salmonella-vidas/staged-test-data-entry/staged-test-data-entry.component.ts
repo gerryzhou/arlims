@@ -12,7 +12,7 @@ import {cloneDataObject, copyWithMergedValuesFrom} from '../../../../shared/util
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
 import {TestConfig} from '../test-config';
-import {MatStepper} from '@angular/material';
+import {MatDialog, MatStepper} from '@angular/material';
 import {StagePrepComponent} from '../stage-prep/stage-prep.component';
 import {StagePreEnrComponent} from '../stage-pre-enr/stage-pre-enr.component';
 import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
@@ -26,7 +26,6 @@ import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
    selector: 'app-micro-imp-slm-vidas-staged-test-data-entry',
    templateUrl: './staged-test-data-entry.component.html',
    styleUrls: ['./staged-test-data-entry.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StagedTestDataEntryComponent implements OnInit {
 
@@ -81,7 +80,7 @@ export class StagedTestDataEntryComponent implements OnInit {
           private activatedRoute: ActivatedRoute,
           private apiUrls: ApiUrlsService,
           private testsSvc: TestsService,
-          private alertMessageSvc: AlertMessageService,
+          private alertMsgSvc: AlertMessageService,
           private router: Router,
           private usrCtxSvc: UserContextService
        )
@@ -144,7 +143,7 @@ export class StagedTestDataEntryComponent implements OnInit {
          if (saveResults.saved) {
             this.usrCtxSvc.loadLabGroupContents();
             this.clearConflictsData();
-            this.alertMessageSvc.alertSuccess('Test data saved.', true);
+            this.alertMsgSvc.alertSuccess('Test data saved.', true);
             this.router.navigate(['/samples', {expsmp: `${this.sampleInTest.sample.id}`}]);
          } else {
             const conflicts = saveResults.mergeConflicts;
@@ -159,7 +158,7 @@ export class StagedTestDataEntryComponent implements OnInit {
                employeeShortName: modInfo.savedByUserShortName,
                timestamp: moment(modInfo.savedInstant, moment.ISO_8601).toDate(),
             };
-            this.alertMessageSvc.alertWarning(msg);
+            this.alertMsgSvc.alertWarning(msg);
          }
       });
       // TODO: Catch observable errors, alert user via alert service that the save opearation failed and to try again.
@@ -183,7 +182,8 @@ export class StagedTestDataEntryComponent implements OnInit {
       const selIx = this.testStageStepper.selectedIndex;
       if (selIx && selIx >= 0)
       {
-         if (this.stageComps[selIx].promptApplyResources) this.stageComps[selIx].promptApplyResources();
+         if (this.stageComps[selIx].promptAssignResources)
+            this.stageComps[selIx].promptAssignResources();
       }
    }
 
