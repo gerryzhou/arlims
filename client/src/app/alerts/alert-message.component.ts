@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {AlertMessageService, AlertMessage} from '../shared/services/alerts';
@@ -8,7 +8,6 @@ import {AlertMessageService, AlertMessage} from '../shared/services/alerts';
    selector: 'app-alert-message',
    templateUrl: './alert-message.component.html',
    styleUrls: ['./alert-message.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertMessageComponent implements OnInit, OnDestroy {
 
@@ -20,17 +19,20 @@ export class AlertMessageComponent implements OnInit, OnDestroy {
 
    get message(): AlertMessage | null { return this._message; }
 
-   clear() {
+   clear()
+   {
       this._message = null;
    }
 
-   ngOnInit() {
+   ngOnInit()
+   {
       this.messagesSubscription = this.alertMessageService.messages().subscribe(msg => {
          this._message = msg;
       });
    }
 
-   ngOnDestroy() {
+   ngOnDestroy()
+   {
       this.messagesSubscription.unsubscribe();
    }
 }
