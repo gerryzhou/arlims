@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 
 @Component({
-  selector: 'app-field-assigned-resources',
-  templateUrl: './field-assigned-resources.component.html',
-  styleUrls: ['./field-assigned-resources.component.scss']
+   selector: 'app-field-assigned-resources',
+   templateUrl: './field-assigned-resources.component.html',
+   styleUrls: ['./field-assigned-resources.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FieldAssignedResourcesComponent implements OnChanges {
 

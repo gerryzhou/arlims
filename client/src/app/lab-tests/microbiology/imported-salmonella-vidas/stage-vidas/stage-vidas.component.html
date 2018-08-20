@@ -39,8 +39,8 @@
 
          <div class="field-area medium-control"
               [class.conflicted]="conflicts.mediumControlDetection !== undefined"
-              [class.pos]="mediumControlDetectionControl().value === true"
-              [class.neg]="mediumControlDetectionControl().value === false">
+              [class.pos]="mediumControlDetectionControl.value === true"
+              [class.neg]="mediumControlDetectionControl.value === false">
             <mat-radio-group formControlName="mediumControlDetection">
                <div>Medium control detection</div>
                <div>
@@ -74,7 +74,7 @@
          </div>
          <div class="sample-test-unit-detections-array" formArrayName="testUnitDetections">
             <div class="sample-test-unit-detection"
-                 *ngFor="let ctrl of getSampleTestUnitDetectionControls(); let i = index;"
+                 *ngFor="let ctrl of testUnitDetectionsControl.controls; let i = index;"
                  [ngClass]="{'pos': ctrl.value === true, 'neg': ctrl.value === false}">
                <span class="test-unit-number">{{i+1}}</span>
                <mat-radio-group [formControlName]="i">
@@ -99,8 +99,8 @@
 
          <div class="field-area spike-control"
               [class.conflicted]="conflicts.spikeDetection !== undefined"
-              [class.pos]="spikeDetectionControl().value === true"
-              [class.neg]="spikeDetectionControl().value === false">
+              [class.pos]="spikeDetectionControl.value === true"
+              [class.neg]="spikeDetectionControl.value === false">
             <mat-radio-group formControlName="spikeDetection">
                <div>Spike detection</div>
                <div>
@@ -120,8 +120,8 @@
 
          <div class="field-area positive-control"
               [class.conflicted]="conflicts.positiveControlDetection !== undefined"
-              [class.pos]="positiveControlDetectionControl().value === true"
-              [class.neg]="positiveControlDetectionControl().value === false">
+              [class.pos]="positiveControlDetectionControl.value === true"
+              [class.neg]="positiveControlDetectionControl.value === false">
             <mat-radio-group formControlName="positiveControlDetection">
                <div>Positive control detection</div>
                <div>

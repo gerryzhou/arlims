@@ -1,12 +1,13 @@
-import {Component, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {WrapupData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 
 @Component({
-  selector: 'app-stage-wrapup',
-  templateUrl: './stage-wrapup.component.html',
-  styleUrls: ['./stage-wrapup.component.scss']
+   selector: 'app-stage-wrapup',
+   templateUrl: './stage-wrapup.component.html',
+   styleUrls: ['./stage-wrapup.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StageWrapupComponent implements OnChanges {
 

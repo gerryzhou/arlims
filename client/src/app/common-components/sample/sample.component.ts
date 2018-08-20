@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {CreatedTestMetadata, LabTestMetadata, LabTestType, Sample} from '../../../generated/dto';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 import {MatDialog} from '@angular/material';
@@ -8,9 +8,10 @@ import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-sample',
-  templateUrl: './sample.component.html',
-  styleUrls: ['./sample.component.scss']
+   selector: 'app-sample',
+   templateUrl: './sample.component.html',
+   styleUrls: ['./sample.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SampleComponent implements OnChanges {
 

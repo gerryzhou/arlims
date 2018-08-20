@@ -1,11 +1,12 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {TestStageStatus} from '../../lab-tests/test-stages';
 import {DatePipe} from '@angular/common';
 
 @Component({
-  selector: 'app-test-stage-status',
-  templateUrl: './test-stage-status.component.html',
-  styleUrls: ['./test-stage-status.component.scss']
+   selector: 'app-test-stage-status',
+   templateUrl: './test-stage-status.component.html',
+   styleUrls: ['./test-stage-status.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestStageStatusComponent implements OnChanges {
 

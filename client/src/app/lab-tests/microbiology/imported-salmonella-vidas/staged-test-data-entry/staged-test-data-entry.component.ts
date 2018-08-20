@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
@@ -25,7 +25,8 @@ import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
 @Component({
    selector: 'app-micro-imp-slm-vidas-staged-test-data-entry',
    templateUrl: './staged-test-data-entry.component.html',
-   styleUrls: ['./staged-test-data-entry.component.scss']
+   styleUrls: ['./staged-test-data-entry.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StagedTestDataEntryComponent implements OnInit {
 

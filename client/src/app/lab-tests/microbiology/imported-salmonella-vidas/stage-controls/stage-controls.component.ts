@@ -1,13 +1,14 @@
-import {Component, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {ControlsData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {MatCheckboxChange} from '@angular/material';
 
 @Component({
-  selector: 'app-stage-controls',
-  templateUrl: './stage-controls.component.html',
-  styleUrls: ['./stage-controls.component.scss']
+   selector: 'app-stage-controls',
+   templateUrl: './stage-controls.component.html',
+   styleUrls: ['./stage-controls.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StageControlsComponent implements OnChanges {
 

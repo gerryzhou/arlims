@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {merge, Subscription} from 'rxjs';
 
@@ -14,9 +14,10 @@ import {AlertMessageService} from '../../../../shared/services/alerts';
 
 
 @Component({
-  selector: 'app-stage-pre-enr',
-  templateUrl: './stage-pre-enr.component.html',
-  styleUrls: ['./stage-pre-enr.component.scss']
+   selector: 'app-stage-pre-enr',
+   templateUrl: './stage-pre-enr.component.html',
+   styleUrls: ['./stage-pre-enr.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StagePreEnrComponent implements OnChanges {
 

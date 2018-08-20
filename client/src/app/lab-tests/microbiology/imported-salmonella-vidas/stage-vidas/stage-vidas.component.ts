@@ -1,13 +1,14 @@
-import {Component, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {VidasData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {LabResource} from '../../../../../generated/dto';
 
 @Component({
-  selector: 'app-stage-vidas',
-  templateUrl: './stage-vidas.component.html',
-  styleUrls: ['./stage-vidas.component.scss']
+   selector: 'app-stage-vidas',
+   templateUrl: './stage-vidas.component.html',
+   styleUrls: ['./stage-vidas.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StageVidasComponent implements OnChanges {
 
@@ -34,32 +35,41 @@ export class StageVidasComponent implements OnChanges {
 
    excessSampleTestUnitControlsCount: number | null = 0;
 
+   mediumControlDetectionControl: AbstractControl;
+   positiveControlDetectionControl: AbstractControl;
+   spikeDetectionControl: AbstractControl;
+   testUnitDetectionsControl: FormArray;
+
    constructor() {}
 
    ngOnChanges()
    {
+      this.mediumControlDetectionControl = this.form.get('mediumControlDetection');
+      this.positiveControlDetectionControl = this.form.get('positiveControlDetection');
+      this.spikeDetectionControl = this.form.get('spikeDetection');
+      this.testUnitDetectionsControl = this.form.get('testUnitDetections') as FormArray;
+
       if ( this.sampleTestUnitsCount )
       {
-         const testUnitDetectionCtrls = this.form.get('testUnitDetections') as FormArray;
-
-         const numCtrlsDelta = this.sampleTestUnitsCount - testUnitDetectionCtrls.length;
+         const numCtrlsDelta = this.sampleTestUnitsCount - this.testUnitDetectionsControl.length;
 
          if ( numCtrlsDelta >= 0 )
-         {
-            for (let d = 1; d <= numCtrlsDelta; ++d)
-            {
-               testUnitDetectionCtrls.push(new FormControl(null));
-            }
-         }
+            this.addSampleDetectionControls(numCtrlsDelta);
          else
-         {
             this.removeSampleDetectionControls(Math.abs(numCtrlsDelta), true);
-         }
       }
       else
-      {
          this.updateExcessSampleTestUnitControlsCount();
+   }
+
+   private addSampleDetectionControls(numControls: number)
+   {
+      for (let d = 1; d <= numControls; ++d)
+      {
+         this.testUnitDetectionsControl.push(new FormControl(null));
       }
+
+      this.updateExcessSampleTestUnitControlsCount();
    }
 
    removeSampleDetectionControls(removeCount: number, stopOnControlWithValue: boolean = false)
@@ -84,12 +94,6 @@ export class StageVidasComponent implements OnChanges {
       this.updateExcessSampleTestUnitControlsCount();
    }
 
-   getSampleTestUnitDetectionControls(): AbstractControl[]
-   {
-      const detectionCtrls = this.form.get('testUnitDetections') as FormArray;
-      return detectionCtrls.controls;
-   }
-
    private updateExcessSampleTestUnitControlsCount()
    {
       const testUnitDetectionCtrls = this.form.get('testUnitDetections') as FormArray;
@@ -99,18 +103,4 @@ export class StageVidasComponent implements OnChanges {
             : null;
    }
 
-   mediumControlDetectionControl(): AbstractControl
-   {
-      return this.form.get('mediumControlDetection');
-   }
-
-   positiveControlDetectionControl(): AbstractControl
-   {
-      return this.form.get('positiveControlDetection');
-   }
-
-   spikeDetectionControl(): AbstractControl
-   {
-      return this.form.get('spikeDetection');
-   }
 }

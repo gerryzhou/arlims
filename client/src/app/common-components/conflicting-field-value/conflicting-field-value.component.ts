@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {EmployeeTimestamp} from '../../shared/models/employee-timestamp';
 
 @Component({
   selector: 'app-conflicting-field-value',
   templateUrl: './conflicting-field-value.component.html',
-  styleUrls: ['./conflicting-field-value.component.scss']
+  styleUrls: ['./conflicting-field-value.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConflictingFieldValueComponent implements OnChanges {
 

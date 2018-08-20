@@ -1,3 +1,5 @@
+
+
 Rename WRAPUP to RES-SAMP?
 
 Vidas Stage
@@ -9,7 +11,7 @@ Commit Notes
 
 
 
-Report Customization
+Reportble Customization
 --------------------
 Allow customizing the test data on client side before invoking generic field value injection into pdf.
   E.g., replace boolean values for growth with appropriate strings.

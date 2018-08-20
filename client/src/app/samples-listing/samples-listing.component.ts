@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CreatedTestMetadata, LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
 import {AlertMessageService, ApiUrlsService, UserContextService, WindowService} from '../shared/services';
@@ -8,9 +8,10 @@ import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
 import {Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-samples-listing',
-  templateUrl: './samples-listing.component.html',
-  styleUrls: ['./samples-listing.component.scss']
+   selector: 'app-samples-listing',
+   templateUrl: './samples-listing.component.html',
+   styleUrls: ['./samples-listing.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SamplesListingComponent implements OnDestroy {
 

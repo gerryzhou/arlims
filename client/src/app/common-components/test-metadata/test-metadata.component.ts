@@ -1,12 +1,13 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {LabTestMetadata, LabTestType} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
 import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 
 @Component({
-  selector: 'app-test-metadata',
-  templateUrl: './test-metadata.component.html',
-  styleUrls: ['./test-metadata.component.scss']
+   selector: 'app-test-metadata',
+   templateUrl: './test-metadata.component.html',
+   styleUrls: ['./test-metadata.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestMetadataComponent implements OnChanges {
 
