@@ -15,14 +15,15 @@ export class AppComponent implements OnDestroy {
 
    private loadingStatusSubscription: Subscription;
 
-
-   constructor(private userCtxSvc: UserContextService, private loadingStatusService: LoadingStatusService) {
+   constructor(private userCtxSvc: UserContextService, private loadingStatusService: LoadingStatusService)
+   {
       this.authenticatedUser = userCtxSvc.authenticatedUser;
       this.loading = false;
       this.loadingStatusSubscription = loadingStatusService.loadingStatus.subscribe(loading => this.loading = loading);
    }
 
-   ngOnDestroy(): void {
+   ngOnDestroy(): void
+   {
       this.loadingStatusSubscription.unsubscribe();
    }
 
