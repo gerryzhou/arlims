@@ -20,8 +20,6 @@ Commit Notes
 
 
 
-Add BAM link in each test.
-  Add links popup menu button in bottom toolbar.
 
 Each test needs to be able to allow free-form entry of "continuation page".
 
