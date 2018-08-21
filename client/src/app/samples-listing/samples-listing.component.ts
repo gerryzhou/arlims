@@ -3,9 +3,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CreatedTestMetadata, LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
 import {AlertMessageService, ApiUrlsService, UserContextService, WindowService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
-import {MatDialog} from '@angular/material';
 import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
 import {Subscription} from 'rxjs';
+import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 
 @Component({
    selector: 'app-samples-listing',
@@ -50,7 +50,7 @@ export class SamplesListingComponent implements OnDestroy {
           private alertMessageSvc: AlertMessageService,
           private windowSvc: WindowService,
           private apiUrlsSvc: ApiUrlsService,
-          private dialogSvc: MatDialog
+          private appUrlsSvc: AppInternalUrlsService,
        )
    {
       this.userShortName = usrCtxSvc.authenticatedUser.shortName;
@@ -136,15 +136,15 @@ export class SamplesListingComponent implements OnDestroy {
       }
    }
 
-   navigateToTest(test: LabTestMetadata)
+   navigateToTestDataEntry(test: LabTestMetadata)
    {
-      this.router.navigate(['test', test.testId, 'data', test.testTypeCode]);
+      this.router.navigate(this.appUrlsSvc.testDataEntry(test.testTypeCode, test.testId));
    }
 
-   navigateToTestStage(testStage: LabTestStageMetadata)
+   navigateToTestStageDataEntry(testStage: LabTestStageMetadata)
    {
       const test = testStage.labTestMetadata;
-      this.router.navigate(['test', test.testId, 'data', test.testTypeCode, testStage.stageName]);
+      this.router.navigate(this.appUrlsSvc.testStageDataEntry(test.testTypeCode, test.testId, testStage.stageName));
    }
 
    initiateReportDownload([testId, reportName]: [number, string])

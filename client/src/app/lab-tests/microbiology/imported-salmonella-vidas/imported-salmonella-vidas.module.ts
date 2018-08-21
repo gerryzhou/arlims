@@ -18,6 +18,7 @@ import {
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
+import {ImportedSalmonellaVidasRoutingModule} from './imported-salmonella-vidas-routing.module';
 import {StagePrepComponent} from './stage-prep/stage-prep.component';
 import {StagedTestDataEntryComponent} from './staged-test-data-entry/staged-test-data-entry.component';
 import {StagePreEnrComponent} from './stage-pre-enr/stage-pre-enr.component';
@@ -30,9 +31,9 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
 @NgModule({
    imports: [
       CommonModule,
+      FormsModule,
       MatExpansionModule,
       ReactiveFormsModule,
-      FormsModule,
       MatInputModule,
       MatCheckboxModule,
       MatSelectModule,
@@ -46,6 +47,7 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       MatMenuModule,
       //
       CommonComponentsModule,
+      ImportedSalmonellaVidasRoutingModule,
    ],
    declarations: [
       StagedTestDataEntryComponent,

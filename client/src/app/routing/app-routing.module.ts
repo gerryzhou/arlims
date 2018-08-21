@@ -5,10 +5,9 @@ import {APP_BASE_HREF, LocationStrategy, PathLocationStrategy} from '@angular/co
 import {environment} from '../../environments/environment';
 import {SamplesListingComponent} from '../samples-listing/samples-listing.component';
 import {LabGroupContentsResolver} from './lab-group-contents.resolver';
-import {StagedTestDataEntryComponent as MicroImpSalVidasTestDataComponent} from '../lab-tests/microbiology/imported-salmonella-vidas/staged-test-data-entry/staged-test-data-entry.component';
-import {LabGroupTestDataResolver} from './lab-group-test-data.resolver';
 import {TestAttachedFilesComponent} from '../test-attached-files/test-attached-files.component';
 import {TestAttachedFilesResolver} from './test-attached-files.resolver';
+import {ModulePreloadingStrategy} from './module-preloading-strategy';
 
 const routes: Routes = [
    {
@@ -22,22 +21,23 @@ const routes: Routes = [
       resolve: { testAttachedFiles: TestAttachedFilesResolver }
    },
    {
-      path: 'test/:testId/data/MICRO_IMP_SAL_VIDAS',
-      component: MicroImpSalVidasTestDataComponent,
-      resolve: { labGroupTestData: LabGroupTestDataResolver }
-   },
-   {
-      path: 'test/:testId/data/MICRO_IMP_SAL_VIDAS/:stage',
-      component: MicroImpSalVidasTestDataComponent,
-      resolve: { labGroupTestData: LabGroupTestDataResolver }
+      path: 'test-types/micro-imp-sal-vidas',
+      loadChildren: '../lab-tests/microbiology/imported-salmonella-vidas/imported-salmonella-vidas.module#ImportedSalmonellaVidasModule',
+      data: {preload: true},
    },
    { path: '', redirectTo: 'samples', pathMatch: 'full' },
 ];
 
 @NgModule({
-   imports: [RouterModule.forRoot(routes, {enableTracing: false && !environment.production})], // false => true for route tracing
+   imports: [
+      RouterModule.forRoot(routes, {
+         enableTracing: false && !environment.production, // false => true for route tracing
+         preloadingStrategy: ModulePreloadingStrategy
+      })
+   ],
    exports: [RouterModule],
    providers: [
+      ModulePreloadingStrategy,
       {provide: APP_BASE_HREF, useValue: environment.baseHref}, // configures base href for PathLocationStrategy
       {provide: LocationStrategy, useClass: PathLocationStrategy},
    ],

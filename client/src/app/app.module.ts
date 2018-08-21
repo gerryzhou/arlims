@@ -33,7 +33,6 @@ import {UserContextService, LoadingStatusService, LoadingStatusInterceptor} from
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
-import {ImportedSalmonellaVidasModule} from './lab-tests/microbiology/imported-salmonella-vidas/imported-salmonella-vidas.module';
 import {CommonComponentsModule} from './common-components/common-components.module';
 import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
 
@@ -73,10 +72,9 @@ import {TestAttachedFilesComponent} from './test-attached-files/test-attached-fi
       MatSlideToggleModule,
       MatDialogModule,
       TruncateModule,
-      // app modules
+      // app modules which are NOT LOADED LAZILY
       CommonComponentsModule,
       AppRoutingModule,
-      ImportedSalmonellaVidasModule,
    ],
    providers: [
       Location,

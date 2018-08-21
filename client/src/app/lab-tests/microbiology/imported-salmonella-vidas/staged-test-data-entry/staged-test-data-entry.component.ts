@@ -1,18 +1,17 @@
-import {ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {MatStepper} from '@angular/material';
 import * as moment from 'moment';
 
-import {AlertMessageService, ApiUrlsService, defaultJsonFieldFormatter,
-        TestsService, UserContextService} from '../../../../shared/services';
+import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
 import {LabResource, LabResourceType} from '../../../../../generated/dto';
-import {cloneDataObject, copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
+import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
 import {TestConfig} from '../test-config';
-import {MatDialog, MatStepper} from '@angular/material';
 import {StagePrepComponent} from '../stage-prep/stage-prep.component';
 import {StagePreEnrComponent} from '../stage-pre-enr/stage-pre-enr.component';
 import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
@@ -21,6 +20,7 @@ import {StageVidasComponent} from '../stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from '../stage-controls/stage-controls.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
+import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-staged-test-data-entry',
@@ -78,7 +78,7 @@ export class StagedTestDataEntryComponent implements OnInit {
    constructor
        (
           private activatedRoute: ActivatedRoute,
-          private apiUrls: ApiUrlsService,
+          private appUrlsSvc: AppInternalUrlsService,
           private testsSvc: TestsService,
           private alertMsgSvc: AlertMessageService,
           private router: Router,
@@ -144,7 +144,7 @@ export class StagedTestDataEntryComponent implements OnInit {
             this.usrCtxSvc.loadLabGroupContents();
             this.clearConflictsData();
             this.alertMsgSvc.alertSuccess('Test data saved.', true);
-            this.router.navigate(['/samples', {expsmp: `${this.sampleInTest.sample.id}`}]);
+            this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));
          } else {
             const conflicts = saveResults.mergeConflicts;
             const modInfo = conflicts.dbModificationInfo;
