@@ -13,17 +13,19 @@ const routes: Routes = [
    {
       path: 'samples',
       component: SamplesListingComponent,
-      resolve: { labGroupContents: LabGroupContentsResolver }
+      resolve: { labGroupContents: LabGroupContentsResolver },
+      data: {title: 'Samples Listing'},
    },
    {
       path: 'test/:testId/attached-files',
       component: TestAttachedFilesComponent,
-      resolve: { testAttachedFiles: TestAttachedFilesResolver }
+      resolve: { testAttachedFiles: TestAttachedFilesResolver },
+      data: {title: 'Test-Attached Files'},
    },
    {
       path: 'test-types/micro-imp-sal-vidas',
       loadChildren: '../lab-tests/microbiology/imported-salmonella-vidas/imported-salmonella-vidas.module#ImportedSalmonellaVidasModule',
-      data: {preload: true},
+      data: {preload: true, title: 'Imported SLM Vidas Test'},
    },
    { path: '', redirectTo: 'samples', pathMatch: 'full' },
 ];

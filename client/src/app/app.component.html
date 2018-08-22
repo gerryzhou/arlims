@@ -1,13 +1,12 @@
 <mat-toolbar color="primary">
    <mat-toolbar-row>
       <nav>
-         <button mat-button routerLink="/" [routerLinkActive]="['active-route']">
+         <button mat-button routerLink="/samples" [routerLinkActive]="['active-route']">
             <mat-icon>home</mat-icon> ALIS
          </button>
-         <button mat-button routerLink="/samples" [routerLinkActive]="['active-route']">Samples</button>
       </nav>
 
-      <span class="toolbar-center-fill"></span>
+      <div class="toolbar-center-fill">{{pageTitle$ | async}}</div>
 
       <span class="user"><mat-icon>person</mat-icon> {{authenticatedUser.shortName}}</span>
    </mat-toolbar-row>
