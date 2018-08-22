@@ -9,17 +9,20 @@ const routes: Routes = [
    {
       path: 'test-data-entry/:testId',
       component: StagedTestDataEntryComponent,
-      resolve: { labGroupTestData: LabGroupTestDataResolver }
+      resolve: { labGroupTestData: LabGroupTestDataResolver },
+      data: {title: 'Imported SLM Vidas Test Data Entry'},
    },
    {
       path: 'test-data-entry/:testId/stage/:stage',
       component: StagedTestDataEntryComponent,
-      resolve: { labGroupTestData: LabGroupTestDataResolver }
+      resolve: { labGroupTestData: LabGroupTestDataResolver },
+      data: {title: 'Imported SLM Vidas Test Data Entry'},
    },
    {
       path: 'test-data-view/:testId',
       component: TestDataViewComponent,
-      resolve: { labGroupTestData: LabGroupTestDataResolver }
+      resolve: { labGroupTestData: LabGroupTestDataResolver },
+      data: {title: 'Imported SLM Vidas Test Data Review'},
    },
 ];
 
