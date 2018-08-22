@@ -1,16 +1,23 @@
 import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {MatStepper} from '@angular/material';
 import * as moment from 'moment';
 
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {LabResource, LabResourceType} from '../../../../../generated/dto';
+import {LabResource} from '../../../../../generated/dto';
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import {emptyTestData, firstNonCompleteTestStageName, getTestStageStatuses, TEST_STAGES, TestData} from '../test-data';
+import {
+   emptyTestData,
+   firstNonCompleteTestStageName,
+   getTestStageStatuses,
+   makeTestDataFormGroup,
+   TEST_STAGES,
+   TestData
+} from '../test-data';
 import {TestConfig} from '../test-config';
 import {StagePrepComponent} from '../stage-prep/stage-prep.component';
 import {StagePreEnrComponent} from '../stage-pre-enr/stage-pre-enr.component';
@@ -70,11 +77,6 @@ export class StagedTestDataEntryComponent implements OnInit {
    @ViewChild(StageWrapupComponent)   wrapupComp: StageWrapupComponent;
    stageComps: any[];
 
-   private static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
-   private static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
-   private static readonly WATERBATH_RESOURCE_TYPE: LabResourceType = 'WAB';
-   private static readonly VIDAS_RESOURCE_TYPE: LabResourceType = 'VID';
-
    constructor
        (
           private activatedRoute: ActivatedRoute,
@@ -105,10 +107,10 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.sampleTestUnitsType = sampleTestUnits.testUnitsType;
 
       const labResources = labGroupTestData.labResourcesByType;
-      this.balances = labResources.get(StagedTestDataEntryComponent.BALANCE_RESOURCE_TYPE);
-      this.incubators = labResources.get(StagedTestDataEntryComponent.INCUBATOR_RESOURCE_TYPE);
-      this.waterBaths = labResources.get(StagedTestDataEntryComponent.WATERBATH_RESOURCE_TYPE);
-      this.vidasInstruments = labResources.get(StagedTestDataEntryComponent.VIDAS_RESOURCE_TYPE);
+      this.balances = labResources.get(UserContextService.BALANCE_RESOURCE_TYPE);
+      this.incubators = labResources.get(UserContextService.INCUBATOR_RESOURCE_TYPE);
+      this.waterBaths = labResources.get(UserContextService.WATERBATH_RESOURCE_TYPE);
+      this.vidasInstruments = labResources.get(UserContextService.VIDAS_RESOURCE_TYPE);
 
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;
@@ -191,80 +193,5 @@ export class StagedTestDataEntryComponent implements OnInit {
    {
       this.showUnsetAffordances = !this.showUnsetAffordances;
    }
-}
-
-function makeTestDataFormGroup(testData: TestData): FormGroup
-{
-   return new FormGroup({
-      prepData: new FormGroup({
-         sampleReceivedDate: new FormControl(testData.prepData.sampleReceivedDate),
-         sampleReceivedFrom: new FormControl(testData.prepData.sampleReceivedFrom),
-         descriptionMatchesCR: new FormControl(testData.prepData.descriptionMatchesCR),
-         descriptionMatchesCRNotes: new FormControl(testData.prepData.descriptionMatchesCRNotes),
-         labelAttachmentType: new FormControl(testData.prepData.labelAttachmentType),
-         containerMatchesCR: new FormControl(testData.prepData.containerMatchesCR),
-         containerMatchesCRNotes: new FormControl(testData.prepData.containerMatchesCRNotes),
-         codeMatchesCR: new FormControl(testData.prepData.codeMatchesCR),
-         codeMatchesCRNotes: new FormControl(testData.prepData.codeMatchesCRNotes),
-      }),
-      preEnrData: new FormGroup({
-         samplingMethod: new FormGroup({
-            numberOfComposites: new FormControl(testData.preEnrData.samplingMethod.numberOfComposites),
-            numberOfSubsPerComposite: new FormControl(testData.preEnrData.samplingMethod.numberOfSubsPerComposite),
-            extractedGramsPerSub: new FormControl(testData.preEnrData.samplingMethod.extractedGramsPerSub),
-            numberOfSubs: new FormControl(testData.preEnrData.samplingMethod.numberOfSubs),
-            compositeMassGrams: new FormControl(testData.preEnrData.samplingMethod.compositeMassGrams),
-         }),
-         samplingMethodExceptionsNotes: new FormControl(testData.preEnrData.samplingMethodExceptionsNotes),
-
-         balanceId: new FormControl(testData.preEnrData.balanceId),
-         blenderJarId: new FormControl(testData.preEnrData.blenderJarId),
-         bagId: new FormControl(testData.preEnrData.bagId),
-         mediumBatchId: new FormControl(testData.preEnrData.mediumBatchId),
-         mediumType: new FormControl(testData.preEnrData.mediumType),
-         incubatorId: new FormControl(testData.preEnrData.incubatorId),
-
-         sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
-         positiveControlGrowth: new FormControl(testData.preEnrData.positiveControlGrowth),
-         mediumControlGrowth: new FormControl(testData.preEnrData.mediumControlGrowth),
-      }),
-      selEnrData: new FormGroup({
-         rvBatchId: new FormControl(testData.selEnrData.rvBatchId),
-         ttBatchId: new FormControl(testData.selEnrData.ttBatchId),
-         bgBatchId: new FormControl(testData.selEnrData.bgBatchId),
-         i2kiBatchId: new FormControl(testData.selEnrData.i2kiBatchId),
-         spikePlateCount: new FormControl(testData.selEnrData.spikePlateCount),
-         rvttWaterBathId: new FormControl(testData.selEnrData.rvttWaterBathId),
-      }),
-      mBrothData: new FormGroup({
-         mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
-         mBrothWaterBathId: new FormControl(testData.mBrothData.mBrothWaterBathId),
-         waterBathStarted: new FormControl(testData.mBrothData.waterBathStarted), // TODO: Add ISO timestamp validator.
-      }),
-      vidasData: new FormGroup({
-         instrumentId: new FormControl(testData.vidasData.instrumentId),
-         kitIds: new FormControl(testData.vidasData.kitIds),
-         testUnitDetections: new FormArray(
-            (testData.vidasData.testUnitDetections || [null]).map(detected => new FormControl(detected))
-         ),
-         positiveControlDetection: new FormControl(testData.vidasData.positiveControlDetection),
-         mediumControlDetection: new FormControl(testData.vidasData.mediumControlDetection),
-         spikeDetection: new FormControl(testData.vidasData.spikeDetection),
-      }),
-      controlsData: new FormGroup({
-         systemControlsUsed: new FormControl(testData.controlsData.systemControlsUsed),
-         systemControlTypes: new FormControl(testData.controlsData.systemControlTypes),
-         systemControlsGrowth: new FormControl(testData.controlsData.systemControlsGrowth),
-         collectorControlsUsed: new FormControl(testData.controlsData.collectorControlsUsed),
-         collectorControlTypes: new FormControl(testData.controlsData.collectorControlTypes),
-         collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
-         bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
-      }),
-      wrapupData: new FormGroup({
-         reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
-         reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
-         reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
-      }),
-   });
 }
 

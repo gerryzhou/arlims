@@ -1,0 +1,23 @@
+.sample-in-test-information {
+   display: flex;
+   align-items: center;
+   margin: 0;
+   app-sample {
+      flex: 1 0 auto;
+   }
+}
+
+.test-stage {
+   margin: 25px 5px 5px 5px;
+}
+
+.form-bottom-toolbar {
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+   margin: 10px 20px;
+}
+
+form {
+   margin: 5px;
+}

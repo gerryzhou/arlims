@@ -2,8 +2,7 @@
 
    <div class="test-overview">
 
-      <div class="test-type"
-         (click)="onTestClicked()">
+      <div class="test-type" (click)="onEditTestClicked()">
          {{test.testTypeShortName}}
       </div>
 
@@ -18,8 +17,14 @@
       <div *ngIf="stageStatuses" class="stage-statuses">
          <app-test-stage-status *ngFor="let status of stageStatuses"
             [status]="status"
-            (click)="onStageClicked(status.stageName)">
+            (click)="onEditStageClicked(status.stageName)">
          </app-test-stage-status>
+      </div>
+
+      <div class="view">
+         <button mat-icon-button (click)="onViewTestClicked()">
+            <mat-icon>visibility</mat-icon>
+         </button>
       </div>
 
       <div class="expanding-flex-space"></div>
@@ -27,7 +32,8 @@
       <div class="reports-and-files">
          <div class="reports" *ngIf="testType.reportNames.length > 0">
             <mat-menu #reportsMenu="matMenu">
-               <button mat-menu-item *ngFor="let reportName of testType.reportNames" (click)="onReportClicked(reportName)">
+               <button mat-menu-item *ngFor="let reportName of testType.reportNames"
+                  (click)="onReportClicked(reportName)">
                   {{reportName}}
                </button>
             </mat-menu>

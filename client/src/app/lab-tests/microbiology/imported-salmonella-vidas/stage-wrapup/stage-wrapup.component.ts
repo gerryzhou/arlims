@@ -34,10 +34,10 @@ export class StageWrapupComponent implements OnChanges {
          this.destinationsEnabled = reserveSampleDispositionCtrl.value === 'ISOLATES_SENT';
          this.otherDescriptionEnabled = reserveSampleDispositionCtrl.value === 'OTHER';
 
-         if (this.destinationsEnabled) this.form.get('reserveSampleDestinations').enable();
+         if ( this.destinationsEnabled && !this.form.disabled ) this.form.get('reserveSampleDestinations').enable();
          else this.form.get('reserveSampleDestinations').disable();
 
-         if (this.otherDescriptionEnabled) this.form.get('reserveSampleOtherDescription').enable();
+         if ( this.otherDescriptionEnabled && !this.form.disabled ) this.form.get('reserveSampleOtherDescription').enable();
          else this.form.get('reserveSampleOtherDescription').disable();
       }
    }

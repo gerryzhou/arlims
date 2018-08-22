@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/cor
 import {FormGroup} from '@angular/forms';
 import {ControlsData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import {MatCheckboxChange} from '@angular/material';
 
 @Component({
    selector: 'app-stage-controls',
@@ -49,7 +48,7 @@ export class StageControlsComponent implements OnChanges {
 
    onSystemControlsUsedChanged()
    {
-      if (this.form.get('systemControlsUsed').value)
+      if ( this.form.get('systemControlsUsed').value && this.form.enabled )
       {
          this.form.get('systemControlTypes').enable();
          this.form.get('systemControlsGrowth').enable();
@@ -63,7 +62,7 @@ export class StageControlsComponent implements OnChanges {
 
    onCollectorControlsUsedChanged()
    {
-      if (this.form.get('collectorControlsUsed').value)
+      if ( this.form.get('collectorControlsUsed').value && this.form.enabled )
       {
          this.form.get('collectorControlTypes').enable();
          this.form.get('collectorControlsGrowth').enable();

@@ -1,0 +1,93 @@
+<form [formGroup]="testDataForm">
+
+   <div class="sample-in-test-information">
+      <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
+      <app-sample [sample]="sampleInTest.sample"></app-sample>
+   </div>
+
+   <div>
+      <h3>PREP</h3>
+      <app-stage-prep class="test-stage"
+         [form]="testDataForm.get('prepData')"
+         [conflicts]="conflictsTestData.prepData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+      </app-stage-prep>
+   </div>
+
+   <div>
+      <h3>PRE-ENR</h3>
+      <app-stage-pre-enr class="test-stage"
+         [form]="testDataForm.get('preEnrData')"
+         [conflicts]="conflictsTestData.preEnrData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [balances]="balances"
+         [incubators]="incubators"
+         [samplingMethodChoices]="testConfig.samplingMethodChoices">
+      </app-stage-pre-enr>
+   </div>
+
+   <div>
+      <h3>SEL-ENR</h3>
+      <app-stage-sel-enr class="test-stage"
+         [form]="testDataForm.get('selEnrData')"
+         [conflicts]="conflictsTestData.selEnrData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [waterBaths]="waterBaths">
+      </app-stage-sel-enr>
+   </div>
+
+   <div>
+      <h3>M-BROTH</h3>
+      <app-stage-m-broth class="test-stage"
+         [form]="testDataForm.get('mBrothData')"
+         [conflicts]="conflictsTestData.mBrothData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [waterBaths]="waterBaths">
+      </app-stage-m-broth>
+   </div>
+
+   <div>
+      <h3>VIDAS</h3>
+      <app-stage-vidas class="test-stage"
+         [form]="testDataForm.get('vidasData')"
+         [conflicts]="conflictsTestData.vidasData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [vidasInstruments]="vidasInstruments"
+         [sampleTestUnitsCount]="sampleTestUnitsCount"
+         [sampleTestUnitsType]="sampleTestUnitsType">
+      </app-stage-vidas>
+   </div>
+
+   <div>
+      <h3>CONTROLS</h3>
+      <app-stage-controls class="test-stage"
+         [form]="testDataForm.get('controlsData')"
+         [conflicts]="conflictsTestData.controlsData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+      </app-stage-controls>
+   </div>
+
+   <div>
+      <h3>WRAPUP</h3>
+      <app-stage-wrapup class="test-stage"
+         [form]="testDataForm.get('wrapupData')"
+         [conflicts]="conflictsTestData.wrapupData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+      </app-stage-wrapup>
+   </div>
+
+   <div class="form-bottom-toolbar">
+      <a href="https://www.fda.gov/Food/FoodScienceResearch/LaboratoryMethods/ucm070149.htm" target="_blank">BAM</a>
+      <div class="expanding-flex-space"></div>
+      <div>
+         <mat-menu #optionsMenu="matMenu">
+            <!--TODO: Add report generation/save actions here.-->
+            <!--<button type="button" mat-menu-item  >Toggle showing 'unset' option for supporting fields</button>-->
+         </mat-menu>
+         <button mat-button type="button" [matMenuTriggerFor]="optionsMenu">
+            Options <mat-icon>more_vert</mat-icon>
+         </button>
+      </div>
+   </div>
+
+</form>

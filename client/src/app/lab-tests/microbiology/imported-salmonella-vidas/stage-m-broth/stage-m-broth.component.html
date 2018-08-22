@@ -21,7 +21,8 @@
          </app-conflicting-field-value>
       </div>
 
-      <button mat-icon-button color="accent" (click)="promptApplyResources()" class="apply-resources-btn">
+      <button class="apply-resources-btn" (click)="promptApplyResources()" *ngIf="!form.disabled"
+              mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>
       </button>
 
@@ -53,7 +54,7 @@
             <mat-form-field>
                <input formControlName="waterBathStarted" type="text" matInput placeholder="Water bath started (YYYY-MM-DD HH:mm[:ss])">
             </mat-form-field>
-            <button class="link now-time" (click)="setStartTimeNow()">now</button>
+            <button class="link now-time" (click)="setStartTimeNow()" *ngIf="!form.disabled">now</button>
          </span>
          <app-conflicting-field-value
             [conflictValue]="conflicts.waterBathStarted"

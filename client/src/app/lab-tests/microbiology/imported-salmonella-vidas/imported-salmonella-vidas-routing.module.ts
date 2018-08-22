@@ -3,6 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 
 import {StagedTestDataEntryComponent} from './staged-test-data-entry/staged-test-data-entry.component';
 import {LabGroupTestDataResolver} from '../../../routing/lab-group-test-data.resolver';
+import {TestDataViewComponent} from './test-data-view/test-data-view.component';
 
 const routes: Routes = [
    {
@@ -13,6 +14,11 @@ const routes: Routes = [
    {
       path: 'test-data-entry/:testId/stage/:stage',
       component: StagedTestDataEntryComponent,
+      resolve: { labGroupTestData: LabGroupTestDataResolver }
+   },
+   {
+      path: 'test-data-view/:testId',
+      component: TestDataViewComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver }
    },
 ];

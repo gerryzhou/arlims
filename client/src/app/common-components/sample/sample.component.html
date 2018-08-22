@@ -81,8 +81,9 @@
             <app-test-metadata
                [test]="test"
                [labGroupTestTypes]="labGroupTestTypes"
-               (testClick)="onTestClicked(test)"
-               (stageClick)="onTestStageClicked($event)"
+               (editTestClick)="onEditTestClicked(test)"
+               (editStageClick)="onEditTestStageClicked($event)"
+               (viewTestClick)="onViewTestClicked($event)"
                (reportClick)="onTestReportClicked(test.testId, $event)">
             </app-test-metadata>
          </div>

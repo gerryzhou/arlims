@@ -24,10 +24,10 @@
             <input formControlName="systemControlTypes" type="text" matInput placeholder="System control types">
          </mat-form-field>
          <div class="ctrl-types-predefined-inputs">
-            <button class="link" (click)="appendSystemControlType('none');">none</button>
-            <button class="link" (click)="appendSystemControlType('knife')">knife</button>
-            <button class="link" (click)="appendSystemControlType('spoon');">spoon</button>
-            <button class="link" (click)="appendSystemControlType('spatula');">spatula</button>
+            <button class="link" (click)="appendSystemControlType('none');" *ngIf="!form.disabled">none</button>
+            <button class="link" (click)="appendSystemControlType('knife')" *ngIf="!form.disabled">knife</button>
+            <button class="link" (click)="appendSystemControlType('spoon');" *ngIf="!form.disabled">spoon</button>
+            <button class="link" (click)="appendSystemControlType('spatula');" *ngIf="!form.disabled">spatula</button>
          </div>
          <app-conflicting-field-value
             [conflictValue]="conflicts.systemControlTypes"
@@ -73,7 +73,7 @@
             <input formControlName="collectorControlTypes" type="text" matInput placeholder="Collector control types">
          </mat-form-field>
          <div class="ctrl-types-predefined-inputs">
-            <button class="link" (click)="appendCollectorControlType('none')">none</button>
+            <button class="link" (click)="appendCollectorControlType('none')" *ngIf="!form.disabled">none</button>
          </div>
          <app-conflicting-field-value
             [conflictValue]="conflicts.collectorControlTypes"

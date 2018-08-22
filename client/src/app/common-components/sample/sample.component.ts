@@ -37,10 +37,13 @@ export class SampleComponent implements OnChanges {
    headerClick = new EventEmitter<void>();
 
    @Output()
-   testClick = new EventEmitter<LabTestMetadata>();
+   editTestClick = new EventEmitter<LabTestMetadata>();
 
    @Output()
-   testStageClick = new EventEmitter<LabTestStageMetadata>();
+   editTestStageClick = new EventEmitter<LabTestStageMetadata>();
+
+   @Output()
+   viewTestClick = new EventEmitter<LabTestMetadata>();
 
    @Output()
    testReportClick = new EventEmitter<[number, string]>();
@@ -86,14 +89,19 @@ export class SampleComponent implements OnChanges {
       this.headerClick.next();
    }
 
-   onTestClicked(test: LabTestMetadata)
+   onEditTestClicked(test: LabTestMetadata)
    {
-      this.testClick.next(test);
+      this.editTestClick.next(test);
    }
 
-   onTestStageClicked(testStage: LabTestStageMetadata)
+   onEditTestStageClicked(testStage: LabTestStageMetadata)
    {
-      this.testStageClick.next(testStage);
+      this.editTestStageClick.next(testStage);
+   }
+
+   onViewTestClicked(test: LabTestMetadata)
+   {
+      this.viewTestClick.next(test);
    }
 
    onTestReportClicked(testId: number, reportName: string)

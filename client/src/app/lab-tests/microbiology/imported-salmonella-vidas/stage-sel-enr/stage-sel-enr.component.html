@@ -78,7 +78,8 @@
          </app-conflicting-field-value>
       </div>
 
-      <button mat-icon-button color="accent" (click)="promptApplyResources()" class="apply-resources-btn">
+      <button class="apply-resources-btn" mat-icon-button color="accent"
+              (click)="promptApplyResources()" *ngIf="!form.disabled">
          <mat-icon>flash_on</mat-icon>
       </button>
 

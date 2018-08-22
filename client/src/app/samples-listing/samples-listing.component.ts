@@ -147,6 +147,11 @@ export class SamplesListingComponent implements OnDestroy {
       this.router.navigate(this.appUrlsSvc.testStageDataEntry(test.testTypeCode, test.testId, testStage.stageName));
    }
 
+   navigateToTestDataView(test: LabTestMetadata)
+   {
+      this.router.navigate(this.appUrlsSvc.testDataView(test.testTypeCode, test.testId));
+   }
+
    initiateReportDownload([testId, reportName]: [number, string])
    {
       this.windowSvc.getWindow().open(this.apiUrlsSvc.reportUrl(testId, reportName));

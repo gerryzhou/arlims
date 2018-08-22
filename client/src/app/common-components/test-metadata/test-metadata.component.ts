@@ -24,29 +24,40 @@ export class TestMetadataComponent implements OnChanges {
    testStatusActions: TestStatusAction[];
 
    @Output()
-   stageClick = new EventEmitter<LabTestStageMetadata>();
+   editStageClick = new EventEmitter<LabTestStageMetadata>();
 
    @Output()
-   testClick = new EventEmitter<LabTestMetadata>();
+   editTestClick = new EventEmitter<LabTestMetadata>();
+
+   @Output()
+   viewTestClick = new EventEmitter<LabTestMetadata>();
 
    @Output()
    reportClick = new EventEmitter<string>();
 
    constructor() { }
 
-   ngOnChanges() {
+   ngOnChanges()
+   {
       this.stageStatuses = JSON.parse(this.test.stageStatusesJson);
       this.testStatusActions = TestMetadataComponent.makeTestStatusActionsTimeDescending(this.test);
 
       this.testType = this.labGroupTestTypes.find(tt => tt.code === this.test.testTypeCode);
    }
 
-   onStageClicked(stageName: string) {
-      this.stageClick.next(new LabTestStageMetadata(this.test, stageName));
+   onEditStageClicked(stageName: string)
+   {
+      this.editStageClick.next(new LabTestStageMetadata(this.test, stageName));
    }
 
-   onTestClicked() {
-      this.testClick.next(this.test);
+   onEditTestClicked()
+   {
+      this.editTestClick.next(this.test);
+   }
+
+   onViewTestClicked()
+   {
+      this.viewTestClick.next(this.test);
    }
 
    onReportClicked(reportName: string)

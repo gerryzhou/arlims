@@ -27,6 +27,7 @@ import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from './stage-controls/stage-controls.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
+import {TestDataViewComponent} from './test-data-view/test-data-view.component';
 
 @NgModule({
    imports: [
@@ -51,6 +52,7 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
    ],
    declarations: [
       StagedTestDataEntryComponent,
+      TestDataViewComponent,
       StagePrepComponent,
       StagePreEnrComponent,
       StageSelEnrComponent,
@@ -59,8 +61,6 @@ import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
       StageControlsComponent,
       StageWrapupComponent
    ],
-   exports: [
-      StagedTestDataEntryComponent,
-   ]
+   exports: []
 })
 export class ImportedSalmonellaVidasModule { }

@@ -4,7 +4,7 @@ import {Observable, of as obsof, ReplaySubject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
-import {UserContext, LabGroupContents, AuthenticatedUser, Sample, LabTestType, LabResource} from '../../../generated/dto';
+import {UserContext, LabGroupContents, AuthenticatedUser, Sample, LabTestType, LabResource, LabResourceType} from '../../../generated/dto';
 import {SampleInTest} from '../models/sample-in-test';
 
 @Injectable()
@@ -18,6 +18,12 @@ export class UserContextService {
    private labResourcesByType$: ReplaySubject<Map<string, LabResource[]>>;
 
    private labGroupContentsLastUpdated: Date;
+
+   static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
+   static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
+   static readonly WATERBATH_RESOURCE_TYPE: LabResourceType = 'WAB';
+   static readonly VIDAS_RESOURCE_TYPE: LabResourceType = 'VID';
+
 
    constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) {}
 

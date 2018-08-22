@@ -6,11 +6,11 @@
          <span class="title">Sampling method</span>
          <mat-menu #samplingMethodMenu="matMenu">
             <button mat-menu-item *ngFor="let samplingMethod of samplingMethodChoices"
-                    (click)="onSamplingMethodClicked(samplingMethod)">
+                    (click)="onSamplingMethodClicked(samplingMethod)" [disabled]="form.disabled">
                {{samplingMethod.description}}
             </button>
          </mat-menu>
-         <button mat-button [matMenuTriggerFor]="samplingMethodMenu">
+         <button mat-button [matMenuTriggerFor]="samplingMethodMenu" [disabled]="form.disabled">
             Select a standard method <mat-icon>more_vert</mat-icon>
          </button>
          <span class="hint-text"> or enter method data manually below</span>
@@ -111,7 +111,8 @@
                   <input formControlName="balanceId" type="text" matInput placeholder="Balance">
                </ng-template>
             </mat-form-field>
-            <button *ngIf="balances && allowTogglingSelects" (click)="toggleSelectBalance()" class="toggle-select"
+            <button class="toggle-select" *ngIf="balances && allowTogglingSelects && !form.disabled"
+                    (click)="toggleSelectBalance()"
                     mat-icon-button matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
             </button>
@@ -193,8 +194,12 @@
          </app-conflicting-field-value>
       </div>
       <div class="medium-type-predefined-inputs">
-         <button class="link" (click)="form.get('mediumType').setValue('Lactose');">Lactose</button>
-         <button class="link" (click)="form.get('mediumType').setValue('TSB');">TSB</button>
+         <button class="link" (click)="form.get('mediumType').setValue('Lactose');" *ngIf="!form.disabled">
+            Lactose
+         </button>
+         <button class="link" (click)="form.get('mediumType').setValue('TSB');" *ngIf="!form.disabled">
+            TSB
+         </button>
       </div>
 
       <div class="field-area" [class.conflicted]="conflicts.incubatorId !== undefined">
@@ -211,7 +216,7 @@
                   <input formControlName="incubatorId" type="text" matInput placeholder="Incubator">
                </ng-template>
             </mat-form-field>
-            <button *ngIf="incubators && allowTogglingSelects" (click)="toggleSelectIncubator()"
+            <button *ngIf="incubators && allowTogglingSelects && !form.disabled" (click)="toggleSelectIncubator()"
                     mat-icon-button matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
             </button>
@@ -223,7 +228,8 @@
          </app-conflicting-field-value>
       </div>
 
-      <button mat-icon-button color="accent" (click)="promptApplyResources()" class="apply-resources-btn">
+      <button class="apply-resources-btn" (click)="promptApplyResources()" *ngIf="!form.disabled"
+         mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>
       </button>
 

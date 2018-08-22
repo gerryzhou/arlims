@@ -28,8 +28,9 @@
          (testDeleted)="onTestDeleted($event)"
          (testDeleteFailed)="onTestDeleteFailed($event)"
          (headerClick)="toggleSampleExpanded(selectableSamples[sampleIx].sample.id)"
-         (testClick)="navigateToTestDataEntry($event)"
-         (testStageClick)="navigateToTestStageDataEntry($event)"
+         (editTestClick)="navigateToTestDataEntry($event)"
+         (editTestStageClick)="navigateToTestStageDataEntry($event)"
+         (viewTestClick)="navigateToTestDataView($event)"
          (testReportClick)="initiateReportDownload($event)">
       </app-sample>
    </div>

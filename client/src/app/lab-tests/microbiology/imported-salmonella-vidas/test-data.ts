@@ -1,5 +1,6 @@
 import {FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SampleTestUnits, SamplingMethod} from '../sampling-methods';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
 
 export interface TestData {
    prepData:     PrepData;
@@ -94,6 +95,82 @@ export function emptyTestData(): TestData {
       wrapupData: {},
    };
 }
+
+export function makeTestDataFormGroup(testData: TestData): FormGroup
+{
+   return new FormGroup({
+      prepData: new FormGroup({
+         sampleReceivedDate: new FormControl(testData.prepData.sampleReceivedDate),
+         sampleReceivedFrom: new FormControl(testData.prepData.sampleReceivedFrom),
+         descriptionMatchesCR: new FormControl(testData.prepData.descriptionMatchesCR),
+         descriptionMatchesCRNotes: new FormControl(testData.prepData.descriptionMatchesCRNotes),
+         labelAttachmentType: new FormControl(testData.prepData.labelAttachmentType),
+         containerMatchesCR: new FormControl(testData.prepData.containerMatchesCR),
+         containerMatchesCRNotes: new FormControl(testData.prepData.containerMatchesCRNotes),
+         codeMatchesCR: new FormControl(testData.prepData.codeMatchesCR),
+         codeMatchesCRNotes: new FormControl(testData.prepData.codeMatchesCRNotes),
+      }),
+      preEnrData: new FormGroup({
+         samplingMethod: new FormGroup({
+            numberOfComposites: new FormControl(testData.preEnrData.samplingMethod.numberOfComposites),
+            numberOfSubsPerComposite: new FormControl(testData.preEnrData.samplingMethod.numberOfSubsPerComposite),
+            extractedGramsPerSub: new FormControl(testData.preEnrData.samplingMethod.extractedGramsPerSub),
+            numberOfSubs: new FormControl(testData.preEnrData.samplingMethod.numberOfSubs),
+            compositeMassGrams: new FormControl(testData.preEnrData.samplingMethod.compositeMassGrams),
+         }),
+         samplingMethodExceptionsNotes: new FormControl(testData.preEnrData.samplingMethodExceptionsNotes),
+
+         balanceId: new FormControl(testData.preEnrData.balanceId),
+         blenderJarId: new FormControl(testData.preEnrData.blenderJarId),
+         bagId: new FormControl(testData.preEnrData.bagId),
+         mediumBatchId: new FormControl(testData.preEnrData.mediumBatchId),
+         mediumType: new FormControl(testData.preEnrData.mediumType),
+         incubatorId: new FormControl(testData.preEnrData.incubatorId),
+
+         sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
+         positiveControlGrowth: new FormControl(testData.preEnrData.positiveControlGrowth),
+         mediumControlGrowth: new FormControl(testData.preEnrData.mediumControlGrowth),
+      }),
+      selEnrData: new FormGroup({
+         rvBatchId: new FormControl(testData.selEnrData.rvBatchId),
+         ttBatchId: new FormControl(testData.selEnrData.ttBatchId),
+         bgBatchId: new FormControl(testData.selEnrData.bgBatchId),
+         i2kiBatchId: new FormControl(testData.selEnrData.i2kiBatchId),
+         spikePlateCount: new FormControl(testData.selEnrData.spikePlateCount),
+         rvttWaterBathId: new FormControl(testData.selEnrData.rvttWaterBathId),
+      }),
+      mBrothData: new FormGroup({
+         mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
+         mBrothWaterBathId: new FormControl(testData.mBrothData.mBrothWaterBathId),
+         waterBathStarted: new FormControl(testData.mBrothData.waterBathStarted), // TODO: Add ISO timestamp validator.
+      }),
+      vidasData: new FormGroup({
+         instrumentId: new FormControl(testData.vidasData.instrumentId),
+         kitIds: new FormControl(testData.vidasData.kitIds),
+         testUnitDetections: new FormArray(
+            (testData.vidasData.testUnitDetections || [null]).map(detected => new FormControl(detected))
+         ),
+         positiveControlDetection: new FormControl(testData.vidasData.positiveControlDetection),
+         mediumControlDetection: new FormControl(testData.vidasData.mediumControlDetection),
+         spikeDetection: new FormControl(testData.vidasData.spikeDetection),
+      }),
+      controlsData: new FormGroup({
+         systemControlsUsed: new FormControl(testData.controlsData.systemControlsUsed),
+         systemControlTypes: new FormControl(testData.controlsData.systemControlTypes),
+         systemControlsGrowth: new FormControl(testData.controlsData.systemControlsGrowth),
+         collectorControlsUsed: new FormControl(testData.controlsData.collectorControlsUsed),
+         collectorControlTypes: new FormControl(testData.controlsData.collectorControlTypes),
+         collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
+         bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
+      }),
+      wrapupData: new FormGroup({
+         reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
+         reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
+         reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
+      }),
+   });
+}
+
 
 interface Stage {
    name: string;

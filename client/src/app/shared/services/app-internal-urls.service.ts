@@ -20,6 +20,12 @@ export class AppInternalUrlsService {
    {
       return ['test-types', lowerCaseDashSeperated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName];
    }
+
+   testDataView(testTypeCode: LabTestTypeCode, testId: number): any[]
+   {
+      return ['test-types', lowerCaseDashSeperated(testTypeCode.toString()), 'test-data-view', testId];
+   }
+
 }
 
 function lowerCaseDashSeperated(s: string)
