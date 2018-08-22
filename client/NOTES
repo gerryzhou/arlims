@@ -9,19 +9,12 @@ Vidas Stage
    Sample detections
       Allow pasting in results or loading from file (see Vidas results output).
 
-Commit Notes
-------------
-
-
-
 
 Each test needs to be able to allow free-form entry of "continuation page".
 
 Add filters to samples listing.
 
 Maybe allow locking each test section.
-
-Create service used by app component to set a title in center of toolbar (maybe switch to grid layout).
 
 TestsService.saveTestData
    Make sure that null value can conflict with non-null value.

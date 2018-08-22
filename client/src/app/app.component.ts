@@ -37,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
    ngOnInit()
    {
+      // (Derived from https://toddmotto.com/dynamic-page-titles-angular-2-router-events)
       this.router.events.pipe(
          filter((event) => event instanceof NavigationEnd),
          map(() => this.activatedRoute),
