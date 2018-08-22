@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {CreatedTestAttachedFiles, TestAttachedFileMetadata} from '../../generated/dto';
 import {TestAttachedFiles} from '../routing/test-attached-files.resolver';
 import {SampleInTest} from '../shared/models/sample-in-test';
-import {ApiUrlsService, TestsService} from '../shared/services';
+import {ApiUrlsService, TestsService, UserContextService} from '../shared/services';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FilesSelectorComponent} from '../common-components/files-selector/files-selector.component';
@@ -36,7 +36,8 @@ export class TestAttachedFilesComponent implements AfterViewInit {
       (
          private activatedRoute: ActivatedRoute,
          public apiUrls: ApiUrlsService,
-         private testsSvc: TestsService
+         private testsSvc: TestsService,
+         private usrCtxSvc: UserContextService
       )
    {
       const testAttachedFiles = <TestAttachedFiles>this.activatedRoute.snapshot.data['testAttachedFiles'];
@@ -60,6 +61,7 @@ export class TestAttachedFilesComponent implements AfterViewInit {
                 // TODO: Add alert message for error.
             }
          );
+      this.usrCtxSvc.loadLabGroupContents();
    }
 
    submitNewAttachments()

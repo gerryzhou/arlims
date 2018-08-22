@@ -1,3 +1,5 @@
+Operations modifying attached files should lead to request for refresh of lab group contents.
+
 Make an html report for imp slm vidas test.
   Maybe customize css for report mode.
 
@@ -18,6 +20,8 @@ Commit Notes
 Each test needs to be able to allow free-form entry of "continuation page".
 
 Add filters to samples listing.
+
+Maybe allow locking each section.
 
 Create service used by app component to set a title in center of toolbar (maybe switch to grid layout).
 

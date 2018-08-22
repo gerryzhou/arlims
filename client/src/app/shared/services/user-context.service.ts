@@ -31,7 +31,7 @@ export class UserContextService {
       return this.labGroupContents$;
    }
 
-   loadLabGroupContents() {
+   loadLabGroupContents(): Observable<LabGroupContents> {
       this.loadLabGroupContentsVia(this.fetchLabGroupContents());
       return this.labGroupContents$;
    }
