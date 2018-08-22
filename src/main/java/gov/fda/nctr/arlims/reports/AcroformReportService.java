@@ -48,9 +48,9 @@ class AcroformReportService
         JsonNode testDataJsonNode = this.jsonReader.readTree(testDataJson);
 
         try ( InputStream template = getClass().getResourceAsStream("/reports/" + templateName);
-              OutputStream os = Files.newOutputStream(reportFile) )
+              OutputStream os = Files.newOutputStream(reportFile);
+              PDDocument templateDoc = PDDocument.load(template) )
         {
-            PDDocument templateDoc = PDDocument.load(template);
 
             PDDocumentCatalog docCatalog = templateDoc.getDocumentCatalog();
             PDAcroForm acroForm = docCatalog.getAcroForm();
@@ -67,9 +67,9 @@ class AcroformReportService
         }
 
         return new Report(
-        reportFile,
-        "application/pdf",
-        testMetadata.getTestTypeCode() +"-" + testMetadata.getSampleNum() + ".pdf"
+            reportFile,
+            "application/pdf",
+            testMetadata.getTestTypeCode() +"-" + testMetadata.getSampleNum() + ".pdf"
         );
     }
 
