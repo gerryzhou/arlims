@@ -86,13 +86,13 @@ import {TestAttachedFilesComponent} from './test-attached-files/test-attached-fi
          multi: true,
          deps: [LoadingStatusService]
       },
-     UserContextService,
-     {
-        provide: APP_INITIALIZER,
-        useFactory: svc => () => svc.loadUserContext(),
-        deps: [UserContextService],
-        multi: true
-     }
+      UserContextService,
+      {
+         provide: APP_INITIALIZER,
+         useFactory: svc => () => svc.loadUserContext(),
+         deps: [UserContextService],
+         multi: true
+      }
   ],
   bootstrap: [AppComponent]
 })

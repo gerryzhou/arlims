@@ -166,6 +166,11 @@ export class StagedTestDataEntryComponent implements OnInit {
       // TODO: Catch observable errors, alert user via alert service that the save opearation failed and to try again.
    }
 
+   hasUnsavedChanges(): boolean
+   {
+      return this.testDataForm.dirty;
+   }
+
    onSampleTestUnitsChanged(testUnitsChange: SampleTestUnits)
    {
       this.sampleTestUnitsCount = testUnitsChange.testUnitsCount;

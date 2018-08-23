@@ -18,7 +18,7 @@ import {
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
-import {ImportedSalmonellaVidasRoutingModule} from './imported-salmonella-vidas-routing.module';
+import {ImportedSalmonellaVidasRoutingModule} from './routing/imported-salmonella-vidas-routing.module';
 import {StagePrepComponent} from './stage-prep/stage-prep.component';
 import {StagedTestDataEntryComponent} from './staged-test-data-entry/staged-test-data-entry.component';
 import {StagePreEnrComponent} from './stage-pre-enr/stage-pre-enr.component';
@@ -28,6 +28,7 @@ import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from './stage-controls/stage-controls.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
 import {TestDataViewComponent} from './test-data-view/test-data-view.component';
+import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-confirm-deactivate-guard';
 
 @NgModule({
    imports: [
@@ -60,6 +61,9 @@ import {TestDataViewComponent} from './test-data-view/test-data-view.component';
       StageVidasComponent,
       StageControlsComponent,
       StageWrapupComponent
+   ],
+   providers: [
+      TestDataEntryConfirmDeactivateGuard,
    ],
    exports: []
 })

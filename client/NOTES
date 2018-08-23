@@ -7,8 +7,11 @@ Audit logging of all test data changes, per field.
    Having seprate test type for positives is fine but the related tests need to be kept together and in proper sequence.
    Add test group/sequence field(s) to order and group tests within samples.
 
-Mirror num slots in vidas in Vidas stage results.
-   Use actual grid. Label rows as bays.
+Vidas Results Grid
+   Mirror num slots in vidas in Vidas stage results.
+   Label rows as bays as done for actual Vidas machine.
+   Use actual css grid.
+   Orient radio buttons vertically.
 
 Try linking to specific section(s) in BAM for each stage.
 
