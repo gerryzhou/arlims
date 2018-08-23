@@ -1,3 +1,32 @@
+Implement user/password auth since alternatives would require certificates and/or AD accounts which would take too much time to obtain.
+
+Audit logging of all test data changes, per field.
+  Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
+
+*** Positives need to be handled as next priority.
+   Having seprate test type for positives is fine but the related tests need to be kept together and in proper sequence.
+   Add test group/sequence field(s) to order and group tests within samples.
+
+Mirror num slots in vidas in Vidas stage results.
+   Use actual grid. Label rows as bays.
+
+Try linking to specific section(s) in BAM for each stage.
+
+Pre enr - Maybe make user have to choose to enter values manually for sampling manually.
+  Could just disable the sampling detail fields unless user selects an other/custom toggle.
+  Run this by John again, he seemed to maybe be OK with it as it is after some discussion.
+
+BAM Integration
+   Maybe pick food etc and restrict sampling method choices based on food and BAM.
+
+Maybe print out labels for plates and tubes, which are different from media labels.
+
+Implement user/password auth since alternatives would require certificates and/or AD accounts which would take too much time to obtain.
+
+Audit logging of all test data changes, per field.
+  Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
+
+
 Make an html report for imp slm vidas test.
   Maybe customize css for report mode.
 
