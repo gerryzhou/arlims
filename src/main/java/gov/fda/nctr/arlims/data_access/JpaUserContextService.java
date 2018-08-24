@@ -36,6 +36,7 @@ public class JpaUserContextService implements UserContextService
     private final SampleAssignmentRepository sampleAssignmentRepo;
     private final TestRepository testRepo;
     private final LabResourceRepository labResourceRepo;
+    private final RoleRepository roleRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private Map<Long,User> usersById;
@@ -52,6 +53,7 @@ public class JpaUserContextService implements UserContextService
             SampleAssignmentRepository sampleAssignmentRepo,
             TestRepository testRepo,
             LabResourceRepository labResourceRepo,
+            RoleRepository roleRepo,
             NamedParameterJdbcTemplate jdbcTemplate
         )
     {
@@ -61,6 +63,7 @@ public class JpaUserContextService implements UserContextService
         this.sampleAssignmentRepo = sampleAssignmentRepo;
         this.testRepo = testRepo;
         this.labResourceRepo = labResourceRepo;
+        this.roleRepo = roleRepo;
         this.jdbcTemplate = jdbcTemplate;
         this.usersById = new HashMap<>();
     }
@@ -90,6 +93,34 @@ public class JpaUserContextService implements UserContextService
                 samples,
                 labResources
             );
+    }
+
+    @Transactional
+    @Override
+    public void registerNewUser(UserRegistration reg)
+    {
+        LabGroup labGroup = labGroupRepository.findById(reg.getLabGroupId()).orElseThrow(() ->
+            new RuntimeException("employee lab group not found")
+        );
+
+        String hashedPassword = "TODO";
+
+        Set<Role> roles = new HashSet<>(roleRepo.findByNameIn(reg.getRoleNames()));
+
+        Employee emp =
+            new Employee(
+                reg.getFdaEmailAccountName(),
+                reg.getShortName(),
+                labGroup,
+                reg.getFactsPersonId().orElse(null),
+                hashedPassword,
+                reg.getLastName().orElse(null),
+                reg.getFirstName().orElse(null),
+                reg.getMiddleName().orElse(null),
+                roles
+            );
+
+        employeeRepo.save(emp);
     }
 
     @Transactional

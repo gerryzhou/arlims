@@ -67,6 +67,12 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${reportName}`);
    }
 
+   registerNewUserUrl(): string
+   {
+      return this.location.prepareExternalUrl(`/api/user/register-new-user`);
+   }
+
+
    isAppApiUrl(url: string)
    {
       return url.startsWith(this.API_PREFIX);

@@ -1,5 +1,5 @@
-Implement user/password authentication.
-   AuthTokenData { empId: long, factsApiToken: string | null, expiresEpochSecs: long }
+Implement server side of user/password authentication and user creation.
+   https://auth0.com/blog/implementing-jwt-authentication-on-spring-boot/
 
 Audit logging of all test data changes, per field.
   Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.

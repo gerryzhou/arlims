@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gov.fda.nctr.arlims.data_access.UserContextService;
-import gov.fda.nctr.arlims.models.dto.User;
-import gov.fda.nctr.arlims.models.dto.AuthenticationResult;
-import gov.fda.nctr.arlims.models.dto.LabGroupContents;
-import gov.fda.nctr.arlims.models.dto.UserContext;
+import gov.fda.nctr.arlims.models.dto.*;
 
 
 @RestController
@@ -25,17 +22,6 @@ public class UserController
     public UserController(UserContextService userContextService)
     {
         this.userContextService = userContextService;
-    }
-
-    @GetMapping("context")
-    public UserContext getUserContext
-        (
-            @RequestHeader HttpHeaders httpHeaders
-        )
-    {
-        String username = "stephen.harris"; // TODO
-
-        return userContextService.getUserContext(username);
     }
 
     @PostMapping("login")
@@ -57,6 +43,26 @@ public class UserController
         }
         else
             return new AuthenticationResult(false, Optional.empty(), Optional.empty());
+    }
+
+    @PostMapping("register-new-user")
+    public void registerNewUser
+        (
+            @RequestBody UserRegistration userRegistration
+        )
+    {
+        userContextService.registerNewUser(userRegistration);
+    }
+
+    @GetMapping("context")
+    public UserContext getUserContext
+        (
+            @RequestHeader HttpHeaders httpHeaders
+        )
+    {
+        String username = "stephen.harris"; // TODO
+
+        return userContextService.getUserContext(username);
     }
 
     @GetMapping("{empId:\\d+}/lab-group-contents")
