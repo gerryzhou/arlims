@@ -1,0 +1,23 @@
+<form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+   <mat-card>
+      <mat-card-title>
+         Login to ALIS
+      </mat-card-title>
+
+      <mat-card-content>
+         <div class="fields-stack">
+
+            <mat-form-field>
+               <input formControlName="username" name="username" matInput placeholder="Username" type="name">
+            </mat-form-field>
+
+            <mat-form-field>
+               <input formControlName="password" name="password" matInput placeholder="Password" type="password">
+            </mat-form-field>
+
+            <button mat-button type="submit" color="primary">Submit</button>
+         </div>
+      </mat-card-content>
+
+   </mat-card>
+</form>

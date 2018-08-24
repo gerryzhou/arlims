@@ -1,67 +1,142 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, of as obsof, ReplaySubject} from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {BehaviorSubject, EMPTY, Observable, of as obsof, ReplaySubject, throwError} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
-import {UserContext, LabGroupContents, AuthenticatedUser, Sample, LabTestType, LabResource, LabResourceType} from '../../../generated/dto';
+import {
+   UserContext,
+   LabGroupContents,
+   User,
+   Sample,
+   LabTestType,
+   LabResource,
+   LabResourceType, AuthenticationResult,
+} from '../../../generated/dto';
 import {SampleInTest} from '../models/sample-in-test';
+import {AppInternalUrlsService} from './app-internal-urls.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class UserContextService {
 
-   public authenticatedUser: AuthenticatedUser;
+   private readonly authenticatedUser = new BehaviorSubject<User | null>(null);
+   private readonly authenticationToken = new BehaviorSubject<string | null>(null);
+   private labGroupContentsLastUpdated: Date | null = null;
 
    private labGroupContents$: ReplaySubject<LabGroupContents>;
    private testIdToSampleInTest$: ReplaySubject<Map<number, SampleInTest>>;
    private testTypeCodeToLabGroupTestConfigJson$: ReplaySubject<Map<string, string>>;
    private labResourcesByType$: ReplaySubject<Map<string, LabResource[]>>;
 
-   private labGroupContentsLastUpdated: Date;
-
    static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
    static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
    static readonly WATERBATH_RESOURCE_TYPE: LabResourceType = 'WAB';
    static readonly VIDAS_RESOURCE_TYPE: LabResourceType = 'VID';
 
+   constructor
+      (
+         private apiUrlsSvc: ApiUrlsService,
+         private appUrlsSvc: AppInternalUrlsService,
+         private router: Router,
+         private httpClient: HttpClient
+      )
+   {}
 
-   constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) {}
+   getAuthenticatedUser(): BehaviorSubject<User | null>
+   {
+      return this.authenticatedUser;
+   }
 
-   getLabGroupContents(): Observable<LabGroupContents> {
+   getAuthenticationToken(): BehaviorSubject<string | null>
+   {
+      return this.authenticationToken;
+   }
+
+   login(fdaEmailAccountName: string, password: string): Observable<boolean>
+   {
+      const url = this.apiUrlsSvc.loginUrl();
+      const body = new HttpParams().set('fdaEmailAccountName', fdaEmailAccountName).set('password', password);
+
+      return this.httpClient.post<AuthenticationResult>(url, body).pipe(
+         map(authRes => {
+            console.log('Authentication result: ', authRes);
+            if ( authRes.authenticated )
+            {
+               this.authenticatedUser.next(authRes.authenticatedUser);
+               this.authenticationToken.next(authRes.authenticationToken);
+               this.refreshLabGroupContents();
+            }
+            return authRes.authenticated;
+         })
+      );
+   }
+
+   logout()
+   {
+      this.authenticatedUser.next(null);
+      this.authenticationToken.next(null);
+      this.refreshLabGroupContentsVia(EMPTY);
+      this.router.navigate(this.appUrlsSvc.login());
+   }
+
+   getLabGroupContents(): Observable<LabGroupContents>
+   {
+      if ( !this.authenticatedUser.getValue() )
+         return throwError('authenticated user required for this operation');
+
       return this.labGroupContents$;
    }
 
-   loadLabGroupContents(): Observable<LabGroupContents> {
-      this.loadLabGroupContentsVia(this.fetchLabGroupContents());
-      return this.labGroupContents$;
-   }
+   getSampleInTest(testId: number): Observable<SampleInTest | undefined>
+   {
+      if ( !this.authenticatedUser.getValue() )
+         return throwError('authenticated user required for this operation');
 
-   getSampleInTest(testId: number): Observable<SampleInTest | undefined> {
       return this.testIdToSampleInTest$.pipe(map(m => m.get(testId)));
    }
 
-   getLabGroupTestConfigJson(testTypeCode: string): Observable<string | undefined> {
+   getLabGroupTestConfigJson(testTypeCode: string): Observable<string | undefined>
+   {
+      if ( !this.authenticatedUser.getValue() )
+         return throwError('authenticated user required for this operation');
+
       return this.testTypeCodeToLabGroupTestConfigJson$.pipe(map(m => m.get(testTypeCode)));
    }
 
-   getLabResourcesByType(): Observable<Map<string, LabResource[]>> {
+   getLabResourcesByType(): Observable<Map<string, LabResource[]>>
+   {
+      if ( !this.authenticatedUser.getValue() )
+         return throwError('authenticated user required for this operation');
+
       return this.labResourcesByType$;
    }
 
-   // Called via app-module to initialize the service prior to usage.
-   loadUserContext(): Promise<UserContext> {
+   refreshLabGroupContents(): Observable<LabGroupContents>
+   {
+      if ( !this.authenticatedUser.getValue() )
+         return throwError('authenticated user required for this operation');
+
+      this.refreshLabGroupContentsVia(this.fetchLabGroupContents());
+      return this.labGroupContents$;
+   }
+
+   // When SSO is used, called via app-module to initialize the service prior to usage.
+   loadUserContextViaSingleSignOn(): Promise<UserContext>
+   {
       return (
          this.fetchUserContext()
             .toPromise()
             .then(userCtx => {
-               this.authenticatedUser = userCtx.authenticatedUser;
-               this.loadLabGroupContentsVia(obsof(userCtx.labGroupContents));
+               this.authenticatedUser.next(userCtx.user);
+               this.refreshLabGroupContentsVia(obsof(userCtx.labGroupContents));
                return userCtx;
             })
       );
    }
 
-   private loadLabGroupContentsVia(lgContents$: Observable<LabGroupContents>) {
+   private refreshLabGroupContentsVia(lgContents$: Observable<LabGroupContents>)
+   {
       this.labGroupContents$ = new ReplaySubject(1);
       this.testIdToSampleInTest$ = new ReplaySubject<Map<number, SampleInTest>>(1);
       this.testTypeCodeToLabGroupTestConfigJson$ = new ReplaySubject<Map<string, string>>(1);
@@ -86,15 +161,22 @@ export class UserContextService {
       lgContents$.subscribe(this.labGroupContents$);
    }
 
-   private fetchUserContext(): Observable<UserContext> {
-      return this.httpClient.get<UserContext>(this.apiUrlsSvc.userContextUrl());
+   private fetchUserContext(): Observable<UserContext>
+   {
+      return this.httpClient.get<UserContext>(
+         this.apiUrlsSvc.userContextUrl()
+      );
    }
 
-   private fetchLabGroupContents(): Observable<LabGroupContents> {
-      return this.fetchUserContext().pipe(map(usrCtx => usrCtx.labGroupContents));
+   private fetchLabGroupContents(): Observable<LabGroupContents>
+   {
+      return this.httpClient.get<LabGroupContents>(
+         this.apiUrlsSvc.labGroupContentsUrl(this.authenticatedUser.getValue().employeeId)
+      );
    }
 
-   private static getSampleInTestsByTestId(samples: Sample[]): Map<number, SampleInTest> {
+   private static getSampleInTestsByTestId(samples: Sample[]): Map<number, SampleInTest>
+   {
       const m = new Map<number, SampleInTest>();
       for (const s of samples) {
          for (const t of s.tests) {
@@ -104,7 +186,8 @@ export class UserContextService {
       return m;
    }
 
-   private static getLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string> {
+   private static getLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string>
+   {
       const m = new Map<string, string>();
       for (const testType of testTypes) {
          if (testType.configurationJson) {

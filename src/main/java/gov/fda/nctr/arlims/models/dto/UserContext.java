@@ -3,20 +3,20 @@ package gov.fda.nctr.arlims.models.dto;
 
 public class UserContext
 {
-    private final AuthenticatedUser authenticatedUser;
+    private final User user;
     private final LabGroupContents labGroupContents;
 
     public UserContext
         (
-            AuthenticatedUser authenticatedUser,
+            User user,
             LabGroupContents labGroupContents
         )
     {
-        this.authenticatedUser = authenticatedUser;
+        this.user = user;
         this.labGroupContents = labGroupContents;
     }
 
-    public AuthenticatedUser getAuthenticatedUser() { return authenticatedUser; }
+    public User getUser() { return user; }
 
     public LabGroupContents getLabGroupContents() { return labGroupContents; }
 }

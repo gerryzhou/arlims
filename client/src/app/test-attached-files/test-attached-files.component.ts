@@ -61,7 +61,7 @@ export class TestAttachedFilesComponent implements AfterViewInit {
                 // TODO: Add alert message for error.
             }
          );
-      this.usrCtxSvc.loadLabGroupContents();
+      this.usrCtxSvc.refreshLabGroupContents();
    }
 
    submitNewAttachments()

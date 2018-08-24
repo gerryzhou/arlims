@@ -15,8 +15,6 @@ import {AppInternalUrlsService} from '../shared/services/app-internal-urls.servi
 })
 export class SamplesListingComponent implements OnDestroy {
 
-   private readonly userShortName: string;
-
    selectableSamples: SelectableSample[]; // all samples in context, before any filtering or sorting
 
    // samples to be displayed, having survived filters and optionally undergone sorting
@@ -53,8 +51,6 @@ export class SamplesListingComponent implements OnDestroy {
           private appUrlsSvc: AppInternalUrlsService,
        )
    {
-      this.userShortName = usrCtxSvc.authenticatedUser.shortName;
-
       const expandedSampleIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
       if (expandedSampleIdsStr)
       {
@@ -165,8 +161,10 @@ export class SamplesListingComponent implements OnDestroy {
 
    private sampleSatisfiesUserAssignmentRequirement(sample: Sample, listingOptions: ListingOptions): boolean
    {
+      const userShortName = this.usrCtxSvc.getAuthenticatedUser().getValue().shortName;
+
       return listingOptions.includeSamplesAssignedOnlyToOtherUsers ||
-         sample.assignments.findIndex(a => a.employeeShortName === this.userShortName) !== -1;
+         sample.assignments.findIndex(a => a.employeeShortName === userShortName) !== -1;
    }
 
    get selectedVisibleSamples(): Sample[]
@@ -272,7 +270,7 @@ export class SamplesListingComponent implements OnDestroy {
          this.labGroupContentsSubscription.unsubscribe();
 
       this.labGroupContentsSubscription =
-         this.usrCtxSvc.loadLabGroupContents()
+         this.usrCtxSvc.refreshLabGroupContents()
             .subscribe(labGroupContents => {
                this.refeshFromLabGroupContents(labGroupContents);
             });

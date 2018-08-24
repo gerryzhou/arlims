@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class AuthenticatedUser
+public class User
 {
     private final long employeeId;
     private final String fdaEmailAccountName;
@@ -17,7 +17,7 @@ public class AuthenticatedUser
     private final List<RoleName> roles;
     private final Instant userInfoLastRefreshedInstant;
 
-    public AuthenticatedUser
+    public User
         (
             long employeeId,
             String fdaEmailAccountName,

@@ -143,7 +143,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       )
       .subscribe(saveResults => {
          if (saveResults.saved) {
-            this.usrCtxSvc.loadLabGroupContents();
+            this.usrCtxSvc.refreshLabGroupContents();
             this.clearConflictsData();
             this.alertMsgSvc.alertSuccess('Test data saved.', true);
             this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));

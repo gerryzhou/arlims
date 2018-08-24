@@ -12,6 +12,16 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl('/api/user/context');
    }
 
+   labGroupContentsUrl(empId: number): string
+   {
+      return this.location.prepareExternalUrl(`/api/user/${empId}/lab-group-contents`);
+   }
+
+   loginUrl()
+   {
+      return this.location.prepareExternalUrl(`/api/user/login`);
+   }
+
    newTestUrl(): string
    {
       return this.location.prepareExternalUrl('/api/tests/new');

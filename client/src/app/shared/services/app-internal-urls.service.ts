@@ -6,6 +6,16 @@ export class AppInternalUrlsService {
 
    constructor() {}
 
+   login(): any[]
+   {
+      return ['/login'];
+   }
+
+   home(): any[]
+   {
+      return [''];
+   }
+
    samplesListingWithSampleExpanded(expandSampleId: number): any[]
    {
       return ['/samples', {expsmp: `${expandSampleId}`}];

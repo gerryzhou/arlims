@@ -1,5 +1,6 @@
 <mat-toolbar color="primary">
    <mat-toolbar-row>
+
       <nav>
          <button mat-button routerLink="/samples" [routerLinkActive]="['active-route']">
             <mat-icon>home</mat-icon> ALIS
@@ -8,7 +9,15 @@
 
       <div class="toolbar-center-fill">{{pageTitle$ | async}}</div>
 
-      <span class="user"><mat-icon>person</mat-icon> {{authenticatedUser.shortName}}</span>
+      <span class="user" *ngIf="userCtxSvc.getAuthenticatedUser().getValue()">
+         <mat-menu #userMenu="matMenu">
+            <button mat-menu-item (click)="onLogoutClicked()">Logout</button>
+         </mat-menu>
+         <button mat-button [matMenuTriggerFor]="userMenu">
+            <mat-icon>person</mat-icon> {{authenticatedUserShortName$ | async}} <mat-icon>more_vert</mat-icon>
+         </button>
+      </span>
+
    </mat-toolbar-row>
 </mat-toolbar>
 

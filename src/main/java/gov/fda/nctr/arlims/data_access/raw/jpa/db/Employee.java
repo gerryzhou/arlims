@@ -1,7 +1,6 @@
 package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 
 import java.util.Set;
-import java.util.HashSet;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -28,8 +27,11 @@ public class Employee
     @Column(name = "SHORT_NAME", nullable = false) @Size(max = 10) @NotBlank
     private String shortName;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
+    @ManyToOne(optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
+
+    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
+    private Long labGroupId;
 
     @Column(name = "FACTS_PERSON_ID")
     private Long factsPersonId;
@@ -79,6 +81,7 @@ public class Employee
         this.fdaEmailAccountName = fdaEmailAccountName;
         this.shortName = shortName;
         this.labGroup = labGroup;
+        this.labGroupId = labGroup.getId();
         this.factsPersonId = factsPersonId;
         this.password = password;
         this.lastName = lastName;
@@ -98,6 +101,8 @@ public class Employee
 
     public LabGroup getLabGroup() { return labGroup; }
     public void setLabGroup(LabGroup labGroup) { this.labGroup = labGroup; }
+
+    public Long getLabGroupId() { return labGroupId; }
 
     public Long getFactsPersonId() { return factsPersonId; }
     public void setFactsPersonId(Long factsPersonId) { this.factsPersonId = factsPersonId; }

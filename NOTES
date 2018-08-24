@@ -1,3 +1,7 @@
+User Authentication & Security
+  Check hashed password vs. db (see Spring security's impl).
+  If password matches, create JWT with emp id as content.
+  Then for each request, retrieve emp id from JWT value in header, lookup User record by emp id via UserContextService.getUser().
 
 
 Data Access
@@ -172,6 +176,10 @@ App ID: 0757
 API Doc
 -------
 Maybe generate api doc via https://www.vojtechruzicka.com/documenting-spring-boot-rest-api-swagger-springfox/
+
+
+Leidos API Swagger Docs
+  LabsDataService/swagger-ui.html
 
 
 EPLC

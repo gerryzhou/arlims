@@ -35,6 +35,8 @@ import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {CommonComponentsModule} from './common-components/common-components.module';
 import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
+import { LoginComponent } from './login/login.component';
+import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interceptor';
 
 @NgModule({
    declarations: [
@@ -43,6 +45,7 @@ import {TestAttachedFilesComponent} from './test-attached-files/test-attached-fi
       SamplesListingComponent,
       SamplesListingOptionsComponent,
       TestAttachedFilesComponent,
+      LoginComponent,
    ],
    entryComponents: [
      // (dialog components here)
@@ -82,17 +85,25 @@ import {TestAttachedFilesComponent} from './test-attached-files/test-attached-fi
       LoadingStatusService,
       {
          provide: HTTP_INTERCEPTORS,
-         useFactory: service => new LoadingStatusInterceptor(service),
+         useFactory: svc => new LoadingStatusInterceptor(svc),
          multi: true,
          deps: [LoadingStatusService]
       },
-      UserContextService,
+      AuthTokenHttpInterceptor,
       {
-         provide: APP_INITIALIZER,
-         useFactory: svc => () => svc.loadUserContext(),
-         deps: [UserContextService],
-         multi: true
-      }
+         provide: HTTP_INTERCEPTORS,
+         useClass:  AuthTokenHttpInterceptor,
+         multi: true,
+         deps: [UserContextService]
+      },
+      UserContextService,
+      // Can uncomment the following for SSO, to initialize the user at app startup.
+      // {
+      //    provide: APP_INITIALIZER,
+      //    useFactory: svc => () => svc.loadUserContextViaSingleSignOn(),
+      //    deps: [UserContextService],
+      //    multi: true
+      // }
   ],
   bootstrap: [AppComponent]
 })

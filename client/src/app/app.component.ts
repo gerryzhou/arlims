@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LoadingStatusService, UserContextService} from './shared/services';
-import {AuthenticatedUser} from '../generated/dto';
 import {Observable, Subscription} from 'rxjs';
 import {ViewTitleService} from './shared/services/view-title.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
@@ -14,7 +13,8 @@ import {filter, map, mergeMap} from 'rxjs/operators';
 export class AppComponent implements OnInit, OnDestroy {
 
    loading: boolean;
-   authenticatedUser: AuthenticatedUser;
+
+   authenticatedUserShortName$: Observable<string | null>;
 
    pageTitle$: Observable<string | null>;
 
@@ -22,14 +22,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
    constructor
       (
-         private userCtxSvc: UserContextService,
+         public userCtxSvc: UserContextService,
          private loadingStatusService: LoadingStatusService,
          private viewTitleSvc: ViewTitleService,
          private router: Router,
          private activatedRoute: ActivatedRoute,
       )
    {
-      this.authenticatedUser = userCtxSvc.authenticatedUser;
+      this.authenticatedUserShortName$ = userCtxSvc.getAuthenticatedUser().pipe(map(au => au != null ? au.shortName : null));
       this.loading = false;
       this.loadingStatusSubscription = loadingStatusService.loadingStatus.subscribe(loading => this.loading = loading);
       this.pageTitle$ = this.viewTitleSvc.titles();
@@ -56,4 +56,8 @@ export class AppComponent implements OnInit, OnDestroy {
       this.loadingStatusSubscription.unsubscribe();
    }
 
+   onLogoutClicked()
+   {
+      this.userCtxSvc.logout();
+   }
 }

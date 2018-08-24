@@ -1,7 +1,6 @@
 package gov.fda.nctr.arlims.data_access;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -14,7 +13,6 @@ import static java.util.stream.Collectors.toList;
 import javax.transaction.Transactional;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -33,11 +31,14 @@ import gov.fda.nctr.arlims.models.dto.LabResource;
 public class JpaUserContextService implements UserContextService
 {
     private final EmployeeRepository employeeRepo;
+    private final LabGroupRepository labGroupRepository;
     private final SampleRepository sampleRepo;
     private final SampleAssignmentRepository sampleAssignmentRepo;
     private final TestRepository testRepo;
     private final LabResourceRepository labResourceRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    private Map<Long,User> usersById;
 
     private final Pattern barPattern = Pattern.compile("\\|");
 
@@ -46,6 +47,7 @@ public class JpaUserContextService implements UserContextService
     public JpaUserContextService
         (
             EmployeeRepository employeeRepo,
+            LabGroupRepository labGroupRepository,
             SampleRepository sampleRepo,
             SampleAssignmentRepository sampleAssignmentRepo,
             TestRepository testRepo,
@@ -54,11 +56,81 @@ public class JpaUserContextService implements UserContextService
         )
     {
         this.employeeRepo = employeeRepo;
+        this.labGroupRepository = labGroupRepository;
         this.sampleRepo = sampleRepo;
         this.sampleAssignmentRepo = sampleAssignmentRepo;
         this.testRepo = testRepo;
         this.labResourceRepo = labResourceRepo;
         this.jdbcTemplate = jdbcTemplate;
+        this.usersById = new HashMap<>();
+    }
+
+    @Transactional
+    @Override
+    public LabGroupContents getLabGroupContents(long employeeId)
+    {
+        LabGroup labGroup = this.labGroupRepository.findByEmployeeId(employeeId).orElseThrow(() ->
+            new ResourceNotFoundException("employee record not found")
+        );
+
+        List<LabTestType> testTypes = getLabGroupTestTypes(labGroup);
+
+        List<UserReference> users = getLabGroupUsers(labGroup);
+
+        List<Sample> samples = getLabGroupActiveSamples(labGroup, users);
+
+        List<LabResource> labResources = getLabGroupLabResources(labGroup);
+
+        return
+            new LabGroupContents(
+                labGroup.getId(),
+                labGroup.getName(),
+                testTypes,
+                users,
+                samples,
+                labResources
+            );
+    }
+
+    @Transactional
+    @Override
+    public User loadUser(String fdaEmailAccountName)
+    {
+        Employee emp = employeeRepo.findByFdaEmailAccountName(fdaEmailAccountName).orElseThrow(() ->
+            new ResourceNotFoundException("employee record not found")
+        );
+
+        User user = makeUser(emp);
+
+        usersById.put(user.getEmployeeId(), user);
+
+        return  user;
+    }
+
+    @Transactional
+    @Override
+    public User loadUser(long empId)
+    {
+        Employee emp = employeeRepo.findById(empId).orElseThrow(() ->
+            new ResourceNotFoundException("employee record not found")
+        );
+
+        User user = makeUser(emp);
+
+        usersById.put(user.getEmployeeId(), user);
+
+        return  user;
+    }
+
+    @Override
+    public User getUser(long empId)
+    {
+        User user = usersById.get(empId);
+
+        if ( user != null )
+            return user;
+        else
+            return loadUser(empId);
     }
 
     // TODO This implementation does too many individual queries.
@@ -66,6 +138,7 @@ public class JpaUserContextService implements UserContextService
     //   Try adding EntityGraph annotation, see:
     //     https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.entity-graph
     @Transactional
+    @Override
     public UserContext getUserContext(String fdaEmailAccountName)
     {
         Employee emp = employeeRepo.findWithLabGroupByFdaEmailAccountName(fdaEmailAccountName).orElseThrow(() ->
@@ -86,7 +159,7 @@ public class JpaUserContextService implements UserContextService
 
         return
             new UserContext(
-                new AuthenticatedUser(
+                new User(
                     emp.getId(),
                     emp.getFdaEmailAccountName(),
                     opt(emp.getFactsPersonId()),
@@ -383,6 +456,26 @@ public class JpaUserContextService implements UserContextService
                 opt(t.getSavedToFacts()),
                 savedToFactsByUserShortName
             );
+    }
+
+    private User makeUser(Employee emp)
+    {
+        List<RoleName> roleNames = emp.getRoles().stream().map(Role::getName).collect(toList());
+
+        User user =
+            new User(
+                emp.getId(),
+                emp.getFdaEmailAccountName(),
+                opt(emp.getFactsPersonId()),
+                emp.getShortName(),
+                emp.getLabGroupId(),
+                emp.getLastName(),
+                emp.getFirstName(),
+                roleNames,
+                Instant.now()
+            );
+
+        return user;
     }
 
     private static <T> Optional<T> opt(T t) { return Optional.ofNullable(t); }
