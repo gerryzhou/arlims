@@ -29,7 +29,7 @@ import {TruncateModule} from '@yellowspot/ng-truncate';
 
 import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
-import {UserContextService, LoadingStatusService, LoadingStatusInterceptor} from './shared/services';
+import {UserContextService, LoadingStatusService, LoadingStatusInterceptor, ApiUrlsService} from './shared/services';
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
@@ -94,16 +94,9 @@ import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interc
          provide: HTTP_INTERCEPTORS,
          useClass:  AuthTokenHttpInterceptor,
          multi: true,
-         deps: [UserContextService]
+         deps: [UserContextService, ApiUrlsService]
       },
       UserContextService,
-      // Can uncomment the following for SSO, to initialize the user at app startup.
-      // {
-      //    provide: APP_INITIALIZER,
-      //    useFactory: svc => () => svc.loadUserContextViaSingleSignOn(),
-      //    deps: [UserContextService],
-      //    multi: true
-      // }
   ],
   bootstrap: [AppComponent]
 })

@@ -5,7 +5,12 @@ import { Location } from '@angular/common';
 @Injectable({providedIn: 'root'})
 export class ApiUrlsService {
 
-   constructor(private location: Location) {}
+   private readonly API_PREFIX: string;
+
+   constructor(private location: Location)
+   {
+      this.API_PREFIX = this.location.prepareExternalUrl('');
+   }
 
    userContextUrl(): string
    {
@@ -62,4 +67,8 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${reportName}`);
    }
 
+   isAppApiUrl(url: string)
+   {
+      return url.startsWith(this.API_PREFIX);
+   }
 }
