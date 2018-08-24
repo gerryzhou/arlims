@@ -33,15 +33,15 @@ public class UserController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        String fdaEmailAccountName = "stephen.harris"; // TODO
+        String username = "stephen.harris"; // TODO
 
-        return userContextService.getUserContext(fdaEmailAccountName);
+        return userContextService.getUserContext(username);
     }
 
     @PostMapping("login")
     public AuthenticationResult login
         (
-            @RequestParam("fdaEmailAccountName") String fdaEmailAccountName,
+            @RequestParam("username") String username,
             @RequestParam("password") String password,
             @RequestHeader HttpHeaders httpHeaders
         )
@@ -52,7 +52,7 @@ public class UserController
         if ( authSuccess )
         {
             String authToken = "TODO"; // TODO
-            User user = userContextService.loadUser(fdaEmailAccountName);
+            User user = userContextService.loadUser(username);
             return new AuthenticationResult(true, Optional.of(user), Optional.of(authToken));
         }
         else

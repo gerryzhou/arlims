@@ -94,9 +94,9 @@ public class JpaUserContextService implements UserContextService
 
     @Transactional
     @Override
-    public User loadUser(String fdaEmailAccountName)
+    public User loadUser(String username)
     {
-        Employee emp = employeeRepo.findByFdaEmailAccountName(fdaEmailAccountName).orElseThrow(() ->
+        Employee emp = employeeRepo.findByFdaEmailAccountName(username).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
         );
 
@@ -139,9 +139,9 @@ public class JpaUserContextService implements UserContextService
     //     https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.entity-graph
     @Transactional
     @Override
-    public UserContext getUserContext(String fdaEmailAccountName)
+    public UserContext getUserContext(String username)
     {
-        Employee emp = employeeRepo.findWithLabGroupByFdaEmailAccountName(fdaEmailAccountName).orElseThrow(() ->
+        Employee emp = employeeRepo.findWithLabGroupByFdaEmailAccountName(username).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
         );
 

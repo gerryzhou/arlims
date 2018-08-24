@@ -53,10 +53,10 @@ export class UserContextService {
       return this.authenticationToken;
    }
 
-   login(fdaEmailAccountName: string, password: string): Observable<boolean>
+   login(username: string, password: string): Observable<boolean>
    {
       const url = this.apiUrlsSvc.loginUrl();
-      const body = new HttpParams().set('fdaEmailAccountName', fdaEmailAccountName).set('password', password);
+      const body = new HttpParams().set('username', username).set('password', password);
 
       return this.httpClient.post<AuthenticationResult>(url, body).pipe(
          map(authRes => {

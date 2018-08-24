@@ -8,7 +8,7 @@ import java.util.Optional;
 public class User
 {
     private final long employeeId;
-    private final String fdaEmailAccountName;
+    private final String username;
     private final Optional<Long> factsPersonId;
     private final String shortName;
     private final long labGroupId;
@@ -20,7 +20,7 @@ public class User
     public User
         (
             long employeeId,
-            String fdaEmailAccountName,
+            String username,
             Optional<Long> factsPersonId,
             String shortName,
             long labGroupId,
@@ -31,7 +31,7 @@ public class User
         )
     {
         this.employeeId = employeeId;
-        this.fdaEmailAccountName = fdaEmailAccountName;
+        this.username = username;
         this.factsPersonId = factsPersonId;
         this.shortName = shortName;
         this.labGroupId = labGroupId;
@@ -43,7 +43,7 @@ public class User
 
     public long getEmployeeId() { return employeeId; }
 
-    public String getFdaEmailAccountName() { return fdaEmailAccountName; }
+    public String getUsername() { return username; }
 
     public Optional<Long> getFactsPersonId() { return factsPersonId; }
 

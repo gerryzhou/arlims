@@ -7,9 +7,9 @@ import gov.fda.nctr.arlims.models.dto.UserContext;
 
 public interface UserContextService
 {
-    UserContext getUserContext(String userFdaAccountName);
+    UserContext getUserContext(String username);
 
-    User loadUser(String fdaEmailAccountName);
+    User loadUser(String username);
 
     User loadUser(long empId);
 
