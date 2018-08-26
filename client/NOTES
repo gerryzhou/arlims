@@ -1,4 +1,6 @@
-Why can't route directly to login page?
+SamplesListingComponent
+  Angular is apparently not noticing changes to the expression "selectableSamples[sampleIx].sample".
+  Replace existing LabGroupContents-derived data with Observables derived from LGC observable.
 
 After new test is created, sample listing is not being refreshed.
   Lab group contents was reloaded but components didn't know to repaint, probably because of new PUSH refresh option.

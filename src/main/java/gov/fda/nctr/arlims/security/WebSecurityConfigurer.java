@@ -25,17 +25,12 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    static final String LOGIN_URL = "/login";
+    static final String LOGIN_URL = "/api/login";
     static final String JWT_HEADER_NAME = "Authorization";
     static final String JWT_HEADER_PREFIX = "Bearer ";
 
     private static final RequestMatcher UNMANAGED_URLS =
-        new NegatedRequestMatcher(
-            new OrRequestMatcher(
-                new AntPathRequestMatcher("/api/**"),
-                new RegexRequestMatcher(LOGIN_URL, "POST", true)
-            )
-        );
+        new NegatedRequestMatcher(new AntPathRequestMatcher("/api/**"));
 
     public WebSecurityConfigurer
         (

@@ -24,7 +24,7 @@ export class ApiUrlsService {
 
    loginUrl()
    {
-      return this.location.prepareExternalUrl(`/login`);
+      return this.location.prepareExternalUrl(`/api/login`);
    }
 
    newTestUrl(): string
