@@ -11,7 +11,6 @@ import {AppInternalUrlsService} from '../shared/services/app-internal-urls.servi
    selector: 'app-samples-listing',
    templateUrl: './samples-listing.component.html',
    styleUrls: ['./samples-listing.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SamplesListingComponent implements OnDestroy {
 
