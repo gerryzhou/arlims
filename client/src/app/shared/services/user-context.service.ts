@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {BehaviorSubject, EMPTY, Observable, of as obsof, ReplaySubject, throwError} from 'rxjs';
+import {BehaviorSubject, EMPTY as emptyObs, Observable, of as obsof, ReplaySubject, throwError} from 'rxjs';
 import {catchError, flatMap, map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
@@ -86,7 +86,7 @@ export class UserContextService {
    {
       this.authenticatedUser.next(null);
       this.authenticationToken.next(null);
-      this.refreshLabGroupContentsVia(EMPTY);
+      this.refreshLabGroupContentsVia(emptyObs);
       this.router.navigate(this.appUrlsSvc.login());
    }
 
