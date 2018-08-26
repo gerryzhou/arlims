@@ -1,11 +1,3 @@
-SamplesListingComponent
-  Angular is apparently not noticing changes to the expression "selectableSamples[sampleIx].sample".
-  Replace existing LabGroupContents-derived data with Observables derived from LGC observable.
-
-After new test is created, sample listing is not being refreshed.
-  Lab group contents was reloaded but components didn't know to repaint, probably because of new PUSH refresh option.
-  Have the sample listing subscribe to changes to the lab group contents.
-
 Need to add registration in UI.
 
 Audit logging of all test data changes, per field.
