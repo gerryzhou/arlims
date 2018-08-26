@@ -24,7 +24,7 @@ export class ApiUrlsService {
 
    loginUrl()
    {
-      return this.location.prepareExternalUrl(`/api/user/login`);
+      return this.location.prepareExternalUrl(`/login`);
    }
 
    newTestUrl(): string
@@ -69,7 +69,7 @@ export class ApiUrlsService {
 
    registerNewUserUrl(): string
    {
-      return this.location.prepareExternalUrl(`/api/user/register-new-user`);
+      return this.location.prepareExternalUrl(`/api/user/register`);
    }
 
 

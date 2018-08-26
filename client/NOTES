@@ -1,5 +1,10 @@
-Implement server side of user/password authentication and user creation.
-   https://auth0.com/blog/implementing-jwt-authentication-on-spring-boot/
+Why can't route directly to login page?
+
+After new test is created, sample listing is not being refreshed.
+  Lab group contents was reloaded but components didn't know to repaint, probably because of new PUSH refresh option.
+  Have the sample listing subscribe to changes to the lab group contents.
+
+Need to add registration in UI.
 
 Audit logging of all test data changes, per field.
   Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.

@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {BehaviorSubject, EMPTY, Observable, of as obsof, ReplaySubject, throwError} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {catchError, flatMap, map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
 import {
    UserContext,
    LabGroupContents,
-   User,
+   AppUser,
    Sample,
    LabTestType,
    LabResource,
-   LabResourceType, AuthenticationResult,
+   LabResourceType,
 } from '../../../generated/dto';
 import {SampleInTest} from '../models/sample-in-test';
 import {AppInternalUrlsService} from './app-internal-urls.service';
@@ -20,7 +20,7 @@ import {Router} from '@angular/router';
 @Injectable()
 export class UserContextService {
 
-   private readonly authenticatedUser = new BehaviorSubject<User | null>(null);
+   private readonly authenticatedUser = new BehaviorSubject<AppUser | null>(null);
    private readonly authenticationToken = new BehaviorSubject<string | null>(null);
    private labGroupContentsLastUpdated: Date | null = null;
 
@@ -43,7 +43,7 @@ export class UserContextService {
       )
    {}
 
-   getAuthenticatedUser(): BehaviorSubject<User | null>
+   getAuthenticatedUser(): BehaviorSubject<AppUser | null>
    {
       return this.authenticatedUser;
    }
@@ -58,16 +58,26 @@ export class UserContextService {
       const url = this.apiUrlsSvc.loginUrl();
       const body = new HttpParams().set('username', username).set('password', password);
 
-      return this.httpClient.post<AuthenticationResult>(url, body).pipe(
-         map(authRes => {
-            console.log('Authentication result: ', authRes);
-            if ( authRes.authenticated )
-            {
-               this.authenticatedUser.next(authRes.authenticatedUser);
-               this.authenticationToken.next(authRes.authenticationToken);
-               this.refreshLabGroupContents();
-            }
-            return authRes.authenticated;
+      return this.httpClient.post<void>(url, body, {observe: 'response'}).pipe(
+         flatMap(httpRes => {
+            console.log(httpRes);
+            const authHdr = httpRes.headers.get('authorization') || httpRes.headers.get('Authorization');
+            const authToken = this.extractAuthToken(authHdr);
+            if ( authToken == null )
+               return obsof(false);
+            this.authenticationToken.next(authToken);
+            return this.fetchUserContext().pipe(
+               map(userContext => {
+                  console.log(userContext);
+                  this.authenticatedUser.next(userContext.user);
+                  this.refreshLabGroupContentsVia(obsof(userContext.labGroupContents));
+                  return true;
+               })
+            );
+         }),
+         catchError((err) => {
+            console.log(err);
+            return obsof(false);
          })
       );
    }
@@ -119,20 +129,6 @@ export class UserContextService {
 
       this.refreshLabGroupContentsVia(this.fetchLabGroupContents());
       return this.labGroupContents$;
-   }
-
-   // When SSO is used, called via app-module to initialize the service prior to usage.
-   loadUserContextViaSingleSignOn(): Promise<UserContext>
-   {
-      return (
-         this.fetchUserContext()
-            .toPromise()
-            .then(userCtx => {
-               this.authenticatedUser.next(userCtx.user);
-               this.refreshLabGroupContentsVia(obsof(userCtx.labGroupContents));
-               return userCtx;
-            })
-      );
    }
 
    private refreshLabGroupContentsVia(lgContents$: Observable<LabGroupContents>)
@@ -216,4 +212,15 @@ export class UserContextService {
 
       return m;
    }
+
+   private extractAuthToken(authHeader: string): string | null
+   {
+      if (!authHeader) return null;
+      const prefix = 'Bearer ';
+      if ( authHeader.startsWith(prefix) )
+         return authHeader.substring(prefix.length);
+      else
+         return authHeader;
+   }
+
 }

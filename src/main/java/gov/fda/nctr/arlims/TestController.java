@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,10 +47,11 @@ public class TestController
         (
             @RequestParam("sampleId") long sampleId,
             @RequestParam("testTypeCode") LabTestTypeCode testTypeCode,
-            @RequestParam("testBeginDate") String testBeginDate
+            @RequestParam("testBeginDate") String testBeginDate,
+            Authentication auth
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can create tests.
+        long empId = ((AppUser)auth.getDetails()).getEmployeeId();
 
         long createdTestId = testDataService.createTest(empId, sampleId, testTypeCode, testBeginDate);
 
@@ -57,10 +59,11 @@ public class TestController
     }
 
     @DeleteMapping("{testId:\\d+}")
-    public void deleteTest(@PathVariable("testId") long testId)
+    public void deleteTest
+        (
+            @PathVariable("testId") long testId
+        )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can create tests.
-
         testDataService.deleteTest(testId);
     }
 
@@ -71,8 +74,6 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
         return testDataService.getVersionedTestData(testId);
     }
 
@@ -83,10 +84,11 @@ public class TestController
             @RequestPart("testDataJson") String testDataJson,
             @RequestPart("stageStatusesJson") String stageStatusesJson,
             @RequestPart("previousMd5") String previousMd5,
-            @RequestHeader HttpHeaders httpHeaders
+            @RequestHeader HttpHeaders httpHeaders,
+            Authentication auth
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee is allowed to save test data.
+        long empId = ((AppUser)auth.getDetails()).getEmployeeId();
 
         boolean saved = testDataService.saveTestDataJson(testId, testDataJson, stageStatusesJson, empId, previousMd5);
 
@@ -110,8 +112,6 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
         return testDataService.getTestAttachedFileMetadatas(testId);
     }
 
@@ -125,8 +125,6 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
         testDataService.updateTestAttachedFileMetadata(attachedFileId, testId, role, name);
     }
 
@@ -140,8 +138,6 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
         List<Long> attachedFileIds = testDataService.createTestAttachedFiles(testId, Arrays.asList(files), role);
 
         return new CreatedTestAttachedFiles(testId, attachedFileIds);
@@ -155,8 +151,6 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
         TestAttachedFileContents tafc = testDataService.getTestAttachedFileContents(attachedFileId, testId);
 
         return
@@ -175,8 +169,6 @@ public class TestController
             @RequestHeader HttpHeaders httpHeaders
         )
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
         testDataService.deleteTestAttachedFile(attachedFileId, testId);
     }
 
@@ -189,8 +181,6 @@ public class TestController
         )
         throws IOException
     {
-        long empId = 1; // TODO: Obtain employee id from headers and/or session, verify employee can access this test data.
-
         VersionedTestData testData = testDataService.getVersionedTestData(testId);
 
         String testDataJson = testData.getTestDataJson().orElseThrow(() ->

@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FormsModule} from '@angular/forms';
@@ -23,6 +23,7 @@ import {
    MatSlideToggleModule,
    MatDialogModule
 } from '@angular/material';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {TruncateModule} from '@yellowspot/ng-truncate';
@@ -35,7 +36,7 @@ import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {CommonComponentsModule} from './common-components/common-components.module';
 import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
-import { LoginComponent } from './login/login.component';
+import {LoginComponent} from './login/login.component';
 import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interceptor';
 
 @NgModule({
@@ -74,6 +75,7 @@ import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interc
       MatSnackBarModule,
       MatSlideToggleModule,
       MatDialogModule,
+      MatMomentDateModule,
       TruncateModule,
       // app modules which are NOT LOADED LAZILY
       CommonComponentsModule,

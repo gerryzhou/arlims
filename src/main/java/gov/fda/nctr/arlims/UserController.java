@@ -1,8 +1,7 @@
 package gov.fda.nctr.arlims;
 
-import java.util.Optional;
-
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,45 +23,19 @@ public class UserController
         this.userContextService = userContextService;
     }
 
-    @PostMapping("login")
-    public AuthenticationResult login
-        (
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestHeader HttpHeaders httpHeaders
-        )
-    {
-        // TODO: Do authentication here.
-        boolean authSuccess = true;
-
-        if ( authSuccess )
-        {
-            String authToken = "TODO"; // TODO
-            User user = userContextService.loadUser(username);
-            return new AuthenticationResult(true, Optional.of(user), Optional.of(authToken));
-        }
-        else
-            return new AuthenticationResult(false, Optional.empty(), Optional.empty());
-    }
-
-    @PostMapping("register-new-user")
+    @PostMapping("register")
     public void registerNewUser
         (
             @RequestBody UserRegistration userRegistration
         )
     {
-        userContextService.registerNewUser(userRegistration);
+        userContextService.createNewUser(userRegistration);
     }
 
     @GetMapping("context")
-    public UserContext getUserContext
-        (
-            @RequestHeader HttpHeaders httpHeaders
-        )
+    public UserContext getUserContext(Authentication auth)
     {
-        String username = "stephen.harris"; // TODO
-
-        return userContextService.getUserContext(username);
+        return userContextService.getUserContext(auth.getName());
     }
 
     @GetMapping("{empId:\\d+}/lab-group-contents")
@@ -74,5 +47,4 @@ public class UserController
     {
         return userContextService.getLabGroupContents(empId);
     }
-
 }

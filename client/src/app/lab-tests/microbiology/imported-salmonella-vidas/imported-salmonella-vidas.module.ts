@@ -15,7 +15,6 @@ import {
    MatStepperModule,
    MatMenuModule,
 } from '@angular/material';
-import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
 import {ImportedSalmonellaVidasRoutingModule} from './routing/imported-salmonella-vidas-routing.module';
@@ -43,7 +42,6 @@ import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-con
       MatSlideToggleModule,
       MatButtonModule,
       MatDatepickerModule,
-      MatMomentDateModule,
       MatIconModule,
       MatStepperModule,
       MatMenuModule,

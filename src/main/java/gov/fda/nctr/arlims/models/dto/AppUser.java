@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class User
+public class AppUser
 {
     private final long employeeId;
     private final String username;
@@ -17,7 +17,7 @@ public class User
     private final List<RoleName> roles;
     private final Instant userInfoLastRefreshedInstant;
 
-    public User
+    public AppUser
         (
             long employeeId,
             String username,

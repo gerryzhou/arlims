@@ -1,7 +1,8 @@
 User Authentication & Security
-  Check hashed password vs. db (see Spring security's impl).
-  If password matches, create JWT with emp id as content.
-  Then for each request, retrieve emp id from JWT value in header, lookup User record by emp id via UserContextService.getUser().
+------------------------------
+
+  curl -i -X POST localhost:8080/alis/login
+  curl -i -X POST -F 'username=stephen.harris' -F 'password=something' localhost:8080/alis/login
 
 
 Data Access

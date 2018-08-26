@@ -2,8 +2,8 @@
 insert into lab_group (name, address_street, buildings_and_rooms, address_city, address_state, address_zip, description)
   values ('ARL-MICRO', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
 
-insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name)
-  values (1234567, 'stephen.harris', 'SCH', (select id from lab_group where name = 'ARL-MICRO'), 'Harris', 'Stephen', 'C');
+insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name, password)
+  values (1234567, 'stephen.harris', 'SCH', (select id from lab_group where name = 'ARL-MICRO'), 'Harris', 'Stephen', 'C', '$2a$10$GuY.dmUtyra9IY.UQ8sUqe/sW7c94MSkMiXgYEjrB78R3OyfC2LOK');
 
 insert into role(name, description)
   values('USER', 'regular user');

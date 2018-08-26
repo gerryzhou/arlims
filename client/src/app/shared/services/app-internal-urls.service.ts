@@ -23,22 +23,22 @@ export class AppInternalUrlsService {
 
    testDataEntry(testTypeCode: LabTestTypeCode, testId: number): any[]
    {
-      return ['test-types', lowerCaseDashSeperated(testTypeCode.toString()), 'test-data-entry', testId];
+      return ['test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId];
    }
 
    testStageDataEntry(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
    {
-      return ['test-types', lowerCaseDashSeperated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName];
+      return ['test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName];
    }
 
    testDataView(testTypeCode: LabTestTypeCode, testId: number): any[]
    {
-      return ['test-types', lowerCaseDashSeperated(testTypeCode.toString()), 'test-data-view', testId];
+      return ['test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId];
    }
 
 }
 
-function lowerCaseDashSeperated(s: string)
+function lowerCaseDashSeparated(s: string)
 {
    return s.toLowerCase().replace(/_/g, '-');
 }

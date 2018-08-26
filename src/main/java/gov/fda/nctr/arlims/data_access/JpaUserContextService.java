@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
@@ -31,15 +33,16 @@ import gov.fda.nctr.arlims.models.dto.LabResource;
 public class JpaUserContextService implements UserContextService
 {
     private final EmployeeRepository employeeRepo;
-    private final LabGroupRepository labGroupRepository;
+    private final LabGroupRepository labGroupRepo;
     private final SampleRepository sampleRepo;
     private final SampleAssignmentRepository sampleAssignmentRepo;
     private final TestRepository testRepo;
     private final LabResourceRepository labResourceRepo;
     private final RoleRepository roleRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final BCryptPasswordEncoder bcryptEncoder;
 
-    private Map<Long,User> usersById;
+    private Map<String, AppUser> usersByUsername;
 
     private final Pattern barPattern = Pattern.compile("\\|");
 
@@ -48,31 +51,33 @@ public class JpaUserContextService implements UserContextService
     public JpaUserContextService
         (
             EmployeeRepository employeeRepo,
-            LabGroupRepository labGroupRepository,
+            LabGroupRepository labGroupRepo,
             SampleRepository sampleRepo,
             SampleAssignmentRepository sampleAssignmentRepo,
             TestRepository testRepo,
             LabResourceRepository labResourceRepo,
             RoleRepository roleRepo,
-            NamedParameterJdbcTemplate jdbcTemplate
+            NamedParameterJdbcTemplate jdbcTemplate,
+            BCryptPasswordEncoder bcryptEncoder
         )
     {
         this.employeeRepo = employeeRepo;
-        this.labGroupRepository = labGroupRepository;
+        this.labGroupRepo = labGroupRepo;
         this.sampleRepo = sampleRepo;
         this.sampleAssignmentRepo = sampleAssignmentRepo;
         this.testRepo = testRepo;
         this.labResourceRepo = labResourceRepo;
         this.roleRepo = roleRepo;
         this.jdbcTemplate = jdbcTemplate;
-        this.usersById = new HashMap<>();
+        this.bcryptEncoder = bcryptEncoder;
+        this.usersByUsername = new HashMap<>();
     }
 
     @Transactional
     @Override
     public LabGroupContents getLabGroupContents(long employeeId)
     {
-        LabGroup labGroup = this.labGroupRepository.findByEmployeeId(employeeId).orElseThrow(() ->
+        LabGroup labGroup = this.labGroupRepo.findByEmployeeId(employeeId).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
         );
 
@@ -97,13 +102,13 @@ public class JpaUserContextService implements UserContextService
 
     @Transactional
     @Override
-    public void registerNewUser(UserRegistration reg)
+    public void createNewUser(UserRegistration reg)
     {
-        LabGroup labGroup = labGroupRepository.findById(reg.getLabGroupId()).orElseThrow(() ->
+        LabGroup labGroup = labGroupRepo.findById(reg.getLabGroupId()).orElseThrow(() ->
             new RuntimeException("employee lab group not found")
         );
 
-        String hashedPassword = "TODO";
+        String encodedPassword = bcryptEncoder.encode(reg.getPassword());
 
         Set<Role> roles = new HashSet<>(roleRepo.findByNameIn(reg.getRoleNames()));
 
@@ -113,7 +118,7 @@ public class JpaUserContextService implements UserContextService
                 reg.getShortName(),
                 labGroup,
                 reg.getFactsPersonId().orElse(null),
-                hashedPassword,
+                encodedPassword,
                 reg.getLastName().orElse(null),
                 reg.getFirstName().orElse(null),
                 reg.getMiddleName().orElse(null),
@@ -125,49 +130,30 @@ public class JpaUserContextService implements UserContextService
 
     @Transactional
     @Override
-    public User loadUser(String username)
+    public AppUser loadUser(String username)
     {
-        Employee emp = employeeRepo.findByFdaEmailAccountName(username).orElseThrow(() ->
-            new ResourceNotFoundException("employee record not found")
+        Employee emp = employeeRepo.findWithRolesByFdaEmailAccountName(username).orElseThrow(() ->
+            new UsernameNotFoundException("employee record not found for user '" + username + "'")
         );
 
-        User user = makeUser(emp);
+        AppUser user = makeUser(emp);
 
-        usersById.put(user.getEmployeeId(), user);
-
-        return  user;
-    }
-
-    @Transactional
-    @Override
-    public User loadUser(long empId)
-    {
-        Employee emp = employeeRepo.findById(empId).orElseThrow(() ->
-            new ResourceNotFoundException("employee record not found")
-        );
-
-        User user = makeUser(emp);
-
-        usersById.put(user.getEmployeeId(), user);
+        usersByUsername.put(user.getUsername(), user);
 
         return  user;
     }
 
     @Override
-    public User getUser(long empId)
+    public AppUser getUser(String username)
     {
-        User user = usersById.get(empId);
+        AppUser user = usersByUsername.get(username);
 
         if ( user != null )
             return user;
         else
-            return loadUser(empId);
+            return loadUser(username);
     }
 
-    // TODO This implementation does too many individual queries.
-    //   Implement without JPA or optimize the JPA as much as possible.
-    //   Try adding EntityGraph annotation, see:
-    //     https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.entity-graph
     @Transactional
     @Override
     public UserContext getUserContext(String username)
@@ -175,8 +161,6 @@ public class JpaUserContextService implements UserContextService
         Employee emp = employeeRepo.findWithLabGroupByFdaEmailAccountName(username).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
         );
-
-        List<RoleName> roleNames = emp.getRoles().stream().map(Role::getName).collect(toList());
 
         LabGroup labGroup = emp.getLabGroup();
 
@@ -188,19 +172,13 @@ public class JpaUserContextService implements UserContextService
 
         List<LabResource> labResources = getLabGroupLabResources(labGroup);
 
+        AppUser user = makeUser(emp);
+
+        usersByUsername.put(user.getUsername(), user);
+
         return
             new UserContext(
-                new User(
-                    emp.getId(),
-                    emp.getFdaEmailAccountName(),
-                    opt(emp.getFactsPersonId()),
-                    emp.getShortName(),
-                    labGroup.getId(),
-                    emp.getLastName(),
-                    emp.getFirstName(),
-                    roleNames,
-                    Instant.now()
-                ),
+                user,
                 new LabGroupContents(
                     labGroup.getId(),
                     labGroup.getName(),
@@ -285,7 +263,7 @@ public class JpaUserContextService implements UserContextService
 
     private Map<Long, Integer> getAttachedFileCountsByTestId(List<Long> testSampleIds)
     {
-        Map<Long, Integer> res = new HashMap();
+        Map<Long, Integer> res = new HashMap<>();
 
         String sql =
             "select tf.test_id, count(*) files\n" +
@@ -293,7 +271,7 @@ public class JpaUserContextService implements UserContextService
             "where tf.test_id in (select t.id from test t where t.sample_id in (:sampleIds))\n" +
             "group by tf.test_id";
 
-        Map<String,Object> params = new HashMap();
+        Map<String,Object> params = new HashMap<>();
         params.put("sampleIds", testSampleIds);
 
         jdbcTemplate.query(sql, params, rs -> {
@@ -489,12 +467,12 @@ public class JpaUserContextService implements UserContextService
             );
     }
 
-    private User makeUser(Employee emp)
+    private AppUser makeUser(Employee emp)
     {
         List<RoleName> roleNames = emp.getRoles().stream().map(Role::getName).collect(toList());
 
-        User user =
-            new User(
+        AppUser user =
+            new AppUser(
                 emp.getId(),
                 emp.getFdaEmailAccountName(),
                 opt(emp.getFactsPersonId()),
