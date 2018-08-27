@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 @Component
 @Validated
 @ConfigurationProperties("app.security")
-public class SecurityConfig
+public class SecurityProperties
 {
     @NotNull
     private String jwtSignatureSecret;

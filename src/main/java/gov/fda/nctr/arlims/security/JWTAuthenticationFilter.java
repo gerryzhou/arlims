@@ -15,28 +15,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import static org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext;
 import com.auth0.jwt.JWT;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_NAME;
 import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_PREFIX;
-import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.LOGIN_URL;
 
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter
 {
     private final AuthenticationManager authenticationManager;
 
-    private SecurityConfig _securityConfig; // late initialized (from request), use accessor method
+    private SecurityProperties securityProperties; // late initialized (from request), use accessor method
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager)
+    public JWTAuthenticationFilter(SecurityProperties securityProperties, AuthenticationManager authenticationManager)
     {
+        this.securityProperties = securityProperties;
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl(LOGIN_URL);
+        super.setAuthenticationManager(authenticationManager);
     }
 
     @Override
@@ -69,21 +68,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     {
         String username = ((User)auth.getPrincipal()).getUsername();
 
-        SecurityConfig secCfg = getSecurityConfig(req);
-
         String token =
             JWT.create()
             .withSubject(username)
-            .withExpiresAt(new Date(System.currentTimeMillis() + secCfg.getJwtExpirationMillis()))
-            .sign(HMAC512(secCfg.getJwtSignatureSecret().getBytes()));
+            .withExpiresAt(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationMillis()))
+            .sign(HMAC512(securityProperties.getJwtSignatureSecret().getBytes()));
 
         res.addHeader(JWT_HEADER_NAME, JWT_HEADER_PREFIX + token);
-    }
-
-    private final SecurityConfig getSecurityConfig(HttpServletRequest req)
-    {
-        if ( _securityConfig == null )
-            _securityConfig = getRequiredWebApplicationContext(req.getServletContext()).getBean(SecurityConfig.class);
-        return _securityConfig;
     }
 }

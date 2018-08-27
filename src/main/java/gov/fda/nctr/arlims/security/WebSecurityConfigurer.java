@@ -12,8 +12,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.*;
+import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.GenericFilterBean;
+
+import gov.fda.nctr.arlims.data_access.UserContextService;
 
 
 @Configuration
@@ -23,9 +28,15 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
 {
     private final AppUserDetailsService userDetailsService;
 
+    private final SecurityProperties securityProperties;
+
+    private final UserContextService userContextService;
+
+    private final PasswordEncoder passwordEncoder;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    static final String LOGIN_URL = "/api/login";
+    private static final String LOGIN_URL = "/api/login";
     static final String JWT_HEADER_NAME = "Authorization";
     static final String JWT_HEADER_PREFIX = "Bearer ";
 
@@ -34,10 +45,16 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
 
     public WebSecurityConfigurer
         (
-            AppUserDetailsService userDetailsService
+            AppUserDetailsService userDetailsService,
+            SecurityProperties securityProperties,
+            UserContextService userContextService,
+            PasswordEncoder passwordEncoder
         )
     {
         this.userDetailsService = userDetailsService;
+        this.securityProperties = securityProperties;
+        this.userContextService = userContextService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -49,8 +66,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
         .antMatchers(HttpMethod.POST, LOGIN_URL).permitAll()
         .anyRequest().authenticated()
         .and()
-        .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-        .addFilter(new JWTRecognitionFilter(authenticationManager()))
+        .addFilterAfter(jwtAuthenticationFilterProxy(), LogoutFilter.class)
+        .addFilterAfter(jwtRecognitionFilterProxy(), LogoutFilter.class)
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
@@ -63,14 +80,33 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception
     {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
+    @Bean
+    DelegatingFilterProxy jwtAuthenticationFilterProxy()
+    {
+        return new DelegatingFilterProxy("jwtAuthenticationFilter");
+    }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder()
+    public GenericFilterBean jwtAuthenticationFilter() throws Exception
     {
-        return new BCryptPasswordEncoder();
+        JWTAuthenticationFilter filter = new JWTAuthenticationFilter(securityProperties, authenticationManager());
+        filter.setFilterProcessesUrl(LOGIN_URL);
+        return filter;
+    }
+
+    @Bean
+    DelegatingFilterProxy jwtRecognitionFilterProxy()
+    {
+        return new DelegatingFilterProxy("jwtRecognitionFilter");
+    }
+
+    @Bean
+    public GenericFilterBean jwtRecognitionFilter() throws Exception
+    {
+        return new JWTRecognitionFilter(securityProperties, userContextService, authenticationManager());
     }
 }
 

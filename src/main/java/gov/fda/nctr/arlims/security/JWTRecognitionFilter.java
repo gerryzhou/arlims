@@ -20,21 +20,26 @@ import gov.fda.nctr.arlims.data_access.UserContextService;
 import gov.fda.nctr.arlims.models.dto.AppUser;
 import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_NAME;
 import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_PREFIX;
-import static org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext;
 
 
 public class JWTRecognitionFilter extends BasicAuthenticationFilter
 {
-    // These are late-initialized (need request object), use accessor methods.
-    private SecurityConfig _securityConfig;
-    private UserContextService _userContextService;
+    private SecurityProperties securityProperties;
+    private UserContextService userContextService;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
-    public JWTRecognitionFilter(AuthenticationManager authManager)
+    public JWTRecognitionFilter
+        (
+            SecurityProperties securityProperties,
+            UserContextService userContextService,
+            AuthenticationManager authManager
+        )
     {
         super(authManager);
+        this.securityProperties = securityProperties;
+        this.userContextService = userContextService;
     }
 
     @Override
@@ -68,7 +73,7 @@ public class JWTRecognitionFilter extends BasicAuthenticationFilter
             return null;
 
         String username =
-            JWT.require(Algorithm.HMAC512(getSecurityConfig(req).getJwtSignatureSecret().getBytes()))
+            JWT.require(Algorithm.HMAC512(securityProperties.getJwtSignatureSecret().getBytes()))
             .build()
             .verify(authHeaderValue.substring(JWT_HEADER_PREFIX.length()))
             .getSubject();
@@ -80,7 +85,7 @@ public class JWTRecognitionFilter extends BasicAuthenticationFilter
 
         try
         {
-            AppUser appUser = getUserContextService(req).getUser(username);
+            AppUser appUser = userContextService.getUser(username);
             auth.setDetails(appUser);
 
             return auth;
@@ -91,19 +96,5 @@ public class JWTRecognitionFilter extends BasicAuthenticationFilter
                      "' extracted from JWT token: " + e);
             return null;
         }
-    }
-
-    private final SecurityConfig getSecurityConfig(HttpServletRequest req)
-    {
-        if ( _securityConfig == null )
-            _securityConfig = getRequiredWebApplicationContext(req.getServletContext()).getBean(SecurityConfig.class);
-        return _securityConfig;
-    }
-
-    private final UserContextService getUserContextService(HttpServletRequest req)
-    {
-        if ( _userContextService == null )
-            _userContextService = getRequiredWebApplicationContext(req.getServletContext()).getBean(UserContextService.class);
-        return _userContextService;
     }
 }
