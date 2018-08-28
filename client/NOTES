@@ -1,8 +1,6 @@
-Tweak styling for user registration form.
-   Left align, add margin within rows.
 
-Audit logging of all test data changes, per field.
-  Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
+
+Add audit log to report pdf (imp slm vidas?) which can be signed.
 
 *** Positives need to be handled as next priority.
    Having seprate test type for positives is fine but the related tests need to be kept together and in proper sequence.

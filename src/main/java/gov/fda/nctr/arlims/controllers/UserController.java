@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims;
+package gov.fda.nctr.arlims.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.fda.nctr.arlims.data_access.UserContextService;
+import gov.fda.nctr.arlims.data_access.user_context.UserContextService;
 import gov.fda.nctr.arlims.models.dto.*;
 
 

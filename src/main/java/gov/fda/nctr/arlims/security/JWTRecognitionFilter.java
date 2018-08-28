@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.fda.nctr.arlims.data_access.UserContextService;
+import gov.fda.nctr.arlims.data_access.user_context.UserContextService;
 import gov.fda.nctr.arlims.models.dto.AppUser;
 import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_NAME;
 import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_PREFIX;

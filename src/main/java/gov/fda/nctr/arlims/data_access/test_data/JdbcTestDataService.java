@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.data_access;
+package gov.fda.nctr.arlims.data_access.test_data;
 
 import java.io.IOError;
 import java.io.IOException;

@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.*;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.GenericFilterBean;
 
-import gov.fda.nctr.arlims.data_access.UserContextService;
+import gov.fda.nctr.arlims.data_access.user_context.UserContextService;
 
 
 @Configuration

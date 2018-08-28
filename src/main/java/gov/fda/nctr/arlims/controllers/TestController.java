@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims;
+package gov.fda.nctr.arlims.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,8 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import gov.fda.nctr.arlims.data_access.TestAttachedFileContents;
-import gov.fda.nctr.arlims.data_access.TestDataService;
+import gov.fda.nctr.arlims.data_access.test_data.TestAttachedFileContents;
+import gov.fda.nctr.arlims.data_access.test_data.TestDataService;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.reports.Report;

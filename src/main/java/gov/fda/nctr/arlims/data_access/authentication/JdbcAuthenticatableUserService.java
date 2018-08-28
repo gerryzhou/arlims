@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.data_access;
+package gov.fda.nctr.arlims.data_access.authentication;
 
 import java.util.List;
 import java.util.Optional;

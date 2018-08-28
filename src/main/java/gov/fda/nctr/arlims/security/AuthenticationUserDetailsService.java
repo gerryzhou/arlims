@@ -12,27 +12,26 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.fda.nctr.arlims.data_access.AuthenticatableUser;
-import gov.fda.nctr.arlims.data_access.AuthenticatableUserService;
+import gov.fda.nctr.arlims.data_access.authentication.AuthenticatableUser;
+import gov.fda.nctr.arlims.data_access.authentication.AuthenticatableUserService;
 
 
 @Service
 public class AuthenticationUserDetailsService implements UserDetailsService
 {
-    private AuthenticatableUserService authUserSvc;
+    private AuthenticatableUserService authenticatableUserSvc;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public AuthenticationUserDetailsService(AuthenticatableUserService authUserSvc)
+    public AuthenticationUserDetailsService(AuthenticatableUserService authenticatableUserSvc)
     {
-        this.authUserSvc = authUserSvc;
+        this.authenticatableUserSvc = authenticatableUserSvc;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        log.info("*** Fetching user details");
-        Optional<AuthenticatableUser> maybeAuthUser = authUserSvc.getAuthenticatableUser(username);
+        Optional<AuthenticatableUser> maybeAuthUser = authenticatableUserSvc.getAuthenticatableUser(username);
 
         return
             maybeAuthUser.map(authUser -> {

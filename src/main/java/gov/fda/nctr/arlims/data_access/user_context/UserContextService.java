@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.data_access;
+package gov.fda.nctr.arlims.data_access.user_context;
 
 import gov.fda.nctr.arlims.models.dto.AppUser;
 import gov.fda.nctr.arlims.models.dto.LabGroupContents;

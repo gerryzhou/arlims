@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.data_access;
+package gov.fda.nctr.arlims.data_access.authentication;
 
 
 public class AuthenticatableUser
