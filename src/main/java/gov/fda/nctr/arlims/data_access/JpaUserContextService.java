@@ -24,6 +24,7 @@ import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Role;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.LabGroup;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Test;
+import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.LabResource;
@@ -107,6 +108,9 @@ public class JpaUserContextService implements UserContextService
         LabGroup labGroup = labGroupRepo.findById(reg.getLabGroupId()).orElseThrow(() ->
             new RuntimeException("employee lab group not found")
         );
+
+        if ( reg.getPassword() == null || reg.getPassword().length() < 8 )
+            throw new BadRequestException("password is too short");
 
         String encodedPassword = bcryptEncoder.encode(reg.getPassword());
 
