@@ -18,6 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
    authenticatedUserIsAdmin$: Observable<boolean>;
 
    pageTitle$: Observable<string | null>;
+   notLoginView$: Observable<boolean>;
 
    private loadingStatusSubscription: Subscription;
 
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
          private loadingStatusService: LoadingStatusService,
          private viewTitleSvc: ViewTitleService,
          private router: Router,
-         private activatedRoute: ActivatedRoute,
+         public activatedRoute: ActivatedRoute,
       )
    {
       const user$ = userCtxSvc.getAuthenticatedUser();
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.loading = false;
       this.loadingStatusSubscription = loadingStatusService.loadingStatus.subscribe(loading => this.loading = loading);
       this.pageTitle$ = this.viewTitleSvc.titles();
+      this.notLoginView$ = this.pageTitle$.pipe(map(title => title !== 'Login'));
    }
 
    ngOnInit()

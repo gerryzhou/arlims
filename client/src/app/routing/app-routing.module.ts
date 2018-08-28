@@ -17,6 +17,7 @@ const routes: Routes = [
    {
       path: 'login',
       component: LoginComponent,
+      data: {title: 'Login'},
    },
    {
       path: 'register-users',
@@ -49,7 +50,7 @@ const routes: Routes = [
 @NgModule({
    imports: [
       RouterModule.forRoot(routes, {
-         enableTracing: true && !environment.production, // false => true for route tracing
+         enableTracing: false && !environment.production, // false => true for route tracing
          preloadingStrategy: ModulePreloadingStrategy
       })
    ],
