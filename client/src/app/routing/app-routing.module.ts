@@ -10,11 +10,18 @@ import {TestAttachedFilesComponent} from '../test-attached-files/test-attached-f
 import {TestAttachedFilesResolver} from './test-attached-files.resolver';
 import {ModulePreloadingStrategy} from './module-preloading-strategy';
 import {AuthenticatedUserGuard} from './authenticated-user-guard';
+import {AdminUserGuard} from './admin-user-guard';
+import {RegistrationComponent} from '../registration/registration.component';
 
 const routes: Routes = [
    {
       path: 'login',
       component: LoginComponent,
+   },
+   {
+      path: 'register-users',
+      component: RegistrationComponent,
+      canActivate: [AdminUserGuard],
    },
    {
       path: 'samples',
@@ -50,6 +57,7 @@ const routes: Routes = [
    providers: [
       ModulePreloadingStrategy,
       AuthenticatedUserGuard,
+      AdminUserGuard,
       {provide: APP_BASE_HREF, useValue: environment.baseHref}, // configures base href for PathLocationStrategy
       {provide: LocationStrategy, useClass: PathLocationStrategy},
    ],

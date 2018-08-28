@@ -15,6 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
    loading: boolean;
 
    authenticatedUserShortName$: Observable<string | null>;
+   authenticatedUserIsAdmin$: Observable<boolean>;
 
    pageTitle$: Observable<string | null>;
 
@@ -29,7 +30,9 @@ export class AppComponent implements OnInit, OnDestroy {
          private activatedRoute: ActivatedRoute,
       )
    {
-      this.authenticatedUserShortName$ = userCtxSvc.getAuthenticatedUser().pipe(map(au => au != null ? au.shortName : null));
+      const user$ = userCtxSvc.getAuthenticatedUser();
+      this.authenticatedUserShortName$ = user$.pipe(map(au => au != null ? au.shortName : null));
+      this.authenticatedUserIsAdmin$ = user$.pipe(map(au => au != null && au.roles.includes('ADMIN')));
       this.loading = false;
       this.loadingStatusSubscription = loadingStatusService.loadingStatus.subscribe(loading => this.loading = loading);
       this.pageTitle$ = this.viewTitleSvc.titles();

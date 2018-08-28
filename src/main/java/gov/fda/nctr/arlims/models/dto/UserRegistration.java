@@ -8,7 +8,7 @@ public class UserRegistration
 {
     private long id;
 
-    private String fdaEmailAccountName;
+    private String username;
 
     private String shortName;
 
@@ -24,14 +24,14 @@ public class UserRegistration
 
     private Optional<String> middleName;
 
-    private List<String> rolesNames;
+    private List<String> roleNames;
 
     protected UserRegistration() {}
 
     public UserRegistration
         (
             long id,
-            String fdaEmailAccountName,
+            String username,
             String shortName,
             long labGroupId,
             String password,
@@ -39,11 +39,11 @@ public class UserRegistration
             Optional<String> lastName,
             Optional<String> firstName,
             Optional<String> middleName,
-            List<String> rolesNames
+            List<String> roleNames
         )
     {
         this.id = id;
-        this.fdaEmailAccountName = fdaEmailAccountName;
+        this.username = username;
         this.shortName = shortName;
         this.labGroupId = labGroupId;
         this.password = password;
@@ -51,12 +51,12 @@ public class UserRegistration
         this.lastName = lastName;
         this.firstName = firstName;
         this.middleName = middleName;
-        this.rolesNames = rolesNames;
+        this.roleNames = roleNames;
     }
 
     public long getId() { return id; }
 
-    public String getFdaEmailAccountName() { return fdaEmailAccountName; }
+    public String getUsername() { return username; }
 
     public String getShortName() { return shortName; }
 
@@ -72,5 +72,5 @@ public class UserRegistration
 
     public Optional<String> getMiddleName() { return middleName; }
 
-    public List<String> getRoleNames() { return rolesNames; }
+    public List<String> getRoleNames() { return roleNames; }
 }

@@ -1,7 +1,8 @@
 User Authentication & Security
 ------------------------------
+Finish testing user registration.
+
 Add user registration page, only accessible to those with ADMIN role.
-  Make sure roles are being associated with the user properly.
 
   curl -i -X POST localhost:8080/alis/login
   curl -i -X POST -F 'username=stephen.harris' -F 'password=something' localhost:8080/alis/login

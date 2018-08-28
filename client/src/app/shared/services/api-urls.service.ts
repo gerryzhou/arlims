@@ -27,6 +27,11 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/login`);
    }
 
+   registerNewUserUrl()
+   {
+      return this.location.prepareExternalUrl(`/api/user/register`);
+   }
+
    newTestUrl(): string
    {
       return this.location.prepareExternalUrl('/api/tests/new');
@@ -66,12 +71,6 @@ export class ApiUrlsService {
    {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${reportName}`);
    }
-
-   registerNewUserUrl(): string
-   {
-      return this.location.prepareExternalUrl(`/api/user/register`);
-   }
-
 
    isAppApiUrl(url: string)
    {

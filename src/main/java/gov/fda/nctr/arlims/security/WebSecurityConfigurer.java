@@ -23,10 +23,10 @@ import gov.fda.nctr.arlims.data_access.UserContextService;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled=true, jsr250Enabled=true)
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
 {
-    private final AppUserDetailsService userDetailsService;
+    private final AuthenticationUserDetailsService authenticationUserDetailsService;
 
     private final SecurityProperties securityProperties;
 
@@ -45,13 +45,13 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
 
     public WebSecurityConfigurer
         (
-            AppUserDetailsService userDetailsService,
+            AuthenticationUserDetailsService authenticationUserDetailsService,
             SecurityProperties securityProperties,
             UserContextService userContextService,
             PasswordEncoder passwordEncoder
         )
     {
-        this.userDetailsService = userDetailsService;
+        this.authenticationUserDetailsService = authenticationUserDetailsService;
         this.securityProperties = securityProperties;
         this.userContextService = userContextService;
         this.passwordEncoder = passwordEncoder;
@@ -80,7 +80,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception
     {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(authenticationUserDetailsService).passwordEncoder(passwordEncoder);
     }
 
     @Bean

@@ -110,11 +110,12 @@ public class JpaUserContextService implements UserContextService
 
         String encodedPassword = bcryptEncoder.encode(reg.getPassword());
 
-        Set<Role> roles = new HashSet<>(roleRepo.findByNameIn(reg.getRoleNames()));
+        List<RoleName> roleNames = reg.getRoleNames().stream().map(rn -> RoleName.valueOf(rn)).collect(toList());
+        Set<Role> roles = new HashSet<>(roleRepo.findByNameIn(roleNames));
 
         Employee emp =
             new Employee(
-                reg.getFdaEmailAccountName(),
+                reg.getUsername(),
                 reg.getShortName(),
                 labGroup,
                 reg.getFactsPersonId().orElse(null),

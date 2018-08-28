@@ -11,7 +11,7 @@ import {
    Sample,
    LabTestType,
    LabResource,
-   LabResourceType,
+   LabResourceType, UserRegistration,
 } from '../../../generated/dto';
 import {SampleInTest} from '../models/sample-in-test';
 import {AppInternalUrlsService} from './app-internal-urls.service';
@@ -53,14 +53,22 @@ export class UserContextService {
       return this.authenticationToken;
    }
 
+   registerNewUser(userRegistration: UserRegistration): Observable<void>
+   {
+      const url = this.apiUrlsSvc.registerNewUserUrl();
+
+      return this.httpClient.post<void>(url, userRegistration);
+   }
+
    login(username: string, password: string): Observable<boolean>
    {
       const url = this.apiUrlsSvc.loginUrl();
       const body = new HttpParams().set('username', username).set('password', password);
 
+      this.logout(false);
+
       return this.httpClient.post<void>(url, body, {observe: 'response'}).pipe(
          flatMap(httpRes => {
-            console.log(httpRes);
             const authHdr = httpRes.headers.get('authorization') || httpRes.headers.get('Authorization');
             const authToken = this.extractAuthToken(authHdr);
             if ( authToken == null )
@@ -77,17 +85,19 @@ export class UserContextService {
          }),
          catchError((err) => {
             console.log(err);
+            this.authenticationToken.next(null);
             return obsof(false);
          })
       );
    }
 
-   logout()
+   logout(navigateToLoginView: boolean = true)
    {
       this.authenticatedUser.next(null);
       this.authenticationToken.next(null);
       this.refreshLabGroupContentsVia(emptyObs);
-      this.router.navigate(this.appUrlsSvc.login());
+      if ( navigateToLoginView )
+         this.router.navigate(this.appUrlsSvc.login());
    }
 
    getLabGroupContents(): Observable<LabGroupContents>

@@ -17,13 +17,13 @@ import gov.fda.nctr.arlims.data_access.AuthenticatableUserService;
 
 
 @Service
-public class AppUserDetailsService implements UserDetailsService
+public class AuthenticationUserDetailsService implements UserDetailsService
 {
     private AuthenticatableUserService authUserSvc;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public AppUserDetailsService(AuthenticatableUserService authUserSvc)
+    public AuthenticationUserDetailsService(AuthenticatableUserService authUserSvc)
     {
         this.authUserSvc = authUserSvc;
     }
@@ -31,6 +31,7 @@ public class AppUserDetailsService implements UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
+        log.info("*** Fetching user details");
         Optional<AuthenticatableUser> maybeAuthUser = authUserSvc.getAuthenticatableUser(username);
 
         return

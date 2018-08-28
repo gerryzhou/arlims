@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -59,13 +58,12 @@ public class JWTRecognitionFilter extends BasicAuthenticationFilter
             return;
         }
 
-        Authentication auth = getAuthentication(req);
+        SecurityContextHolder.getContext().setAuthentication(makeAuthentication(req));
 
-        SecurityContextHolder.getContext().setAuthentication(auth);
         chain.doFilter(req, res);
     }
 
-    private Authentication getAuthentication(HttpServletRequest req)
+    private Authentication makeAuthentication(HttpServletRequest req)
     {
         String authHeaderValue = req.getHeader(JWT_HEADER_NAME);
 
@@ -81,19 +79,15 @@ public class JWTRecognitionFilter extends BasicAuthenticationFilter
         if ( username == null )
             return null;
 
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, null);
-
         try
         {
             AppUser appUser = userContextService.getUser(username);
-            auth.setDetails(appUser);
 
-            return auth;
+            return new AppUserAuthentication(appUser);
         }
         catch(Exception e)
         {
-            log.info("Failed to set user details for username '" + username +
-                     "' extracted from JWT token: " + e);
+            log.info("Failed to set user details for username '" + username + "' extracted from JWT token: " + e);
             return null;
         }
     }

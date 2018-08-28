@@ -1,5 +1,7 @@
 package gov.fda.nctr.arlims;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ public class UserController
     }
 
     @PostMapping("register")
+    @RolesAllowed("ROLE_ADMIN")
     public void registerNewUser
         (
             @RequestBody UserRegistration userRegistration

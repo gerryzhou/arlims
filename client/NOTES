@@ -1,4 +1,5 @@
-Need to add registration in UI.
+Tweak styling for user registration form.
+   Left align, add margin within rows.
 
 Audit logging of all test data changes, per field.
   Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.

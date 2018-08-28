@@ -21,6 +21,7 @@ import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.reports.Report;
 import gov.fda.nctr.arlims.reports.TestDataReportService;
+import gov.fda.nctr.arlims.security.AppUserAuthentication;
 
 
 @RestController
@@ -51,7 +52,7 @@ public class TestController
             Authentication auth
         )
     {
-        long empId = ((AppUser)auth.getDetails()).getEmployeeId();
+        long empId = ((AppUserAuthentication)auth).getAppUser().getEmployeeId();
 
         long createdTestId = testDataService.createTest(empId, sampleId, testTypeCode, testBeginDate);
 
@@ -88,7 +89,7 @@ public class TestController
             Authentication auth
         )
     {
-        long empId = ((AppUser)auth.getDetails()).getEmployeeId();
+        long empId = ((AppUserAuthentication)auth).getAppUser().getEmployeeId();
 
         boolean saved = testDataService.saveTestDataJson(testId, testDataJson, stageStatusesJson, empId, previousMd5);
 

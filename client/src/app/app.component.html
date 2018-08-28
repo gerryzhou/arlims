@@ -12,6 +12,9 @@
       <span class="user" *ngIf="userCtxSvc.getAuthenticatedUser().getValue()">
          <mat-menu #userMenu="matMenu">
             <button mat-menu-item (click)="onLogoutClicked()">Logout</button>
+            <a *ngIf="authenticatedUserIsAdmin$ | async" mat-menu-item routerLink="/register-users">
+               Register new users
+            </a>
          </mat-menu>
          <button mat-button [matMenuTriggerFor]="userMenu">
             <mat-icon>person</mat-icon> {{authenticatedUserShortName$ | async}} <mat-icon>more_vert</mat-icon>
