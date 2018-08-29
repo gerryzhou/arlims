@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, ViewChild} from '@angular/core';
+import {FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AlertMessageService} from '../shared/services/alerts';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
@@ -26,6 +26,8 @@ export class RegistrationComponent {
       // role names are determined from admin checkbox for now
       isAdmin: new FormControl(false),
    });
+
+   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
 
    constructor
    (
@@ -65,7 +67,7 @@ export class RegistrationComponent {
 
          this.usrCtxSvc.registerNewUser(userRegistration).subscribe(
             () => {
-               this.form.reset();
+               this.formGroupDirective.resetForm();
                this.alertMsgSvc.alertInfo(`New user ${userRegistration.username} created.`);
             },
             err => {
