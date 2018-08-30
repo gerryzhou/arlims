@@ -1,11 +1,12 @@
-package gov.fda.nctr.arlims.data_access.change_auditing;
+package gov.fda.nctr.arlims.data_access.auditing;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,15 +19,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import gov.fda.nctr.arlims.models.dto.AuditEntry;
+
 
 @Service
-public class JdbcDataChangeAuditingService implements DataChangeAuditingService
+public class JdbcAuditLogService implements AuditLogService
 {
     private final JdbcTemplate jdbc;
 
     private final ObjectWriter jsonWriter;
 
-    public JdbcDataChangeAuditingService(JdbcTemplate jdbcTemplate)
+    public JdbcAuditLogService(JdbcTemplate jdbcTemplate)
     {
         this.jdbc = jdbcTemplate;
         ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();
@@ -38,7 +41,7 @@ public class JdbcDataChangeAuditingService implements DataChangeAuditingService
 
     @Override
     @Transactional
-    public long logDataChange
+    public long addLogEntry
         (
             Instant timestamp,
             long labGroupId,
@@ -52,8 +55,8 @@ public class JdbcDataChangeAuditingService implements DataChangeAuditingService
         )
     {
         String sql =
-            "insert into data_change\n" +
-            "(timestamp, lab_group_id, creating_emp_id, creating_username, action, object_type," +
+            "insert into audit_entry\n" +
+            "(timestamp, lab_group_id, acting_emp_id, acting_username, action, object_type," +
              "object_context_metadata_json, object_from_value_json, object_to_value_json)\n" +
             "values(?,?,?,?,?,?,?,?,?)";
 
@@ -82,6 +85,20 @@ public class JdbcDataChangeAuditingService implements DataChangeAuditingService
     public ObjectWriter getJsonWriter()
     {
         return jsonWriter;
+    }
+
+    @Override
+    public List<AuditEntry> getLogEntries
+        (
+            long labGroupId,
+            Instant fromTimestamp,
+            Optional<Set<String>> usernames,
+            Optional<Set<String>> actions,
+            Optional<Set<String>> objectTypes
+        )
+    {
+        // TODO
+        return null;
     }
 
 

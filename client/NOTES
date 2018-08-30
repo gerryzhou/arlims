@@ -1,3 +1,20 @@
+Audit Log View
+--------------
+
+   +AuditLogListingService
+   +AuditLogReviewComponent [router target, admin only]
+      AuditLogSearchPanel
+      AuditLogListingComponent
+   +AuditLogListingComponent
+      [startTimestamp]
+      [endTimestamp]
+      [changeTypes]
+      [changeTargets]
+      [users]
+
+  Add audit log listing page for admins.
+  Append audit log listing component (reused from above) to end of test data report.
+
 Vidas Results Grid
    Mirror num slots in vidas in Vidas stage results.
    Label rows as bays as done for actual Vidas machine.
@@ -24,6 +41,7 @@ Implement user/password auth since alternatives would require certificates and/o
 Audit logging of all test data changes, per field.
   Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
 
+Add data refresh button in main view.
 
 Make an html report for imp slm vidas test.
   Maybe customize css for report mode.

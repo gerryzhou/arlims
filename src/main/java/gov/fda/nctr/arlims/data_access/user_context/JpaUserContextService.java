@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,7 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import gov.fda.nctr.arlims.data_access.change_auditing.DataChangeAuditingService;
+import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Role;
@@ -45,7 +44,7 @@ public class JpaUserContextService implements UserContextService
     private final RoleRepository roleRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bcryptEncoder;
-    private final DataChangeAuditingService dataChangeAuditingSvc;
+    private final AuditLogService dataChangeAuditingSvc;
 
     private Map<String, AppUser> usersByUsername;
 
@@ -64,7 +63,7 @@ public class JpaUserContextService implements UserContextService
             RoleRepository roleRepo,
             NamedParameterJdbcTemplate jdbcTemplate,
             BCryptPasswordEncoder bcryptEncoder,
-            DataChangeAuditingService dataChangeAuditingSvc
+            AuditLogService dataChangeAuditingSvc
         )
     {
         this.employeeRepo = employeeRepo;
@@ -164,7 +163,7 @@ public class JpaUserContextService implements UserContextService
         {
             ObjectWriter jsonWriter = this.dataChangeAuditingSvc.getJsonWriter();
 
-            this.dataChangeAuditingSvc.logDataChange(
+            this.dataChangeAuditingSvc.addLogEntry(
                 Instant.now(),
                 creatingUser.getLabGroupId(),
                 creatingUser.getEmployeeId(),

@@ -1,39 +1,41 @@
-create table DATA_CHANGE
+create table AUDIT_ENTRY
 (
   ID                           NUMBER(19) generated as identity
     primary key,
+  ACTING_EMP_ID                NUMBER(19)         not null,
+  ACTING_USERNAME              VARCHAR2(150 char) not null,
   ACTION                       VARCHAR2(50 char)  not null,
-  CREATING_EMP_ID              NUMBER(19)         not null,
-  CREATING_USERNAME            VARCHAR2(150 char) not null,
   LAB_GROUP_ID                 NUMBER(19)         not null,
   OBJECT_CONTEXT_METADATA_JSON CLOB
+    constraint CK_AUDENT_OBJMD_ISJSON
+    check (object_context_metadata_json is json format json strict)
     constraint CK_DTACHG_OBJMD_ISJSON
     check (object_context_metadata_json is json format json strict),
   OBJECT_FROM_VALUE_JSON       CLOB
-    constraint CK_DTACHG_OBJFROMVAL_ISJSON
+    constraint CK_AUDENT_OBJFROMVAL_ISJSON
     check (object_from_value_json is json format json strict),
   OBJECT_TO_VALUE_JSON         CLOB
-    constraint CK_DTACHG_OBJTOVAL_ISJSON
+    constraint CK_AUDENT_OBJTOVAL_ISJSON
     check (object_to_value_json is json format json strict),
   OBJECT_TYPE                  VARCHAR2(50 char)  not null,
   TIMESTAMP                    TIMESTAMP(6)       not null
 )
 /
 
-create index IX_AUDDTACHG_TIMESTAMP
-  on DATA_CHANGE (TIMESTAMP)
+create index IX_AUDENT_TIMESTAMP
+  on AUDIT_ENTRY (TIMESTAMP)
 /
 
-create index IX_AUDDTACHG_LABGRPID
-  on DATA_CHANGE (LAB_GROUP_ID)
+create index IX_AUDENT_LABGRPID
+  on AUDIT_ENTRY (LAB_GROUP_ID)
 /
 
-create index IX_AUDDTACHG_CREATINGEMPID
-  on DATA_CHANGE (CREATING_EMP_ID)
+create index IX_AUDENT_EMPID
+  on AUDIT_ENTRY (ACTING_EMP_ID)
 /
 
-create index IX_AUDDTACHG_OBJT
-  on DATA_CHANGE (OBJECT_TYPE)
+create index IX_AUDENT_OBJT
+  on AUDIT_ENTRY (OBJECT_TYPE)
 /
 
 create table LAB_GROUP

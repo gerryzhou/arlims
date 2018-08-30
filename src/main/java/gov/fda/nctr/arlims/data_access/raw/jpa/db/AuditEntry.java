@@ -9,13 +9,13 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(
     indexes = {
-        @Index(name = "IX_AUDDTACHG_TIMESTAMP", columnList = "TIMESTAMP"),
-        @Index(name = "IX_AUDDTACHG_LABGRPID", columnList = "LAB_GROUP_ID"),
-        @Index(name = "IX_AUDDTACHG_CREATINGEMPID", columnList = "CREATING_EMP_ID"),
-        @Index(name = "IX_AUDDTACHG_OBJT", columnList = "OBJECT_TYPE"),
+        @Index(name = "IX_AUDENT_TIMESTAMP", columnList = "TIMESTAMP"),
+        @Index(name = "IX_AUDENT_LABGRPID", columnList = "LAB_GROUP_ID"),
+        @Index(name = "IX_AUDENT_EMPID", columnList = "ACTING_EMP_ID"),
+        @Index(name = "IX_AUDENT_OBJT", columnList = "OBJECT_TYPE"),
     }
 )
-public class DataChange
+public class AuditEntry
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,11 +26,11 @@ public class DataChange
     @Column(name = "LAB_GROUP_ID") @NotNull
     private Long labGroupId;
 
-    @Column(name = "CREATING_EMP_ID") @NotNull
-    private Long creatingEmpId;
+    @Column(name = "ACTING_EMP_ID") @NotNull
+    private Long actingEmpId;
 
-    @Column(name = "CREATING_USERNAME") @Size(max = 150) @NotNull
-    private String creatingUsername;
+    @Column(name = "ACTING_USERNAME") @Size(max = 150) @NotNull
+    private String actingUsername;
 
     @Column(name = "ACTION") @Size(max = 50) @NotNull
     private String action;

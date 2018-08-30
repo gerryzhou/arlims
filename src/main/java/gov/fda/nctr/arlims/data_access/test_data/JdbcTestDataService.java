@@ -26,8 +26,8 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import gov.fda.nctr.arlims.data_access.change_auditing.DataChangeAuditingService;
-import gov.fda.nctr.arlims.data_access.change_auditing.AttachedFileDescription;
+import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
+import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.models.dto.*;
 
 
@@ -35,7 +35,7 @@ import gov.fda.nctr.arlims.models.dto.*;
 public class JdbcTestDataService implements TestDataService
 {
     private final JdbcTemplate jdbc;
-    private final DataChangeAuditingService dataChangeAuditingSvc;
+    private final AuditLogService auditLogSvc;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -44,11 +44,11 @@ public class JdbcTestDataService implements TestDataService
     public JdbcTestDataService
         (
             JdbcTemplate jdbcTemplate,
-            DataChangeAuditingService dataChangeAuditingSvc
+            AuditLogService auditLogSvc
         )
     {
         this.jdbc = jdbcTemplate;
-        this.dataChangeAuditingSvc = dataChangeAuditingSvc;
+        this.auditLogSvc = auditLogSvc;
     }
 
     @Transactional
@@ -104,7 +104,7 @@ public class JdbcTestDataService implements TestDataService
     {
         TestAuditInfo testAuditInfo = getTestAuditInfo(testId, true);
 
-        dataChangeAuditingSvc.logDataChange(
+        auditLogSvc.addLogEntry(
             Instant.now(),
             user.getLabGroupId(),
             user.getEmployeeId(),
@@ -136,7 +136,7 @@ public class JdbcTestDataService implements TestDataService
     {
         TestAuditInfo testAuditInfo = getTestAuditInfo(testId, true);
 
-        dataChangeAuditingSvc.logDataChange(
+        auditLogSvc.addLogEntry(
             Instant.now(),
             user.getLabGroupId(),
             user.getEmployeeId(),
@@ -230,7 +230,7 @@ public class JdbcTestDataService implements TestDataService
 
         String action = unchanged ? "save-unchanged" : "update";
 
-        dataChangeAuditingSvc.logDataChange(
+        auditLogSvc.addLogEntry(
             Instant.now(),
             user.getLabGroupId(),
             user.getEmployeeId(),
@@ -238,7 +238,7 @@ public class JdbcTestDataService implements TestDataService
             action,
             "test-data",
             Optional.of(rowToJson(testAuditInfo.testIdentifyingMetadata)),
-            origTestDataJson,
+            unchanged ? Optional.empty() : origTestDataJson,
             Optional.of(updatedTestDataJson)
         );
     }
@@ -423,9 +423,9 @@ public class JdbcTestDataService implements TestDataService
 
         try
         {
-            String descrsJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(fileDescrs);
+            String descrsJson = auditLogSvc.getJsonWriter().writeValueAsString(fileDescrs);
 
-            dataChangeAuditingSvc.logDataChange(
+            auditLogSvc.addLogEntry(
                 Instant.now(),
                 user.getLabGroupId(),
                 user.getEmployeeId(),
@@ -504,10 +504,10 @@ public class JdbcTestDataService implements TestDataService
 
         try
         {
-            String origJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(origMd);
-            String newJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(newMd);
+            String origJson = auditLogSvc.getJsonWriter().writeValueAsString(origMd);
+            String newJson = auditLogSvc.getJsonWriter().writeValueAsString(newMd);
 
-            dataChangeAuditingSvc.logDataChange(
+            auditLogSvc.addLogEntry(
                 Instant.now(),
                 user.getLabGroupId(),
                 user.getEmployeeId(),
@@ -580,11 +580,11 @@ public class JdbcTestDataService implements TestDataService
 
         try
         {
-            String mdJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(
+            String mdJson = auditLogSvc.getJsonWriter().writeValueAsString(
                 Collections.singletonList(attachedFileMd)
             );
 
-            dataChangeAuditingSvc.logDataChange(
+            auditLogSvc.addLogEntry(
                 Instant.now(),
                 user.getLabGroupId(),
                 user.getEmployeeId(),
@@ -653,7 +653,7 @@ public class JdbcTestDataService implements TestDataService
     {
         try
         {
-            return dataChangeAuditingSvc.getJsonWriter().writeValueAsString(row);
+            return auditLogSvc.getJsonWriter().writeValueAsString(row);
         }
         catch(JsonProcessingException jpe)
         {

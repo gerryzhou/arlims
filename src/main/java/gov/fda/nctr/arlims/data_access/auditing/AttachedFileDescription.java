@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.data_access.change_auditing;
+package gov.fda.nctr.arlims.data_access.auditing;
 
 import java.util.Optional;
 
