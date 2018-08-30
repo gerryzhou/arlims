@@ -141,29 +141,38 @@ export class StagedTestDataEntryComponent implements OnInit {
          getTestStageStatuses,
          this.jsonFieldFormatter
       )
-      .subscribe(saveResults => {
-         if (saveResults.saved) {
-            this.usrCtxSvc.refreshLabGroupContents();
-            this.clearConflictsData();
-            this.alertMsgSvc.alertSuccess('Test data saved.', true);
-            this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));
-         } else {
-            const conflicts = saveResults.mergeConflicts;
-            const modInfo = conflicts.dbModificationInfo;
-            const msg = `Changes were not saved due to conflicting changes made by ${modInfo.savedByUserShortName}, ` +
-                        'which should be highlighted below. Please adjust field values as necessary and save again.';
-            this.testDataForm.patchValue(conflicts.mergedTestData);
-            this.originalTestData = conflicts.dbTestData;
-            this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
-            this.conflictsTestData = copyWithMergedValuesFrom(emptyTestData(), conflicts.conflictingDbValues);
-            this.conflictsEmployeeTimestamp = {
-               employeeShortName: modInfo.savedByUserShortName,
-               timestamp: moment(modInfo.savedInstant, moment.ISO_8601).toDate(),
-            };
-            this.alertMsgSvc.alertWarning(msg);
-         }
-      });
-      // TODO: Catch observable errors, alert user via alert service that the save opearation failed and to try again.
+      .subscribe(
+         saveResults => {
+             if (saveResults.saved)
+             {
+                this.usrCtxSvc.refreshLabGroupContents();
+                this.clearConflictsData();
+                this.alertMsgSvc.alertSuccess('Test data saved.', true);
+                this.testDataForm.markAsPristine();
+                this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));
+             }
+             else
+             {
+                const conflicts = saveResults.mergeConflicts;
+                const modInfo = conflicts.dbModificationInfo;
+                const msg = `Changes were not saved due to conflicting changes made by ${modInfo.savedByUserShortName}, ` +
+                            'which should be highlighted below. Please adjust field values as necessary and save again.';
+                this.testDataForm.patchValue(conflicts.mergedTestData);
+                this.originalTestData = conflicts.dbTestData;
+                this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
+                this.conflictsTestData = copyWithMergedValuesFrom(emptyTestData(), conflicts.conflictingDbValues);
+                this.conflictsEmployeeTimestamp = {
+                   employeeShortName: modInfo.savedByUserShortName,
+                   timestamp: moment(modInfo.savedInstant, moment.ISO_8601).toDate(),
+                };
+                this.alertMsgSvc.alertWarning(msg);
+             }
+         },
+         err => {
+            console.log('Error occurred while trying to save test data, details below:');
+            console.log(err);
+            this.alertMsgSvc.alertDanger('An error occurred while trying to save test data. The test data may not have been saved.');
+         });
    }
 
    hasUnsavedChanges(): boolean
