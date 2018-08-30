@@ -3,7 +3,6 @@ package gov.fda.nctr.arlims.data_access.test_data;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -669,7 +668,7 @@ public class JdbcTestDataService implements TestDataService
         Map<String,Object> testIdentifyingMetadata;
         Map<String,Object> testRow;
 
-        public TestAuditInfo(String testTypeCode, Map<String,Object> testRow, Map<String,Object> testIdentifyingMetadata)
+        TestAuditInfo(String testTypeCode, Map<String,Object> testRow, Map<String,Object> testIdentifyingMetadata)
         {
             this.testTypeCode = testTypeCode;
             this.testRow = testRow;
