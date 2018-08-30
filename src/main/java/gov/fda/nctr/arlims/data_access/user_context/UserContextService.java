@@ -16,5 +16,5 @@ public interface UserContextService
 
     LabGroupContents getLabGroupContents(long employeeId);
 
-    void createNewUser(UserRegistration userRegistration);
+    void createNewUser(UserRegistration userRegistration, AppUser creatingUser);
 }

@@ -5,13 +5,15 @@ import java.time.Instant;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import javax.transaction.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import gov.fda.nctr.arlims.data_access.change_auditing.DataChangeAuditingService;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Role;
@@ -42,6 +45,7 @@ public class JpaUserContextService implements UserContextService
     private final RoleRepository roleRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bcryptEncoder;
+    private final DataChangeAuditingService dataChangeAuditingSvc;
 
     private Map<String, AppUser> usersByUsername;
 
@@ -59,7 +63,8 @@ public class JpaUserContextService implements UserContextService
             LabResourceRepository labResourceRepo,
             RoleRepository roleRepo,
             NamedParameterJdbcTemplate jdbcTemplate,
-            BCryptPasswordEncoder bcryptEncoder
+            BCryptPasswordEncoder bcryptEncoder,
+            DataChangeAuditingService dataChangeAuditingSvc
         )
     {
         this.employeeRepo = employeeRepo;
@@ -72,6 +77,7 @@ public class JpaUserContextService implements UserContextService
         this.jdbcTemplate = jdbcTemplate;
         this.bcryptEncoder = bcryptEncoder;
         this.usersByUsername = new HashMap<>();
+        this.dataChangeAuditingSvc = dataChangeAuditingSvc;
     }
 
     @Transactional
@@ -103,18 +109,21 @@ public class JpaUserContextService implements UserContextService
 
     @Transactional
     @Override
-    public void createNewUser(UserRegistration reg)
+    public void createNewUser(UserRegistration reg, AppUser creatingUser)
     {
         LabGroup labGroup = labGroupRepo.findById(reg.getLabGroupId()).orElseThrow(() ->
-            new RuntimeException("employee lab group not found")
+            new RuntimeException("Employee lab group was not found.")
         );
 
+        if ( creatingUser.getLabGroupId() != reg.getLabGroupId() )
+            throw new BadRequestException("Cannot create a user in a different lab group.");
+
         if ( reg.getPassword() == null || reg.getPassword().length() < 8 )
-            throw new BadRequestException("password is too short");
+            throw new BadRequestException("Password is too short.");
 
         String encodedPassword = bcryptEncoder.encode(reg.getPassword());
 
-        List<RoleName> roleNames = reg.getRoleNames().stream().map(rn -> RoleName.valueOf(rn)).collect(toList());
+        List<RoleName> roleNames = reg.getRoleNames().stream().map(RoleName::valueOf).collect(toList());
         Set<Role> roles = new HashSet<>(roleRepo.findByNameIn(roleNames));
 
         Employee emp =
@@ -131,6 +140,46 @@ public class JpaUserContextService implements UserContextService
             );
 
         employeeRepo.save(emp);
+
+        logNewUser(emp.getId(), reg, creatingUser);
+    }
+
+    private void logNewUser(long newEmpId, UserRegistration reg, AppUser creatingUser)
+    {
+        UserRegistration logReg =
+            new UserRegistration(
+                newEmpId,
+                reg.getUsername(),
+                reg.getShortName(),
+                reg.getLabGroupId(),
+                null,
+                reg.getFactsPersonId(),
+                reg.getLastName(),
+                reg.getFirstName(),
+                reg.getMiddleName(),
+                reg.getRoleNames()
+            );
+
+        try
+        {
+            ObjectWriter jsonWriter = this.dataChangeAuditingSvc.getJsonWriter();
+
+            this.dataChangeAuditingSvc.logDataChange(
+                Instant.now(),
+                creatingUser.getLabGroupId(),
+                creatingUser.getEmployeeId(),
+                creatingUser.getUsername(),
+                "create",
+                "user",
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of(jsonWriter.writeValueAsString(logReg))
+            );
+        }
+        catch(JsonProcessingException jpe)
+        {
+            throw new RuntimeException(jpe);
+        }
     }
 
     @Transactional

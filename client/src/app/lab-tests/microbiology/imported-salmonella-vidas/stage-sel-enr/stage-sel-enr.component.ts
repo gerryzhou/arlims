@@ -30,12 +30,19 @@ export class StageSelEnrComponent implements OnChanges {
    @Input()
    showUnsetAffordances = false;
 
+   @Input()
+   spiking: boolean | null = null;
+
    resourceAssignments: ResourceControlAssignments;
 
    constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
 
    ngOnChanges()
    {
+      const spikePlateCountCtrl = this.form.get('spikePlateCount');
+      if ( this.spiking ) spikePlateCountCtrl.enable();
+      else spikePlateCountCtrl.disable();
+
       this.resourceAssignments = new ResourceControlAssignments(
          this.form,
          new Map()

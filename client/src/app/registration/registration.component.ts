@@ -71,7 +71,8 @@ export class RegistrationComponent {
                this.alertMsgSvc.alertInfo(`New user ${userRegistration.username} created.`);
             },
             err => {
-               this.alertMsgSvc.alertDanger('Unexpected error ' + (err.message ? ': ' + err.message + '.' : '.'));
+               const msg = err.error ? err.error : 'unexpected error [' + err.message + ']';
+               this.alertMsgSvc.alertDanger('The user could not be created' + (msg ? ': ' + msg + '.' : '.'));
             }
          );
       }

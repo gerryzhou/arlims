@@ -1,10 +1,40 @@
-/*
-select 'drop table ' || table_name || ' cascade constraints purge;' drop_command
-from user_tables
-;
+create table DATA_CHANGE
+(
+  ID                           NUMBER(19) generated as identity
+    primary key,
+  ACTION                       VARCHAR2(50 char)  not null,
+  CREATING_EMP_ID              NUMBER(19)         not null,
+  CREATING_USERNAME            VARCHAR2(150 char) not null,
+  LAB_GROUP_ID                 NUMBER(19)         not null,
+  OBJECT_CONTEXT_METADATA_JSON CLOB
+    constraint CK_DTACHG_OBJMD_ISJSON
+    check (object_context_metadata_json is json format json strict),
+  OBJECT_FROM_VALUE_JSON       CLOB
+    constraint CK_DTACHG_OBJFROMVAL_ISJSON
+    check (object_from_value_json is json format json strict),
+  OBJECT_TO_VALUE_JSON         CLOB
+    constraint CK_DTACHG_OBJTOVAL_ISJSON
+    check (object_to_value_json is json format json strict),
+  OBJECT_TYPE                  VARCHAR2(50 char)  not null,
+  TIMESTAMP                    TIMESTAMP(6)       not null
+)
+/
 
-purge recyclebin;
-*/
+create index IX_AUDDTACHG_TIMESTAMP
+  on DATA_CHANGE (TIMESTAMP)
+/
+
+create index IX_AUDDTACHG_LABGRPID
+  on DATA_CHANGE (LAB_GROUP_ID)
+/
+
+create index IX_AUDDTACHG_CREATINGEMPID
+  on DATA_CHANGE (CREATING_EMP_ID)
+/
+
+create index IX_AUDDTACHG_OBJT
+  on DATA_CHANGE (OBJECT_TYPE)
+/
 
 create table LAB_GROUP
 (
@@ -31,13 +61,13 @@ create table EMPLOYEE
     constraint UN_EMP_FDAEMAILACCN
     unique,
   FIRST_NAME             VARCHAR2(60 char)  not null,
+  LAB_GROUP_ID           NUMBER(19)
+    constraint FK_EMP_LABGROUP
+    references LAB_GROUP,
   LAST_NAME              VARCHAR2(60 char)  not null,
   MIDDLE_NAME            VARCHAR2(60 char),
   PASSWORD               VARCHAR2(200 char),
   SHORT_NAME             VARCHAR2(10 char)  not null,
-  LAB_GROUP_ID           NUMBER(19)         not null
-    constraint FK_EMP_LABGROUP
-    references LAB_GROUP,
   constraint UN_EMP_SHORTNAMELABGRP
   unique (SHORT_NAME, LAB_GROUP_ID)
 )
@@ -456,5 +486,4 @@ create index IX_TSTUNMRSC_RSCCD
 create index IX_TSTUNMRSC_RSCT
   on TEST_UNMANAGED_RESOURCE (RESOURCE_TYPE)
 /
-
 

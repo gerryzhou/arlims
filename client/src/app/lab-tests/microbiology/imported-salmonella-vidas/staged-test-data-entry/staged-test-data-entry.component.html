@@ -24,22 +24,23 @@
       <mat-step label="PRE-ENR">
          <app-stage-pre-enr class="test-stage"
             [form]="testDataForm.get('preEnrData')"
-            [conflicts]="conflictsTestData.preEnrData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [balances]="balances"
             [incubators]="incubators"
             [samplingMethodChoices]="testConfig.samplingMethodChoices"
-            [showUnsetAffordances]="showUnsetAffordances"
-            (sampleTestUnitsChange)="onSampleTestUnitsChanged($event)">
+            (sampleTestUnitsChange)="onSampleTestUnitsChanged($event)"
+            [conflicts]="conflictsTestData.preEnrData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-pre-enr>
       </mat-step>
 
       <mat-step label="SEL-ENR">
          <app-stage-sel-enr class="test-stage"
             [form]="testDataForm.get('selEnrData')"
+            [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
+            [waterBaths]="waterBaths"
             [conflicts]="conflictsTestData.selEnrData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [waterBaths]="waterBaths"
             [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-sel-enr>
       </mat-step>
@@ -47,9 +48,9 @@
       <mat-step label="M-BROTH">
          <app-stage-m-broth class="test-stage"
             [form]="testDataForm.get('mBrothData')"
+            [waterBaths]="waterBaths"
             [conflicts]="conflictsTestData.mBrothData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [waterBaths]="waterBaths"
             [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-m-broth>
       </mat-step>
@@ -57,11 +58,12 @@
       <mat-step label="VIDAS">
          <app-stage-vidas class="test-stage"
             [form]="testDataForm.get('vidasData')"
-            [conflicts]="conflictsTestData.vidasData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [vidasInstruments]="vidasInstruments"
             [sampleTestUnitsCount]="sampleTestUnitsCount"
             [sampleTestUnitsType]="sampleTestUnitsType"
+            [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
+            [conflicts]="conflictsTestData.vidasData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-vidas>
       </mat-step>

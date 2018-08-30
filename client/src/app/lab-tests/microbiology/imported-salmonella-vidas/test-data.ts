@@ -243,6 +243,10 @@ function preEnrStatusCode(testData: TestData): FieldValuesStatusCode
    );
 }
 
+function spikingSpecified(testData: TestData) {
+   return testData.preEnrData && !!testData.preEnrData.sampleSpike;
+}
+
 function selEnrStatusCode(testData: TestData): FieldValuesStatusCode
 {
    const data = testData.selEnrData;
@@ -254,8 +258,7 @@ function selEnrStatusCode(testData: TestData): FieldValuesStatusCode
       data.i2kiBatchId,
       data.rvttWaterBathId,
    ]);
-
-   const spiking = testData.preEnrData && !!testData.preEnrData.sampleSpike;
+   const spiking = spikingSpecified(testData);
    const spikeCountPresent = !!data.spikePlateCount;
 
    return (
@@ -279,14 +282,17 @@ function mBrothStatusCode(testData: TestData): FieldValuesStatusCode
 function vidasStatusCode(testData: TestData): FieldValuesStatusCode
 {
    const data = testData.vidasData;
-   return statusForRequiredFieldValues([
-      data.instrumentId,
-      data.kitIds,
-      data.testUnitDetections,
-      data.positiveControlDetection,
-      data.mediumControlDetection,
-      data.spikeDetection,
-   ]);
+   const spiking = spikingSpecified(testData);
+   return statusForRequiredFieldValues(
+      [
+          data.instrumentId,
+          data.kitIds,
+          data.testUnitDetections,
+          data.positiveControlDetection,
+          data.mediumControlDetection,
+      ]
+      .concat(spiking ? [data.spikeDetection] : [])
+   );
 }
 
 function controlsStatusCode(testData: TestData): FieldValuesStatusCode

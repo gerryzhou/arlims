@@ -1,7 +1,3 @@
-
-
-Add audit log to report pdf (imp slm vidas?) which can be signed.
-
 *** Positives need to be handled as next priority.
    Having seprate test type for positives is fine but the related tests need to be kept together and in proper sequence.
    Add test group/sequence field(s) to order and group tests within samples.

@@ -10,13 +10,13 @@ import gov.fda.nctr.arlims.models.dto.*;
 
 public interface TestDataService
 {
-    long createTest(long empId, long sampleId, LabTestTypeCode testTypeCode, String testBeginDate);
+    long createTest(long sampleId, LabTestTypeCode testTypeCode, String testBeginDate, AppUser user);
 
-    void deleteTest(long testId);
+    void deleteTest(long testId, AppUser deletingUser);
 
     VersionedTestData getVersionedTestData(long testId);
 
-    boolean saveTestDataJson(long testId, String testDataJson, String stageStatusesJson, long empId, String previousMd5);
+    boolean saveTestData(long testId, String testDataJson, String stageStatusesJson, String previousMd5, AppUser user);
 
     Optional<DataModificationInfo> getTestDataModificationInfo(long testId);
 
@@ -24,11 +24,11 @@ public interface TestDataService
 
     List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId);
 
-    List<Long> createTestAttachedFiles(long testId, List<MultipartFile> files, Optional<String> role);
+    List<Long> attachFilesToTest(long testId, List<MultipartFile> files, Optional<String> role, AppUser user);
 
-    void updateTestAttachedFileMetadata(long attachedFileId, long testId, Optional<String> role, String name);
+    void updateTestAttachedFileMetadata(long testId, long attachedFileId, Optional<String> role, String name, AppUser user);
 
     TestAttachedFileContents getTestAttachedFileContents(long attachedFileId, long testId);
 
-    void deleteTestAttachedFile(long attachedFileId, long testId);
+    void deleteTestAttachedFile(long testId, long attachedFileId, AppUser user);
 }

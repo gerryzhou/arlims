@@ -1,15 +1,21 @@
 package gov.fda.nctr.arlims.controllers;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.WebRequest;
 
 import gov.fda.nctr.arlims.data_access.user_context.UserContextService;
+import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.*;
+import gov.fda.nctr.arlims.security.AppUserAuthentication;
 
 
 @RestController
@@ -29,10 +35,25 @@ public class UserController
     @RolesAllowed("ROLE_ADMIN")
     public void registerNewUser
         (
-            @RequestBody UserRegistration userRegistration
+            @RequestBody UserRegistration userRegistration,
+            Authentication authentication
         )
     {
-        userContextService.createNewUser(userRegistration);
+
+        AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
+
+        try
+        {
+            userContextService.createNewUser(userRegistration, currentUser);
+        }
+        catch(DataAccessException e)
+        {
+            String msg = e.toString();
+            if ( msg.contains(".UN_EMP_") )
+                throw new BadRequestException("The entered data conflicts with one or more existing records, please choose unique values where required.");
+            else
+                throw e;
+        }
     }
 
     @GetMapping("context")
@@ -49,5 +70,19 @@ public class UserController
         )
     {
         return userContextService.getLabGroupContents(empId);
+    }
+
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleBadRequestException
+        (
+            BadRequestException e,
+            WebRequest request,
+            HttpServletResponse response
+        )
+    {
+        return e.getMessage();
     }
 }

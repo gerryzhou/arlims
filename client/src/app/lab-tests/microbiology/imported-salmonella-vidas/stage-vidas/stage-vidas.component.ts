@@ -33,6 +33,9 @@ export class StageVidasComponent implements OnChanges {
    @Input()
    sampleTestUnitsType: string | null = null;
 
+   @Input()
+   spiking: boolean | null = null;
+
    excessSampleTestUnitControlsCount: number | null = 0;
 
    mediumControlDetectionControl: AbstractControl;
@@ -60,6 +63,11 @@ export class StageVidasComponent implements OnChanges {
       }
       else
          this.updateExcessSampleTestUnitControlsCount();
+
+      // Enable or disable spike plate count control based on whether spiking is being done.
+      const spikeDetectionCtrl = this.form.get('spikeDetection');
+      if ( this.spiking ) spikeDetectionCtrl.enable();
+      else spikeDetectionCtrl.disable();
    }
 
    private addSampleDetectionControls(numControls: number)

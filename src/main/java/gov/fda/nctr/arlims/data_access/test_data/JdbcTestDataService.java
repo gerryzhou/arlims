@@ -5,17 +5,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,6 +27,8 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import gov.fda.nctr.arlims.data_access.change_auditing.DataChangeAuditingService;
+import gov.fda.nctr.arlims.data_access.change_auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.models.dto.*;
 
 
@@ -32,21 +36,30 @@ import gov.fda.nctr.arlims.models.dto.*;
 public class JdbcTestDataService implements TestDataService
 {
     private final JdbcTemplate jdbc;
+    private final DataChangeAuditingService dataChangeAuditingSvc;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
 
-    public JdbcTestDataService(JdbcTemplate jdbcTemplate)
+    public JdbcTestDataService
+        (
+            JdbcTemplate jdbcTemplate,
+            DataChangeAuditingService dataChangeAuditingSvc
+        )
     {
         this.jdbc = jdbcTemplate;
+        this.dataChangeAuditingSvc = dataChangeAuditingSvc;
     }
 
+    @Transactional
     @Override
     public long createTest
         (
-            long empId,
             long sampleId,
             LabTestTypeCode testTypeCode,
-            String testBeginDate
+            String testBeginDate,
+            AppUser user
         )
     {
         java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
@@ -68,12 +81,12 @@ public class JdbcTestDataService implements TestDataService
             final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
             ps.setLong(1, sampleId);
             ps.setString(2, testTypeCode.toString());
-            ps.setLong(3, empId);
+            ps.setLong(3, user.getEmployeeId());
             ps.setString(4, testBeginDate);
             ps.setTimestamp(5, now);
-            ps.setLong(6, empId);
+            ps.setLong(6, user.getEmployeeId());
             ps.setTimestamp(7, now);
-            ps.setLong(8, empId);
+            ps.setLong(8, user.getEmployeeId());
             return ps;
         };
 
@@ -81,12 +94,36 @@ public class JdbcTestDataService implements TestDataService
 
         jdbc.update(psc, holder);
 
-        return holder.getKey().longValue();
+        long testId = holder.getKey().longValue();
+
+        logTestCreated(testId, user);
+
+        return testId;
     }
 
-    @Transactional @Override
-    public void deleteTest(long testId)
+    private void logTestCreated(long testId, AppUser user)
     {
+        TestAuditInfo testAuditInfo = getTestAuditInfo(testId, true);
+
+        dataChangeAuditingSvc.logDataChange(
+            Instant.now(),
+            user.getLabGroupId(),
+            user.getEmployeeId(),
+            user.getUsername(),
+            "create",
+            "test",
+            Optional.of(rowToJson(testAuditInfo.testIdentifyingMetadata)),
+            Optional.empty(),
+            Optional.of(rowToJson(testAuditInfo.testRow))
+        );
+    }
+
+    @Transactional
+    @Override
+    public void deleteTest(long testId, AppUser user)
+    {
+        logTestToBeDeleted(testId, user);
+
         jdbc.update("delete from test_file where test_id = ?", testId);
         jdbc.update("delete from test_managed_resource where test_id = ?", testId);
         jdbc.update("delete from test_unmanaged_resource where test_id = ?", testId);
@@ -95,6 +132,24 @@ public class JdbcTestDataService implements TestDataService
         if ( updateCount == 0 )
             throw new RuntimeException("delete failed: no test with id " + testId + " was found");
     }
+
+    private void logTestToBeDeleted(long testId, AppUser user)
+    {
+        TestAuditInfo testAuditInfo = getTestAuditInfo(testId, true);
+
+        dataChangeAuditingSvc.logDataChange(
+            Instant.now(),
+            user.getLabGroupId(),
+            user.getEmployeeId(),
+            user.getUsername(),
+            "delete",
+            "test",
+            Optional.of(rowToJson(testAuditInfo.testIdentifyingMetadata)),
+            Optional.of(rowToJson(testAuditInfo.testRow)),
+            Optional.empty()
+        );
+    }
+
 
     @Override
     public VersionedTestData getVersionedTestData(long testId)
@@ -116,16 +171,23 @@ public class JdbcTestDataService implements TestDataService
         return jdbc.queryForObject(sql, rowMapper, testId);
     }
 
-    @Transactional @Override
-    public boolean saveTestDataJson
+    @Transactional
+    @Override
+    public boolean saveTestData
         (
             long testId,
             String testDataJson,
             String stageStatusesJson,
-            long empId,
-            String previousMd5
+            String previousMd5,
+            AppUser user
         )
     {
+        // Get the current database test data before the update attempt, for the purpose of data change logging.
+        // It's OK if the data is updated from elsewhere between this read and the steps below, because in that
+        // case the optimistic update will update no record (not found based on expected md5), and so no logging
+        // will need to be done.
+        VersionedTestData origTestData = getVersionedTestData(testId);
+
         String newMd5 = md5OfUtf8Bytes(testDataJson);
 
         String sql =
@@ -139,13 +201,47 @@ public class JdbcTestDataService implements TestDataService
                 testDataJson,
                 stageStatusesJson,
                 new java.sql.Timestamp(Instant.now().toEpochMilli()),
-                empId,
+                user.getEmployeeId(),
                 newMd5,
                 testId,
                 previousMd5
             );
 
-        return updateCount > 0;
+        boolean saved = updateCount > 0; // optimistic update may have missed due to concurrent update
+
+        if ( saved )
+        {
+            logTestDataSaved(testId, origTestData.getTestDataJson(), testDataJson, user);
+        }
+
+        return saved;
+    }
+
+    private void logTestDataSaved
+        (
+            long testId,
+            Optional<String> origTestDataJson,
+            String updatedTestDataJson,
+            AppUser user
+        )
+    {
+        TestAuditInfo testAuditInfo = getTestAuditInfo(testId, false);
+
+        boolean unchanged = origTestDataJson.map(origJson -> origJson.equals(updatedTestDataJson)).orElse(false);
+
+        String action = unchanged ? "save-unchanged" : "update";
+
+        dataChangeAuditingSvc.logDataChange(
+            Instant.now(),
+            user.getLabGroupId(),
+            user.getEmployeeId(),
+            user.getUsername(),
+            action,
+            "test-data",
+            Optional.of(rowToJson(testAuditInfo.testIdentifyingMetadata)),
+            origTestDataJson,
+            Optional.of(updatedTestDataJson)
+        );
     }
 
     @Override
@@ -232,8 +328,8 @@ public class JdbcTestDataService implements TestDataService
 
         RowMapper<TestAttachedFileMetadata> rowMapper = (row, rowNum) ->
             new TestAttachedFileMetadata(
-                row.getLong(1),
                 testId,
+                row.getLong(1),
                 Optional.ofNullable(row.getString(2)),
                 row.getString(3),
                 row.getLong(4),
@@ -243,12 +339,34 @@ public class JdbcTestDataService implements TestDataService
         return jdbc.query(sql, rowMapper, testId);
     }
 
+    private TestAttachedFileMetadata getTestAttachedFileMetadata(long testId, long attachedFileId)
+    {
+        String sql =
+            "select tf.id, tf.role, tf.name, length(tf.data), tf.uploaded " +
+            "from test_file tf " +
+            "where tf.id = ?";
+
+        RowMapper<TestAttachedFileMetadata> rowMapper = (row, rowNum) ->
+            new TestAttachedFileMetadata(
+                testId,
+                row.getLong(1),
+                Optional.ofNullable(row.getString(2)),
+                row.getString(3),
+                row.getLong(4),
+                row.getTimestamp(5).toInstant()
+            );
+
+        return jdbc.queryForObject(sql, rowMapper, attachedFileId);
+    }
+
     @Override
-    public List<Long> createTestAttachedFiles
+    @Transactional
+    public List<Long> attachFilesToTest
         (
             long testId,
             List<MultipartFile> files,
-            Optional<String> role
+            Optional<String> role,
+            AppUser user
         )
     {
         java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
@@ -281,6 +399,8 @@ public class JdbcTestDataService implements TestDataService
                 createdIds.add(holder.getKey().longValue());
             }
 
+            logFilesAttached(testId, files, createdIds, role, user);
+
             return createdIds;
         }
         catch(IOException e)
@@ -289,16 +409,74 @@ public class JdbcTestDataService implements TestDataService
         }
     }
 
+    private void logFilesAttached
+        (
+            long testId,
+            List<MultipartFile> files,
+            List<Long> attachedFileIds,
+            Optional<String> role,
+            AppUser user
+        )
+    {
+        TestAuditInfo testAuditInfo = getTestAuditInfo(testId, false);
 
+        List<AttachedFileDescription> fileDescrs = makeAttachedFileDescriptions(files, attachedFileIds, role);
+
+        try
+        {
+            String descrsJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(fileDescrs);
+
+            dataChangeAuditingSvc.logDataChange(
+                Instant.now(),
+                user.getLabGroupId(),
+                user.getEmployeeId(),
+                user.getUsername(),
+                "attach-files",
+                "test",
+                Optional.of(rowToJson(testAuditInfo.testIdentifyingMetadata)),
+                Optional.empty(),
+                Optional.of(descrsJson)
+            );
+        }
+        catch (JsonProcessingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<AttachedFileDescription> makeAttachedFileDescriptions
+        (
+            List<MultipartFile> AttachedFiles,
+            List<Long> attachedFileIds,
+            Optional<String> role
+        )
+    {
+        List<AttachedFileDescription> attachedFileDescrs = new ArrayList<>();
+
+        for (int i = 0; i < AttachedFiles.size(); ++i)
+        {
+            MultipartFile f = AttachedFiles.get(i);
+            long id = attachedFileIds.get(i);
+            attachedFileDescrs.add(new AttachedFileDescription(id, f.getOriginalFilename(), f.getSize(), role));
+        }
+
+        return attachedFileDescrs;
+    }
+
+    @Transactional
     @Override
     public void updateTestAttachedFileMetadata
         (
-            long attachedFileId,
             long testId,
+            long attachedFileId,
             Optional<String> role,
-            String name
+            String name,
+            AppUser user
+
         )
     {
+        logAttachedFileMetadataChange(testId, attachedFileId, role, name, user);
+
         String sql = "update test_file set name = ?, role = ? where id = ? and test_id = ?";
 
         int affectedCount = jdbc.update(sql, name, role, attachedFileId, testId);
@@ -308,6 +486,43 @@ public class JdbcTestDataService implements TestDataService
             case 1: return;
             case 0: throw new RuntimeException("Attached file data not updated: no record found for given attached file id and test id.");
             default: throw new RuntimeException("Attached file update unexpectedly reported " + affectedCount + " rows as updated.");
+        }
+    }
+
+    private void logAttachedFileMetadataChange
+        (
+            long testId,
+            long attachedFileId,
+            Optional<String> role,
+            String name,
+            AppUser user
+        )
+    {
+        TestAuditInfo testAuditInfo = getTestAuditInfo(testId, false);
+
+        TestAttachedFileMetadata origMd = getTestAttachedFileMetadata(testId, attachedFileId);
+        TestAttachedFileMetadata newMd = new TestAttachedFileMetadata(testId, attachedFileId, role, name, origMd.getSize(), origMd.getUploadedInstant());
+
+        try
+        {
+            String origJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(origMd);
+            String newJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(newMd);
+
+            dataChangeAuditingSvc.logDataChange(
+                Instant.now(),
+                user.getLabGroupId(),
+                user.getEmployeeId(),
+                user.getUsername(),
+                "update",
+                "test-attached-file-metadata",
+                Optional.of(rowToJson(testAuditInfo.testIdentifyingMetadata)),
+                Optional.of(origJson),
+                Optional.of(newJson)
+            );
+        }
+        catch (JsonProcessingException e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
@@ -330,13 +545,17 @@ public class JdbcTestDataService implements TestDataService
         return jdbc.queryForObject(sql, rowMapper, attachedFileId, testId);
     }
 
+    @Transactional
     @Override
     public void deleteTestAttachedFile
         (
+            long testId,
             long attachedFileId,
-            long testId
+            AppUser user
         )
     {
+        logTestAttachedFileToBeDeleted(testId, attachedFileId, user);
+
         String sql = "delete from test_file where id = ? and test_id = ?";
 
         int affectedCount = jdbc.update(sql, attachedFileId, testId);
@@ -347,6 +566,64 @@ public class JdbcTestDataService implements TestDataService
             case 0: throw new RuntimeException("Attached file data not deleted: no record found for given attached file id and test id.");
             default: throw new RuntimeException("Attached file delete unexpectedly reported " + affectedCount + " rows as affected.");
         }
+    }
+
+    private void logTestAttachedFileToBeDeleted
+        (
+            long testId,
+            long attachedFileId,
+            AppUser user
+        )
+    {
+        TestAuditInfo testAuditInfo = getTestAuditInfo(testId, false);
+
+        TestAttachedFileMetadata attachedFileMd = getTestAttachedFileMetadata(testId, attachedFileId);
+
+        try
+        {
+            String mdJson = dataChangeAuditingSvc.getJsonWriter().writeValueAsString(
+                Collections.singletonList(attachedFileMd)
+            );
+
+            dataChangeAuditingSvc.logDataChange(
+                Instant.now(),
+                user.getLabGroupId(),
+                user.getEmployeeId(),
+                user.getUsername(),
+                "detach-files",
+                "test",
+                Optional.of(rowToJson(testAuditInfo.testIdentifyingMetadata)),
+                Optional.of(mdJson),
+                Optional.empty()
+            );
+        }
+        catch (JsonProcessingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private TestAuditInfo getTestAuditInfo(long testId, boolean includeTestRow)
+    {
+        String contextSql =
+            "select\n" +
+              "s.id sample_id, s.facts_status sample_facts_status, s.lab_group_id lab_group_id, lg.name lab_group, " +
+              "s.last_refreshed_from_facts, s.lid, s.pac, s.paf, s.product_name, s.received, s.sample_num, s.sampling_org, " +
+              "t.id test_id, t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
+              "tt.name test_type_name, tt.code \"TEST_TYPE_CODE\"\n" +
+            "from sample s\n" +
+            "join lab_group lg on s.lab_group_id = lg.id\n" +
+            "join test t on t.sample_id = s.id\n" +
+            "join test_type tt on t.test_type_id = tt.id\n" +
+            "where t.id = ?";
+
+        Map<String,Object> contextRow = jdbc.queryForMap(contextSql, testId);
+        Map<String,Object> testRow = includeTestRow ?
+            jdbc.queryForMap("select * from test where id = ?", testId)
+            : new HashMap<>();
+        String testTypeCode = (String)contextRow.get("TEST_TYPE_CODE");
+
+        return new TestAuditInfo(testTypeCode, testRow, contextRow);
     }
 
     private static String md5(byte[] data)
@@ -370,10 +647,34 @@ public class JdbcTestDataService implements TestDataService
 
     private static String md5OfUtf8Bytes(String s)
     {
+        return md5(s.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String rowToJson(Map<String,Object> row)
+    {
         try
         {
-            return md5(s.getBytes("UTF-8"));
+            return dataChangeAuditingSvc.getJsonWriter().writeValueAsString(row);
         }
-        catch(UnsupportedEncodingException e) { throw new RuntimeException(e); }
+        catch(JsonProcessingException jpe)
+        {
+            throw new RuntimeException(jpe);
+        }
     }
+
+
+    private static class TestAuditInfo
+    {
+        String testTypeCode;
+        Map<String,Object> testIdentifyingMetadata;
+        Map<String,Object> testRow;
+
+        public TestAuditInfo(String testTypeCode, Map<String,Object> testRow, Map<String,Object> testIdentifyingMetadata)
+        {
+            this.testTypeCode = testTypeCode;
+            this.testRow = testRow;
+            this.testIdentifyingMetadata = testIdentifyingMetadata;
+        }
+    }
+
 }

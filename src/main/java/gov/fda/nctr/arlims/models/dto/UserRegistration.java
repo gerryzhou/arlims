@@ -3,6 +3,9 @@ package gov.fda.nctr.arlims.models.dto;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 
 public class UserRegistration
 {
@@ -14,6 +17,7 @@ public class UserRegistration
 
     private long labGroupId;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
 
     private Optional<Long> factsPersonId;

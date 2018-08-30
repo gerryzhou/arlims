@@ -15,8 +15,8 @@ public class TestAttachedFileMetadata
 
     public TestAttachedFileMetadata
         (
-            long attachedFileId,
             long testId,
+            long attachedFileId,
             Optional<String> role,
             String name,
             long size,

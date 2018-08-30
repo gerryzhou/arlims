@@ -1,34 +1,5 @@
-Audit logging of all data changes.
-  +DataChangeAuditLoggingService
-    log_change(...)
-  +audit_log
-    emp_id (not nullable)
-    sample_id (nullable)
-    action (not nullable) (create | update | delete | ...)
-    subject (not nullable) (user | test | test-data | ...)
-    from_val_json
-    to_val_json
+Add audit log page for admins.
 
-  Employee
-    User controller registerNewUser function should add log_change() call.
-  Sample
-    Test creation and deletion should be logged and associated with the sample.
-  Test
-    Test and test data operations should be logged and associated with the sample.
-  TestFile
-    Test file creations and deletions should be logged and associated with the sample.
-  ---
-  LabGroup, LabResource
-    No changes managed by app currently.
-  LabGroupTestType, Role, TestType
-    No changes managed by app.
-  SampleList
-    Not used in app at all currently aside from entity definition.
-  SampleManagedResource, SampleUnmanagedResource
-    Currently not used in app, although loading functions are present in user context service (not being called as part of loading).
-    Both are mapped to LabResourceListMetadata in the (unused) loading functions.
-  TestManagedResource, TestUnmanagedResource
-    Not used in app at all currently aside from entity definitions.
 
 Data Access
 -----------

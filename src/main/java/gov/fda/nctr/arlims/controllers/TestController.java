@@ -6,17 +6,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import gov.fda.nctr.arlims.data_access.test_data.TestAttachedFileContents;
 import gov.fda.nctr.arlims.data_access.test_data.TestDataService;
+import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.reports.Report;
@@ -49,12 +54,12 @@ public class TestController
             @RequestParam("sampleId") long sampleId,
             @RequestParam("testTypeCode") LabTestTypeCode testTypeCode,
             @RequestParam("testBeginDate") String testBeginDate,
-            Authentication auth
+            Authentication authentication
         )
     {
-        long empId = ((AppUserAuthentication)auth).getAppUser().getEmployeeId();
+        AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        long createdTestId = testDataService.createTest(empId, sampleId, testTypeCode, testBeginDate);
+        long createdTestId = testDataService.createTest(sampleId, testTypeCode, testBeginDate, currentUser);
 
         return new CreatedTestMetadata(sampleId, createdTestId);
     }
@@ -62,17 +67,19 @@ public class TestController
     @DeleteMapping("{testId:\\d+}")
     public void deleteTest
         (
-            @PathVariable("testId") long testId
+            @PathVariable("testId") long testId,
+            Authentication authentication
         )
     {
-        testDataService.deleteTest(testId);
+        AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
+
+        testDataService.deleteTest(testId, currentUser);
     }
 
     @GetMapping("{testId:\\d+}/data")
     public VersionedTestData getTestDataJson
         (
-            @PathVariable long testId,
-            @RequestHeader HttpHeaders httpHeaders
+            @PathVariable long testId
         )
     {
         return testDataService.getVersionedTestData(testId);
@@ -85,13 +92,12 @@ public class TestController
             @RequestPart("testDataJson") String testDataJson,
             @RequestPart("stageStatusesJson") String stageStatusesJson,
             @RequestPart("previousMd5") String previousMd5,
-            @RequestHeader HttpHeaders httpHeaders,
-            Authentication auth
+            Authentication authentication
         )
     {
-        long empId = ((AppUserAuthentication)auth).getAppUser().getEmployeeId();
+        AppUser user = ((AppUserAuthentication)authentication).getAppUser();
 
-        boolean saved = testDataService.saveTestDataJson(testId, testDataJson, stageStatusesJson, empId, previousMd5);
+        boolean saved = testDataService.saveTestData(testId, testDataJson, stageStatusesJson, previousMd5, user);
 
         if ( saved )
             return new OptimisticDataUpdateResult(true, Optional.empty());
@@ -109,8 +115,7 @@ public class TestController
     @GetMapping("{testId:\\d+}/attached-files/metadatas")
     public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas
         (
-            @PathVariable long testId,
-            @RequestHeader HttpHeaders httpHeaders
+            @PathVariable long testId
         )
     {
         return testDataService.getTestAttachedFileMetadatas(testId);
@@ -123,10 +128,12 @@ public class TestController
             @PathVariable long testId,
             @RequestPart("role") Optional<String> role,
             @RequestPart("name") String name,
-            @RequestHeader HttpHeaders httpHeaders
+            Authentication authentication
         )
     {
-        testDataService.updateTestAttachedFileMetadata(attachedFileId, testId, role, name);
+        AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
+
+        testDataService.updateTestAttachedFileMetadata(testId, attachedFileId, role, name, currentUser);
     }
 
 
@@ -136,10 +143,12 @@ public class TestController
             @PathVariable long testId,
             @RequestPart("files") MultipartFile[] files,
             @RequestPart("role") Optional<String> role,
-            @RequestHeader HttpHeaders httpHeaders
+            Authentication authentication
         )
     {
-        List<Long> attachedFileIds = testDataService.createTestAttachedFiles(testId, Arrays.asList(files), role);
+        AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
+
+        List<Long> attachedFileIds = testDataService.attachFilesToTest(testId, Arrays.asList(files), role, currentUser);
 
         return new CreatedTestAttachedFiles(testId, attachedFileIds);
     }
@@ -148,8 +157,7 @@ public class TestController
     public ResponseEntity<InputStreamResource>  getTestAttachedFileContents
         (
             @PathVariable long attachedFileId,
-            @PathVariable long testId,
-            @RequestHeader HttpHeaders httpHeaders
+            @PathVariable long testId
         )
     {
         TestAttachedFileContents tafc = testDataService.getTestAttachedFileContents(attachedFileId, testId);
@@ -167,18 +175,19 @@ public class TestController
         (
             @PathVariable long attachedFileId,
             @PathVariable long testId,
-            @RequestHeader HttpHeaders httpHeaders
+            Authentication authentication
         )
     {
-        testDataService.deleteTestAttachedFile(attachedFileId, testId);
+        AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
+
+        testDataService.deleteTestAttachedFile(testId, attachedFileId, currentUser);
     }
 
     @GetMapping("{testId}/report/{reportName}")
     public ResponseEntity<InputStreamResource> getTestDataReport
         (
             @PathVariable long testId,
-            @PathVariable String reportName,
-            @RequestHeader HttpHeaders httpHeaders
+            @PathVariable String reportName
         )
         throws IOException
     {
@@ -200,5 +209,18 @@ public class TestController
             .body(new InputStreamResource(Files.newInputStream(report.getReportFile())));
     }
 
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleBadRequestException
+    (
+        BadRequestException e,
+        WebRequest request,
+        HttpServletResponse response
+    )
+    {
+        return e.getMessage();
+    }
 }
 
