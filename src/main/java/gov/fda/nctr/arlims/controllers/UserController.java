@@ -57,19 +57,20 @@ public class UserController
     }
 
     @GetMapping("context")
-    public UserContext getUserContext(Authentication auth)
+    public UserContext getUserContext(Authentication authentication)
     {
-        return userContextService.getUserContext(auth.getName());
+        return userContextService.getUserContext(authentication.getName());
     }
 
-    @GetMapping("{empId:\\d+}/lab-group-contents")
+    @GetMapping("lab-group-contents")
     public LabGroupContents getLabGroupContents
         (
-            @PathVariable("empId") long empId,
-            @RequestHeader HttpHeaders httpHeaders
+            Authentication authentication
         )
     {
-        return userContextService.getLabGroupContents(empId);
+        AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
+
+        return userContextService.getLabGroupContents(currentUser.getEmployeeId());
     }
 
 
