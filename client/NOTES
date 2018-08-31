@@ -1,11 +1,12 @@
-Audit Log View
---------------
+Audit Log
+---------
+   Make this a lazy loaded module (with routing), patterned from imported-salmonella-vidas.
 
-   +AuditLogListingService
-   +AuditLogReviewComponent [router target, admin only]
+   +AuditLogReviewComponent [router target (no resolver), admin only]
       AuditLogSearchPanel
       AuditLogListingComponent
    +AuditLogListingComponent
+      [testId]
       [startTimestamp]
       [endTimestamp]
       [changeTypes]

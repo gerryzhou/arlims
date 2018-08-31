@@ -1,7 +1,9 @@
-change_auditing => auditing
-DataChange => AuditEntry
-creatingEmpId => actingEmpId
-creatingUsername => actingUsername
+
+JWT Invalidation
+----------------
+  Add a mechanism to tell the server to flush the user cache (in UserContextManager) for a given user or all users.
+  Add disabled field to employee and AppUser.
+  Have jwt recognizer check whether the user is disabled.
 
 
 Data Access

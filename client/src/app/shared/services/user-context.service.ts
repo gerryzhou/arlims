@@ -177,7 +177,7 @@ export class UserContextService {
    private fetchLabGroupContents(): Observable<LabGroupContents>
    {
       return this.httpClient.get<LabGroupContents>(
-         this.apiUrlsSvc.labGroupContentsUrl(this.authenticatedUser.getValue().employeeId)
+         this.apiUrlsSvc.labGroupContentsUrl()
       );
    }
 

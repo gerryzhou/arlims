@@ -7,6 +7,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 import org.springframework.security.core.GrantedAuthority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class AppUser
@@ -19,8 +20,10 @@ public class AppUser
     private final String lastName;
     private final String firstName;
     private final List<RoleName> roles;
-    private final Collection<? extends GrantedAuthority> grantedAuthorities;
     private final Instant userInfoLastRefreshedInstant;
+
+    @JsonIgnore
+    private final Collection<? extends GrantedAuthority> grantedAuthorities;
 
     public AppUser
         (
@@ -66,19 +69,18 @@ public class AppUser
     public Instant getUserInfoLastRefreshedInstant() { return userInfoLastRefreshedInstant; }
 
     public Collection<? extends GrantedAuthority> getGrantedAuthorities() { return grantedAuthorities; }
-
-
-    static final class RoleAuthority implements GrantedAuthority
-    {
-        private final String role;
-
-        RoleAuthority(String role) { this.role = role; }
-
-        @Override
-        public String getAuthority() { return role; }
-
-        @Override
-        public String toString() { return "RoleAuthority[" + role + "]"; }
-    }
-
 }
+
+class RoleAuthority implements GrantedAuthority
+{
+    private final String role;
+
+    RoleAuthority(String role) { this.role = role; }
+
+    @Override
+    public String getAuthority() { return role; }
+
+    @Override
+    public String toString() { return "RoleAuthority[" + role + "]"; }
+}
+

@@ -44,6 +44,12 @@ const routes: Routes = [
       data: {preload: true, title: 'Imported SLM Vidas Test'},
       canActivate: [AuthenticatedUserGuard],
    },
+   {
+      path: 'audit-log',
+      loadChildren: '../audit-log/audit-log.module#AuditLogModule',
+      data: {title: 'Audit Log'},
+      canActivate: [AdminUserGuard],
+   },
    { path: '', redirectTo: 'samples', pathMatch: 'full' },
 ];
 

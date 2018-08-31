@@ -8,8 +8,6 @@ create table AUDIT_ENTRY
   LAB_GROUP_ID                 NUMBER(19)         not null,
   OBJECT_CONTEXT_METADATA_JSON CLOB
     constraint CK_AUDENT_OBJMD_ISJSON
-    check (object_context_metadata_json is json format json strict)
-    constraint CK_DTACHG_OBJMD_ISJSON
     check (object_context_metadata_json is json format json strict),
   OBJECT_FROM_VALUE_JSON       CLOB
     constraint CK_AUDENT_OBJFROMVAL_ISJSON
@@ -18,12 +16,17 @@ create table AUDIT_ENTRY
     constraint CK_AUDENT_OBJTOVAL_ISJSON
     check (object_to_value_json is json format json strict),
   OBJECT_TYPE                  VARCHAR2(50 char)  not null,
+  TEST_ID                      NUMBER(19),
   TIMESTAMP                    TIMESTAMP(6)       not null
 )
 /
 
 create index IX_AUDENT_TIMESTAMP
   on AUDIT_ENTRY (TIMESTAMP)
+/
+
+create index IX_AUDENT_TESTID
+  on AUDIT_ENTRY (TEST_ID)
 /
 
 create index IX_AUDENT_LABGRPID

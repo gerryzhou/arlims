@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
+import {HttpParams} from '@angular/common/http';
 
 
 @Injectable({providedIn: 'root'})
@@ -70,6 +71,33 @@ export class ApiUrlsService {
    reportUrl(testId: number, reportName: string): string
    {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${reportName}`);
+   }
+
+   auditLogEntriesQueryUrl
+      (
+         dateOrDateRange: string[] | null,
+         testId: number | null,
+         username: string | null,
+         includeChangeData: boolean,
+         includeUnchangedSaves: boolean
+      )
+      : string
+   {
+      const searchParams = new HttpParams();
+      if ( dateOrDateRange )
+         searchParams.append('date', dateOrDateRange[0] + (dateOrDateRange.length === 2 ? '-' + dateOrDateRange[1] : ''));
+      if ( testId )
+         searchParams.append('test', testId.toString());
+      if ( username )
+         searchParams.append('user', username);
+      if ( includeChangeData )
+         searchParams.append('data', includeChangeData ? '1' : '0');
+      if ( includeUnchangedSaves )
+         searchParams.append('unch', includeUnchangedSaves ? '1' : '0');
+
+      // TODO: this isn't working
+      return this.location.prepareExternalUrl('/api/audit-log/entries') +
+         '?' + searchParams.toString();
    }
 
    isAppApiUrl(url: string)

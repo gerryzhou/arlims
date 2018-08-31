@@ -104,9 +104,10 @@ public class JdbcTestDataService implements TestDataService
     {
         TestAuditInfo testAuditInfo = getTestAuditInfo(testId, true);
 
-        auditLogSvc.addLogEntry(
+        auditLogSvc.addEntry(
             Instant.now(),
             user.getLabGroupId(),
+            Optional.of(testId),
             user.getEmployeeId(),
             user.getUsername(),
             "create",
@@ -136,9 +137,10 @@ public class JdbcTestDataService implements TestDataService
     {
         TestAuditInfo testAuditInfo = getTestAuditInfo(testId, true);
 
-        auditLogSvc.addLogEntry(
+        auditLogSvc.addEntry(
             Instant.now(),
             user.getLabGroupId(),
+            Optional.of(testId),
             user.getEmployeeId(),
             user.getUsername(),
             "delete",
@@ -148,7 +150,6 @@ public class JdbcTestDataService implements TestDataService
             Optional.empty()
         );
     }
-
 
     @Override
     public VersionedTestData getVersionedTestData(long testId)
@@ -230,9 +231,10 @@ public class JdbcTestDataService implements TestDataService
 
         String action = unchanged ? "save-unchanged" : "update";
 
-        auditLogSvc.addLogEntry(
+        auditLogSvc.addEntry(
             Instant.now(),
             user.getLabGroupId(),
+            Optional.of(testId),
             user.getEmployeeId(),
             user.getUsername(),
             action,
@@ -425,9 +427,10 @@ public class JdbcTestDataService implements TestDataService
         {
             String descrsJson = auditLogSvc.getJsonWriter().writeValueAsString(fileDescrs);
 
-            auditLogSvc.addLogEntry(
+            auditLogSvc.addEntry(
                 Instant.now(),
                 user.getLabGroupId(),
+                Optional.of(testId),
                 user.getEmployeeId(),
                 user.getUsername(),
                 "attach-files",
@@ -507,9 +510,10 @@ public class JdbcTestDataService implements TestDataService
             String origJson = auditLogSvc.getJsonWriter().writeValueAsString(origMd);
             String newJson = auditLogSvc.getJsonWriter().writeValueAsString(newMd);
 
-            auditLogSvc.addLogEntry(
+            auditLogSvc.addEntry(
                 Instant.now(),
                 user.getLabGroupId(),
+                Optional.of(testId),
                 user.getEmployeeId(),
                 user.getUsername(),
                 "update",
@@ -584,9 +588,10 @@ public class JdbcTestDataService implements TestDataService
                 Collections.singletonList(attachedFileMd)
             );
 
-            auditLogSvc.addLogEntry(
+            auditLogSvc.addEntry(
                 Instant.now(),
                 user.getLabGroupId(),
+                Optional.of(testId),
                 user.getEmployeeId(),
                 user.getUsername(),
                 "detach-files",

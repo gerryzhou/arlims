@@ -38,7 +38,7 @@ import {CommonComponentsModule} from './common-components/common-components.modu
 import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
 import {LoginComponent} from './login/login.component';
 import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interceptor';
-import { RegistrationComponent } from './registration/registration.component';
+import {RegistrationComponent} from './registration/registration.component';
 
 @NgModule({
    declarations: [

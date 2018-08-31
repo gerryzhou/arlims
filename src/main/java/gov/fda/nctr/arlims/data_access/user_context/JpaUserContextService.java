@@ -163,9 +163,10 @@ public class JpaUserContextService implements UserContextService
         {
             ObjectWriter jsonWriter = this.dataChangeAuditingSvc.getJsonWriter();
 
-            this.dataChangeAuditingSvc.addLogEntry(
+            this.dataChangeAuditingSvc.addEntry(
                 Instant.now(),
                 creatingUser.getLabGroupId(),
+                Optional.empty(),
                 creatingUser.getEmployeeId(),
                 creatingUser.getUsername(),
                 "create",

@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 @Table(
     indexes = {
         @Index(name = "IX_AUDENT_TIMESTAMP", columnList = "TIMESTAMP"),
+        @Index(name = "IX_AUDENT_TESTID", columnList = "TEST_ID"),
         @Index(name = "IX_AUDENT_LABGRPID", columnList = "LAB_GROUP_ID"),
         @Index(name = "IX_AUDENT_EMPID", columnList = "ACTING_EMP_ID"),
         @Index(name = "IX_AUDENT_OBJT", columnList = "OBJECT_TYPE"),
@@ -25,6 +26,9 @@ public class AuditEntry
 
     @Column(name = "LAB_GROUP_ID") @NotNull
     private Long labGroupId;
+
+    @Column(name = "TEST_ID")
+    private Long testId;
 
     @Column(name = "ACTING_EMP_ID") @NotNull
     private Long actingEmpId;
