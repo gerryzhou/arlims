@@ -59,7 +59,7 @@ public class AuditLogAccessController
             if ( datesMatcher.matches() )
             {
                 Instant from = dateStringToInstant(datesMatcher.group(1));
-                if ( datesMatcher.group(2).isEmpty() ) return new Instant[]{from};
+                if ( datesMatcher.group(2) == null ) return new Instant[]{from};
                 else return new Instant[]{from, dateStringToInstant(datesMatcher.group(3))};
             }
             else

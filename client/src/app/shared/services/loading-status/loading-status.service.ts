@@ -1,13 +1,18 @@
-import { Injectable } from '@angular/core';
-import { HttpRequest } from '@angular/common/http';
-import {Subject} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpRequest} from '@angular/common/http';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable()
 export class LoadingStatusService {
 
-   loadingStatus = new Subject<boolean>();
+   private loadingStatus$ = new BehaviorSubject<boolean>(false);
 
    private activeRequests: HttpRequest<any>[] = [];
+
+   getLoadingStatus(): Observable<boolean>
+   {
+      return this.loadingStatus$;
+   }
 
    requestStarted(req: HttpRequest<any>): void {
       this.activeRequests.push(req);
@@ -23,7 +28,7 @@ export class LoadingStatusService {
    }
 
    private notify(): void {
-      this.loadingStatus.next(this.activeRequests.length !== 0);
+      this.loadingStatus$.next(this.activeRequests.length !== 0);
    }
 
 }

@@ -4,6 +4,7 @@ import {CommonModule} from '@angular/common';
 import {AuditLogRoutingModule} from './audit-log-routing.module';
 import {AuditLogAccessService} from './audit-log-access.service';
 import {AuditLogReviewComponent} from './audit-log-review/audit-log-review.component';
+import {InitialAuditLogEntriesResolver} from './initial-audit-log-entries-resolver';
 
 @NgModule({
    imports: [
@@ -15,6 +16,7 @@ import {AuditLogReviewComponent} from './audit-log-review/audit-log-review.compo
    ],
    providers: [
       AuditLogAccessService,
+      InitialAuditLogEntriesResolver,
    ],
 })
 export class AuditLogModule { }

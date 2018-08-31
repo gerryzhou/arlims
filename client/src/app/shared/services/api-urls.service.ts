@@ -83,21 +83,20 @@ export class ApiUrlsService {
       )
       : string
    {
-      const searchParams = new HttpParams();
-      if ( dateOrDateRange )
-         searchParams.append('date', dateOrDateRange[0] + (dateOrDateRange.length === 2 ? '-' + dateOrDateRange[1] : ''));
-      if ( testId )
-         searchParams.append('test', testId.toString());
-      if ( username )
-         searchParams.append('user', username);
-      if ( includeChangeData )
-         searchParams.append('data', includeChangeData ? '1' : '0');
-      if ( includeUnchangedSaves )
-         searchParams.append('unch', includeUnchangedSaves ? '1' : '0');
+      let searchParams = new HttpParams();
 
-      // TODO: this isn't working
-      return this.location.prepareExternalUrl('/api/audit-log/entries') +
-         '?' + searchParams.toString();
+      if ( dateOrDateRange )
+         searchParams = searchParams.append('date', dateOrDateRange[0] + (dateOrDateRange.length === 2 ? '-' + dateOrDateRange[1] : ''));
+      if ( testId )
+         searchParams = searchParams.append('test', testId.toString());
+      if ( username )
+         searchParams = searchParams.append('user', username);
+      searchParams =
+         searchParams
+         .append('data', includeChangeData ? '1' : '0')
+         .append('unch', includeUnchangedSaves ? '1' : '0');
+
+      return this.location.prepareExternalUrl('/api/audit-log/entries') + '?' + searchParams.toString();
    }
 
    isAppApiUrl(url: string)

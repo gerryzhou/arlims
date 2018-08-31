@@ -1,9 +1,12 @@
+AppComponent:
+  Correct 'Expression has changed after it was checked.' caused by loading$ somehow.
+  Try moving initial query out of constructor.
+  Failing that, try adding a resolver to deliver initial data.
+
 Audit Log
 ---------
-   Make this a lazy loaded module (with routing), patterned from imported-salmonella-vidas.
-
    +AuditLogReviewComponent [router target (no resolver), admin only]
-      AuditLogSearchPanel
+      AuditLogSearchPanel (search criteria)
       AuditLogListingComponent
    +AuditLogListingComponent
       [testId]

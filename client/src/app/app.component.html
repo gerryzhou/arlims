@@ -33,7 +33,7 @@
 
 <app-alert-message></app-alert-message>
 
-<div *ngIf="loading" class="spinner-holder">
+<div *ngIf="loading$ | async" class="spinner-holder">
    <div class="spinner"></div>
 </div>
 

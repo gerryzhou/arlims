@@ -1,26 +1,25 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LoadingStatusService, UserContextService} from './shared/services';
-import {Observable, Subscription} from 'rxjs';
-import {ViewTitleService} from './shared/services/view-title.service';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {Observable} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
+
+import {LoadingStatusService, UserContextService} from './shared/services';
+import {ViewTitleService} from './shared/services/view-title.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
-   loading: boolean;
+   loading$: Observable<boolean>;
 
    authenticatedUserShortName$: Observable<string | null>;
    authenticatedUserIsAdmin$: Observable<boolean>;
 
    pageTitle$: Observable<string | null>;
    notLoginView$: Observable<boolean>;
-
-   private loadingStatusSubscription: Subscription;
 
    constructor
       (
@@ -34,8 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const user$ = userCtxSvc.getAuthenticatedUser();
       this.authenticatedUserShortName$ = user$.pipe(map(au => au != null ? au.shortName : null));
       this.authenticatedUserIsAdmin$ = user$.pipe(map(au => au != null && au.roles.includes('ADMIN')));
-      this.loading = false;
-      this.loadingStatusSubscription = loadingStatusService.loadingStatus.subscribe(loading => this.loading = loading);
+      this.loading$ = loadingStatusService.getLoadingStatus();
       this.pageTitle$ = this.viewTitleSvc.titles();
       this.notLoginView$ = this.pageTitle$.pipe(map(title => title !== 'Login'));
    }
@@ -54,11 +52,6 @@ export class AppComponent implements OnInit, OnDestroy {
          mergeMap((route: ActivatedRoute) => route.data)
       )
       .subscribe((data) => this.viewTitleSvc.setTitle(data['title'] || null));
-   }
-
-   ngOnDestroy()
-   {
-      this.loadingStatusSubscription.unsubscribe();
    }
 
    onLogoutClicked()
