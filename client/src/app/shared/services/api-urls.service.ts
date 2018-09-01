@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import {HttpParams} from '@angular/common/http';
+import {Moment} from 'moment';
 
 
 @Injectable({providedIn: 'root'})
@@ -75,7 +76,8 @@ export class ApiUrlsService {
 
    auditLogEntriesQueryUrl
       (
-         dateOrDateRange: string[] | null,
+         fromMoment: Moment | null,
+         toMoment: Moment | null,
          testId: number | null,
          username: string | null,
          includeChangeData: boolean,
@@ -85,8 +87,10 @@ export class ApiUrlsService {
    {
       let searchParams = new HttpParams();
 
-      if ( dateOrDateRange )
-         searchParams = searchParams.append('date', dateOrDateRange[0] + (dateOrDateRange.length === 2 ? '-' + dateOrDateRange[1] : ''));
+      if ( fromMoment )
+         searchParams = searchParams.append('from', fromMoment.toISOString());
+      if ( toMoment )
+         searchParams = searchParams.append('to', toMoment.toISOString());
       if ( testId )
          searchParams = searchParams.append('test', testId.toString());
       if ( username )

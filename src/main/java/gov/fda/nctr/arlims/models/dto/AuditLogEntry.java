@@ -3,7 +3,7 @@ package gov.fda.nctr.arlims.models.dto;
 import java.time.Instant;
 import java.util.Optional;
 
-public class AuditEntry
+public class AuditLogEntry
 {
     private long entryId;
     private Instant timestamp;
@@ -17,7 +17,7 @@ public class AuditEntry
     private Optional<String> objectFromValueJson;
     private Optional<String> objectToValueJson;
 
-    public AuditEntry
+    public AuditLogEntry
         (
             long entryId,
             Instant timestamp,

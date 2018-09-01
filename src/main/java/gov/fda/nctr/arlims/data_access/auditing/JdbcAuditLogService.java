@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,7 +22,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
-import gov.fda.nctr.arlims.models.dto.AuditEntry;
+import gov.fda.nctr.arlims.models.dto.AuditLogEntry;
 
 
 @Service
@@ -29,6 +31,8 @@ public class JdbcAuditLogService implements AuditLogService
     private final JdbcTemplate jdbc;
 
     private final ObjectWriter jsonWriter;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public JdbcAuditLogService(JdbcTemplate jdbcTemplate)
     {
@@ -87,7 +91,7 @@ public class JdbcAuditLogService implements AuditLogService
     }
 
     @Override
-    public List<AuditEntry> getEntries
+    public List<AuditLogEntry> getEntries
         (
             long labGroupId,
             Optional<Long> testId,
@@ -120,7 +124,7 @@ public class JdbcAuditLogService implements AuditLogService
         });
 
         actingUsername.ifPresent(username -> {
-            conds.add("username = ?");
+            conds.add("acting_emp_id in (select e.id from employee e where e.fda_email_account_name = ?)");
             params.add(username);
         });
 
@@ -135,8 +139,8 @@ public class JdbcAuditLogService implements AuditLogService
             "where " + String.join("\nand ", conds) + "\n" +
             "order by timestamp";
 
-        RowMapper<AuditEntry> rowMapper = (row, rowNum) ->
-            new AuditEntry(
+        RowMapper<AuditLogEntry> rowMapper = (row, rowNum) ->
+            new AuditLogEntry(
                 row.getLong(1),
                 row.getTimestamp(2).toInstant(),
                 labGroupId,

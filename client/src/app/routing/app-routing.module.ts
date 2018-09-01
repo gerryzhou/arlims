@@ -46,7 +46,7 @@ const routes: Routes = [
    },
    {
       path: 'audit-log',
-      loadChildren: '../audit-log/audit-log.module#AuditLogModule',
+      loadChildren: '../audit-log-explorer/audit-log-explorer.module#AuditLogExplorerModule',
       data: {title: 'Audit Log'},
       canActivate: [AdminUserGuard],
    },

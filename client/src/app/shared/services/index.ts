@@ -5,3 +5,4 @@ export * from './api-urls.service';
 export * from './window.service';
 export * from './user-context.service';
 export * from './tests.service';
+export * from './audit-log-query.service';

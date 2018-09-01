@@ -1,12 +1,11 @@
-AppComponent:
-  Correct 'Expression has changed after it was checked.' caused by loading$ somehow.
-  Try moving initial query out of constructor.
-  Failing that, try adding a resolver to deliver initial data.
-
 Audit Log
 ---------
-   +AuditLogReviewComponent [router target (no resolver), admin only]
+   +AuditLogReviewComponent
+      table view with columns: who when action object context change-summary-or-link
+        change col: when change data present, list top level differing properties as link, else just link to changes view
+      changeDataPresent: boolean
       AuditLogSearchPanel (search criteria)
+        (all options exposed via service)
       AuditLogListingComponent
    +AuditLogListingComponent
       [testId]

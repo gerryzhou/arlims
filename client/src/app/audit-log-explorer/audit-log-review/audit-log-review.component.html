@@ -1,0 +1,13 @@
+<div class="content-stack">
+
+   <app-audit-log-review-data-options
+      [initialDataOptions]="initialDataOptions"
+      [usernames]="labGroupUsernames$ | async"
+      (optionsChanged)="reloadEntries($event)">
+   </app-audit-log-review-data-options>
+
+   <app-audit-log-entries-table
+      [entries]="logEntries$ | async">
+   </app-audit-log-entries-table>
+
+</div>

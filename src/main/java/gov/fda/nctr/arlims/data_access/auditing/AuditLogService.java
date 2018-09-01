@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import gov.fda.nctr.arlims.models.dto.AuditEntry;
+import gov.fda.nctr.arlims.models.dto.AuditLogEntry;
 
 
 public interface AuditLogService
@@ -29,7 +29,7 @@ public interface AuditLogService
     /// json data passed to addEntry().
     ObjectWriter getJsonWriter();
 
-    List<AuditEntry> getEntries
+    List<AuditLogEntry> getEntries
         (
             long labGroupId,
             Optional<Long> testId,
