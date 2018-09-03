@@ -14,11 +14,12 @@ import {
 import {AuditLogExplorerRoutingModule} from './audit-log-explorer-routing.module';
 import {AuditLogReviewInitialDataResolver} from './audit-log-review/audit-log-review-initial-data.resolver';
 import {AuditLogReviewComponent} from './audit-log-review/audit-log-review.component';
-import {AuditLogEntriesTableComponent} from './audit-log-entries-table/audit-log-entries-table.component';
 import {DataOptionsComponent} from './audit-log-review/data-options-panel/data-options.component';
+import {CommonComponentsModule} from '../common-components/common-components.module';
 
 @NgModule({
    imports: [
+      CommonModule,
       FormsModule,
       ReactiveFormsModule,
       MatInputModule,
@@ -29,13 +30,12 @@ import {DataOptionsComponent} from './audit-log-review/data-options-panel/data-o
       MatDatepickerModule,
       MatMenuModule,
       //
-      CommonModule,
+      CommonComponentsModule,
       AuditLogExplorerRoutingModule,
    ],
    declarations: [
       AuditLogReviewComponent,
       DataOptionsComponent,
-      AuditLogEntriesTableComponent,
    ],
    providers: [
       AuditLogReviewInitialDataResolver,

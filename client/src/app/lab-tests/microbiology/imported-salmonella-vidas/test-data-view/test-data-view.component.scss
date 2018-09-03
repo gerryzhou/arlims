@@ -18,6 +18,12 @@
    margin: 10px 20px;
 }
 
+.audit-log {
+   display: flex;
+   flex-flow: column nowrap;
+   margin: 25px;
+}
+
 form {
    margin: 5px;
 }

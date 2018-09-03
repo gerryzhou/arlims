@@ -1,8 +1,6 @@
 import {FormGroup} from '@angular/forms';
 import {isEmptyString} from './microbiology/imported-salmonella-vidas/test-data';
 import {MatDialog, MatDialogConfig} from '@angular/material';
-import {TemplateRef} from '@angular/core';
-import {ComponentType} from '@angular/cdk/portal';
 import {ResourceCodesDialogResult} from '../common-components/resource-codes-dialog/resource-codes-dialog-result';
 import {AlertMessageService} from '../shared/services/alerts';
 import {ResourceCodesDialogComponent} from '../common-components/resource-codes-dialog/resource-codes-dialog.component';

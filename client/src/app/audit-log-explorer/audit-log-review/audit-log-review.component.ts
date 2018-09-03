@@ -4,9 +4,9 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {UserContextService, AuditLogQueryService} from '../../shared/services';
-import {AuditLogEntry} from '../../../generated/dto';
 import {AuditLogDataOptions} from './audit-log-data-options';
 import {AuditLogReviewInitialData} from './audit-log-review-initial-data.resolver';
+import {AnalyzedAuditLogEntry} from '../../common-components/audit-log-entry/analyzed-audit-log-entry';
 
 @Component({
    selector: 'app-audit-log-review',
@@ -16,7 +16,7 @@ import {AuditLogReviewInitialData} from './audit-log-review-initial-data.resolve
 })
 export class AuditLogReviewComponent
 {
-   logEntries$: BehaviorSubject<AuditLogEntry[]>;
+   analyzedAuditLogEntries$: BehaviorSubject<AnalyzedAuditLogEntry[]>;
 
    labGroupUsernames$: Observable<string[]>;
 
@@ -33,7 +33,7 @@ export class AuditLogReviewComponent
 
       this.initialDataOptions = dataOptions;
 
-      this.logEntries$ = new BehaviorSubject(entries);
+      this.analyzedAuditLogEntries$ = new BehaviorSubject(entries.map(e => new AnalyzedAuditLogEntry(e)));
 
       this.labGroupUsernames$ = userCtxSvc.getLabGroupContents().pipe(
          map(lgc => lgc.memberUsers.map(uref => uref.username))
@@ -51,7 +51,7 @@ export class AuditLogReviewComponent
          dataOptions.includeUnchangedSaves
       )
       .subscribe(entries => {
-         this.logEntries$.next(entries);
+         this.analyzedAuditLogEntries$.next(entries.map(e => new AnalyzedAuditLogEntry(e)));
       });
    }
 }

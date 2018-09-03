@@ -48,6 +48,64 @@ export function copyWithoutUnchangedAtomicDataVsReference(obj, refObj)
    return res;
 }
 
+type FieldDiffType = 'new' | 'updated' | 'removed';
+
+export interface AtomicValueDiff
+{
+   path: string;
+   diffType: FieldDiffType;
+   fromValue?: any;
+   toValue?: any;
+}
+
+export function atomicValuesDiffList
+   (
+      fromObj: any,
+      toObj: any,
+      path: string = '',
+   )
+   : AtomicValueDiff[]
+{
+   if ( !fromObj && !toObj )
+      return [];
+
+   if ( fromObj && isAtomicValue(fromObj) )
+   {
+      if ( !toObj )
+         return [{path, diffType: 'removed', fromValue: fromObj, toValue: toObj}];
+      else if ( !isAtomicValue(toObj) )
+         throw new Error(`values at path ${path} are not comparable`);
+      else
+         return atomicValueEquals(fromObj, toObj) ? []
+            : [{path, diffType: 'updated', fromValue: fromObj, toValue: toObj}];
+   }
+
+   if ( toObj && isAtomicValue(toObj) )
+   {
+      if ( !fromObj )
+         return [{path, diffType: 'new', fromValue: fromObj, toValue: toObj}];
+      else // fromObj can't be an atomic value here, would have already returned above in that case
+         throw new Error(`values at path ${path} are not comparable`);
+   }
+
+   // From here neither object is atomic, but one (at most) may be null/undefined.
+
+   const res = [];
+
+   unionKeys(fromObj, toObj).forEach(key => {
+      const fromVal = fromObj ? fromObj[key] : undefined;
+      const toVal = toObj ? toObj[key] : undefined;
+
+      if ( !isFunction(fromVal) && !isFunction(toVal) )
+      {
+         const pathWithKey = path ? path + '/' + key : key;
+         res.push(...this.atomicValuesDiffList(fromVal, toVal, pathWithKey));
+      }
+   });
+
+   return res;
+}
+
 // "Atomic" values here means those that we won't look within to find further differences of its parts vs another such value.
 function isAtomicValue(obj): boolean
 {
@@ -213,13 +271,10 @@ export function mergeValues(toObj, fromObj, allowReplacingExistingAtomicValues =
          {
             if (!isAtomicValue(toObj[k]))
             {
-               console.log('Merge error: ', fromVal , '===>|', toObj[k]);
                throw new MergeError(`Will not replace a non-atomic value ${toObj[k]} with an atomic value ${fromVal} in merge operation.`);
             }
             if (!allowReplacingExistingAtomicValues)
             {
-               console.dir(toObj);
-               console.dir(fromObj);
                throw new MergeError(`Merge operation would have overwritten an existing atomic value for key '${k}'.`);
             }
          }
@@ -248,3 +303,15 @@ export class MergeError extends Error {
       Object.setPrototypeOf(this, MergeError.prototype);
    }
 }
+
+
+function unionKeys(fromObj: any, toObj: any): Set<string>
+{
+   const keysUnion = new Set<string>();
+   if (fromObj)
+      Object.keys(fromObj).forEach(key => keysUnion.add(key));
+   if (toObj)
+      Object.keys(toObj).forEach(key => keysUnion.add(key));
+   return keysUnion;
+}
+

@@ -4,12 +4,13 @@ import {FormGroup} from '@angular/forms';
 
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {LabResource} from '../../../../../generated/dto';
+import {AuditLogEntry, LabResource} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, makeTestDataFormGroup} from '../test-data';
 import {TestConfig} from '../test-config';
 import {makeSampleTestUnits} from '../../sampling-methods';
 import {UserContextService} from '../../../../shared/services';
+import {AnalyzedAuditLogEntry} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
 
 @Component({
    selector: 'app-micro-imp-slm-vidas-test-data-view',
@@ -36,12 +37,15 @@ export class TestDataViewComponent implements OnInit {
    readonly waterBaths: LabResource[] | undefined;
    readonly vidasInstruments: LabResource[] | undefined;
 
+   readonly analyzedAuditLogEntries: AnalyzedAuditLogEntry[];
+
    constructor
        (
           private activatedRoute: ActivatedRoute,
        )
    {
       const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
+
       const verTestData = labGroupTestData.versionedTestData;
       const testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       this.testDataForm = makeTestDataFormGroup(testData);
@@ -62,6 +66,10 @@ export class TestDataViewComponent implements OnInit {
 
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;
+
+      this.analyzedAuditLogEntries = labGroupTestData.auditLogEntries ?
+         labGroupTestData.auditLogEntries.map(e => new AnalyzedAuditLogEntry(e))
+         : [];
    }
 
    ngOnInit() {}

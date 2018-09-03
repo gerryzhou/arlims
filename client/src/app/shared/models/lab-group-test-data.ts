@@ -1,5 +1,5 @@
 import {SampleInTest} from './sample-in-test';
-import {LabResource, VersionedTestData} from '../../../generated/dto';
+import {AuditLogEntry, LabResource, VersionedTestData} from '../../../generated/dto';
 
 /** Versioned test data with sample and test metadata, and optional configuration and managed resources from the owning lab group. */
 export interface LabGroupTestData {
@@ -11,4 +11,6 @@ export interface LabGroupTestData {
    labGroupTestConfig: any;
 
    labResourcesByType: Map<string, LabResource[]>;
+
+   auditLogEntries?: AuditLogEntry[] | null;
 }

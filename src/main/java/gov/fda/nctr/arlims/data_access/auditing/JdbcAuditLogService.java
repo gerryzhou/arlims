@@ -150,8 +150,8 @@ public class JdbcAuditLogService implements AuditLogService
                 row.getString(6),
                 row.getString(7),
                 Optional.ofNullable(row.getString(8)),
-                includeChangeData ? Optional.of(row.getString(9)) : Optional.empty(),
-                includeChangeData ? Optional.of(row.getString(10)) : Optional.empty()
+                includeChangeData ? Optional.ofNullable(row.getString(9)) : Optional.empty(),
+                includeChangeData ? Optional.ofNullable(row.getString(10)) : Optional.empty()
             );
 
         return jdbc.query(sql, params.toArray(), rowMapper);

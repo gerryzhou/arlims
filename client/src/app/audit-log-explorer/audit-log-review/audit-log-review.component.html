@@ -6,8 +6,11 @@
       (optionsChanged)="reloadEntries($event)">
    </app-audit-log-review-data-options>
 
-   <app-audit-log-entries-table
-      [entries]="logEntries$ | async">
-   </app-audit-log-entries-table>
+   <div class="entries-list">
+      <app-audit-log-entry *ngFor="let entry of analyzedAuditLogEntries$ | async"
+         [analyzedEntry]="entry"
+         [showTestMetadata]="true">
+      </app-audit-log-entry>
+   </div>
 
 </div>

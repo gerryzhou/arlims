@@ -1,0 +1,27 @@
+<!--TODO: Customize the styling here. -->
+
+<div>
+   {{entry.timestamp | date: 'MMM d h:mm a'}}
+</div>
+<div>
+   {{entry.actingUsername}}
+</div>
+<div>
+   {{entry.action}}
+</div>
+<div>
+   {{entry.objectType}}
+</div>
+<div *ngIf="showTestMetadata">
+   {{entry.objectContextMetadataJson | json}}
+</div>
+
+<div *ngIf="testDataValueDiffs">
+   <div *ngFor="let valueDiff of testDataValueDiffs">
+      {{valueDiff.path}}
+      {{valueDiff.diffType}}
+      {{valueDiff.fromValue}}
+      {{valueDiff.toValue}}
+   </div>
+</div>
+

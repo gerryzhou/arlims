@@ -8,14 +8,14 @@ import {TestDataEntryConfirmDeactivateGuard} from './test-data-entry-confirm-dea
 
 const routes: Routes = [
    {
-      path: 'test-data-entry/:testId',
+      path: 'test-data-analyzedEntry/:testId',
       component: StagedTestDataEntryComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {title: 'Imported SLM Vidas Test Data Entry'},
       canDeactivate: [TestDataEntryConfirmDeactivateGuard],
    },
    {
-      path: 'test-data-entry/:testId/stage/:stage',
+      path: 'test-data-analyzedEntry/:testId/stage/:stage',
       component: StagedTestDataEntryComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {title: 'Imported SLM Vidas Test Data Entry'},
@@ -25,7 +25,10 @@ const routes: Routes = [
       path: 'test-data-view/:testId',
       component: TestDataViewComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
-      data: {title: 'Imported SLM Vidas Test Data Review'},
+      data: {
+         title: 'Imported SLM Vidas Test Data Review',
+         includeAuditLogEntries: true, // tell resolver to also load audit log entries
+      },
    },
 ];
 

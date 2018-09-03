@@ -1,22 +1,28 @@
+Write unit tests for atomicValuesDiffList().
+
+In AuditLogEntryComponent and TestDataViewComponent, make AnalyzedAuditLogEntry[] from AuditLogEntry[].
+
+
+AuditLogEntryComponent
+  Decide where test data diffing is done.
+    Too expensive to do in the component itself, so @Input needs to already contain the diff.
+
+AuditLogEntryComponent
+  @Input auditLogEntry
+  onChanges
+    Compute changed fields with from/to values by json path.
+  Display list of all changed values, organized by stage, in standard stage order.
+
 Audit Log
 ---------
-   +AuditLogReviewComponent
-      table view with columns: who when action object context change-summary-or-link
-        change col: when change data present, list top level differing properties as link, else just link to changes view
-      changeDataPresent: boolean
-      AuditLogSearchPanel (search criteria)
-        (all options exposed via service)
-      AuditLogListingComponent
-   +AuditLogListingComponent
-      [testId]
-      [startTimestamp]
-      [endTimestamp]
-      [changeTypes]
-      [changeTargets]
-      [users]
++AuditLogEntriesTableComponent
+  Summarize changes by listing changed top level properties (e.g. "preEnrData" as "Pre Enr").
+  Change details link includes test type so it can be routed to the proper test module.
+    Route to this view relative to test module is standardized here, e.g. as
+      <test-type>/audit-log-entry-view
+    Each test module should route audit-log-entry-view to its test-specific log entry viewer.
 
-  Add audit log listing page for admins.
-  Append audit log listing component (reused from above) to end of test data report.
+Append audit log listing component (reused from above) to end of test data report.
 
 Vidas Results Grid
    Mirror num slots in vidas in Vidas stage results.

@@ -1,17 +1,30 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Observable, throwError, zip} from 'rxjs';
+import {Observable, throwError, zip, of as obsof} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
-import {TestsService, UserContextService} from '../shared/services';
+import {AuditLogQueryService, TestsService, UserContextService} from '../shared/services';
 import {LabGroupTestData} from '../shared/models/lab-group-test-data';
+import {AuditLogEntry} from '../../generated/dto';
 
 
 @Injectable({providedIn: 'root'})
 export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
 
-   constructor(private testsService: TestsService, private usrCtxSvc: UserContextService) {}
+   constructor
+      (
+         private testsService: TestsService,
+         private usrCtxSvc: UserContextService,
+         private auditLogSvc: AuditLogQueryService,
+      )
+   {}
 
-   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LabGroupTestData> {
+   resolve
+      (
+         route: ActivatedRouteSnapshot,
+         state: RouterStateSnapshot
+      )
+      : Observable<LabGroupTestData>
+   {
       const testId = +route.paramMap.get('testId');
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
@@ -26,10 +39,22 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       );
       const labResourcesByType$ = this.usrCtxSvc.getLabResourcesByType();
 
-      return zip(verTestData$, sampleInTest$, testConfig$, labResourcesByType$).pipe(
-         map(([versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType]) => (
-            { versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType }
-         ))
+      const auditLogEntries$: Observable<AuditLogEntry[] | null> =
+         !!route.data['includeAuditLogEntries'] ? this.auditLogSvc.getEntriesForTest(testId) : obsof(null);
+
+      return (
+         zip(
+            verTestData$,
+            sampleInTest$,
+            testConfig$,
+            labResourcesByType$,
+            auditLogEntries$,
+         )
+         .pipe(
+            map(([versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries]) =>
+               ({ versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries })
+            )
+         )
       );
    }
 }

@@ -5,7 +5,7 @@ import {
    copyWithoutUnchangedAtomicDataVsReference,
    MergeError,
    partitionLeftChangedAndNewValuesVsRefByConflictWithRights,
-   cloneDataObject,
+   cloneDataObject, atomicValuesDiffList,
 } from './data-objects';
 
 
@@ -431,156 +431,128 @@ describe('cloneDataObject function', () => {
    });
 });
 
-/*
-describe('ObjectDiffer', () => {
+describe('atomicValuesDiffList function', () => {
 
-   it('should compare simple top-level values properly when including all comparison result types', () => {
-      const differ = new ObjectDiffer();
-      const diff: any = differ.diffObjects(objA, objB);
-      expect(diff.commonString.type).toBe('updated');
-      expect(diff.commonString.data).toBe('B value');
-      expect(diff.commonStringCommonVal.type).toBe('unchanged');
-      expect(diff.commonStringCommonVal.data).toBe('common value');
-      expect(diff.stringOnlyInObjA.type).toBe('deleted');
-      expect(diff.stringOnlyInObjA.data).toBe('val-A');
-      expect(diff.stringOnlyInObjB.type).toBe('created');
-      expect(diff.stringOnlyInObjB.data).toBe('val-B');
-      expect(diff.commonDateField.type).toBe('updated');
-      expect(diff.commonDateField.data.getTime()).toBe(new Date(2011, 1, 1, 1, 1, 1, 1).getTime());
-      expect(diff.commonDateFieldCommonValue.type).toBe('unchanged');
-      expect(diff.commonDateFieldCommonValue.data.getTime()).toBe(new Date(2018, 7, 18, 8, 30, 23, 100).getTime());
-      expect(diff.dateOnlyInObjB.type).toBe('created');
-      expect(diff.dateOnlyInObjB.data.getTime()).toBe(new Date(2011, 1, 1, 1, 1, 1, 1).getTime());
-      expect(diff.commonBoolean.type).toBe('updated');
-      expect(diff.commonBoolean.data).toBe(true);
-      expect(diff.booleanOnlyInObjB.type).toBe('created');
-      expect(diff.booleanOnlyInObjB.data).toBe(true);
-
-      expect(Object.keys(diff).length === 9);
+   it('should yield empty list when both sides null or undefined', () => {
+      expect(atomicValuesDiffList(undefined, undefined)).toEqual([]);
    });
 
-   it('should compare nested values properly when including all comparison result types', () => {
-      const nestedA = {
-         commonObjField: objA
-      };
-      const nestedB = {
-         commonObjField: objB
-      };
-      const differ = new ObjectDiffer();
-      const diff: any = differ.diffObjects(nestedA, nestedB);
-
-      const commonObjDiff = diff.commonObjField;
-      expect(commonObjDiff).toBeTruthy();
-      expect(commonObjDiff.commonString.type).toBe('updated');
-      expect(commonObjDiff.commonString.data).toBe('B value');
-      expect(commonObjDiff.commonStringCommonVal.type).toBe('unchanged');
-      expect(commonObjDiff.commonStringCommonVal.data).toBe('common value');
-      expect(commonObjDiff.stringOnlyInObjA.type).toBe('deleted');
-      expect(commonObjDiff.stringOnlyInObjA.data).toBe('val-A');
-      expect(commonObjDiff.stringOnlyInObjB.type).toBe('created');
-      expect(commonObjDiff.stringOnlyInObjB.data).toBe('val-B');
-      expect(commonObjDiff.commonDateField.type).toBe('updated');
-      expect(commonObjDiff.commonDateField.data.getTime()).toBe(new Date(2011, 1, 1, 1, 1, 1, 1).getTime());
-      expect(commonObjDiff.commonDateFieldCommonValue.type).toBe('unchanged');
-      expect(commonObjDiff.commonDateFieldCommonValue.data.getTime()).toBe(new Date(2018, 7, 18, 8, 30, 23, 100).getTime());
-      expect(commonObjDiff.dateOnlyInObjB.type).toBe('created');
-      expect(commonObjDiff.dateOnlyInObjB.data.getTime()).toBe(new Date(2011, 1, 1, 1, 1, 1, 1).getTime());
-      expect(commonObjDiff.commonBoolean.type).toBe('updated');
-      expect(commonObjDiff.commonBoolean.data).toBe(true);
-      expect(commonObjDiff.booleanOnlyInObjB.type).toBe('created');
-      expect(commonObjDiff.booleanOnlyInObjB.data).toBe(true);
-
-      expect(Object.keys(diff).length === 1);
-      expect(Object.keys(commonObjDiff).length === 9);
+   it('should yield empty list when inputs are same number', () => {
+      expect(atomicValuesDiffList(10, 10)).toEqual([]);
    });
 
-   it('should compare nested values properly when including result types other than unchanged', () => {
-      const nestedA = {
-         commonObjField: objA
-      };
-      const nestedB = {
-         commonObjField: objB
-      };
-      const differ = new ObjectDiffer();
-      const diff: any = differ.diffObjects(nestedA, nestedB, ObjectDiffer.OMIT_UNCHANGED);
-
-      const commonObjDiff = diff.commonObjField;
-      expect(commonObjDiff).toBeTruthy();
-      expect(commonObjDiff.commonString.type).toBe('updated');
-      expect(commonObjDiff.commonString.data).toBe('B value');
-      expect(commonObjDiff.stringOnlyInObjA.type).toBe('deleted');
-      expect(commonObjDiff.stringOnlyInObjA.data).toBe('val-A');
-      expect(commonObjDiff.stringOnlyInObjB.type).toBe('created');
-      expect(commonObjDiff.stringOnlyInObjB.data).toBe('val-B');
-      expect(commonObjDiff.commonDateField.type).toBe('updated');
-      expect(commonObjDiff.commonDateField.data.getTime()).toBe(new Date(2011, 1, 1, 1, 1, 1, 1).getTime());
-      expect(commonObjDiff.dateOnlyInObjB.type).toBe('created');
-      expect(commonObjDiff.dateOnlyInObjB.data.getTime()).toBe(new Date(2011, 1, 1, 1, 1, 1, 1).getTime());
-      expect(commonObjDiff.commonBoolean.type).toBe('updated');
-      expect(commonObjDiff.commonBoolean.data).toBe(true);
-      expect(commonObjDiff.booleanOnlyInObjB.type).toBe('created');
-      expect(commonObjDiff.booleanOnlyInObjB.data).toBe(true);
-
-      expect(Object.keys(diff).length === 1);
-      expect(Object.keys(commonObjDiff).length === 7);
+   it('should yield empty list when inputs are same date', () => {
+      const now = new Date();
+      expect(atomicValuesDiffList(now, now)).toEqual([]);
    });
 
-   it('should properly eliminate equal nested values from output when not including unchanged', () => {
-      const nestedA = {
-         a: {
-            b: 1,
-            c: {
-               d: 2,
-               e: 3
-            }
-         }
-      };
-      const nestedB = {
-         a: {
-            b: 1,
-            c: {
-               d: 2,
-               e: 3
-            }
-         }
-      };
-
-      const differ = new ObjectDiffer();
-      const diff: any = differ.diffObjects(nestedA, nestedB, ObjectDiffer.OMIT_UNCHANGED);
-
-      expect(Object.keys(diff).length === 0);
+   it('should yield empty list when inputs are same string', () => {
+      expect(atomicValuesDiffList('hello', 'hello')).toEqual([]);
    });
 
-   it('should properly eliminate equal parts of nested values from output when not including unchanged', () => {
-      const nestedA = {
-         a: {
-            b: 1,
-            c: {
-               d: 2,
-               e: 3
-            }
-         }
-      };
-      const nestedB = {
-         a: {
-            b: 1,
-            c: {
-               d: 2,
-               e: 4
-            }
-         }
-      };
+   it('should yield empty list when inputs are same array value', () => {
+      expect(atomicValuesDiffList([1, 2], [1, 2])).toEqual([]);
+   });
 
-      const differ = new ObjectDiffer();
-      const diff: any = differ.diffObjects(nestedA, nestedB, ObjectDiffer.OMIT_UNCHANGED);
+   it('should yield empty list when both inputs are empty objects', () => {
+      expect(atomicValuesDiffList({}, {})).toEqual([]);
+   });
 
-      // Only a.c.e should be defined.
-      expect(Object.keys(diff).length === 1);
-      expect(Object.keys(diff.a).length === 1);
-      expect(Object.keys(diff.a.c).length === 1);
-      expect(diff.a.c.e.type).toBe('updated');
-      expect(diff.a.c.e.data).toBe(4);
+   it('should yield empty list when objects have nested content and have same contents', () => {
+      const now = new Date();
+      const a = {a: {aa: 1, ab: now}, b: {ba: 'yes', bb: [1, 2]}};
+      const b = {a: {aa: 1, ab: now}, b: {ba: 'yes', bb: [1, 2]}};
+      expect(atomicValuesDiffList(a, b)).toEqual([]);
+   });
+
+   it('should yield \'new\' diff record when resp. values are undefined and a number', () => {
+      expect(atomicValuesDiffList(undefined, 2)).toEqual(
+         [ { path: '', diffType: 'new', fromValue: undefined, toValue: 2} ]
+      );
+   });
+
+   it('should yield \'removed\' diff record when resp. values are a number and undefined', () => {
+      expect(atomicValuesDiffList(2, undefined)).toEqual(
+         [ { path: '', diffType: 'removed', fromValue: 2, toValue: undefined} ]
+      );
+   });
+
+   it('should yield \'updated\' diff record when resp. values are two different numbers', () => {
+      expect(atomicValuesDiffList(2, 3)).toEqual(
+         [ { path: '', diffType: 'updated', fromValue: 2, toValue: 3} ]
+      );
+   });
+
+   it('should yield empty list when objects are simple and have same contents', () => {
+      const now = new Date();
+      const a = {a: 1, b: now, c: 'yes', d: [1, 2]};
+      const b = {a: 1, b: now, c: 'yes', d: [1, 2]};
+      expect(atomicValuesDiffList(a, b)).toEqual([]);
+   });
+
+   it('should yield \'updated\' record for top level numeric field difference', () => {
+      const now = new Date();
+      const a = {a: 1, b: now, c: 'yes', d: [1, 2]};
+      const b = {a: 2, b: now, c: 'yes', d: [1, 2]};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'a', diffType: 'updated', fromValue: 1, toValue: 2}
+      ]);
+   });
+
+   it('should yield \'updated\' record for top level string field difference', () => {
+      const now = new Date();
+      const a = {a: 1, b: now, c: 'yes', d: [1, 2]};
+      const b = {a: 1, b: now, c: 'no', d: [1, 2]};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'c', diffType: 'updated', fromValue: 'yes', toValue: 'no'}
+      ]);
+   });
+
+   it('should yield \'new\' record for new top level string field', () => {
+      const now = new Date();
+      const a = {a: 1, b: now, c: 'yes', d: [1, 2]};
+      const b = {a: 1, b: now, c: 'yes', d: [1, 2], e: 'hey!'};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'e', diffType: 'new', fromValue: undefined, toValue: 'hey!'}
+      ]);
+   });
+
+   it('should yield \'new\' records for new top level date and string fields', () => {
+      const now = new Date();
+      const a = {a: 1, c: 'yes', d: [1, 2]};
+      const b = {a: 1, c: 'yes', d: [1, 2], e: 'hey!', b: now};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'e', diffType: 'new', fromValue: undefined, toValue: 'hey!'},
+         { path: 'b', diffType: 'new', fromValue: undefined, toValue: now}
+      ]);
+   });
+
+   it('should yield proper \'new\' diff record for nested values', () => {
+      const now = new Date();
+      const a = {a: 1, b: {c: 1, d: [1, 2]}};
+      const b = {a: 1, b: {c: 1, d: [1, 2], e: 'hey!'}};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'b/e', diffType: 'new', fromValue: undefined, toValue: 'hey!'},
+      ]);
+   });
+
+   it('should yield proper \'removed\' diff record for nested values', () => {
+      const now = new Date();
+      const a = {a: 1, b: {c: 1, d: [1, 2], e: 'hey!'}};
+      const b = {a: 1, b: {c: 1, d: [1, 2]}};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'b/e', diffType: 'removed', fromValue: 'hey!', toValue: undefined},
+      ]);
+   });
+
+   it('should yield proper \'updated\' diff record for nested string updates', () => {
+      const now = new Date();
+      const a = {a: 1, b: {c: 1, d: [1, 2], e: 'hey-1'}};
+      const b = {a: 1, b: {c: 1, d: [1, 2], e: 'hey-2'}};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'b/e', diffType: 'updated', fromValue: 'hey-1', toValue: 'hey-2'},
+      ]);
    });
 
 });
-*/
+

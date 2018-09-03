@@ -1,5 +1,5 @@
 import {FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
-import {SampleTestUnits, SamplingMethod} from '../sampling-methods';
+import {SamplingMethod} from '../sampling-methods';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 
 export interface TestData {
