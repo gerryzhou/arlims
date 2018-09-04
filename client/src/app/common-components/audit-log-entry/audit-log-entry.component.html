@@ -1,27 +1,38 @@
-<!--TODO: Customize the styling here. -->
+<mat-card class="entry">
+   <mat-card-content>
 
-<div>
-   {{entry.timestamp | date: 'MMM d h:mm a'}}
-</div>
-<div>
-   {{entry.actingUsername}}
-</div>
-<div>
-   {{entry.action}}
-</div>
-<div>
-   {{entry.objectType}}
-</div>
-<div *ngIf="showTestMetadata">
-   {{entry.objectContextMetadataJson | json}}
-</div>
+      <div class="entry-md">
+         <span class="action-object">
+            {{analyzedEntry.entry.action + ' ' + analyzedEntry.entry.objectType | uppercase}}
+         </span>
+         <span class="user"><mat-icon>person_outline</mat-icon> {{analyzedEntry.entry.actingUsername}}</span>
+         <span class="entry-timestamp"><mat-icon>access_time</mat-icon> {{analyzedEntry.entry.timestamp | date: 'MMM d h:mm a'}}</span>
+      </div>
 
-<div *ngIf="testDataValueDiffs">
-   <div *ngFor="let valueDiff of testDataValueDiffs">
-      {{valueDiff.path}}
-      {{valueDiff.diffType}}
-      {{valueDiff.fromValue}}
-      {{valueDiff.toValue}}
-   </div>
-</div>
+      <div class="sample-test-details-grid">
 
+         <b class="sample-md-label" *ngIf="showSampleMetadata && hasSampleMetadata">Sample</b>
+         <div class="sample-md" *ngIf="showSampleMetadata && hasSampleMetadata">
+            <span class="sample-num">{{sampleNum}}</span>
+            <span class="product-name">{{sampleProductName}}</span>
+            <span class="sample-org" *ngIf="sampleOrg">( {{sampleOrg}} )</span>
+            <span class="sample-pac" *ngIf="samplePac">PAC: {{samplePac}}</span>
+            <span class="sample-paf" *ngIf="samplePaf">PAF: {{samplePaf}}</span>
+            <span class="sample-lid" *ngIf="sampleLid">LID: {{sampleLid}}</span>
+         </div>
+
+         <b class="test-md-label" *ngIf="showTestMetadata && hasTestMetadata">Test</b>
+         <div class="test-md" *ngIf="showTestMetadata && hasTestMetadata">
+            <span class="test-type">{{testTypeShortName}}</span>
+            <span class="test-begin-date">Begin date: {{testBeginDate | date: 'MMM d h:mm a'}}</span>
+         </div>
+
+         <b class="data-changes-label" *ngIf="analyzedEntry.dataFieldDiffs">Data changes</b>
+         <app-data-field-diffs class="data-changes" *ngIf="analyzedEntry.dataFieldDiffs"
+            [dataFieldDiffs]="analyzedEntry.dataFieldDiffs">
+         </app-data-field-diffs>
+
+      </div> <!-- sample details grid -->
+
+   </mat-card-content>
+</mat-card>

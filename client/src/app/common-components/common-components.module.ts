@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+import {RouterModule} from '@angular/router';
 
 import {SampleComponent} from './sample/sample.component';
 import {TestMetadataComponent} from './test-metadata/test-metadata.component';
@@ -20,11 +20,11 @@ import {DayNumberPipe} from './day-number.pipe';
 import {NewTestDialogComponent} from './new-test-dialog/new-test-dialog.component';
 import {ConflictingFieldValueComponent} from './conflicting-field-value/conflicting-field-value.component';
 import {FieldAssignedResourcesComponent} from './field-assigned-resources/field-assigned-resources.component';
-import { ResourceCodesDialogComponent } from './resource-codes-dialog/resource-codes-dialog.component';
+import {ResourceCodesDialogComponent} from './resource-codes-dialog/resource-codes-dialog.component';
 import {FilesSelectorComponent} from './files-selector/files-selector.component';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import { AuditLogEntryComponent } from './audit-log-entry/audit-log-entry.component';
-import {AuditLogEntry} from '../../generated/dto';
+import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component';
+import {AuditLogEntryComponent} from './audit-log-entry/audit-log-entry.component';
+import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.component';
 
 @NgModule({
    imports: [
@@ -54,6 +54,7 @@ import {AuditLogEntry} from '../../generated/dto';
       FilesSelectorComponent,
       ConfirmDialogComponent,
       AuditLogEntryComponent,
+      DataFieldDiffsComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
@@ -66,10 +67,14 @@ import {AuditLogEntry} from '../../generated/dto';
       TestMetadataComponent,
       TestStageStatusComponent,
       DayNumberPipe,
+      NewTestDialogComponent,
       ConflictingFieldValueComponent,
       FieldAssignedResourcesComponent,
+      ResourceCodesDialogComponent,
       FilesSelectorComponent,
+      ConfirmDialogComponent,
       AuditLogEntryComponent,
+      DataFieldDiffsComponent,
    ],
 })
 export class CommonComponentsModule { }

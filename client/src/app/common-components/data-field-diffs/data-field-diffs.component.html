@@ -1,0 +1,22 @@
+<div *ngFor="let parentPathFieldDiffs of parentPathFieldDiffss">
+   <span class="parent-path">{{parentPathFieldDiffs.fieldsParentPath}}</span>
+   <table class="diffs-table">
+      <tr *ngFor="let fieldDiff of parentPathFieldDiffs.fieldDiffs">
+         <td>
+            <span class="field-name">{{fieldDiff.fieldName}}</span>
+         </td>
+         <td>
+            <span class="diff-type">{{fieldDiff.diffType | uppercase }}</span>
+         </td>
+         <td>
+            <span class="from-value" *ngIf="fieldDiff.diffType !== 'new'">{{fieldDiff.fromValue}}</span>
+         </td>
+         <td>
+            <mat-icon *ngIf="fieldDiff.diffType === 'updated'">arrow_forward</mat-icon>
+         </td>
+         <td>
+            <span class="to-value" *ngIf="fieldDiff.diffType !== 'removed'">{{fieldDiff.toValue}}</span>
+         </td>
+      </tr>
+   </table>
+</div>

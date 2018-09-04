@@ -1,0 +1,131 @@
+mat-card.entry {
+   margin: 10px;
+}
+
+.entry-md {
+   display: grid;
+   grid-template-columns: 1fr 1fr 1fr;
+   grid-gap: 10px;
+   margin-bottom: 15px;
+}
+
+.action-object {
+   grid-row: 1;
+   grid-column: 1;
+   align-items: flex-start;
+   margin-right: 10px;
+   padding: 10px;
+   border: 2px solid #555;
+   font-weight: bold;
+   color: black;
+   background: #eee;
+}
+
+.user {
+   grid-row: 1;
+   grid-column: 2;
+   display: flex;
+   align-items: center;
+   margin: 0 10px;
+   padding: 7px 10px;
+   mat-icon {
+      margin-right: 5px;
+   }
+}
+
+.entry-timestamp {
+   grid-row: 1;
+   grid-column: 3;
+   display: flex;
+   align-items: center;
+   justify-content: flex-end;
+   margin-left: 10px;
+   mat-icon {
+      margin-right: 5px;
+   }
+}
+
+.sample-test-details-grid {
+   display: grid;
+   grid-template-columns: auto 1fr;
+   grid-gap: 10px;
+   align-items: center;
+}
+
+.sample-md-label {
+   grid-row: 1;
+   grid-column: 1;
+   align-self: start;
+   margin-right: 20px;
+   margin-top: 15px;
+}
+
+.sample-md {
+   grid-row: 1;
+   grid-column: 2;
+   margin: 15px 15px 15px 0;
+}
+
+.sample-num {
+   font-weight: bold;
+   font-size: 110%;
+   padding: 2px 5px;
+   color: lightgray;
+   background-color: darkblue;
+   margin-right: 10px;
+}
+
+.product-name {
+   font-weight: bold;
+   font-size: 110%;
+   margin: 0 10px;
+}
+
+.sample-org {
+   color: darkgray;
+   margin: 0 10px;
+}
+
+.sample-pac, .sample-paf, .sample-lid {
+   color: darkgray;
+   margin: 0 10px;
+}
+
+.test-md-label {
+   grid-row: 2;
+   grid-column: 1;
+   align-self: start;
+   margin-right: 20px;
+   margin-top: 10px;
+}
+
+.test-md {
+   grid-row: 2;
+   grid-column: 2;
+   display: flex;
+   align-items: center;
+   margin-bottom: 15px;
+}
+
+.test-type {
+   padding: 5px;
+   width: unset !important;
+   margin-right: 10px;
+}
+
+.test-begin-date {
+   margin: 0 10px;
+}
+
+.data-changes-label {
+   grid-row: 3;
+   grid-column: 1;
+   margin-right: 20px;
+   align-self: start;
+}
+
+.data-changes {
+   grid-row: 3;
+   grid-column: 2;
+}
+

@@ -48,9 +48,9 @@ export function copyWithoutUnchangedAtomicDataVsReference(obj, refObj)
    return res;
 }
 
-type FieldDiffType = 'new' | 'updated' | 'removed';
+export type FieldDiffType = 'new' | 'updated' | 'removed';
 
-export interface AtomicValueDiff
+export interface DataFieldDiff
 {
    path: string;
    diffType: FieldDiffType;
@@ -64,7 +64,7 @@ export function atomicValuesDiffList
       toObj: any,
       path: string = '',
    )
-   : AtomicValueDiff[]
+   : DataFieldDiff[]
 {
    if ( !fromObj && !toObj )
       return [];
@@ -99,7 +99,7 @@ export function atomicValuesDiffList
       if ( !isFunction(fromVal) && !isFunction(toVal) )
       {
          const pathWithKey = path ? path + '/' + key : key;
-         res.push(...this.atomicValuesDiffList(fromVal, toVal, pathWithKey));
+         res.push(...atomicValuesDiffList(fromVal, toVal, pathWithKey));
       }
    });
 
@@ -315,3 +315,9 @@ function unionKeys(fromObj: any, toObj: any): Set<string>
    return keysUnion;
 }
 
+export function atomicValueAsString(value: any): string
+{
+   if ( value === undefined ) return '';
+   else if ( isDate(value) ) return (<Date>value).toISOString();
+   else return JSON.stringify(value);
+}

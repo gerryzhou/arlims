@@ -1,0 +1,26 @@
+.parent-path {
+   font-weight: bold;
+   font-size: 110%;
+   color: gray;
+}
+
+.diffs-table {
+   margin-left: 30px;
+   border-collapse: separate;
+   border-spacing: 10px;
+}
+
+.field-name {
+   font-weight: bold;
+}
+
+.diff-type {
+   margin: 0 15px;
+}
+
+.from-value, .to-value {
+   margin: 0 10px;
+   padding: 2px 5px;
+   border-left: 3px solid lightgray;
+   border-right: 3px solid lightgray;
+}

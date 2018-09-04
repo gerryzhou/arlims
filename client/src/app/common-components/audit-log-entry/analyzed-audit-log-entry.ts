@@ -1,30 +1,25 @@
 import {AuditLogEntry} from '../../../generated/dto';
-import {AtomicValueDiff, atomicValuesDiffList} from '../../shared/util/data-objects';
+import {DataFieldDiff, atomicValuesDiffList} from '../../shared/util/data-objects';
 
 export class AnalyzedAuditLogEntry
 {
-   testDataAtomicValueDiffs: AtomicValueDiff[] | null;
+   objectContextMetadata: any | null;
+
+   objectFromValue: any | null;
+
+   objectToValue: any | null;
+
+   dataFieldDiffs: DataFieldDiff[] | null;
 
    constructor(public entry: AuditLogEntry)
    {
-      this.testDataAtomicValueDiffs = entry.objectType === 'test' && entry.action === 'update' ?
-         this.makeTestDataValueDiffs(entry.objectFromValueJson, entry.objectToValueJson)
+      this.objectContextMetadata = entry.objectContextMetadataJson ? JSON.parse(entry.objectContextMetadataJson) : null;
+      this.objectFromValue = entry.objectFromValueJson ? JSON.parse(entry.objectFromValueJson) : null;
+      this.objectToValue = entry.objectToValueJson ? JSON.parse(entry.objectToValueJson) : null;
+
+      this.dataFieldDiffs = this.objectFromValue && this.objectToValue ?
+         atomicValuesDiffList(this.objectFromValue, this.objectToValue).sort((d1, d2) => d1.path.localeCompare(d2.path))
          : null;
-
-      const contextMetadata = JSON.parse(entry.objectContextMetadataJson);
-      // TODO: Set common context fields here for the general multiple-test log viewing case.
-   }
-
-   private makeTestDataValueDiffs(fromValueJson: string, toValueJson: string): AtomicValueDiff[]
-   {
-      const fromValue = JSON.parse(fromValueJson);
-      const toValue = JSON.parse(toValueJson);
-
-      const diffs = atomicValuesDiffList(fromValue, toValue).sort((diff1, diff2) =>
-         diff1.path.localeCompare(diff2.path)
-      );
-
-      return diffs;
    }
 }
 
