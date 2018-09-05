@@ -43,10 +43,17 @@
       align-items: center;
 
       .sample-test-unit-detection {
+         display: flex;
+         flex-flow: column wrap;
+         align-items: center;
          margin: 5px;
          padding: 5px;
          border: 5px dotted lightgray;
          position: relative;
+         mat-radio-group {
+            display: flex;
+            flex-flow: column nowrap;
+         }
          &.pos {
             background-color: #ffeeee;
             border: 5px solid darkred;
@@ -68,7 +75,6 @@
       }
 
       .test-unit-number {
-         margin-right: 15px;
          padding: 3px 6px;
          border-radius: 10px;
          background-color: darkblue;
