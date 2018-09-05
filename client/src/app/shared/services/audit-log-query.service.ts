@@ -27,7 +27,7 @@ export class AuditLogQueryService {
          toMoment: Moment | null,
          testId: number | null,
          username: string | null,
-         includeChangeData: boolean,
+         includeChangeDetailData: boolean,
          includeUnchangedSaves: boolean
       )
       : Observable<AuditLogEntry[]>
@@ -38,7 +38,7 @@ export class AuditLogQueryService {
             toMoment,
             testId,
             username,
-            includeChangeData,
+            includeChangeDetailData,
             includeUnchangedSaves
          )
       );

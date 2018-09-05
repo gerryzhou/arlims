@@ -84,7 +84,8 @@
          <app-audit-log-entry *ngFor="let entry of analyzedAuditLogEntries"
             [analyzedEntry]="entry"
             [showSampleMetadata]="false"
-            [showTestMetadata]="false">
+            [showTestMetadata]="false"
+            [includeDataChangeDetails]="true">
          </app-audit-log-entry>
       </div>
    </div>

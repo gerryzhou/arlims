@@ -20,6 +20,8 @@ export class AuditLogReviewComponent
 
    labGroupUsernames$: Observable<string[]>;
 
+   includeDataChangeDetails$: BehaviorSubject<boolean>;
+
    readonly initialDataOptions: AuditLogDataOptions;
 
    constructor
@@ -38,6 +40,8 @@ export class AuditLogReviewComponent
       this.labGroupUsernames$ = userCtxSvc.getLabGroupContents().pipe(
          map(lgc => lgc.memberUsers.map(uref => uref.username))
       );
+
+      this.includeDataChangeDetails$ = new BehaviorSubject(dataOptions.includeChangeDetailData);
    }
 
    reloadEntries(dataOptions: AuditLogDataOptions)
@@ -47,10 +51,11 @@ export class AuditLogReviewComponent
          dataOptions.toMoment,
          dataOptions.testId,
          dataOptions.username,
-         dataOptions.includeChangeData,
+         dataOptions.includeChangeDetailData,
          dataOptions.includeUnchangedSaves
       )
       .subscribe(entries => {
+         this.includeDataChangeDetails$.next(dataOptions.includeChangeDetailData);
          this.analyzedAuditLogEntries$.next(entries.map(e => new AnalyzedAuditLogEntry(e)));
       });
    }

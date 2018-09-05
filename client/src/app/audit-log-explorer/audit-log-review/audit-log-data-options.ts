@@ -6,6 +6,6 @@ export interface AuditLogDataOptions
    toMoment: Moment | null;
    testId: number | null;
    username: string | null;
-   includeChangeData: boolean;
+   includeChangeDetailData: boolean;
    includeUnchangedSaves: boolean;
 }

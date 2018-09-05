@@ -25,7 +25,7 @@ export class AuditLogReviewInitialDataResolver implements Resolve<AuditLogReview
          toMoment: null,
          testId: null,
          username: null,
-         includeChangeData: false,
+         includeChangeDetailData: false,
          includeUnchangedSaves: true
       };
 
@@ -35,7 +35,7 @@ export class AuditLogReviewInitialDataResolver implements Resolve<AuditLogReview
             dataOpts.toMoment,
             dataOpts.testId,
             dataOpts.username,
-            dataOpts.includeChangeData,
+            dataOpts.includeChangeDetailData,
             dataOpts.includeUnchangedSaves
          )
          .pipe(

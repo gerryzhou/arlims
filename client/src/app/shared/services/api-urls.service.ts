@@ -80,7 +80,7 @@ export class ApiUrlsService {
          toMoment: Moment | null,
          testId: number | null,
          username: string | null,
-         includeChangeData: boolean,
+         includeChangeDetailData: boolean,
          includeUnchangedSaves: boolean
       )
       : string
@@ -97,7 +97,7 @@ export class ApiUrlsService {
          searchParams = searchParams.append('user', username);
       searchParams =
          searchParams
-         .append('data', includeChangeData ? '1' : '0')
+         .append('data', includeChangeDetailData ? '1' : '0')
          .append('unch', includeUnchangedSaves ? '1' : '0');
 
       return this.location.prepareExternalUrl('/api/audit-log/entries') + '?' + searchParams.toString();

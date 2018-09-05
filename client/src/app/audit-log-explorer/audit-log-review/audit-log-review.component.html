@@ -10,7 +10,8 @@
       <app-audit-log-entry *ngFor="let entry of analyzedAuditLogEntries$ | async"
          [analyzedEntry]="entry"
          [showSampleMetadata]="true"
-         [showTestMetadata]="true">
+         [showTestMetadata]="true"
+         [includeDataChangeDetails]="includeDataChangeDetails$ | async">
       </app-audit-log-entry>
    </div>
 

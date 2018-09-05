@@ -16,6 +16,9 @@ export class AuditLogEntryComponent implements OnChanges
    showSampleMetadata: boolean;
 
    @Input()
+   includeDataChangeDetails: boolean;
+
+   @Input()
    showTestMetadata: boolean;
 
    hasSampleMetadata: boolean;

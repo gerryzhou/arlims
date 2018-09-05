@@ -3,7 +3,7 @@
 
       <div class="entry-md">
          <span class="action-object">
-            {{analyzedEntry.entry.action + ' ' + analyzedEntry.entry.objectType | uppercase}}
+            {{analyzedEntry.actionObjectText}}
          </span>
          <span class="user"><mat-icon>person_outline</mat-icon> {{analyzedEntry.entry.actingUsername}}</span>
          <span class="entry-timestamp"><mat-icon>access_time</mat-icon> {{analyzedEntry.entry.timestamp | date: 'MMM d h:mm a'}}</span>
@@ -27,10 +27,21 @@
             <span class="test-begin-date">Begin date: {{testBeginDate | date: 'MMM d h:mm a'}}</span>
          </div>
 
-         <b class="data-changes-label" *ngIf="analyzedEntry.dataFieldDiffs">Data changes</b>
-         <app-data-field-diffs class="data-changes" *ngIf="analyzedEntry.dataFieldDiffs"
+         <b class="data-changes-label" *ngIf="analyzedEntry.dataFieldDiffs && includeDataChangeDetails">Data changes</b>
+         <app-data-field-diffs class="data-changes" *ngIf="analyzedEntry.dataFieldDiffs && includeDataChangeDetails"
             [dataFieldDiffs]="analyzedEntry.dataFieldDiffs">
          </app-data-field-diffs>
+
+         <b class="attached-files-label" *ngIf="analyzedEntry.attachedFileDescrs">Files</b>
+         <div class="attached-files" *ngIf="analyzedEntry.attachedFileDescrs">
+            <ul>
+               <li *ngFor="let attachedFileDescr of analyzedEntry.attachedFileDescrs">
+                  {{attachedFileDescr.fileName}}<br>
+                  ({{attachedFileDescr.size / 1000}} KB)<br>
+                  <span *ngIf="attachedFileDescr.role">Role: {{attachedFileDescr.role}}</span>
+               </li>
+            </ul>
+         </div>
 
       </div> <!-- sample details grid -->
 

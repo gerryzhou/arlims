@@ -9,7 +9,7 @@ public class TestAttachedFileMetadata
     private final long attachedFileId;
     private final long testId;
     private final Optional<String> role;
-    private final String name;
+    private final String fileName;
     private final long size;
     private final Instant uploadedInstant;
 
@@ -18,7 +18,7 @@ public class TestAttachedFileMetadata
             long testId,
             long attachedFileId,
             Optional<String> role,
-            String name,
+            String fileName,
             long size,
             Instant uploadedInstant
         )
@@ -26,7 +26,7 @@ public class TestAttachedFileMetadata
         this.attachedFileId = attachedFileId;
         this.testId = testId;
         this.role = role;
-        this.name = name;
+        this.fileName = fileName;
         this.size = size;
         this.uploadedInstant = uploadedInstant;
     }
@@ -37,7 +37,7 @@ public class TestAttachedFileMetadata
 
     public Optional<String> getRole() { return role; }
 
-    public String getName() { return name; }
+    public String getFileName() { return fileName; }
 
     public long getSize() { return size; }
 

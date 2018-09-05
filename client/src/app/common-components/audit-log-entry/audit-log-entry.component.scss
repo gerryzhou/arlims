@@ -129,3 +129,15 @@ mat-card.entry {
    grid-column: 2;
 }
 
+.attached-files-label {
+   grid-row: 4;
+   grid-column: 1;
+   align-self: start;
+   margin-right: 20px;
+   margin-top: 15px;
+}
+
+.attached-files {
+   grid-row: 4;
+   grid-column: 2;
+}
