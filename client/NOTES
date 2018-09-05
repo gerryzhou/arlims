@@ -1,15 +1,20 @@
-Show file attachment details in audit log entry component.
-
-
-Vidas Results Grid
-   Mirror num slots in vidas in Vidas stage results.
-   Label rows as bays as done for actual Vidas machine.
-   Use actual css grid.
-   Orient radio buttons vertically.
+API
+  Inbox
+    Personal Inbox - focus on this first.
+    Org Inbox - for weekend work mainly and/or where someone substitutes for another
+  Pushing data into FACTS
+    Lower priority for now.
 
 *** Positives need to be handled as next priority.
    Having seprate test type for positives is fine but the related tests need to be kept together and in proper sequence.
    Add test group/sequence field(s) to order and group tests within samples.
+
+
+Vidas Results Grid (later)
+   Mirror num slots in vidas in Vidas stage results.
+   Label rows as bays as done for actual Vidas machine.
+   Use actual css grid.
+   Orient radio buttons vertically.
 
 Try linking to specific section(s) in BAM for each stage.
 
