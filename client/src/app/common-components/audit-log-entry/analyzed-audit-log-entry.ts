@@ -17,7 +17,7 @@ export class AnalyzedAuditLogEntry
       this.objectFromValue = entry.objectFromValueJson ? JSON.parse(entry.objectFromValueJson) : null;
       this.objectToValue = entry.objectToValueJson ? JSON.parse(entry.objectToValueJson) : null;
 
-      this.dataFieldDiffs = this.objectFromValue && this.objectToValue ?
+      this.dataFieldDiffs = entry.action === 'update' && entry.objectType === 'test-data' ?
          atomicValuesDiffList(this.objectFromValue, this.objectToValue).sort((d1, d2) => d1.path.localeCompare(d2.path))
          : null;
    }

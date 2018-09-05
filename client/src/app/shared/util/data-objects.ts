@@ -224,7 +224,8 @@ export function partitionLeftChangedAndNewValuesVsRefByConflictWithRights
       ref,
       omitIdenticalLRChanges = true
    )
-   : ConflictsPartition {
+   : ConflictsPartition
+{
 
    const lChanged = copyWithoutUnchangedAtomicDataVsReference(lObj, ref);
    const rChanged = copyWithoutUnchangedAtomicDataVsReference(rObj, ref);
@@ -248,12 +249,14 @@ export function partitionLeftChangedAndNewValuesVsRefByConflictWithRights
    };
 }
 
-export interface ConflictsPartition {
+export interface ConflictsPartition
+{
    conflictingValues: any;
    nonConflictingValues: any;
 }
 
-export function copyWithMergedValuesFrom(toObj, fromObj, allowReplacingExistingAtomicValues = false): any {
+export function copyWithMergedValuesFrom(toObj, fromObj, allowReplacingExistingAtomicValues = false): any
+{
    const res = cloneDataObject(toObj);
    mergeValues(res, fromObj, allowReplacingExistingAtomicValues);
    return res;

@@ -6,7 +6,7 @@
             <span class="field-name">{{fieldDiff.fieldName}}</span>
          </td>
          <td>
-            <span class="diff-type">{{fieldDiff.diffType | uppercase }}</span>
+            <span class="diff-type">{{fieldDiff.diffTypeText}}</span>
          </td>
          <td>
             <span class="from-value" *ngIf="fieldDiff.diffType !== 'new'">{{fieldDiff.fromValue}}</span>

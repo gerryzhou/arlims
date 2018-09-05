@@ -76,7 +76,6 @@ export class UserContextService {
             this.authenticationToken.next(authToken);
             return this.fetchUserContext().pipe(
                map(userContext => {
-                  console.log(userContext);
                   this.authenticatedUser.next(userContext.user);
                   this.refreshLabGroupContentsVia(obsof(userContext.labGroupContents));
                   return true;

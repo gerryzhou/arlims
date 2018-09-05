@@ -554,5 +554,13 @@ describe('atomicValuesDiffList function', () => {
       ]);
    });
 
+   it('should yield proper \'new\' diff record with null from-value and simple single-field to-value', () => {
+      const a = null;
+      const b = {a: 1};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'a', diffType: 'new', fromValue: undefined, toValue: 1},
+      ]);
+   });
+
 });
 

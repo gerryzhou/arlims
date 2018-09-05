@@ -76,12 +76,17 @@
       </app-stage-wrapup>
    </div>
 
-   <div class="audit-log">
-      <app-audit-log-entry *ngFor="let entry of analyzedAuditLogEntries"
-         [analyzedEntry]="entry"
-         [showSampleMetadata]="false"
-         [showTestMetadata]="false">
-      </app-audit-log-entry>
+   <hr/>
+
+   <div>
+      <h3>CHANGE LOG</h3>
+      <div class="audit-log">
+         <app-audit-log-entry *ngFor="let entry of analyzedAuditLogEntries"
+            [analyzedEntry]="entry"
+            [showSampleMetadata]="false"
+            [showTestMetadata]="false">
+         </app-audit-log-entry>
+      </div>
    </div>
 
    <div class="form-bottom-toolbar">

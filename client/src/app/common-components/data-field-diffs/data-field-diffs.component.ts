@@ -57,13 +57,20 @@ interface ParentPathFieldDiffs
 
 class FieldDiff
 {
+   fieldName: string;
    diffType: FieldDiffType;
+   diffTypeText: string;
    fromValue: string;
    toValue: string;
 
-   constructor(public fieldName: string, dataFieldDiff: DataFieldDiff)
+   constructor(fieldName: string, dataFieldDiff: DataFieldDiff)
    {
+      this.fieldName = fieldName;
       this.diffType = dataFieldDiff.diffType;
+      this.diffTypeText =
+         dataFieldDiff.diffType === 'new' ? 'NEW VALUE'
+            : dataFieldDiff.diffType === 'updated' ? 'UPDATED'
+            : 'REMOVED VALUE';
       this.fromValue = atomicValueAsString(dataFieldDiff.fromValue);
       this.toValue = atomicValueAsString(dataFieldDiff.toValue);
    }
