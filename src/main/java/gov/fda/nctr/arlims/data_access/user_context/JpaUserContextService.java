@@ -3,6 +3,7 @@ package gov.fda.nctr.arlims.data_access.user_context;
 import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import static java.util.Collections.emptyList;
@@ -75,7 +76,7 @@ public class JpaUserContextService implements UserContextService
         this.roleRepo = roleRepo;
         this.jdbcTemplate = jdbcTemplate;
         this.bcryptEncoder = bcryptEncoder;
-        this.usersByUsername = new HashMap<>();
+        this.usersByUsername = new ConcurrentHashMap<>(500);
         this.dataChangeAuditingSvc = dataChangeAuditingSvc;
     }
 
