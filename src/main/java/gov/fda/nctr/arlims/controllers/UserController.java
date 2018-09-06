@@ -4,12 +4,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.WebRequest;
 
 import gov.fda.nctr.arlims.data_access.user_context.UserContextService;
@@ -20,11 +17,9 @@ import gov.fda.nctr.arlims.security.AppUserAuthentication;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController
+public class UserController extends ControllerBase
 {
     private final UserContextService userContextService;
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public UserController(UserContextService userContextService)
     {

@@ -14,8 +14,6 @@ import java.time.LocalDate;
 import java.util.*;
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -26,18 +24,17 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.models.dto.*;
 
 
 @Service
-public class JdbcTestDataService implements TestDataService
+public class JdbcTestDataService extends ServiceBase implements TestDataService
 {
     private final JdbcTemplate jdbc;
     private final AuditLogService auditLogSvc;
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
 

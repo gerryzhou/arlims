@@ -6,9 +6,11 @@ import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import gov.fda.nctr.arlims.data_access.ServiceBase;
+
 
 @Service
-public class JdbcAuthenticatableUserService implements AuthenticatableUserService
+public class JdbcAuthenticatableUserService extends ServiceBase implements AuthenticatableUserService
 {
     private final JdbcTemplate jdbc;
 

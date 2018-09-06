@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
@@ -34,7 +35,7 @@ import gov.fda.nctr.arlims.models.dto.LabResource;
 
 
 @Service
-public class JpaUserContextService implements UserContextService
+public class JpaUserContextService extends ServiceBase implements UserContextService
 {
     private final EmployeeRepository employeeRepo;
     private final LabGroupRepository labGroupRepo;

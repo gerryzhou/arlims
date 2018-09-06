@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -22,17 +20,16 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.models.dto.AuditLogEntry;
 
 
 @Service
-public class JdbcAuditLogService implements AuditLogService
+public class JdbcAuditLogService extends ServiceBase implements AuditLogService
 {
     private final JdbcTemplate jdbc;
 
     private final ObjectWriter jsonWriter;
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public JdbcAuditLogService(JdbcTemplate jdbcTemplate)
     {

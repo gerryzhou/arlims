@@ -8,8 +8,6 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,12 +29,10 @@ import gov.fda.nctr.arlims.security.AppUserAuthentication;
 
 @RestController
 @RequestMapping("/api/tests")
-public class TestController
+public class TestController extends ControllerBase
 {
     private final TestDataService testDataService;
     private final TestDataReportService reportService;
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public TestController
         (

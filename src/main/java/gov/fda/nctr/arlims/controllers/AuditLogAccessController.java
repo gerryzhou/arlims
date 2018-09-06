@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +15,9 @@ import gov.fda.nctr.arlims.security.AppUserAuthentication;
 
 @RestController
 @RequestMapping("/api/audit-log")
-public class AuditLogAccessController
+public class AuditLogAccessController extends ControllerBase
 {
     private final AuditLogService auditLogService;
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public AuditLogAccessController
         (
