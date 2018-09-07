@@ -2,6 +2,6 @@
 
 export const environment = {
   production: true,
-  baseHref: '/alis',
+  baseHref: '/alis-proto',
 };
 

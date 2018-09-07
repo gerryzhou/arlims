@@ -1,0 +1,68 @@
+# Building a complete production package
+
+Build production war file with default context name of "alis".
+
+    mvn package
+
+This produces target/alis.war.
+
+# Build war file with custom context / war name.
+
+    mvn -DCONTEXT_NAME=alis-proto clean package
+
+The above produces file `target/alis-proto.war` with a bundled client expecting
+to find resources and the application api under that context name from the
+server root.
+
+# Running in a standalone/embedded Tomcat container
+
+Make a prod application properties file using 
+`src/main/resources/application-prod.properties.template` as a template. Items
+that need adjustment are marked `ADJUST-THIS` in the template file. Store the
+file in the same directory as the production war file.
+
+Example run:
+
+    cd target
+    # Get the prod config file from somewhere, put it next to the war file.
+    cp ~/Programming/etc/test-configs/alis/application-prod.properties ./application.properties
+    java -jar alis.war
+
+Access at
+ 
+    http://localhost:8080/alis
+
+To run under a different context in an embedded Tomcat container,  build with
+the custom context specified:
+    
+    mvn -DCONTEXT_NAME=alis-proto clean package
+
+Then run with the server.servlet.contextpath property specified:
+    
+    java -jar alis-proto.war --server.servlet.contextpath=/alis-proto
+
+In this case the application would be accessed at
+    
+    http://localhost:8080/alis-proto
+
+
+# Development
+
+Front end resources and backend services are served via separate servers for development.
+
+## Start backend services, terminal 1
+```
+mvn spring-boot:run
+```
+
+Runs with context name "alis", http://localhost:8080/alis/api/...
+
+## Start frontend app, terminal 2
+```
+cd client
+npm start
+```
+The above executes `ng serve` with extra configuration to forward /api/* requests
+to the backend started in terminal 1. Hotloading is enabled. The app can be
+accessed in the browser at `localhost:4200`.
+

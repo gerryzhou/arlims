@@ -1,0 +1,21 @@
+# Template prod properties file, items marked ADJUST-THIS need customization for the environment.
+
+ ADJUST-THIS
+# Either provide jndi datasource configured in the application container and reference it like so:
+#db.primary.jndi-name=jdbc/alis
+# ... or else provide individual connection properties:
+#arlims.db.primary.driverClassName=oracle.jdbc.OracleDriver
+#arlims.db.primary.jdbcUrl=jdbc:oracle:thin:@SOMEHOST:SOMEPORT:SOMESID
+#arlims.db.primary.username=someschema
+#arlims.db.primary.password=somepassword
+
+# ADJUST-THIS
+app.security.jwt-signature-secret=adjust-this
+
+# Set the servlet context path for embedded containers in case we're running that way.
+# This setting is ignored for war deployment to an external container.
+server.servlet.contextpath=/alis
+
+spring.datasource.initialization-mode=never
+spring.jpa.hibernate.ddl-auto=none
+spring.h2.console.enabled=false

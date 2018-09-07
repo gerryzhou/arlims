@@ -28,15 +28,14 @@
        under which the client produced here will expect application services and static resources to be available. The
        client is always configured via this param to use this prefix both in index.html as base href, and when building
        application urls for services. Normally when just deploying the produced war to an external Tomcat instance
-       without specially configuring a context name, this will have the context name (derived from the war name) match
-       what the client side expects, and no other configuration is necessary.
+       without specially configuring a context name, the context name is determined by the war file name, which comes
+       from this setting, and no other configuration is necessary.
 
        On the other hand when running an embedded container, for example via "mvn spring-boot:run" or via "java -jar",
        this parameter does not determine the context name of the app's services in the embedded server. Instead, in
        these cases the context is set via the "server.servlet.contextPath" property in one of the application properties
-       files. The client however is still configured to use the prod.context.name parameter as described above, so the
-       server.servlet.contextPath property should be set to match the value of prod.context.name, for the case of
-       running services in an embedded container.
+       files. The client however is still configured to use this prod.context.name parameter as described above, so the
+       server.servlet.contextPath property should be set to match the value of prod.context.name in this case.
        -->
       <prod.context.name>alis</prod.context.name>
       <filtering.output.message>THIS FILE WAS PRODUCED FROM A TEMPLATE, DO NOT EDIT.</filtering.output.message>
@@ -241,7 +240,7 @@
             </executions>
          </plugin>
 
-         <!-- Include client artifacts in the war file produced in the packaging stage. -->
+         <!-- Include client artifacts in the jar file produced in the packaging stage. -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -249,7 +248,8 @@
             <configuration>
                <webResources>
                   <resource>
-                     <directory>client/dist</directory>
+                     <directory>client/dist/arlims-client</directory>
+                     <targetPath>public</targetPath>
                   </resource>
                </webResources>
             </configuration>
@@ -285,5 +285,16 @@
 
    </build>
 
+   <profiles>
+      <profile>
+         <id>specified-context-name</id>
+         <activation>
+            <property><name>CONTEXT_NAME</name></property>
+         </activation>
+         <properties>
+            <prod.context.name>${CONTEXT_NAME}</prod.context.name>
+         </properties>
+      </profile>
+   </profiles>
 
 </project>
