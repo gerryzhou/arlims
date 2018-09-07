@@ -1,22 +1,7 @@
 Commit Notes
 ------------
-In Maven build, package client into public/ so it's served properly outside of dev mode.
-Unify database configuration classes to one which tries jndi first then falls back to individual db connection properties.
-Add README describing how to run the app.
-Add skeleton for FACTS scheduled tasks.
 
 ----------------
-Prevent build from trying to modify Oracle db.
-
-Add to README as an example of running in embedded mode for prod:
-  For now, can start via:
-    cp src/main/resources/application-prod.properties target/
-    Edit target/application-prod.properties property values to suit environment (items marked ADJUST-THIS).
-    cd target
-    java -jar alis.war --spring.profiles.active=prod
-    Access at http://localhost:8080/alis
-
-
 
 Add scheduled task to update samples from FACTS, driven by properties.
 
