@@ -5,8 +5,8 @@
 
    <groupId>gov.fda.nctr</groupId>
    <artifactId>arlims</artifactId>
-   <version>0.0.1-SNAPSHOT</version>
-   <packaging>war</packaging>
+   <version>0.1.0-SNAPSHOT</version>
+   <packaging>jar</packaging>
 
    <name>arlims</name>
    <description>ALIS</description>
@@ -24,23 +24,24 @@
       <java.version>1.8</java.version>
       <nodejs.version>v8.11.1</nodejs.version>
       <!-- prod.context.name:
-       Provides the final war file name, and the context name (initial component of the resource part of the app's url)
-       under which the client produced here will expect application services and static resources to be available. The
-       client is always configured via this param to use this prefix both in index.html as base href, and when building
-       application urls for services. Normally when just deploying the produced war to an external Tomcat instance
-       without specially configuring a context name, the context name is determined by the war file name, which comes
-       from this setting, and no other configuration is necessary.
+       Provides the final jar or war file name, and the context name (initial component of the resource
+       part of the app's url) under which the client produced here will expect application services and
+       static resources to be available. The client is always configured via this param to use this prefix
+       both in index.html as base href, and when building application urls for services. Normally when
+       just deploying the produced war to an external Tomcat instance without specially configuring a
+       context name, the context name is determined by the war file name, which comes from this setting,
+       and no other configuration is necessary.
 
-       On the other hand when running an embedded container, for example via "mvn spring-boot:run" or via "java -jar",
-       this parameter does not determine the context name of the app's services in the embedded server. Instead, in
-       these cases the context is set via the "server.servlet.contextPath" property in one of the application properties
-       files. The client however is still configured to use this prod.context.name parameter as described above, so the
-       server.servlet.contextPath property should be set to match the value of prod.context.name in this case.
+       On the other hand when running an embedded container, for example via "mvn spring-boot:run" or via
+       "java -jar", this parameter does not determine the context name of the app's services in the
+       embedded server. Instead, in these cases the context is set via the "server.servlet.contextpath"
+       property in one of the application properties files. The client however is still configured to use
+       this prod.context.name parameter as described above, so the server.servlet.contextpath property
+       should be set to match the value of prod.context.name in this case.
        -->
       <prod.context.name>alis</prod.context.name>
       <filtering.output.message>THIS FILE WAS PRODUCED FROM A TEMPLATE, DO NOT EDIT.</filtering.output.message>
    </properties>
-
 
    <dependencies>
       <dependency>
@@ -62,7 +63,7 @@
       <dependency>
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-tomcat</artifactId>
-         <scope>provided</scope>
+         <!--<scope>provided</scope>-->
       </dependency>
       <dependency>
          <groupId>org.springframework.boot</groupId>
@@ -227,7 +228,6 @@
                   </configuration>
                   <phase>prepare-package</phase>
                </execution>
-
                <!-- Build the client. -->
                <execution>
                   <id>npm run build</id>
@@ -237,24 +237,17 @@
                   </configuration>
                   <phase>prepare-package</phase>
                </execution>
+               <!-- Copy client dist into target for inclusion in packaging. -->
+               <execution>
+                  <id>npm run copy-dist</id>
+                  <goals><goal>npm</goal></goals>
+                  <configuration>
+                     <arguments>run copy-dist -- ${project.build.directory}/classes/public/</arguments>
+                  </configuration>
+                  <phase>prepare-package</phase>
+               </execution>
             </executions>
          </plugin>
-
-         <!-- Include client artifacts in the jar file produced in the packaging stage. -->
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>3.1.0</version>
-            <configuration>
-               <webResources>
-                  <resource>
-                     <directory>client/dist/arlims-client</directory>
-                     <targetPath>public</targetPath>
-                  </resource>
-               </webResources>
-            </configuration>
-         </plugin>
-
 
          <!--A "clean" should remove contents from the client's build directory also. -->
          <plugin>

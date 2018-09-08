@@ -1,16 +1,16 @@
 # Building a complete production package
 
-Build production war file with default context name of "alis".
+Build production jar file with default context name of "alis".
 
     mvn package
 
-This produces target/alis.war.
+This produces target/alis.jar.
 
-# Build war file with custom context / war name.
+# Build jar file with custom context name.
 
     mvn -DCONTEXT_NAME=alis-proto clean package
 
-The above produces file `target/alis-proto.war` with a bundled client expecting
+The above produces file `target/alis-proto.jar` with a bundled client expecting
 to find resources and the application api under that context name from the
 server root.
 
@@ -19,14 +19,14 @@ server root.
 Make a prod application properties file using 
 `src/main/resources/application-prod.properties.template` as a template. Items
 that need adjustment are marked `ADJUST-THIS` in the template file. Store the
-file in the same directory as the production war file.
+file in the same directory as the production jar file.
 
 Example run:
 
     cd target
-    # Get the prod config file from somewhere, put it next to the war file.
-    cp ~/Programming/etc/test-configs/alis/application-prod.properties ./application.properties
-    java -jar alis.war
+    # Get the prod config file from somewhere, put it next to the jar file.
+    cp ~/Programming/etc/test-configs/alis/application.properties ./application.properties
+    java -jar alis.jar
 
 Access at
  
@@ -39,7 +39,9 @@ the custom context specified:
 
 Then run with the server.servlet.contextpath property specified:
     
-    java -jar alis-proto.war --server.servlet.contextpath=/alis-proto
+    java -jar alis-proto.jar --server.servlet.contextpath=//alis-proto
+    
+(The extra extra '/' in "//alis-proto" is to prevent some Bash environments on Windows from mangling the path.)
 
 In this case the application would be accessed at
     
