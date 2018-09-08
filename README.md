@@ -26,6 +26,7 @@ Example run:
     cd target
     # Get the prod config file from somewhere, put it next to the jar file.
     cp ~/Programming/etc/test-configs/alis/application.properties ./application.properties
+    # Maybe copy over a log config as well, see prod-deployment directory.
     java -jar alis.jar
 
 Access at
