@@ -1,7 +1,11 @@
+
+
 Commit Notes
 ------------
+Add an assembly step which makes an app archive with the jar and files from prod-deployment.
 
 ----------------
+
 
 Add scheduled task to update samples from FACTS, driven by properties.
 

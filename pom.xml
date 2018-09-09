@@ -249,6 +249,24 @@
             </executions>
          </plugin>
 
+         <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+               <descriptors>
+                  <descriptor>src/assembly/dist.xml</descriptor>
+               </descriptors>
+            </configuration>
+            <executions>
+               <execution>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>single</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+
          <!--A "clean" should remove contents from the client's build directory also. -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>

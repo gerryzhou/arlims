@@ -1,0 +1,33 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+   <id>dist</id>
+   <includeBaseDirectory>false</includeBaseDirectory>
+   <formats>
+      <format>tgz</format>
+   </formats>
+   <fileSets>
+      <fileSet>
+         <directory>${basedir}/prod-deployment</directory>
+         <outputDirectory>alis</outputDirectory>
+         <includes>
+            <include>**</include>
+         </includes>
+      </fileSet>
+      <fileSet>
+         <directory>target</directory>
+         <outputDirectory>alis</outputDirectory>
+         <includes>
+            <include>alis*.jar</include>
+         </includes>
+      </fileSet>
+   </fileSets>
+   <files>
+      <file>
+         <source>SERVER_SETUP.md</source>
+         <outputDirectory>alis</outputDirectory>
+         <filtered>false</filtered>
+      </file>
+   </files>
+</assembly>
+

@@ -1,0 +1,17 @@
+[Unit]
+Description=ALIS Service
+After=syslog.target network.target
+
+[Service]
+Type=simple
+PIDFile=/u01/lims-api/alis/RUNNING_PID
+#EnvironmentFile=/u01/lims-api/alis/alis-env.conf
+User=alis
+WorkingDirectory=/u01/lims-api/alis/
+ExecStart=/bin/java -jar alis.jar
+
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+
