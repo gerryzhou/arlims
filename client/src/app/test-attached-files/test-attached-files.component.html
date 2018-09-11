@@ -12,7 +12,7 @@
          <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Attached File</th>
             <td mat-cell *matCellDef="let af">
-               <a [href]="apiUrls.testAttachedFileUrl(af.attachedFileId, af.testId)">{{af.fileName}}</a>
+               <button class="link" (click)="promptDownloadFile(af)">{{af.fileName}}</button>
             </td>
          </ng-container>
 

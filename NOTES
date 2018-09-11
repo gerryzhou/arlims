@@ -1,5 +1,4 @@
-What's wrong with fetching file attachments?
-  These are handled by the browser as normal links (not via HttpClient) so the JWT token is not present and the server rejects the request as unauthorized.
+
 
 Enable lab form based pdf report again.
 

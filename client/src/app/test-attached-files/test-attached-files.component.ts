@@ -7,6 +7,7 @@ import {ApiUrlsService, TestsService, UserContextService} from '../shared/servic
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FilesSelectorComponent} from '../common-components/files-selector/files-selector.component';
+import {FileDownloadsService} from '../shared/services/file-downloads';
 
 
 @Component({
@@ -35,7 +36,8 @@ export class TestAttachedFilesComponent implements AfterViewInit {
    constructor
       (
          private activatedRoute: ActivatedRoute,
-         public apiUrls: ApiUrlsService,
+         private fileDownloadsSvc: FileDownloadsService,
+         private apiUrlsSvc: ApiUrlsService,
          private testsSvc: TestsService,
          private usrCtxSvc: UserContextService
       )
@@ -92,6 +94,13 @@ export class TestAttachedFilesComponent implements AfterViewInit {
       );
    }
 
+   promptDownloadFile(attachedFile: TestAttachedFileMetadata)
+   {
+      const fileUrl = this.apiUrlsSvc.testAttachedFileUrl(attachedFile.attachedFileId, attachedFile.testId);
+      this.fileDownloadsSvc.promptDownloadFile(fileUrl, attachedFile.fileName)
+         .subscribe(() => {});
+   }
+
    removeAttachedFile(attachedFile: TestAttachedFileMetadata)
    {
       this.testsSvc.deleteTestAttachedFile(attachedFile.attachedFileId, attachedFile.testId).subscribe(
@@ -109,6 +118,7 @@ export class TestAttachedFilesComponent implements AfterViewInit {
           }
       );
    }
+
 }
 
 
