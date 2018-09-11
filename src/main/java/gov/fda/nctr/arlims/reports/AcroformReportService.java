@@ -43,7 +43,7 @@ class AcroformReportService
         )
         throws IOException
     {
-        Path reportFile = Files.createTempFile("arlims-report-" + testMetadata.getTestId(), ".pdf");
+        Path reportFile = Files.createTempFile("alis-report-" + testMetadata.getTestId(), ".pdf");
 
         JsonNode testDataJsonNode = this.jsonReader.readTree(testDataJson);
 
