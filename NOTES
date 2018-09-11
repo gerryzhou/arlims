@@ -1,13 +1,18 @@
+What's wrong with fetching file attachments?
+  These are handled by the browser as normal links (not via HttpClient) so the JWT token is not present and the server rejects the request as unauthorized.
+
+Enable lab form based pdf report again.
+
+Customize formatting for test data view report to generate better pdf output.
+
+Add scheduled task to update samples from FACTS, driven by properties.
 
 
 Commit Notes
 ------------
-Add an assembly step which makes an app archive with the jar and files from prod-deployment.
 
 ----------------
 
-
-Add scheduled task to update samples from FACTS, driven by properties.
 
 JWT Invalidation
 ----------------

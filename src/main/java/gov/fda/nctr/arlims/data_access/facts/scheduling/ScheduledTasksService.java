@@ -13,6 +13,5 @@ public class ScheduledTasksService extends ServiceBase
     public void refreshSamples()
     {
         // TODO
-        log.info("refreshSamples()");
     }
 }
