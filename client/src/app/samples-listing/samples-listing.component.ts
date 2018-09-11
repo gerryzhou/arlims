@@ -6,6 +6,7 @@ import {ListingOptions} from './listing-options/listing-options';
 import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
 import {Subscription} from 'rxjs';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
+import {FileDownloadsService} from '../shared/services/file-downloads';
 
 @Component({
    selector: 'app-samples-listing',
@@ -45,7 +46,7 @@ export class SamplesListingComponent implements OnDestroy {
           private activatedRoute: ActivatedRoute,
           private router: Router,
           private alertMessageSvc: AlertMessageService,
-          private windowSvc: WindowService,
+          private fileDownloadsSvc: FileDownloadsService,
           private apiUrlsSvc: ApiUrlsService,
           private appUrlsSvc: AppInternalUrlsService,
        )
@@ -149,7 +150,8 @@ export class SamplesListingComponent implements OnDestroy {
 
    initiateReportDownload([testId, reportName]: [number, string])
    {
-      this.windowSvc.getWindow().open(this.apiUrlsSvc.reportUrl(testId, reportName));
+      const reportUrl = this.apiUrlsSvc.reportUrl(testId, reportName);
+      this.fileDownloadsSvc.promptDownloadFile(reportUrl, reportName).subscribe();
    }
 
    private sampleSatisfiesSearchTextRequirement(sample: Sample, listingOptions: ListingOptions): boolean

@@ -97,8 +97,7 @@ export class TestAttachedFilesComponent implements AfterViewInit {
    promptDownloadFile(attachedFile: TestAttachedFileMetadata)
    {
       const fileUrl = this.apiUrlsSvc.testAttachedFileUrl(attachedFile.attachedFileId, attachedFile.testId);
-      this.fileDownloadsSvc.promptDownloadFile(fileUrl, attachedFile.fileName)
-         .subscribe(() => {});
+      this.fileDownloadsSvc.promptDownloadFile(fileUrl, attachedFile.fileName).subscribe();
    }
 
    removeAttachedFile(attachedFile: TestAttachedFileMetadata)
