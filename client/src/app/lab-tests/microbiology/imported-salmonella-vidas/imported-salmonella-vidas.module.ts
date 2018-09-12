@@ -26,7 +26,7 @@ import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from './stage-controls/stage-controls.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
-import {TestDataViewComponent} from './test-data-view/test-data-view.component';
+import {FormDataReviewComponent} from './form-data-review/form-data-review.component';
 import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-confirm-deactivate-guard';
 
 @NgModule({
@@ -51,7 +51,7 @@ import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-con
    ],
    declarations: [
       StagedTestDataEntryComponent,
-      TestDataViewComponent,
+      FormDataReviewComponent,
       StagePrepComponent,
       StagePreEnrComponent,
       StageSelEnrComponent,

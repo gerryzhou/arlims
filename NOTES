@@ -1,16 +1,5 @@
-Revive the pdf report, do proper rendering of full data and change log.
-  Options
-    0. Move the report generation functions to within the test specific modules.
-       Then the test module can transform the report data as to match the form needed by the report.
-       This would also eliminate the requirement of fetching the reports by test type for the lab group, because
-       the test module naturally knows its own report types.
-    1. Have the client generate a modified form of the test data for the particular report?
-       Can't do this practically, because the test module is not in scope for the generic report generation action in test metadata component.
-    2. Have the server switch based on the report name to customize the test data as necessary?
-       Makes the server have to know about the particular test data.  In which case the test data definitions would have
-       to be moved back to the server's dto package.
-    3. Find a more flexible reporting engine.
-    4. Investigate whether pdf is corrupt as cause for javascript-generated field values not showing?
+Allow deep linking by always sending index.html from server when any subresource is requested.
+
 
 Add scheduled task to update samples from FACTS, driven by properties.
 

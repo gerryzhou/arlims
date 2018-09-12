@@ -4,7 +4,7 @@ import {FormGroup} from '@angular/forms';
 
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {AuditLogEntry, LabResource} from '../../../../../generated/dto';
+import {LabResource} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, makeTestDataFormGroup} from '../test-data';
 import {TestConfig} from '../test-config';
@@ -13,11 +13,11 @@ import {UserContextService} from '../../../../shared/services';
 import {AnalyzedAuditLogEntry} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
 
 @Component({
-   selector: 'app-micro-imp-slm-vidas-test-data-view',
-   templateUrl: './test-data-view.component.html',
-   styleUrls: ['./test-data-view.component.scss'],
+   selector: 'app-micro-imp-slm-vidas-form-data-review',
+   templateUrl: './form-data-review.component.html',
+   styleUrls: ['./form-data-review.component.scss'],
 })
-export class TestDataViewComponent implements OnInit {
+export class FormDataReviewComponent implements OnInit {
 
    // The form group holds the edited state of the test data.
    readonly testDataForm: FormGroup;

@@ -80,11 +80,7 @@
             </button>
             <app-test-metadata
                [test]="test"
-               [labGroupTestTypes]="labGroupTestTypes"
-               (editTestClick)="onEditTestClicked(test)"
-               (editStageClick)="onEditTestStageClicked($event)"
-               (viewTestClick)="onViewTestClicked($event)"
-               (reportClick)="onTestReportClicked(test.testId, $event)">
+               [labGroupTestTypes]="labGroupTestTypes">
             </app-test-metadata>
          </div>
       </div>

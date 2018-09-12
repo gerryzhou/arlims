@@ -22,16 +22,12 @@
          [showAssociatedItems]="expandedSampleIds.has(selectableSamples[sampleIx].sample.id)"
          [showAssociatedItemsSummaryInSampleMetadata]="true"
          [labGroupTestTypes]="labGroupTestTypes"
-         (testCreated)="onNewTestCreated($event)"
-         (testCreationFailed)="onTestCreationFailed($event)"
          [showTestDeleteButtons]="showTestDeleteButtons"
          (testDeleted)="onTestDeleted($event)"
          (testDeleteFailed)="onTestDeleteFailed($event)"
-         (headerClick)="toggleSampleExpanded(selectableSamples[sampleIx].sample.id)"
-         (editTestClick)="navigateToTestDataEntry($event)"
-         (editTestStageClick)="navigateToTestStageDataEntry($event)"
-         (viewTestClick)="navigateToTestDataView($event)"
-         (testReportClick)="initiateReportDownload($event)">
+         (testCreated)="onNewTestCreated($event)"
+         (testCreationFailed)="onTestCreationFailed($event)"
+         (headerClick)="toggleSampleExpanded(selectableSamples[sampleIx].sample.id)">
       </app-sample>
    </div>
 </div>

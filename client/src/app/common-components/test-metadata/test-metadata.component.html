@@ -2,8 +2,8 @@
 
    <div class="test-overview">
 
-      <div class="test-type" (click)="onEditTestClicked()">
-         {{test.testTypeShortName}}
+      <div class="test-type">
+         <a [routerLink]="appUrlsSvc.testDataEntry(test.testTypeCode, test.testId)">{{test.testTypeShortName}}</a>
       </div>
 
       <div class="elapsed">
@@ -21,30 +21,17 @@
          </app-test-stage-status>
       </div>
 
-      <div class="view">
-         <button mat-icon-button (click)="onViewTestClicked()">
-            <mat-icon>visibility</mat-icon>
-         </button>
-      </div>
-
       <div class="expanding-flex-space"></div>
 
-      <div class="reports-and-files">
-         <div class="reports" *ngIf="testType.reportNames.length > 0">
-            <mat-menu #reportsMenu="matMenu">
-               <button mat-menu-item *ngFor="let reportName of testType.reportNames"
-                  (click)="onReportClicked(reportName)">
-                  {{reportName}}
-               </button>
-            </mat-menu>
-            <button class="link" [matMenuTriggerFor]="reportsMenu">
-               Reports <mat-icon>more_vert</mat-icon>
-            </button>
+      <div class="reports-and-files-stack">
+         <div class="reports">
+            <mat-icon>visibility</mat-icon>
+            <a [routerLink]="appUrlsSvc.testReportsListing(test.testTypeCode, test.testId)">Reports</a>
          </div>
-         <span class="files">
+         <div class="files">
             <mat-icon>attach_file</mat-icon>
-            <a [routerLink]="['/test', test.testId, 'attached-files']">{{test.attachedFilesCount}} files</a>
-         </span>
+            <a [routerLink]="appUrlsSvc.testAttachedFiles(test.testId)">{{test.attachedFilesCount}} files</a>
+         </div>
       </div>
 
       <div *ngIf="test.note" class="note">

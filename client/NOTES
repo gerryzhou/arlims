@@ -1,3 +1,24 @@
+Commit Notes
+------------
+
+
+------------
+
+
+Revive the pdf report, do proper rendering of full data and change log.
+  Create a reports-listing view within each test module, link to it from the test metadata view.
+  Then for any report, the test module can transform the report data as to match the form needed by the report.
+  This would also eliminate the requirement of fetching the reports by test type for the lab group, because
+  the test module naturally knows its own report types.
+  Rename the test view to "form-view" and link to it from the new reports-listing page.
+
+   // TODO: Move this into the test module. Need to send customized test data here, not just test id.
+   initiateReportDownload([testId, reportName]: [number, string])
+   {
+      const reportUrl = this.apiUrlsSvc.reportUrl(testId, reportName);
+      this.fileDownloadsSvc.promptDownloadFile(reportUrl, reportName).subscribe();
+   }
+
 
 
 API

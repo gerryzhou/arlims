@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {LabTestMetadata, LabTestType} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
-import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
+import {AppInternalUrlsService} from '../../shared/services/app-internal-urls.service';
+import {Router} from '@angular/router';
 
 @Component({
    selector: 'app-test-metadata',
@@ -23,19 +24,12 @@ export class TestMetadataComponent implements OnChanges {
 
    testStatusActions: TestStatusAction[];
 
-   @Output()
-   editStageClick = new EventEmitter<LabTestStageMetadata>();
-
-   @Output()
-   editTestClick = new EventEmitter<LabTestMetadata>();
-
-   @Output()
-   viewTestClick = new EventEmitter<LabTestMetadata>();
-
-   @Output()
-   reportClick = new EventEmitter<string>();
-
-   constructor() { }
+   constructor
+      (
+         public appUrlsSvc: AppInternalUrlsService,
+         public router: Router,
+      )
+   {}
 
    ngOnChanges()
    {
@@ -47,22 +41,8 @@ export class TestMetadataComponent implements OnChanges {
 
    onEditStageClicked(stageName: string)
    {
-      this.editStageClick.next(new LabTestStageMetadata(this.test, stageName));
-   }
-
-   onEditTestClicked()
-   {
-      this.editTestClick.next(this.test);
-   }
-
-   onViewTestClicked()
-   {
-      this.viewTestClick.next(this.test);
-   }
-
-   onReportClicked(reportName: string)
-   {
-      this.reportClick.next(reportName);
+      const url = this.appUrlsSvc.testStageDataEntry(this.test.testTypeCode, this.test.testId, stageName);
+      this.router.navigate(url);
    }
 
    private static makeTestStatusActionsTimeDescending(test: LabTestMetadata): TestStatusAction[] {

@@ -1,12 +1,9 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CreatedTestMetadata, LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
-import {AlertMessageService, ApiUrlsService, UserContextService, WindowService} from '../shared/services';
+import {AlertMessageService, UserContextService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
-import {LabTestStageMetadata} from '../shared/models/lab-test-stage-metadata';
 import {Subscription} from 'rxjs';
-import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
-import {FileDownloadsService} from '../shared/services/file-downloads';
 
 @Component({
    selector: 'app-samples-listing',
@@ -46,9 +43,6 @@ export class SamplesListingComponent implements OnDestroy {
           private activatedRoute: ActivatedRoute,
           private router: Router,
           private alertMessageSvc: AlertMessageService,
-          private fileDownloadsSvc: FileDownloadsService,
-          private apiUrlsSvc: ApiUrlsService,
-          private appUrlsSvc: AppInternalUrlsService,
        )
    {
       const expandedSampleIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
@@ -132,28 +126,6 @@ export class SamplesListingComponent implements OnDestroy {
       }
    }
 
-   navigateToTestDataEntry(test: LabTestMetadata)
-   {
-      this.router.navigate(this.appUrlsSvc.testDataEntry(test.testTypeCode, test.testId));
-   }
-
-   navigateToTestStageDataEntry(testStage: LabTestStageMetadata)
-   {
-      const test = testStage.labTestMetadata;
-      this.router.navigate(this.appUrlsSvc.testStageDataEntry(test.testTypeCode, test.testId, testStage.stageName));
-   }
-
-   navigateToTestDataView(test: LabTestMetadata)
-   {
-      this.router.navigate(this.appUrlsSvc.testDataView(test.testTypeCode, test.testId));
-   }
-
-   initiateReportDownload([testId, reportName]: [number, string])
-   {
-      const reportUrl = this.apiUrlsSvc.reportUrl(testId, reportName);
-      this.fileDownloadsSvc.promptDownloadFile(reportUrl, reportName).subscribe();
-   }
-
    private sampleSatisfiesSearchTextRequirement(sample: Sample, listingOptions: ListingOptions): boolean
    {
       return !listingOptions.searchText || listingOptions.searchText.trim().length === 0 ||
@@ -215,6 +187,7 @@ export class SamplesListingComponent implements OnDestroy {
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
+
    unselectAllVisible()
    {
       for (const sampleIx of this.visibleSampleIxs)

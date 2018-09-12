@@ -40,10 +40,11 @@
       }
    }
 
-   .reports-and-files {
+   .reports-and-files-stack {
       display: flex;
       flex-flow: column nowrap;
-      .reports .link {
+
+      .reports {
          display: flex;
          align-items: center;
       }

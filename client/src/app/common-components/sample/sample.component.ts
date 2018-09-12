@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {CreatedTestMetadata, LabTestMetadata, LabTestType, Sample} from '../../../generated/dto';
-import {LabTestStageMetadata} from '../../shared/models/lab-test-stage-metadata';
 import {MatDialog} from '@angular/material';
 import {NewTestDialogComponent} from '../new-test-dialog/new-test-dialog.component';
 import {TestsService} from '../../shared/services';
@@ -35,18 +34,6 @@ export class SampleComponent implements OnChanges {
 
    @Output()
    headerClick = new EventEmitter<void>();
-
-   @Output()
-   editTestClick = new EventEmitter<LabTestMetadata>();
-
-   @Output()
-   editTestStageClick = new EventEmitter<LabTestStageMetadata>();
-
-   @Output()
-   viewTestClick = new EventEmitter<LabTestMetadata>();
-
-   @Output()
-   testReportClick = new EventEmitter<[number, string]>();
 
    @Output()
    testCreated = new EventEmitter<CreatedTestMetadata>();
@@ -87,26 +74,6 @@ export class SampleComponent implements OnChanges {
    onHeaderClick()
    {
       this.headerClick.next();
-   }
-
-   onEditTestClicked(test: LabTestMetadata)
-   {
-      this.editTestClick.next(test);
-   }
-
-   onEditTestStageClicked(testStage: LabTestStageMetadata)
-   {
-      this.editTestStageClick.next(testStage);
-   }
-
-   onViewTestClicked(test: LabTestMetadata)
-   {
-      this.viewTestClick.next(test);
-   }
-
-   onTestReportClicked(testId: number, reportName: string)
-   {
-      this.testReportClick.next([testId, reportName]);
    }
 
    promptCreateNewTest()

@@ -3,27 +3,28 @@ import {Routes, RouterModule} from '@angular/router';
 
 import {StagedTestDataEntryComponent} from '../staged-test-data-entry/staged-test-data-entry.component';
 import {LabGroupTestDataResolver} from '../../../../routing/lab-group-test-data.resolver';
-import {TestDataViewComponent} from '../test-data-view/test-data-view.component';
+import {FormDataReviewComponent} from '../form-data-review/form-data-review.component';
 import {TestDataEntryConfirmDeactivateGuard} from './test-data-entry-confirm-deactivate-guard';
 
 const routes: Routes = [
    {
-      path: 'test-data-analyzedEntry/:testId',
+      path: 'test-data-entry/:testId',
       component: StagedTestDataEntryComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {title: 'Imported SLM Vidas Test Data Entry'},
       canDeactivate: [TestDataEntryConfirmDeactivateGuard],
    },
    {
-      path: 'test-data-analyzedEntry/:testId/stage/:stage',
+      path: 'test-data-entry/:testId/stage/:stage',
       component: StagedTestDataEntryComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {title: 'Imported SLM Vidas Test Data Entry'},
       canDeactivate: [TestDataEntryConfirmDeactivateGuard],
    },
    {
-      path: 'test-data-view/:testId',
-      component: TestDataViewComponent,
+      path: 'reports-listing/:testId',
+      // TODO: Route to new reports listing component here instead.
+      component: FormDataReviewComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {
          title: 'Imported SLM Vidas Test Data Review',
