@@ -10,7 +10,12 @@
 .reports-stack {
    display: flex;
    flex-flow: column nowrap;
+   align-items: center;
    margin-top: 30px;
+
+   mat-card {
+      width: 50%;
+   }
 }
 
 .report {

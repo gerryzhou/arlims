@@ -8,10 +8,18 @@
 
    <mat-card class="report">
       <a [routerLink]="['../../reports/form-data-review', sampleInTest.testMetadata.testId]">Form data review</a>
+
+      <p>
+         This report provides a read-only view of the test data as entered in the data entry forms, with all test
+         stages stacked together, and a trailing audit log of all test data changes.
+      </p>
    </mat-card>
 
    <mat-card class="report">
       <button mat-button (click)="generateAndPromptSavePdfReport()">Pdf report</button>
+      <p>
+         Generates a pdf version of the "Imp. Sal Template" form, with trailing audit log listing all test data changes.
+      </p>
    </mat-card>
 
 </div>
