@@ -50,7 +50,6 @@ export class SampleComponent implements OnChanges {
    @Output()
    testDeletionFailed = new EventEmitter<string>();
 
-   // Sample "details" include tests or resource lists, and additional sample metadata.
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasAssociatedItems: boolean;
 

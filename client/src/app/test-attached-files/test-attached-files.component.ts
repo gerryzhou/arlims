@@ -1,14 +1,16 @@
 import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {CreatedTestAttachedFiles, TestAttachedFileMetadata} from '../../generated/dto';
+import {FormControl, FormGroup} from '@angular/forms';
+import {HttpClient} from '@angular/common/http';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {map} from 'rxjs/operators';
+import * as FileSaver from 'file-saver';
+
+import {FilesSelectorComponent} from '../common-components/files-selector/files-selector.component';
 import {TestAttachedFiles} from '../routing/test-attached-files.resolver';
 import {SampleInTest} from '../shared/models/sample-in-test';
 import {ApiUrlsService, TestsService, UserContextService} from '../shared/services';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {FormControl, FormGroup} from '@angular/forms';
-import {FilesSelectorComponent} from '../common-components/files-selector/files-selector.component';
-import {FileDownloadsService} from '../shared/services/file-downloads';
-
+import {CreatedTestAttachedFiles, TestAttachedFileMetadata} from '../../generated/dto';
 
 @Component({
   selector: 'app-test-attached-files',
@@ -35,8 +37,8 @@ export class TestAttachedFilesComponent implements AfterViewInit {
 
    constructor
       (
+         private httpClient: HttpClient,
          private activatedRoute: ActivatedRoute,
-         private fileDownloadsSvc: FileDownloadsService,
          private apiUrlsSvc: ApiUrlsService,
          private testsSvc: TestsService,
          private usrCtxSvc: UserContextService
@@ -97,7 +99,11 @@ export class TestAttachedFilesComponent implements AfterViewInit {
    promptDownloadFile(attachedFile: TestAttachedFileMetadata)
    {
       const fileUrl = this.apiUrlsSvc.testAttachedFileUrl(attachedFile.attachedFileId, attachedFile.testId);
-      this.fileDownloadsSvc.promptDownloadFile(fileUrl, attachedFile.fileName).subscribe();
+      this.httpClient.get(fileUrl, {responseType: 'blob'})
+         .pipe(
+            map(blob => FileSaver.saveAs(blob, attachedFile.fileName, true))
+         )
+         .subscribe();
    }
 
    removeAttachedFile(attachedFile: TestAttachedFileMetadata)

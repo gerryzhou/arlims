@@ -5,6 +5,7 @@ import {StagedTestDataEntryComponent} from '../staged-test-data-entry/staged-tes
 import {LabGroupTestDataResolver} from '../../../../routing/lab-group-test-data.resolver';
 import {FormDataReviewComponent} from '../form-data-review/form-data-review.component';
 import {TestDataEntryConfirmDeactivateGuard} from './test-data-entry-confirm-deactivate-guard';
+import {TestReportsListingComponent} from '../reports-listing/test-reports-listing.component';
 
 const routes: Routes = [
    {
@@ -23,7 +24,15 @@ const routes: Routes = [
    },
    {
       path: 'reports-listing/:testId',
-      // TODO: Route to new reports listing component here instead.
+      component: TestReportsListingComponent,
+      resolve: { labGroupTestData: LabGroupTestDataResolver },
+      data: {
+         title: 'Test Reports - Imported SLM Vidas',
+         includeAuditLogEntries: true, // tell resolver to also load audit log entries
+      },
+   },
+   {
+      path: 'reports/form-data-review/:testId',
       component: FormDataReviewComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {

@@ -1,4 +1,7 @@
-Allow deep linking by always sending index.html from server when any subresource is requested.
+
+
+
+Allow deep linking by always sending index.html from server when any sub-resource is requested.
 
 
 Add scheduled task to update samples from FACTS, driven by properties.

@@ -44,6 +44,10 @@
       display: flex;
       flex-flow: column nowrap;
 
+      mat-icon {
+         margin-right: 5px;
+      }
+
       .reports {
          display: flex;
          align-items: center;

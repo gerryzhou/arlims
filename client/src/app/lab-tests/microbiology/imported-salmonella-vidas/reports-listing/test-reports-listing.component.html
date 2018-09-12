@@ -1,0 +1,19 @@
+<div class="sample-in-test-information">
+   <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
+   <app-sample [sample]="sampleInTest.sample"></app-sample>
+</div>
+
+
+<div class="reports-stack">
+
+   <mat-card class="report">
+      <a [routerLink]="['../../reports/form-data-review', sampleInTest.testMetadata.testId]">Form data review</a>
+   </mat-card>
+
+   <mat-card class="report">
+      <button mat-button (click)="generateAndPromptSavePdfReport()">Pdf report</button>
+   </mat-card>
+
+</div>
+
+

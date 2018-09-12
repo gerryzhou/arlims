@@ -205,6 +205,26 @@ public class TestController extends ControllerBase
             .body(new InputStreamResource(Files.newInputStream(report.getReportFile())));
     }
 
+    @PostMapping("{testId}/report/{reportName}")
+    public ResponseEntity<InputStreamResource> getTestDataReportForProvidedTestData
+        (
+            @PathVariable long testId,
+            @PathVariable String reportName,
+            @RequestBody String testDataJson
+        )
+        throws IOException
+    {
+        LabTestMetadata testMetadata = testDataService.getTestMetadata(testId);
+
+        Report report = reportService.makeReport(reportName, testDataJson, testMetadata);
+
+        return
+            ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+            "attachment;filename=" + report.getSuggestedFileName())
+            .contentLength(report.getReportFile().toFile().length())
+            .body(new InputStreamResource(Files.newInputStream(report.getReportFile())));
+    }
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

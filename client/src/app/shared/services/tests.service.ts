@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Observable, of as observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
+import * as FileSaver from 'file-saver';
+
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
 import {ApiUrlsService} from './api-urls.service';
 import {
@@ -19,7 +21,12 @@ import {TestStageStatus} from '../../lab-tests/test-stages';
 })
 export class TestsService {
 
-   constructor(private apiUrlsSvc: ApiUrlsService, private httpClient: HttpClient) { }
+   constructor
+      (
+         private httpClient: HttpClient,
+         private apiUrlsSvc: ApiUrlsService,
+      )
+   {}
 
    createTest(sampleId: number, testTypeCode: LabTestTypeCode, testBeginDate: string): Observable<CreatedTestMetadata>
    {
@@ -164,6 +171,14 @@ export class TestsService {
          })
       );
    }
+
+   getTestReportBlobForPostedTestData(testId: number, reportName: string, testData: any): Observable<Blob>
+   {
+      const reportUrl = this.apiUrlsSvc.reportUrl(testId, reportName);
+
+      return this.httpClient.post(reportUrl, testData, {responseType: 'blob'});
+   }
+
 }
 
 export class SaveResult {

@@ -14,6 +14,7 @@ import {
    MatIconModule,
    MatStepperModule,
    MatMenuModule,
+   MatCardModule,
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
@@ -26,8 +27,9 @@ import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from './stage-controls/stage-controls.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
-import {FormDataReviewComponent} from './form-data-review/form-data-review.component';
 import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-confirm-deactivate-guard';
+import {TestReportsListingComponent} from './reports-listing/test-reports-listing.component';
+import {FormDataReviewComponent} from './form-data-review/form-data-review.component';
 
 @NgModule({
    imports: [
@@ -45,6 +47,7 @@ import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-con
       MatIconModule,
       MatStepperModule,
       MatMenuModule,
+      MatCardModule,
       //
       CommonComponentsModule,
       ImportedSalmonellaVidasRoutingModule,
@@ -58,7 +61,8 @@ import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-con
       StageMBrothComponent,
       StageVidasComponent,
       StageControlsComponent,
-      StageWrapupComponent
+      StageWrapupComponent,
+      TestReportsListingComponent
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,
