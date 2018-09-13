@@ -109,13 +109,3 @@ insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
 insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
   values(5, 1, '24 Jun 2018', 1);
 
--- insert into sample_managed_resource (sample_id, employee_id, list_name, resource_code)
---   values(2, 1, 'shrimp - Jul 5, 2018', 'ARL00424');
--- insert into sample_managed_resource (sample_id, employee_id, list_name, resource_code)
---   values(2, 1, 'shrimp - Jul 5, 2018', 'ARL00190');
---
--- insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resource_code, resource_type)
---   values(2, 1, 'shrimp media - Jul 3, 2018', 'RT-234567', 'MED');
--- insert into sample_unmanaged_resource (sample_id, employee_id, list_name, resource_code, resource_type)
---   values(2, 1, 'shrimp media - Jul 3, 2018', 'TT-345678', 'MED');
-
