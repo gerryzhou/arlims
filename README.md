@@ -18,6 +18,14 @@ The above executes `ng serve` with extra configuration to forward /api/* request
 to the backend started in terminal 1. Hotloading is enabled. The app can be
 accessed in the browser at `localhost:4200`.
 
+## Running from jar in development
+
+    mvn clean package
+    # Get the application properties from somewhere, to provide db connect info etc.
+    cp ~/Programming/etc/test-configs/alis/application-dev.properties target/application.properties
+    cd target
+    java -jar alis
+
 
 # Building and deploying for production
 

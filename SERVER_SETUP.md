@@ -9,6 +9,7 @@
     adduser alis --system -s /bin/false
 
 # Setup application directory
+
     # sudo su -
     # Copy alis-dist.tgz from somewhere into /u01/LIMS_APi/.
     cd /u01/LIMS_APi
