@@ -1,3 +1,4 @@
+import {isBoolean} from 'util';
 
 export interface TestStageStatus {
    stageName: string;
@@ -38,8 +39,8 @@ export function statusForRequiredFieldValues
       if ( v === undefined || v === null || v === '' ) nonValueFound = true;
       else if ( Array.isArray(v) )
       {
-            valueFound = v.some((item) => item != null);
-            nonValueFound = (!allowEmptyArrayAsValue && v.length === 0) || v.some((item) => item == null);
+            valueFound = arrayContainsValue(v);
+            nonValueFound = (!allowEmptyArrayAsValue && v.length === 0) || arrayContainsNonValue(v);
       }
       else valueFound = true;
    }
@@ -53,3 +54,19 @@ export function statusForRequiredFieldValues
    }
 }
 
+export function arrayContainsValue<T>(a: Array<T>): boolean
+{
+   return a.some((item) => item != null);
+}
+
+export function countValueOccurrences<T>(a: Array<T>, v: T): number
+{
+   let count = 0;
+   for ( const av of a ) if ( av === v ) ++count;
+   return count;
+}
+
+export function arrayContainsNonValue<T>(a: Array<T>): boolean
+{
+   return a.some((item) => item == null);
+}

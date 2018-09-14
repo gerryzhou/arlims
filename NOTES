@@ -1,12 +1,8 @@
 
-
-
-Allow deep linking by always sending index.html from server when any sub-resource is requested.
-
-
 Add scheduled task to update samples from FACTS, driven by properties.
 
-
+Spring Reverse Proxy Setup using Spring Cloud / Zuul
+  https://spring.io/guides/tutorials/spring-security-and-angular-js/
 
 Commit Notes
 ------------
