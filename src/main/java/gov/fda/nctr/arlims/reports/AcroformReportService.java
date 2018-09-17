@@ -13,6 +13,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,10 +30,17 @@ class AcroformReportService
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public AcroformReportService()
+
+    public AcroformReportService(ReportsConfig config)
     {
         ObjectMapper jsonSerializer = Jackson2ObjectMapperBuilder.json().build();
         this.jsonReader = jsonSerializer.reader();
+
+        if ( config.getPdfboxCacheDir() != null )
+        {
+            System.setProperty("pdfbox.fontcache", config.getPdfboxCacheDir());
+            log.info("Set pdfbox cache directory to " + config.getPdfboxCacheDir() + ".");
+        }
     }
 
     Report generateReport
