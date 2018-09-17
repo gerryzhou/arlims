@@ -1,13 +1,23 @@
 
+
+API Access
+  Inbox
+    Personal Inbox - focus on this first.
+      John agrees with refreshing from FACTS inbox every 30min or so in background.
+    Org Inbox - for weekend work mainly and/or where someone substitutes for another
+  Pushing data into FACTS
+    Lower priority for now.
+
 Add scheduled task to update samples from FACTS, driven by properties.
 
 Spring Reverse Proxy Setup using Spring Cloud / Zuul
   https://spring.io/guides/tutorials/spring-security-and-angular-js/
 
+
 Commit Notes
 ------------
 
-----------------
+------------
 
 
 JWT Invalidation
