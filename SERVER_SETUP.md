@@ -37,14 +37,15 @@ if it was built with a custom context name.
 Review alis.service to verify paths are correct for the host system, then copy
 into the systemd system directory:
 
-    sudo cp alis.service /etc/systemd/system
+    sudo su -
+    cp alis.service /etc/systemd/system
     
-    sudo systemctl daemon-reload
-    sudo systemctl start alis
+    systemctl daemon-reload
+    systemctl start alis
     # Start at boot time automatically.
-    sudo systemctl enable alis
+    systemctl enable alis
 
 Check status:
 
-    sudo systemctl status alis
+    systemctl status alis
 
