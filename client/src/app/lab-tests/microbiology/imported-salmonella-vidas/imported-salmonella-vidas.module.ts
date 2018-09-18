@@ -28,7 +28,7 @@ import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from './stage-controls/stage-controls.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
 import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-confirm-deactivate-guard';
-import {TestReportsListingComponent} from './reports-listing/test-reports-listing.component';
+import {TestReportsListingComponent} from './reports/reports-listing/test-reports-listing.component';
 import {FormDataReviewComponent} from './form-data-review/form-data-review.component';
 
 @NgModule({

@@ -1,5 +1,9 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {atomicValueAsString, DataFieldDiff, FieldDiffType} from '../../shared/util/data-objects';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {
+   DataFieldDiff,
+   ParentPathDisplayableFieldDiffs,
+   getDisplayableFieldDiffsByFieldParentPath
+} from '../../shared/util/data-objects';
 
 @Component({
    selector: 'app-data-field-diffs',
@@ -12,67 +16,12 @@ export class DataFieldDiffsComponent implements OnChanges
    @Input()
    dataFieldDiffs: DataFieldDiff[];
 
-   parentPathFieldDiffss: ParentPathFieldDiffs[];
+   parentPathFieldDiffss: ParentPathDisplayableFieldDiffs[];
 
    constructor() {}
 
-   ngOnChanges(changes: SimpleChanges): void
+   ngOnChanges(): void
    {
-      const changesByParentPath  = new Map<string, FieldDiff[]>();
-
-      for ( const dataFieldDiff of this.dataFieldDiffs )
-      {
-         const pathComps = dataFieldDiff.path.split('/').map(friendlyFieldPathComponentName);
-         const fieldName = pathComps.length > 0 ? pathComps[pathComps.length - 1] : '';
-         const parentPath = pathComps.length > 0 ? pathComps.slice(0, pathComps.length - 1).join(' / ').toUpperCase() : '';
-         const parentPathDiffs = changesByParentPath.get(parentPath);
-         if ( !parentPathDiffs )
-            changesByParentPath.set(parentPath, [new FieldDiff(fieldName, dataFieldDiff)]);
-         else
-            parentPathDiffs.push(new FieldDiff(fieldName, dataFieldDiff));
-      }
-
-      const diffs: ParentPathFieldDiffs[] = [];
-      for ( const [fieldsParentPath, fieldDiffs] of changesByParentPath.entries() )
-      {
-         diffs.push({fieldsParentPath, fieldDiffs});
-      }
-      this.parentPathFieldDiffss = diffs;
-   }
-
-}
-
-export function friendlyFieldPathComponentName(pathCompName: string): string
-{
-   return pathCompName
-      .replace(/Data$/g, '')
-      .replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
-}
-
-interface ParentPathFieldDiffs
-{
-   fieldsParentPath: string;
-   fieldDiffs: FieldDiff[];
-}
-
-class FieldDiff
-{
-   fieldName: string;
-   diffType: FieldDiffType;
-   diffTypeText: string;
-   fromValue: string;
-   toValue: string;
-
-   constructor(fieldName: string, dataFieldDiff: DataFieldDiff)
-   {
-      this.fieldName = fieldName;
-      this.diffType = dataFieldDiff.diffType;
-      this.diffTypeText =
-         dataFieldDiff.diffType === 'new' ? 'NEW VALUE'
-            : dataFieldDiff.diffType === 'updated' ? 'UPDATED'
-            : 'REMOVED VALUE';
-      this.fromValue = atomicValueAsString(dataFieldDiff.fromValue);
-      this.toValue = atomicValueAsString(dataFieldDiff.toValue);
+      this.parentPathFieldDiffss = getDisplayableFieldDiffsByFieldParentPath(this.dataFieldDiffs);
    }
 }
-

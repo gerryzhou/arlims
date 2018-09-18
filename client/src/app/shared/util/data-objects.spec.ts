@@ -508,6 +508,14 @@ describe('atomicValuesDiffList function', () => {
       ]);
    });
 
+   it('should yield \'updated\' record for null changed to false', () => {
+      const a = {a: null};
+      const b = {a: false};
+      expect(atomicValuesDiffList(a, b)).toEqual([
+         { path: 'a', diffType: 'updated', fromValue: 'null', toValue: 'false'}
+      ]);
+   });
+
    it('should yield \'new\' record for new top level string field', () => {
       const now = new Date();
       const a = {a: 1, b: now, c: 'yes', d: [1, 2]};
@@ -563,4 +571,3 @@ describe('atomicValuesDiffList function', () => {
    });
 
 });
-

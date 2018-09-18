@@ -66,12 +66,12 @@ export function atomicValuesDiffList
    )
    : DataFieldDiff[]
 {
-   if ( !fromObj && !toObj )
+   if ( fromObj == null && toObj == null )
       return [];
 
-   if ( fromObj && isAtomicValue(fromObj) )
+   if ( fromObj != null && isAtomicValue(fromObj) )
    {
-      if ( !toObj )
+      if ( toObj == null )
          return [{path, diffType: 'removed', fromValue: fromObj, toValue: toObj}];
       else if ( !isAtomicValue(toObj) )
          throw new Error(`values at path ${path} are not comparable`);
@@ -80,9 +80,9 @@ export function atomicValuesDiffList
             : [{path, diffType: 'updated', fromValue: fromObj, toValue: toObj}];
    }
 
-   if ( toObj && isAtomicValue(toObj) )
+   if ( toObj != null && isAtomicValue(toObj) )
    {
-      if ( !fromObj )
+      if ( fromObj == null )
          return [{path, diffType: 'new', fromValue: fromObj, toValue: toObj}];
       else // fromObj can't be an atomic value here, would have already returned above in that case
          throw new Error(`values at path ${path} are not comparable`);
@@ -324,3 +324,68 @@ export function atomicValueAsString(value: any): string
    else if ( isDate(value) ) return (<Date>value).toISOString();
    else return JSON.stringify(value);
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Types and functions related to the display of field level differences for data changes.
+
+export function getDisplayableFieldDiffsByFieldParentPath(dataFieldDiffs: DataFieldDiff[]): ParentPathDisplayableFieldDiffs[]
+{
+   const changesByParentPath  = new Map<string, DisplayableFieldDiff[]>();
+
+   for ( const dataFieldDiff of dataFieldDiffs )
+   {
+      const pathComps = dataFieldDiff.path.split('/').map(friendlyFieldPathComponentName);
+      const fieldName = pathComps.length > 0 ? pathComps[pathComps.length - 1] : '';
+      const parentPath = pathComps.length > 0 ? pathComps.slice(0, pathComps.length - 1).join(' / ').toUpperCase() : '';
+      const parentPathDiffs = changesByParentPath.get(parentPath);
+      if ( !parentPathDiffs )
+         changesByParentPath.set(parentPath, [new DisplayableFieldDiff(fieldName, dataFieldDiff)]);
+      else
+         parentPathDiffs.push(new DisplayableFieldDiff(fieldName, dataFieldDiff));
+   }
+
+   const diffs: ParentPathDisplayableFieldDiffs[] = [];
+
+   for ( const [fieldsParentPath, fieldDiffs] of changesByParentPath.entries() )
+   {
+      diffs.push({fieldsParentPath, fieldDiffs});
+   }
+
+   return diffs;
+}
+
+export interface ParentPathDisplayableFieldDiffs
+{
+   fieldsParentPath: string;
+   fieldDiffs: DisplayableFieldDiff[];
+}
+
+export class DisplayableFieldDiff
+{
+   fieldName: string;
+   diffType: FieldDiffType;
+   diffTypeText: string;
+   fromValue: string;
+   toValue: string;
+
+   constructor(fieldName: string, dataFieldDiff: DataFieldDiff)
+   {
+      this.fieldName = fieldName;
+      this.diffType = dataFieldDiff.diffType;
+      this.diffTypeText =
+         dataFieldDiff.diffType === 'new' ? 'NEW VALUE'
+            : dataFieldDiff.diffType === 'updated' ? 'UPDATED'
+            : 'REMOVED VALUE';
+      this.fromValue = atomicValueAsString(dataFieldDiff.fromValue);
+      this.toValue = atomicValueAsString(dataFieldDiff.toValue);
+   }
+}
+
+function friendlyFieldPathComponentName(pathCompName: string): string
+{
+   return pathCompName
+      .replace(/Data$/g, '')
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
+}
+

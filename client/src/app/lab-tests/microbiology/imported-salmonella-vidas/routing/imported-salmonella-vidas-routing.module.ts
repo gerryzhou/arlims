@@ -5,7 +5,7 @@ import {StagedTestDataEntryComponent} from '../staged-test-data-entry/staged-tes
 import {LabGroupTestDataResolver} from '../../../../routing/lab-group-test-data.resolver';
 import {FormDataReviewComponent} from '../form-data-review/form-data-review.component';
 import {TestDataEntryConfirmDeactivateGuard} from './test-data-entry-confirm-deactivate-guard';
-import {TestReportsListingComponent} from '../reports-listing/test-reports-listing.component';
+import {TestReportsListingComponent} from '../reports/reports-listing/test-reports-listing.component';
 
 const routes: Routes = [
    {
