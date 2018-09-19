@@ -1,14 +1,16 @@
 package gov.fda.nctr.arlims.data_access.facts;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.InboxItem;
 
 
 @Service
@@ -47,7 +49,10 @@ public class ScheduledTasksService extends ServiceBase implements SchedulingConf
     @Scheduled(cron = "${facts.scheduling.sample-refresh.cron}")
     public void refreshSamples()
     {
-        // TODO
-        log.info("[scheduled task] refreshSamples()");
+        List<InboxItem> inboxItems = factsService.getLabInboxItems();
+
+        log.info("[scheduled task] refreshSamples(): got inbox items: " + inboxItems);
+
+        // TODO: Update tables from retrieved inbox items.
     }
 }

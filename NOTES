@@ -1,6 +1,28 @@
-
-
 API Access
+----------
+
+person inbox entry example:
+  "leadInd": "Y",
+   "operationCode": "12",
+   "personId": 478923,
+   "reviewRequiredInd": "N",
+   "rvMeaning": "Assigned",
+   "statusCode": "S",
+   "statusDate": "2018-05-04 15:53:21.000-0400",
+   "subjectText": "test",
+   "workDetailId": 8533498,
+   "workId": 8637563,
+   "workRequestId": 11649125,
+   "workDetailRowId": "AAAE5sAANAAFqMuAAE"
+
+
+
+Add scheduled task to update samples from FACTS, driven by properties.
+
+Try using the "lab inbox" api to fetch the inbox for all lab employees with single api call.
+  Add new facts lab id field to lab group.
+  For each lab group, fetch inbox items for the lab group and update sample table.
+
   Inbox
     Personal Inbox - focus on this first.
       John agrees with refreshing from FACTS inbox every 30min or so in background.
@@ -8,7 +30,6 @@ API Access
   Pushing data into FACTS
     Lower priority for now.
 
-Add scheduled task to update samples from FACTS, driven by properties.
 
 Spring Reverse Proxy Setup using Spring Cloud / Zuul
   https://spring.io/guides/tutorials/spring-security-and-angular-js/
