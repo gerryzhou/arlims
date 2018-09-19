@@ -374,9 +374,9 @@ export class DisplayableFieldDiff
       this.fieldName = fieldName;
       this.diffType = dataFieldDiff.diffType;
       this.diffTypeText =
-         dataFieldDiff.diffType === 'new' ? 'NEW VALUE'
-            : dataFieldDiff.diffType === 'updated' ? 'UPDATED'
-            : 'REMOVED VALUE';
+         dataFieldDiff.diffType === 'new' ? 'ADD'
+            : dataFieldDiff.diffType === 'updated' ? 'UPDATE'
+            : 'REMOVE';
       this.fromValue = atomicValueAsString(dataFieldDiff.fromValue);
       this.toValue = atomicValueAsString(dataFieldDiff.toValue);
    }

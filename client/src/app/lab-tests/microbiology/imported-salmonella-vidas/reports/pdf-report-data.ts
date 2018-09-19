@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 import {
    cloneDataObject,
    getDisplayableFieldDiffsByFieldParentPath,
@@ -6,9 +8,11 @@ import {
 import {arrayContainsNonValue, arrayContainsValue, countValueOccurrences} from '../../../test-stages';
 import {TestData} from '../test-data';
 import {AuditLogEntry} from '../../../../../generated/dto';
-import {AnalyzedAuditLogEntry} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
+import {AnalyzedAuditLogEntry, AttachedFileDescr} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
 
 export const IMP_SLM_VIDAS_PDF_REPORT_NAME = 'imp_slm_vidas.pdf';
+const SIX_SPACES = Array(7).join(' ');
+const THIRTY_SPACES = Array(31).join(' ');
 
 export function makePdfReportData(testData: TestData, auditLogEntries: AuditLogEntry[] | null): any
 {
@@ -86,7 +90,10 @@ export function makePdfReportData(testData: TestData, auditLogEntries: AuditLogE
       testData.wrapupData.reserveSampleDisposition.toLowerCase().replace('_', ' ')
       : null;
 
-   repData.auditLogText = auditLogEntries ? makeAuditLogText(auditLogEntries) : null;
+   repData._appendices = [];
+
+   if ( auditLogEntries )
+      repData._appendices.push({title: 'Audit Log', text: makeAuditLogText(auditLogEntries)});
 
    return repData;
 }
@@ -115,10 +122,18 @@ function auditLogEntryText(e: AuditLogEntry): string
 
    const fieldDiffsByParentPath = ae.dataFieldDiffs ? getDisplayableFieldDiffsByFieldParentPath(ae.dataFieldDiffs) : null;
 
-   const changeDetailsText = fieldDiffsByParentPath ? fieldDiffsText(fieldDiffsByParentPath, '    ') : '';
+   const detailParts: string[] = [];
 
-   return e.actingUsername + '   ' + ae.actionObjectText + '   ' + e.timestamp + '\n' +
-      changeDetailsText + '\n';
+   if ( fieldDiffsByParentPath )
+      detailParts.push(fieldDiffsText(fieldDiffsByParentPath, '   '));
+
+   if ( ae.attachedFileDescrs )
+      detailParts.push('   ' + ae.attachedFileDescrs.map(describeAttachedFile).join('\n   '));
+
+   return padstr(ae.actionObjectText, THIRTY_SPACES) + ' ' +
+          padstr(e.actingUsername, THIRTY_SPACES) +
+          ' at ' + moment(e.timestamp).format('h:mm a, D MMM YYYY') + '\n' +
+      detailParts.join('\n');
 }
 
 function fieldDiffsText(fieldDiffsByParentPath: ParentPathDisplayableFieldDiffs[], linePrefix: string | null): string
@@ -127,7 +142,7 @@ function fieldDiffsText(fieldDiffsByParentPath: ParentPathDisplayableFieldDiffs[
 
    for (const parentPathFieldDiffs of fieldDiffsByParentPath)
    {
-      if ( linePrefix ) res.push('\n' + linePrefix); else res.push('\n');
+      if ( linePrefix ) res.push(linePrefix);
 
       res.push(parentPathFieldDiffs.fieldsParentPath + '\n');
 
@@ -135,12 +150,16 @@ function fieldDiffsText(fieldDiffsByParentPath: ParentPathDisplayableFieldDiffs[
       {
          if ( linePrefix ) res.push(linePrefix);
 
-         res.push('    ' + fieldDiff.fieldName + '    ' + fieldDiff.diffTypeText + ':   ');
+         res.push('   ' + fieldDiff.fieldName + '\n');
+
+         if ( linePrefix ) res.push(linePrefix);
+
+         res.push('      ' + padstr(fieldDiff.diffTypeText, SIX_SPACES) + ' ');
 
          if ( fieldDiff.diffType !== 'new' )
             res.push(fieldDiff.fromValue);
          if ( fieldDiff.diffType === 'updated' )
-            res.push('  =>  ');
+            res.push(' => ');
          if ( fieldDiff.diffType !== 'removed' )
             res.push(fieldDiff.toValue);
 
@@ -149,5 +168,18 @@ function fieldDiffsText(fieldDiffsByParentPath: ParentPathDisplayableFieldDiffs[
    }
 
    return res.join('');
+}
+
+function describeAttachedFile(attachedFile: AttachedFileDescr): string
+{
+   return attachedFile.fileName + '  ' + (attachedFile.size / 1000) + ' KB' +
+      (attachedFile.role ? '  [' + attachedFile.role + ']' : '') +
+      '\n';
+}
+
+function padstr(str: string, pad: string, padLeft: boolean = false)
+{
+   if (padLeft) return (pad + str).slice(-pad.length);
+   else return (str + pad).substring(0, pad.length);
 }
 

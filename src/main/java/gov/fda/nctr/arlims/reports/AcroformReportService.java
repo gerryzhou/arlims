@@ -1,25 +1,29 @@
 package gov.fda.nctr.arlims.reports;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
+import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.LabTestMetadata;
 
 
@@ -30,6 +34,9 @@ class AcroformReportService
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private static final String APPENDICES_KEY = "_appendices";
+    private static final int APPENDIX_MAX_LINES_PER_PAGE = 40;
+    private static final int APPENDIX_MAX_BLANK_LINE_NUM = 30;
 
     public AcroformReportService(ReportsConfig config)
     {
@@ -71,6 +78,9 @@ class AcroformReportService
 
             setTestDataFields(acroForm, testDataJsonNode, "");
 
+            if ( testDataJsonNode.hasNonNull(APPENDICES_KEY) )
+                appendAppendices(templateDoc, testDataJsonNode.get(APPENDICES_KEY));
+
             templateDoc.save(os);
         }
 
@@ -81,8 +91,91 @@ class AcroformReportService
         );
     }
 
+    private void appendAppendices(PDDocument doc, JsonNode appendicesJson) throws IOException
+    {
+        if ( !appendicesJson.isArray() )
+            throw new BadRequestException("Expected appendices to be an array.");
+
+        for ( JsonNode appendix: appendicesJson )
+        {
+            if ( !appendix.hasNonNull("title") || !appendix.hasNonNull("text") )
+                throw new BadRequestException("Expected appendices to have title and text values.");
+
+            String title = appendix.get("title").asText();
+
+            List<String> appendixLines = getAppendixLines(appendix.get("text").asText());
+
+            PDPage page = new PDPage();
+            doc.addPage(page);
+            PDRectangle mediaBox = page.getMediaBox();
+            PDPageContentStream pageContentStream = new PDPageContentStream(doc, page);
+            pageContentStream.beginText();
+            PDType1Font contentFont = PDType1Font.COURIER;
+
+            float margin = 30;
+            float pageStartX = mediaBox.getLowerLeftX() + margin;
+            float pageStartY = mediaBox.getUpperRightY() - margin;
+            float titleFontSize = 12;
+
+            float contentFontSize = 8;
+            float contentLeading = 1.5f * contentFontSize;
+
+            // appendix title
+            pageContentStream.setFont(PDType1Font.HELVETICA_BOLD, titleFontSize);
+            pageContentStream.newLineAtOffset(pageStartX, pageStartY);
+            pageContentStream.showText(title + "  ");
+            pageContentStream.setFont(PDType1Font.HELVETICA_BOLD, 6f);
+            pageContentStream.newLineAtOffset(0, -2f * titleFontSize);
+            pageContentStream.setFont(contentFont, contentFontSize);
+
+            float remainingHeight = mediaBox.getHeight() - 2*margin - 2*titleFontSize;
+
+            for ( String line: appendixLines )
+            {
+                if ( remainingHeight < contentLeading )
+                {
+                    pageContentStream.endText();
+                    pageContentStream.close();
+                    page = new PDPage();
+                    doc.addPage(page);
+                    pageContentStream = new PDPageContentStream(doc, page);
+                    pageContentStream.beginText();
+                    pageContentStream.newLineAtOffset(pageStartX, pageStartY);
+                    pageContentStream.setFont(contentFont, contentFontSize);
+                    remainingHeight = mediaBox.getHeight() - 2*margin;
+                }
+
+                pageContentStream.showText(line);
+                pageContentStream.newLineAtOffset(0, -contentLeading);
+                remainingHeight -= contentLeading;
+            }
+
+            pageContentStream.endText();
+            pageContentStream.close();
+        }
+    }
+
+    private List<String> getAppendixLines(String text) throws IOException
+    {
+        List<String> lines = new ArrayList<>();
+
+        BufferedReader br = new BufferedReader(new StringReader(text));
+
+        String line;
+
+        while ( (line = br.readLine()) != null )
+        {
+            lines.add(line);
+        }
+
+        return lines;
+    }
+
     private void setTestDataFields(PDAcroForm acroForm, JsonNode testDataJsonNode, String fieldName) throws IOException
     {
+        if ( fieldName.startsWith("_")  )
+            return;
+
         switch(testDataJsonNode.getNodeType())
         {
             case STRING:

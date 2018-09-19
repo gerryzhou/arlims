@@ -1,5 +1,4 @@
 
-
 Commit Notes
 ------------
 
@@ -11,6 +10,12 @@ Commit Notes
 *** Positives need to be handled as next priority.
    Having seprate test type for positives is fine but the related tests need to be kept together and in proper sequence.
    Add test group/sequence field(s) to order and group tests within samples.
+
+
+Audit log section of form review report
+  Data changes table alignment needs tweaking.
+    Use common table for diffs across sections.
+    Prevent some to-values from moving to far right.
 
 
 Try linking to specific section(s) in BAM for each stage.
