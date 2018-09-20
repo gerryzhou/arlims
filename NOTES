@@ -1,19 +1,87 @@
+Sample Sync Process
+-------------------
+For each lab:
+  1) Refresh Sample table.
+  Load lab inbox items for the FACTS org name.
+  Match against existing sample records having the same FACTS org.
+    Q: Which fields to match?
+    For matched inbox item/sample id pairs:
+      Update a select subset of fields, including status and status date.
+        Which other fields should be updatable this way?
+    For unmatched inbox items.
+      Add new sample records.
+    For unmatched sample ids.
+      If their existing status indicated that they've been synced with FACTS:
+        Set a final status (or new field) so they won't show up in queries anymore.
+        Log warning and do nothing if existing status code is not as expected.
+        Which existing status codes should be expected here?
+  2) Refresh employee assignments for the lab groups having the FACTS org.
+  For each person in each FACTS org:
+    Just clear the assignments and initialize from the person's inbox data.
+
+Qs
+  - Is "accomplishingOrg/Id" supposed to be the org passed as orgName in the request?
+  - What are the valid status codes and display texts?
+    S,A,I are documented
+    O? Mentioned as possibility (p.16) but not defined.
+    P? Shown in example result on p.17.
+
+
 API Access
 ----------
+lab inbox entry example:
+  "sampleTrackingNum": 843768,
+    mapped to sample_tracking_num
+  "sampleTrackingSubNum": 0,
+    mapped to sample_tracking_sub_num
+  "cfsanProductDesc": "Raw Plum Tomatoes",
+    map to product_name
+  "pacCode": "07001",
+    mapped to pac
+  "problemAreaFlag": "MYC",
+    mapped to pac
+  "statusCode": "P",
+    map to facts_status (only convert to more friendly expanded text in ui)
+  "statusDate": "2018-05-22 08:42:24.000-0400",
+    map to facts_status_timestamp
+  "subject": "Adhoc Sample Analysis",
+    map to subject
+  "samplingOrg": "CHI-DO",
+    map to samplingOrganization
+  "operationCode": "41",
+    add
+  "workId": 6771183,
+    add
+  "sampleAnalysisId": 893080,
+    add
+  "workRqstId": 1572599
+    add
 
 person inbox entry example:
   "leadInd": "Y",
-   "operationCode": "12",
-   "personId": 478923,
-   "reviewRequiredInd": "N",
-   "rvMeaning": "Assigned",
-   "statusCode": "S",
-   "statusDate": "2018-05-04 15:53:21.000-0400",
-   "subjectText": "test",
-   "workDetailId": 8533498,
-   "workId": 8637563,
-   "workRequestId": 11649125,
-   "workDetailRowId": "AAAE5sAANAAFqMuAAE"
+    map to sample_assignment.lead(0/1)
+  "operationCode": "12",
+    Use to join to sample? If so, add index on sample.operation_code.
+  "personId": 478923,
+    <sent in request presumably, from iterating employee table>
+  "reviewRequiredInd": "N",
+    add to sample_assignment table
+  "rvMeaning": "Assigned",
+    ?
+  "statusCode": "S",
+    ? Is this a differnt sort of status than that of the lab inbox?
+  "statusDate": "2018-05-04 15:53:21.000-0400",
+    ? "
+  "subjectText": "test",
+    ? How relates to subject of lab inbox?
+  "workDetailId": 8533498,
+    add to sample_assignment table
+  "workId": 8637563,
+    ?add or use in matching with sample?
+  "workRequestId": 11649125,
+    ?add or use in matching with sample?
+  "workDetailRowId": "AAAE5sAANAAFqMuAAE"
+    add
 
 
 

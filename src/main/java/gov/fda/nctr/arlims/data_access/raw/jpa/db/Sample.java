@@ -67,6 +67,18 @@ public class Sample
     @Column(name="SUBJECT") @Size(max = 4000)
     private String subject;
 
+    @NotNull
+    private Long operationCode;
+
+    @NotNull
+    private Long workId;
+
+    @NotNull
+    private Long sampleAnalysisId;
+
+    @NotNull
+    private Long workRequestId;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sample")
     private Set<SampleAssignment> assignments = new HashSet<>();
 
@@ -83,11 +95,15 @@ public class Sample
             @Size(max = 100) @NotBlank String productName,
             @NotNull LocalDate received,
             @Size(max = 100) String receivedBy,
-            String factsStatus,
-            Instant factsStatusTimestamp,
-            Instant lastRefreshedFromFacts,
+            @NotBlank String factsStatus,
+            @NotNull Instant factsStatusTimestamp,
+            @NotNull Instant lastRefreshedFromFacts,
             String samplingOrganization,
-            String subject
+            String subject,
+            @NotNull Long operationCode,
+            @NotNull Long workId,
+            @NotNull Long sampleAnalysisId,
+            @NotNull Long workRequestId
         )
     {
         this.labGroup = labGroup;
@@ -105,6 +121,10 @@ public class Sample
         this.lastRefreshedFromFacts = lastRefreshedFromFacts;
         this.samplingOrganization = samplingOrganization;
         this.subject = subject;
+        this.operationCode = operationCode;
+        this.workId = workId;
+        this.sampleAnalysisId = sampleAnalysisId;
+        this.workRequestId = workRequestId;
     }
 
     public Long getId() { return id; }
@@ -150,6 +170,18 @@ public class Sample
 
     public String getSubject() { return subject; }
     public void setSubject(String subject) { this.subject = subject; }
+
+    public Long getOperationCode() { return operationCode; }
+    public void setOperationCode(Long operationCode) { this.operationCode = operationCode; }
+
+    public Long getWorkId() { return workId; }
+    public void setWorkId(Long workId) { this.workId = workId; }
+
+    public Long getSampleAnalysisId() { return sampleAnalysisId; }
+    public void setSampleAnalysisId(Long sampleAnalysisId) { this.sampleAnalysisId = sampleAnalysisId; }
+
+    public Long getWorkRequestId() { return workRequestId; }
+    public void setWorkRequestId(Long workRequestId) { this.workRequestId = workRequestId; }
 
     public Set<SampleAssignment> getAssignments() { return assignments; }
     public void setAssignments(Set<SampleAssignment> assignments) { this.assignments = assignments; }

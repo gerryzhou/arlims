@@ -50,9 +50,9 @@ public class ScheduledTasksService extends ServiceBase implements SchedulingConf
     @Scheduled(cron = "${scheduling.facts-sample-refresh.cron}")
     public void refreshSamplesFromFacts()
     {
-        List<InboxItem> inboxItems = factsService.getLabInboxItems();
+//        List<InboxItem> inboxItems = factsService.getLabInboxItems();
 
-        log.info("[scheduled task] refreshSamplesFromFacts(): got inbox items: " + inboxItems);
+//        log.info("[scheduled task] refreshSamplesFromFacts(): got inbox items: " + inboxItems);
 
         // TODO: Update tables from retrieved inbox items.
     }
