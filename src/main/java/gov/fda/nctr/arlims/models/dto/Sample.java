@@ -24,7 +24,7 @@ public class Sample
 
     private final String factsStatus;
 
-    private final LocalDate factsStatusDate;
+    private final Instant factsStatusTimestamp;
 
     private final Instant lastRefreshedFromFactsInstant;
 
@@ -50,7 +50,7 @@ public class Sample
             String productName,
             Optional<LocalDate> receivedDate,
             String factsStatus,
-            LocalDate factsStatusDate,
+            Instant factsStatusTimestamp,
             Instant lastRefreshedFromFactsInstant,
             Optional<String> samplingOrganization,
             Optional<String> subject,
@@ -68,7 +68,7 @@ public class Sample
         this.productName = productName;
         this.receivedDate = receivedDate;
         this.factsStatus = factsStatus;
-        this.factsStatusDate = factsStatusDate;
+        this.factsStatusTimestamp = factsStatusTimestamp;
         this.lastRefreshedFromFactsInstant = lastRefreshedFromFactsInstant;
         this.samplingOrganization = samplingOrganization;
         this.subject = subject;
@@ -94,7 +94,7 @@ public class Sample
 
     public String getFactsStatus() { return factsStatus; }
 
-    public LocalDate getFactsStatusDate() { return factsStatusDate; }
+    public Instant getFactsStatusTimestamp() { return factsStatusTimestamp; }
 
     public Instant getLastRefreshedFromFactsInstant() { return lastRefreshedFromFactsInstant; }
 

@@ -307,7 +307,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                         dbSample.getProductName(),
                         opt(dbSample.getReceived()),
                         dbSample.getFactsStatus(),
-                        dbSample.getFactsStatusDate(),
+                        dbSample.getFactsStatusTimestamp(),
                         dbSample.getLastRefreshedFromFacts(),
                         opt(dbSample.getSamplingOrganization()),
                         opt(dbSample.getSubject()),

@@ -56,7 +56,7 @@ public class Sample
     private String factsStatus;
 
     @NotNull
-    private LocalDate factsStatusDate;
+    private Instant factsStatusTimestamp;
 
     @NotNull
     private Instant lastRefreshedFromFacts;
@@ -84,7 +84,7 @@ public class Sample
             @NotNull LocalDate received,
             @Size(max = 100) String receivedBy,
             String factsStatus,
-            LocalDate factsStatusDate,
+            Instant factsStatusTimestamp,
             Instant lastRefreshedFromFacts,
             String samplingOrganization,
             String subject
@@ -101,7 +101,7 @@ public class Sample
         this.received = received;
         this.receivedBy = receivedBy;
         this.factsStatus = factsStatus;
-        this.factsStatusDate = factsStatusDate;
+        this.factsStatusTimestamp = factsStatusTimestamp;
         this.lastRefreshedFromFacts = lastRefreshedFromFacts;
         this.samplingOrganization = samplingOrganization;
         this.subject = subject;
@@ -139,8 +139,8 @@ public class Sample
     public String getFactsStatus() { return factsStatus; }
     public void setFactsStatus(String factsStatus) { this.factsStatus = factsStatus; }
 
-    public LocalDate getFactsStatusDate() { return factsStatusDate; }
-    public void setFactsStatusDate(LocalDate factsStatusDate) { this.factsStatusDate = factsStatusDate; }
+    public Instant getFactsStatusTimestamp() { return factsStatusTimestamp; }
+    public void setFactsStatusTimestamp(Instant factsStatusTimestamp) { this.factsStatusTimestamp = factsStatusTimestamp; }
 
     public Instant getLastRefreshedFromFacts() { return lastRefreshedFromFacts; }
     public void setLastRefreshedFromFacts(Instant lastRefreshedFromFacts) { this.lastRefreshedFromFacts = lastRefreshedFromFacts; }

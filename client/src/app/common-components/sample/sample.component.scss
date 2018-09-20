@@ -50,6 +50,10 @@
          border: 2px solid gray;
 
          // Color the FACTS status.
+         &.accepted {
+            background: darkgray;
+            color: white;
+         }
          &.assigned {
             background: black;
             color: white;
@@ -63,7 +67,7 @@
             color: #aaaaaa;
          }
 
-         .facts-status-date {
+         .facts-status-timestamp {
             font-size: small;
          }
       }

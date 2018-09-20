@@ -1,10 +1,13 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import * as moment from 'moment';
+
 import {CreatedTestMetadata, LabTestMetadata, LabTestType, Sample} from '../../../generated/dto';
 import {MatDialog} from '@angular/material';
 import {NewTestDialogComponent} from '../new-test-dialog/new-test-dialog.component';
 import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+
 
 @Component({
    selector: 'app-sample',
@@ -55,6 +58,8 @@ export class SampleComponent implements OnChanges {
 
    numAssociatedResourceLists: number;
 
+   displayFactsStatusTimestamp: string;
+   factsStatusText: string;
    factsStatusCssClass: string;
 
    constructor(private testsSvc: TestsService,
@@ -62,12 +67,16 @@ export class SampleComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.factsStatusCssClass = this.sample.factsStatus.replace(/ /g, '-').toLowerCase();
       this.numAssociatedResourceLists =
          this.sample.associatedManagedResourceLists.length +
          this.sample.associatedUnmanagedResourceLists.length;
       this.hasExtendedSampleMetadata = !!this.sample.subject;
       this.hasAssociatedItems = this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
+      this.displayFactsStatusTimestamp =
+         this.sample.factsStatusTimestamp ? moment(this.sample.factsStatusTimestamp).format(' MMM D h:mm a')
+         : '';
+      this.factsStatusText = this.factsStatusTextFromCode(this.sample.factsStatus);
+      this.factsStatusCssClass = this.factsStatusText.replace(/ /g, '-').toLowerCase();
    }
 
    onHeaderClick()
@@ -128,5 +137,18 @@ export class SampleComponent implements OnChanges {
             );
          }
       });
+   }
+
+   private factsStatusTextFromCode(factsStatus: string)
+   {
+      // TODO: Verify and complete this status code => status text mappings.
+      switch (factsStatus)
+      {
+         case 'A': return 'Accepted';
+         case 'S': return 'Assigned';
+         case 'I': return 'In Progress';
+         case 'O': return 'Original Complete';
+         default: return factsStatus;
+      }
    }
 }
