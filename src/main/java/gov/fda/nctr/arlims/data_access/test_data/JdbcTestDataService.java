@@ -273,9 +273,9 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     {
         String sql =
             "select " +
-            "t.sample_id, s.sample_num, s.pac, s.product_name, tt.code, tt.name, " +
-            "tt.short_name, t.created, ce.short_name created_by_emp, t.last_saved, " +
-            "se.short_name last_saved_emp, " +
+            "t.sample_id, s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, " +
+            "s.pac, s.product_name, tt.code, tt.name, tt.short_name, t.created, " +
+            "ce.short_name created_by_emp, t.last_saved, se.short_name last_saved_emp, " +
             "(select count(*) from test_file tf where tf.test_id = t.id) attached_files_count," +
             "TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date, " +
             "t.note, t.stage_statuses_json, t.reviewed, re.short_name reviewed_by_emp, " +
@@ -609,7 +609,8 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         String contextSql =
             "select\n" +
               "s.id sample_id, s.facts_status sample_facts_status, s.lab_group_id lab_group_id, lg.name lab_group, " +
-              "s.last_refreshed_from_facts, s.lid, s.pac, s.paf, s.product_name, s.received, s.sample_num, s.sampling_org, " +
+              "s.last_refreshed_from_facts, s.lid, s.pac, s.paf, s.product_name, s.received, " +
+              "s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, s.sampling_org, " +
               "t.id test_id, t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
               "tt.name test_type_name, tt.code \"TEST_TYPE_CODE\"\n" +
             "from sample s\n" +

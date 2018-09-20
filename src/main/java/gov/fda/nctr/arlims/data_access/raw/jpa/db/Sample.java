@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
 @Table(
     indexes = {
         @Index(name = "IX_SMP_LABGRPID", columnList = "LAB_GROUP_ID"),
-        @Index(name = "IX_SMP_SMPNUMPAC", columnList = "SAMPLE_NUM,PAC"),
         @Index(name = "IX_SMP_RECEIVED", columnList = "RECEIVED"),
         @Index(name = "IX_SMP_FACTSSTATUS", columnList = "FACTS_STATUS")
     }
@@ -30,8 +29,11 @@ public class Sample
     @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
     private Long labGroupId;
 
-    @Column(name="SAMPLE_NUM", nullable = false) @Size(max = 20) @NotBlank
-    private String sampleNum;
+    @Column(name="SAMPLE_TRACKING_NUM") @NotNull
+    private Long sampleTrackingNum;
+
+    @Column(name="SAMPLE_TRACKING_SUB_NUM") @NotNull
+    private Long sampleTrackingSubNum;
 
     @Column(name="PAC", nullable = false) @Size(max = 20) @NotBlank
     private String pac;
@@ -73,7 +75,8 @@ public class Sample
     public Sample
         (
             @NotNull LabGroup labGroup,
-            @Size(max = 20) @NotBlank String sampleNum,
+            @NotNull Long sampleTrackingNum,
+            @NotNull Long sampleTrackingSubNum,
             @Size(max = 20) @NotBlank String pac,
             @Size(max = 20) String lid,
             @Size(max = 20) String paf,
@@ -89,7 +92,8 @@ public class Sample
     {
         this.labGroup = labGroup;
         this.labGroupId = labGroup.getId();
-        this.sampleNum = sampleNum;
+        this.sampleTrackingNum = sampleTrackingNum;
+        this.sampleTrackingSubNum = sampleTrackingSubNum;
         this.pac = pac;
         this.lid = lid;
         this.paf = paf;
@@ -108,8 +112,11 @@ public class Sample
 
     public Long getLabGroupId() { return labGroupId; }
 
-    public String getSampleNumber() { return sampleNum; }
-    public void setSampleNumber(String sampleNum) { this.sampleNum = sampleNum; }
+    public Long getSampleTrackingNumber() { return sampleTrackingNum; }
+    public void setSampleTrackingNumber(Long sampleNum) { this.sampleTrackingNum = sampleNum; }
+
+    public Long getSampleTrackingSubNumber() { return sampleTrackingSubNum; }
+    public void setSampleTrackingSubNumber(Long sampleSubNum) { this.sampleTrackingSubNum = sampleSubNum; }
 
     public String getPac() { return pac; }
     public void setPac(String pacCode) { this.pac= pacCode; }

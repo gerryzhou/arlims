@@ -1,6 +1,6 @@
 
-insert into lab_group (name, address_street, buildings_and_rooms, address_city, address_state, address_zip, description)
-  values ('ARL-MICRO', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
+insert into lab_group (name, facts_org_name, address_street, buildings_and_rooms, address_city, address_state, address_zip, description)
+  values ('ARL-MICRO', 'ARL', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
 
 insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name, password)
   values (1234567, 'stephen.harris', 'SCH', (select id from lab_group where name = 'ARL-MICRO'), 'Harris', 'Stephen', 'C', '$2a$10$GuY.dmUtyra9IY.UQ8sUqe/sW7c94MSkMiXgYEjrB78R3OyfC2LOK');
@@ -85,16 +85,16 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
     null);
 
 
-insert into sample(lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org, subject)
-  values(1, '123456-0', 'C12345', null, 'MIC', 'Golanga', 'In-progress', CURRENT_DATE-3, CURRENT_TIMESTAMP-2, CURRENT_DATE-4, 'DNTI', 'Adhoc Sample Analysis');
-insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
-  values(1, '234567-0', 'C23456', 'M', 'MIC', 'Shrimp Powder', 'In-progress', CURRENT_DATE-4, CURRENT_TIMESTAMP-3, CURRENT_DATE-4, 'HADR4');
-insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
-  values(1, '34567-0', 'C33456',  'M', 'MIC', 'Shrimp Tartar', 'Assigned', CURRENT_DATE-5, CURRENT_TIMESTAMP-3, CURRENT_DATE-5, 'REI2');
-insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
-  values(1, '595678-0', 'C46567', 'M', 'MIC', 'Steak Sauce', 'Assigned', CURRENT_DATE-4, CURRENT_TIMESTAMP-4, CURRENT_DATE-5, 'WER');
-insert into sample (lab_group_id, sample_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
-  values(1, '595678-0', 'C46567', 'M', 'MIC', 'Tomato Powder', 'Complete', CURRENT_DATE-15, CURRENT_TIMESTAMP-13, CURRENT_DATE-16, 'DNH1');
+insert into sample(lab_group_id, sample_tracking_num, sample_tracking_sub_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org, subject)
+  values(1, 123456, 0, 'C12345', null, 'MIC', 'Golanga', 'In-progress', CURRENT_DATE-3, CURRENT_TIMESTAMP-2, CURRENT_DATE-4, 'DNTI', 'Adhoc Sample Analysis');
+insert into sample (lab_group_id, sample_tracking_num, sample_tracking_sub_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
+  values(1, 234567, 0, 'C23456', 'M', 'MIC', 'Shrimp Powder', 'In-progress', CURRENT_DATE-4, CURRENT_TIMESTAMP-3, CURRENT_DATE-4, 'HADR4');
+insert into sample (lab_group_id, sample_tracking_num, sample_tracking_sub_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
+  values(1, 34567, 0, 'C33456',  'M', 'MIC', 'Shrimp Tartar', 'Assigned', CURRENT_DATE-5, CURRENT_TIMESTAMP-3, CURRENT_DATE-5, 'REI2');
+insert into sample (lab_group_id, sample_tracking_num, sample_tracking_sub_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
+  values(1, 595678, 0, 'C46567', 'M', 'MIC', 'Steak Sauce', 'Assigned', CURRENT_DATE-4, CURRENT_TIMESTAMP-4, CURRENT_DATE-5, 'WER');
+insert into sample (lab_group_id, sample_tracking_num, sample_tracking_sub_num, pac, lid, paf, product_name, facts_status, facts_status_date, last_refreshed_from_facts, received, sampling_org)
+  values(1, 595678, 0, 'C46567', 'M', 'MIC', 'Tomato Powder', 'Complete', CURRENT_DATE-15, CURRENT_TIMESTAMP-13, CURRENT_DATE-16, 'DNH1');
 
 insert into sample_assignment(sample_id, employee_id, assigned_date, lead)
   values(1, 1, '22 Jun 2018', 1);

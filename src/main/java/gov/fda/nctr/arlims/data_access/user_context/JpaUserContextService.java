@@ -294,10 +294,13 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                 List<LabResourceListMetadata> managedResourceLists =
                     managedResourceListsBySampleId.getOrDefault(sampleId, emptyList());
 
+                String sampleNum = dbSample.getSampleTrackingNumber() + "-" +
+                                   dbSample.getSampleTrackingSubNumber();
+
                 return
                     new Sample(
                         dbSample.getId(),
-                        dbSample.getSampleNumber(),
+                        sampleNum,
                         dbSample.getPac(),
                         opt(dbSample.getLid()),
                         opt(dbSample.getPaf()),
@@ -498,11 +501,14 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
             .flatMap(empId -> opt(usersById.get(empId)))
             .map(UserReference::getShortName);
 
+        String sampleNum = s.getSampleTrackingNumber() + "-" +
+                           s.getSampleTrackingSubNumber();
+
         return
             new LabTestMetadata(
                 t.getId(),
                 s.getId(),
-                s.getSampleNumber(),
+                sampleNum,
                 s.getPac(),
                 opt(s.getProductName()),
                 t.getTestType().getCode(),
