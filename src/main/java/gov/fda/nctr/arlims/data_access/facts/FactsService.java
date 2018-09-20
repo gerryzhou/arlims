@@ -71,7 +71,7 @@ public class FactsService extends ServiceBase
         this.jsonReader = jsonSerializer.reader();
     }
 
-    List<InboxItem> getLabInboxItems()
+    public List<InboxItem> getLabInboxItems()
     {
         List<InboxItem> resInboxItems = new ArrayList<>();
 
