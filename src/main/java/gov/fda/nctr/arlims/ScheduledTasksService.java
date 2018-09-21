@@ -1,7 +1,5 @@
 package gov.fda.nctr.arlims;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -10,24 +8,23 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
-import gov.fda.nctr.arlims.data_access.facts.FactsService;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.InboxItem;
 
 
 @Service
 public class ScheduledTasksService extends ServiceBase implements SchedulingConfigurer
 {
-    private FactsService factsService;
     private int threadPoolSize;
+
+    private FactsService factsService;
 
     public ScheduledTasksService
         (
-            FactsService factsService,
-            @Value("${scheduling.facts-thread-pool-size:5}") int threadPoolSize
+            @Value("${scheduling.thread-pool-size:5}") int threadPoolSize,
+            FactsService factsService
         )
     {
-        this.factsService = factsService;
         this.threadPoolSize = threadPoolSize;
+        this.factsService = factsService;
     }
 
     @Override
@@ -50,10 +47,11 @@ public class ScheduledTasksService extends ServiceBase implements SchedulingConf
     @Scheduled(cron = "${scheduling.facts-sample-refresh.cron}")
     public void refreshSamplesFromFacts()
     {
-//        List<InboxItem> inboxItems = factsService.getLabInboxItems();
 
-//        log.info("[scheduled task] refreshSamplesFromFacts(): got inbox items: " + inboxItems);
+        log.info("[scheduled task start] Refreshing sample and employee assignment information from FACTS.");
 
-        // TODO: Update tables from retrieved inbox items.
+        factsService.refreshSamplesFromFacts();
+
+        log.info("[scheduled task end] Finished refreshing sample and employee assignment information from FACTS.");
     }
 }

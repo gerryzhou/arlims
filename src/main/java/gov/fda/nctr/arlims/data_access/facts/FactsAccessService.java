@@ -23,11 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.InboxItem;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 
 
 @Service
-public class FactsService extends ServiceBase
+public class FactsAccessService extends ServiceBase
 {
     private final FactsApiConfig apiConfig;
 
@@ -46,7 +46,7 @@ public class FactsService extends ServiceBase
     private static final String UPPER_ALPHA_NUM_CHARS ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
-    public FactsService
+    public FactsAccessService
         (
             FactsApiConfig apiConfig,
             JdbcTemplate jdbc
@@ -71,33 +71,36 @@ public class FactsService extends ServiceBase
         this.jsonReader = jsonSerializer.reader();
     }
 
-    public List<InboxItem> getLabInboxItems()
+    public List<LabInboxItem> getLabInboxItems()
     {
-        List<InboxItem> resInboxItems = new ArrayList<>();
+        List<LabInboxItem> resInboxItems = new ArrayList<>();
 
-        List<String> orgNames = jdbc.queryForList("select facts_org_name from lab_group", String.class);
+        List<String> orgNames = jdbc.queryForList("select distinct facts_org_name from lab_group", String.class);
 
-        String includeFields = "subject,cfsanProductDesc,operationCode,pacCode,sampleTrackingNum,sampleTrackingSubNum,samplingOrg";
+        String includeFields =
+            "sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject,pacCode," +
+            "problemAreaFlag,lidCode,splitInd,workId,workRqstId,operationCode,sampleAnalysisId," +
+            "requestedOperationNum,requestDate,scheduledCompletionDate,samplingOrg,accomplishingOrg," +
+            "accomplishingOrgId,fdaOrganizationId,responsibleFirmCode,rvMeaning,assignedToLeadInd," +
+            "assignedToPersonId,assignedToStatusCode,assignedToStatusDate,assignedToWorkAssignmentDate";
 
         for ( String orgName : orgNames )
         {
             String url =
-                UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl())
+                UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
                 .queryParam("orgName", orgName)
                 .queryParam("objectFilters", includeFields)
                 .toUriString();
 
             HttpEntity reqEntity = new HttpEntity(newRequestHeaders());
 
-            ResponseEntity<InboxItem[]> resp =
-                restTemplate.exchange(url, HttpMethod.GET, reqEntity, InboxItem[].class);
+            ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, LabInboxItem[].class);
 
-            if ( resp.getStatusCode().isError() )
-                throw new RuntimeException("Lab inbox items api call ended in error: " + resp.getBody());
+            LabInboxItem[] inboxItems = resp.getBody();
 
-            InboxItem[] items = resp.getBody();
+            log.info("Retrieved " + inboxItems.length + " inbox items for organization " + orgName + ".");
 
-            Arrays.stream(items).forEach(resInboxItems::add);
+            Arrays.stream(inboxItems).forEach(resInboxItems::add);
         }
 
         return resInboxItems;
@@ -142,7 +145,7 @@ public class FactsService extends ServiceBase
                 JsonNode errorNode = jsonReader.readTree(response.getBody());
                 log.info("LABS-DS api call resulted in error: " + errorNode.toString());
 
-                super.handleError(response);
+                super.handleError(response); // throws appropriate determined by status code
             }
         };
     }

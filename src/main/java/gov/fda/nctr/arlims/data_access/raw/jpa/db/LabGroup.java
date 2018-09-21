@@ -22,7 +22,7 @@ public class LabGroup
     private String name;
 
     @Column(nullable = false) @Size(max = 20) @NotBlank
-    private String factsOrgName;
+    private String factsOrgName; // "accomplishing org" in FACTS
 
     @Size(max = 200)
     private String addressStreet;

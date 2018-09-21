@@ -1,61 +1,108 @@
+Add required operationId field to Sample, with index.
+
+
+
+In Lab_Group table, need more information about FACTS orgs?
+  accomplishing org, e.g. "ARKL".
+  performing org, e.g. "ARL-MICRO1".
+
+
 Sample Sync Process
 -------------------
-For each lab:
-  1) Refresh Sample table.
-  Load lab inbox items for the FACTS org name.
-  Match against existing sample records having the same FACTS org.
-    Q: Which fields to match?
-    For matched inbox item/sample id pairs:
-      Update a select subset of fields, including status and status date.
-        Which other fields should be updatable this way?
-    For unmatched inbox items.
-      Add new sample records.
-    For unmatched sample ids.
-      If their existing status indicated that they've been synced with FACTS:
-        Set a final status (or new field) so they won't show up in queries anymore.
-        Log warning and do nothing if existing status code is not as expected.
-        Which existing status codes should be expected here?
-  2) Refresh employee assignments for the lab groups having the FACTS org.
-  For each person in each FACTS org:
-    Just clear the assignments and initialize from the person's inbox data.
-
-Qs
-  - Is "accomplishingOrg/Id" supposed to be the org passed as orgName in the request?
   - What are the valid status codes and display texts?
     S,A,I are documented
     O? Mentioned as possibility (p.16) but not defined.
-    P? Shown in example result on p.17.
-
+    P? Shown in example result on p.17. Probably this is "Pending" which was in the list Rick provided.
 
 API Access
 ----------
+
+Lab inbox declared fields:
+  accomplishingOrg
+  accomplishingOrgId
+  accomplishingOrgPrtyCode
+  assignerPersonId
+  cfsanProductDesc
+  collectionReason
+  fdaOrganizationId
+  itobCncrncNum
+  lidCode
+  operationCode
+  organizationName
+  pacCode
+  problemAreaFlag
+  reviewRemarks
+  remarks
+  requestDate
+  requestedOperationNum
+  requestingOrgId
+  requestionPersonId
+  requestorPartyCode
+  requestorStatusCode
+  requestorTargetCompletionDate
+  responsibleFirmCode
+  rvMeaning
+  scheduledCompletionDate
+  sampleAnalysisId
+  sampleTrackingNum
+  sampleTrackingSubNum
+  samplingDistrictOrgId
+  samplingOrg
+  splitInd
+  statusCode
+  statusDate
+  subject
+  tdSampleNumber
+  worId
+  workId
+  workRqstId
+  assignedToFirstName
+  assignedToLastName
+  assignedToMiddleInitial
+  pacCodeDescription
+  assignedToAnlystTypeCode
+  assignedToLeadInd
+  assignedToPersonId
+  assignedToRemarks
+  assignedToStatusCode
+  assignedToStatusDate
+  assignedToWorkAssignmentDate
+
+
 lab inbox entry example:
-  "sampleTrackingNum": 843768,
-    mapped to sample_tracking_num
+  "accomplishingOrg": "NFFL",
+  "accomplishingOrgId": 123,
+  "cfsanProductDesc": "SMOKED TROUT",
+  "collectionReason": "12345678901234567890 1234567890 12345678901234567890 12345678901234567890 1234;ELE",
+  "operationCode": "43",
+  "pacCode": "04019A",
+  "problemAreaFlag": "ELE",
+  "requestDate": "2015-12-10 00:00:00.000-0500",
+  "requestedOperationNum": 1,
+  "requestingOrgId": 464,
+  "requestionPersonId": 478820,
+  "requestorPartyCode": "R",
+  "requestorStatusCode": "I",
+  "responsibleFirmCode": "O",
+  "rvMeaning": "In Progress",
+  "sampleAnalysisId": 875826,
+  "sampleTrackingNum": 804972,
   "sampleTrackingSubNum": 0,
-    mapped to sample_tracking_sub_num
-  "cfsanProductDesc": "Raw Plum Tomatoes",
-    map to product_name
-  "pacCode": "07001",
-    mapped to pac
-  "problemAreaFlag": "MYC",
-    mapped to pac
-  "statusCode": "P",
-    map to facts_status (only convert to more friendly expanded text in ui)
-  "statusDate": "2018-05-22 08:42:24.000-0400",
-    map to facts_status_timestamp
-  "subject": "Adhoc Sample Analysis",
-    map to subject
-  "samplingOrg": "CHI-DO",
-    map to samplingOrganization
-  "operationCode": "41",
-    add
-  "workId": 6771183,
-    add
-  "sampleAnalysisId": 893080,
-    add
-  "workRqstId": 1572599
-    add
+  "samplingDistrictOrgId": 20,
+  "samplingOrg": "NYK-DO",
+  "statusCode": "I",
+  "statusDate": "2018-04-17 11:08:59.000-0400",
+  "workId": 6687466,
+  "workRqstId": 1508256,
+  "assignedToFirstName": "Lynda",
+  "assignedToLastName": "Vidot",
+  "pacCodeDescription": "Toxic Elements in Foods (Domestic & Import)",
+  "assignedToAnlystTypeCode": "O",
+  "assignedToLeadInd": "Y",
+  "assignedToStatusCode": "I",
+  "assignedToStatusDate": "2018-04-17 00:00:00.000-0400",
+  "assignedToWorkAssignmentDate": "2018-04-17 11:04:16.000-0400"
+
 
 person inbox entry example:
   "leadInd": "Y",
