@@ -1,33 +1,42 @@
-package gov.fda.nctr.arlims;
+package gov.fda.nctr.arlims.data_access.facts;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
-import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
+import gov.fda.nctr.arlims.data_access.raw.jpa.SampleRepository;
+import gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample;
+import static java.util.stream.Collectors.toList;
 
 
 @Service
-public class FactsService extends ServiceBase
+public class LabsDSSampleRefreshService extends ServiceBase implements SampleRefreshService
 {
     private FactsAccessService factsAccessService;
+    private SampleRepository sampleRepository;
 
-    public FactsService
+    public LabsDSSampleRefreshService
         (
-            FactsAccessService factsAccessService
+            FactsAccessService factsAccessService,
+            SampleRepository sampleRepository
         )
     {
         this.factsAccessService = factsAccessService;
+        this.sampleRepository = sampleRepository;
     }
 
     public void refreshSamplesFromFacts()
     {
         List<LabInboxItem> labInboxItems = factsAccessService.getLabInboxItems();
 
+        List<Long> inboxOpIds = labInboxItems.stream().map(LabInboxItem::getWorkId).collect(toList());
+
         // TODO: Remove after testing.
         log.info(labInboxItems.toString());
+
+        List<Sample> samples = sampleRepository.findByWorkIdIn(inboxOpIds);
 
         // TODO: Update tables from retrieved inbox items.
 
@@ -35,12 +44,14 @@ public class FactsService extends ServiceBase
             Make map of lab inbox items by operation id (which is "workId", according to Paul).
 
             Query for matching Sample records by operation id list using new SampleRepository method
-                (Requires new operation id field in sample table.)
 
             For each matched record:
                 Verify sample num/sub-num fields are the same as in the inbox record, else just log error and continue.
                 Update any updatable fields that have changed.
 
+            Insert new db records for unmatched inbox items.
+
+            Mark disabled/finished any unmatched records on db side.
          */
     }
 }

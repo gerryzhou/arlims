@@ -2,6 +2,8 @@ package gov.fda.nctr.arlims.data_access.facts.models.dto;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 public class LabInboxItem
 {
@@ -9,6 +11,7 @@ public class LabInboxItem
     private Long sampleTrackingSubNum;
     private String cfsanProductDesc;
     private String statusCode;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
     private Instant statusDate;
     private String subject;
     private String pacCode;
@@ -20,6 +23,7 @@ public class LabInboxItem
     private String operationCode;
     private Long sampleAnalysisId;
     private Long requestedOperationNum;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
     private Instant requestDate;
     private String scheduledCompletionDate;
     private String samplingOrg;
@@ -31,7 +35,9 @@ public class LabInboxItem
     private String assignedToLeadInd;
     private Long assignedToPersonId;
     private String assignedToStatusCode;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
     private Instant assignedToStatusDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
     private Instant assignedToWorkAssignmentDate;
 
     protected LabInboxItem() {}

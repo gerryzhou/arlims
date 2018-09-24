@@ -12,5 +12,9 @@ import gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample;
 public interface SampleRepository extends JpaRepository<Sample,Long>
 {
     List<Sample> findByLabGroupIdAndFactsStatusIn(long labGroupId, List<String> includeStatuses);
+
+    List<Sample> findByFactsStatusIn(List<String> includeStatuses);
+
+    List<Sample> findByWorkIdIn(List<Long> workIds);
 }
 
