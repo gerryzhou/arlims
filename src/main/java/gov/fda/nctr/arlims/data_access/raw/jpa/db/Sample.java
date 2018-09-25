@@ -1,7 +1,6 @@
 package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -14,8 +13,10 @@ import javax.validation.constraints.Size;
 @Table(
     indexes = {
         @Index(name = "IX_SMP_LABGRPID", columnList = "LAB_GROUP_ID"),
-        @Index(name = "IX_SMP_RECEIVED", columnList = "RECEIVED"),
         @Index(name = "IX_SMP_FACTSSTATUS", columnList = "FACTS_STATUS")
+    },
+    uniqueConstraints = {
+        @UniqueConstraint(name="UN_SMP_WORKID", columnNames = {"WORK_ID"}),
     }
 )
 public class Sample
@@ -23,10 +24,14 @@ public class Sample
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_SMP_LABGROUP")) @NotNull
+    @Column(name="WORK_ID") @NotNull
+    private Long workId; // a.k.a. "work operation id" or "operation id"
+
+    @ManyToOne(fetch = FetchType.LAZY, optional=false)
+    @JoinColumn(name = "LAB_GROUP_ID", nullable=false, foreignKey = @ForeignKey(name="FK_SMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
+    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false, nullable = false)
     private Long labGroupId;
 
     @Column(name="SAMPLE_TRACKING_NUM") @NotNull
@@ -47,12 +52,10 @@ public class Sample
     @Size(max = 100) @NotBlank
     private String productName;
 
-    private LocalDate received;
+    @Size(max = 1)
+    private String splitInd;
 
-    @Size(max = 100)
-    private String receivedBy;
-
-    @Column(name="FACTS_STATUS", nullable = false) @Size(max = 30) @NotBlank
+    @Column(name="FACTS_STATUS", nullable = false) @Size(max = 1) @NotBlank
     private String factsStatus;
 
     @NotNull
@@ -68,10 +71,7 @@ public class Sample
     private String subject;
 
     @NotNull
-    private Long operationCode;
-
-    @NotNull
-    private Long workId;
+    private String operationCode;
 
     @NotNull
     private Long sampleAnalysisId;
@@ -86,6 +86,7 @@ public class Sample
 
     public Sample
         (
+            @NotNull Long workId,
             @NotNull LabGroup labGroup,
             @NotNull Long sampleTrackingNum,
             @NotNull Long sampleTrackingSubNum,
@@ -93,19 +94,18 @@ public class Sample
             @Size(max = 20) String lid,
             @Size(max = 20) String paf,
             @Size(max = 100) @NotBlank String productName,
-            @NotNull LocalDate received,
-            @Size(max = 100) String receivedBy,
+            @Size(max = 1) String splitInd,
             @NotBlank String factsStatus,
             @NotNull Instant factsStatusTimestamp,
             @NotNull Instant lastRefreshedFromFacts,
             String samplingOrganization,
             String subject,
-            @NotNull Long operationCode,
-            @NotNull Long workId,
+            @NotNull String operationCode,
             @NotNull Long sampleAnalysisId,
             @NotNull Long workRequestId
         )
     {
+        this.workId = workId;
         this.labGroup = labGroup;
         this.labGroupId = labGroup.getId();
         this.sampleTrackingNum = sampleTrackingNum;
@@ -114,21 +114,22 @@ public class Sample
         this.lid = lid;
         this.paf = paf;
         this.productName = productName;
-        this.received = received;
-        this.receivedBy = receivedBy;
+        this.splitInd = splitInd;
         this.factsStatus = factsStatus;
         this.factsStatusTimestamp = factsStatusTimestamp;
         this.lastRefreshedFromFacts = lastRefreshedFromFacts;
         this.samplingOrganization = samplingOrganization;
         this.subject = subject;
         this.operationCode = operationCode;
-        this.workId = workId;
         this.sampleAnalysisId = sampleAnalysisId;
         this.workRequestId = workRequestId;
     }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Long getWorkId() { return workId; }
+    public void setWorkId(Long workId) { this.workId = workId; }
 
     public Long getLabGroupId() { return labGroupId; }
 
@@ -150,11 +151,8 @@ public class Sample
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
 
-    public LocalDate getReceived() { return received; }
-    public void setReceived(LocalDate received) { this.received = received; }
-
-    public String getReceivedBy() { return receivedBy; }
-    public void setReceivedBy(String receivedBy) { this.receivedBy = receivedBy; }
+    public String getSplitInd() { return splitInd; }
+    public void setSplitInd(String splitInd) { this.splitInd = splitInd; }
 
     public String getFactsStatus() { return factsStatus; }
     public void setFactsStatus(String factsStatus) { this.factsStatus = factsStatus; }
@@ -171,11 +169,8 @@ public class Sample
     public String getSubject() { return subject; }
     public void setSubject(String subject) { this.subject = subject; }
 
-    public Long getOperationCode() { return operationCode; }
-    public void setOperationCode(Long operationCode) { this.operationCode = operationCode; }
-
-    public Long getWorkId() { return workId; }
-    public void setWorkId(Long workId) { this.workId = workId; }
+    public String getOperationCode() { return operationCode; }
+    public void setOperationCode(String operationCode) { this.operationCode = operationCode; }
 
     public Long getSampleAnalysisId() { return sampleAnalysisId; }
     public void setSampleAnalysisId(Long sampleAnalysisId) { this.sampleAnalysisId = sampleAnalysisId; }

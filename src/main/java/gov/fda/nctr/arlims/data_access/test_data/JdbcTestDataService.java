@@ -609,7 +609,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         String contextSql =
             "select\n" +
               "s.id sample_id, s.facts_status sample_facts_status, s.lab_group_id lab_group_id, lg.name lab_group, " +
-              "s.last_refreshed_from_facts, s.lid, s.pac, s.paf, s.product_name, s.received, " +
+              "s.last_refreshed_from_facts, s.lid, s.pac, s.paf, s.product_name, " +
               "s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, s.sampling_org, " +
               "t.id test_id, t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
               "tt.name test_type_name, tt.code \"TEST_TYPE_CODE\"\n" +

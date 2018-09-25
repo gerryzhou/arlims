@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims.data_access.facts;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -23,7 +24,7 @@ public class FakeFactsAccessService implements FactsAccessService
     }
 
     @Override
-    public List<LabInboxItem> getLabInboxItems()
+    public List<LabInboxItem> getLabInboxItems(List<String> statusCodes)
     {
         try
         {
@@ -34,6 +35,8 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"cfsanProductDesc\": \"SMOKED TROUT\",\n" +
                 "\"operationCode\": \"43\",\n" +
                 "\"pacCode\": \"04019A\",\n" +
+                "\"lidCode\": null,\n" +
+                "\"splitInd\": null,\n" +
                 "\"problemAreaFlag\": \"ELE\",\n" +
                 "\"requestDate\": \"2015-12-10 00:00:00.000-0500\",\n" +
                 "\"responsibleFirmCode\": \"O\",\n" +
@@ -45,12 +48,14 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"samplingOrg\": \"NYK-DO\",\n" +
                 "\"statusCode\": \"I\",\n" +
                 "\"statusDate\": \"2018-04-17 11:08:59.000-0400\",\n" +
+                "\"subject\": null,\n" +
                 "\"workId\": 6687466,\n" +
                 "\"workRqstId\": 1508256,\n" +
                 "\"assignedToFirstName\": \"Lynda\",\n" +
                 "\"assignedToLastName\": \"Vidot\",\n" +
                 "\"pacCodeDescription\": \"Toxic Elements in Foods (Domestic & Import)\",\n" +
                 "\"assignedToAnlystTypeCode\": \"O\",\n" +
+                "\"assignedToPersonId\": 1234567,\n" +
                 "\"assignedToLeadInd\": \"Y\",\n" +
                 "\"assignedToStatusCode\": \"I\",\n" +
                 "\"assignedToStatusDate\": \"2018-04-17 00:00:00.000-0400\",\n" +
@@ -61,6 +66,8 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"cfsanProductDesc\": \"SMOKED SALMON\",\n" +
                 "\"operationCode\": \"43\",\n" +
                 "\"pacCode\": \"04019B\",\n" +
+                "\"lidCode\": null,\n" +
+                "\"splitInd\": null,\n" +
                 "\"problemAreaFlag\": \"ELE\",\n" +
                 "\"requestDate\": \"2015-12-09 00:00:00.000-0500\",\n" +
                 "\"responsibleFirmCode\": \"O\",\n" +
@@ -72,12 +79,14 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"samplingOrg\": \"NYK-DO\",\n" +
                 "\"statusCode\": \"I\",\n" +
                 "\"statusDate\": \"2018-03-16 11:08:59.000-0400\",\n" +
+                "\"subject\": null,\n" +
                 "\"workId\": 6587465,\n" +
                 "\"workRqstId\": 1408255,\n" +
                 "\"assignedToFirstName\": \"Lydia\",\n" +
                 "\"assignedToLastName\": \"Vinot\",\n" +
                 "\"pacCodeDescription\": \"Toxic Elements in Foods (Domestic & Import)\",\n" +
                 "\"assignedToAnlystTypeCode\": \"O\",\n" +
+                "\"assignedToPersonId\": 1234567,\n" +
                 "\"assignedToLeadInd\": \"Y\",\n" +
                 "\"assignedToStatusCode\": \"I\",\n" +
                 "\"assignedToStatusDate\": \"2018-04-16 00:00:00.000-0400\",\n" +
@@ -88,6 +97,8 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"cfsanProductDesc\": \"TURKEY BREAST\",\n" +
                 "\"operationCode\": \"43\",\n" +
                 "\"pacCode\": \"04019C\",\n" +
+                "\"lidCode\": null,\n" +
+                "\"splitInd\": null,\n" +
                 "\"problemAreaFlag\": \"ELE\",\n" +
                 "\"requestDate\": \"2015-11-08 00:00:00.000-0500\",\n" +
                 "\"responsibleFirmCode\": \"O\",\n" +
@@ -99,12 +110,14 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"samplingOrg\": \"NYK-DO\",\n" +
                 "\"statusCode\": \"P\",\n" +
                 "\"statusDate\": \"2018-03-15 10:07:59.000-0400\",\n" +
+                "\"subject\": null,\n" +
                 "\"workId\": 6487464,\n" +
                 "\"workRqstId\": 1308253,\n" +
                 "\"assignedToFirstName\": \"Yian\",\n" +
                 "\"assignedToLastName\": \"Shooster\",\n" +
                 "\"pacCodeDescription\": \"Toxic Elements in Foods (Domestic & Import)\",\n" +
                 "\"assignedToAnlystTypeCode\": \"O\",\n" +
+                "\"assignedToPersonId\": 1234567,\n" +
                 "\"assignedToLeadInd\": \"Y\",\n" +
                 "\"assignedToStatusCode\": \"I\",\n" +
                 "\"assignedToStatusDate\": \"2018-03-15 00:00:00.000-0400\",\n" +
@@ -117,5 +130,11 @@ public class FakeFactsAccessService implements FactsAccessService
         {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public Optional<String> getWorkStatus(long workId)
+    {
+        return Optional.of("C");
     }
 }

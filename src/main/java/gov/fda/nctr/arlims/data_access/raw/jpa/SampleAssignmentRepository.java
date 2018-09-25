@@ -12,5 +12,7 @@ import gov.fda.nctr.arlims.data_access.raw.jpa.db.SampleAssignment;
 public interface SampleAssignmentRepository extends JpaRepository<SampleAssignment,Long>
 {
     List<SampleAssignment> findBySampleIdIn(List<Long> sampleIds);
+
+    void deleteForSampleIdEquals(Long sampleId);
 }
 

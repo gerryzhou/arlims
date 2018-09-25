@@ -1,7 +1,6 @@
 package gov.fda.nctr.arlims.models.dto;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,7 @@ public class Sample
 
     private final String productName;
 
-    private final Optional<LocalDate> receivedDate;
+    private final Optional<String> splitInd;
 
     private final String factsStatus;
 
@@ -48,7 +47,7 @@ public class Sample
             Optional<String> lid,
             Optional<String> paf,
             String productName,
-            Optional<LocalDate> receivedDate,
+            Optional<String> splitInd,
             String factsStatus,
             Instant factsStatusTimestamp,
             Instant lastRefreshedFromFactsInstant,
@@ -66,7 +65,7 @@ public class Sample
         this.lid = lid;
         this.paf = paf;
         this.productName = productName;
-        this.receivedDate = receivedDate;
+        this.splitInd = splitInd;
         this.factsStatus = factsStatus;
         this.factsStatusTimestamp = factsStatusTimestamp;
         this.lastRefreshedFromFactsInstant = lastRefreshedFromFactsInstant;
@@ -90,7 +89,7 @@ public class Sample
 
     public String getProductName() { return productName; }
 
-    public Optional<LocalDate> getReceivedDate() { return receivedDate; }
+    public Optional<String> getSplitInd() { return splitInd; }
 
     public String getFactsStatus() { return factsStatus; }
 

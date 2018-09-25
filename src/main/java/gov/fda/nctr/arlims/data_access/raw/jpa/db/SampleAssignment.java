@@ -1,6 +1,6 @@
 package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -21,19 +21,21 @@ public class SampleAssignment
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_SMPAST_SMP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false)
+    @JoinColumn(name = "SAMPLE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_SMPAST_SMP")) @NotNull
     private Sample sample;
 
-    @Column(name = "SAMPLE_ID", insertable = false, updatable = false)
+    @Column(name = "SAMPLE_ID", insertable = false, updatable = false, nullable = false)
     private Long sampleId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name="FK_SMPAST_EMP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false)
+    @JoinColumn(name = "EMPLOYEE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_SMPAST_EMP")) @NotNull
     private Employee employee;
 
-    @Column(name = "EMPLOYEE_ID", insertable = false, updatable = false)
+    @Column(name = "EMPLOYEE_ID", insertable = false, updatable = false, nullable = false)
     private Long employeeId;
 
-    private LocalDate assignedDate;
+    private Instant assignedInstant;
 
     private Boolean lead;
 
@@ -43,7 +45,7 @@ public class SampleAssignment
         (
             @NotNull Sample sample,
             @NotNull Employee employee,
-            LocalDate assignedDate,
+            Instant assignedInstant,
             Boolean lead
         )
     {
@@ -51,7 +53,7 @@ public class SampleAssignment
         this.sampleId = sample.getId();
         this.employee = employee;
         this.employeeId = employee.getId();
-        this.assignedDate = assignedDate;
+        this.assignedInstant = assignedInstant;
         this.lead = lead;
     }
 
@@ -70,8 +72,8 @@ public class SampleAssignment
     public Long getEmployeeId() { return employeeId; }
     public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
 
-    public LocalDate getAssignedDate() { return assignedDate; }
-    public void setAssignedDate(LocalDate assignedDate) { this.assignedDate = assignedDate; }
+    public Instant getAssignedInstant() { return assignedInstant; }
+    public void setAssignedInstant(Instant assignedInstant) { this.assignedInstant = assignedInstant; }
 
     public Boolean getLead() { return lead; }
     public void setLead(Boolean lead) { this.lead = lead; }

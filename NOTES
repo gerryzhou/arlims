@@ -1,9 +1,42 @@
-Add required operationId field to Sample, with index.
+Recreate db objects, re-insert test data but first remove sample creation from data.sql.
+Test that samples are created and updated properly from fake facts access service.
 
 
-In Lab_Group table, need more information about FACTS orgs?
-  accomplishing org, e.g. "ARKL".
-  performing org, e.g. "ARL-MICRO1".
+
+Sample/Assignments
+------------------
+Assume only a single employee will be assigned to a sample, for now (LABS-DS api only supports one such assignment afaict).
+
+Maybe change names to reflect that Sample represents "sample work" or "assigned sample work".
+
+Don't store samples before the Assigned ("A") stage.
+  Implement "lab inbox" management over the api directly.
+  Then sample/assignment data is always current during management ops which is necessary anyway.
+
+
+LABS-DS api
+-----------
+Which fields are guaranteed to be present and non-null in lab inbox result objects?
+   assignedToPersonId really allowed to be absent, even when other assignedTo* fields are present?
+
+What to do if an employee referenced in an assignment does not exist?
+  Can't create the employee, don't have values for required fda email or lab group fields.
+  Maybe just assign employee to special lab group for unassigned samples.
+
+
+Sample Changes
+--------------
+  - received, receivedBy
+  + String splitInd;
+
+
+Commit Notes
+------------
+Remove unused tables.
+Data model fields added and removed: add facts parent org name field to lab group, add splitInd to sample, remove received/by from sample.
+Adjust JPA annotations so parent entities get proper not-null constraints when id field is exposed separately.
+Most of initial inbox sync impl finished.
+------------
 
 
 Sample Sync Process

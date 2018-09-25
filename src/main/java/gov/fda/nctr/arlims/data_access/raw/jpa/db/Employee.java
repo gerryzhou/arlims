@@ -27,10 +27,10 @@ public class Employee
     @Column(name = "SHORT_NAME", nullable = false) @Size(max = 10) @NotBlank
     private String shortName;
 
-    @ManyToOne(optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
+    @ManyToOne(optional=false) @JoinColumn(name = "LAB_GROUP_ID", nullable = false, foreignKey = @ForeignKey(name="FK_EMP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
+    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false, nullable = false)
     private Long labGroupId;
 
     @Column(name = "FACTS_PERSON_ID")

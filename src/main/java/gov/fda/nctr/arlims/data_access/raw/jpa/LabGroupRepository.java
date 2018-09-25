@@ -15,6 +15,10 @@ public interface LabGroupRepository extends JpaRepository<LabGroup,Long>
 {
     @Query(value = "SELECT lg FROM LabGroup lg where lg.id = (select e.labGroup.id from Employee e where e.id = :empId)")
     Optional<LabGroup> findByEmployeeId(@Param("empId") long empId);
+
+    @Query(value = "SELECT lg FROM LabGroup lg where lg.id = (select e.labGroup.id from Employee e where e.factsPersonId = :id)")
+    Optional<LabGroup> findByFactsPersonId(@Param("id") long factsPersonId);
 }
+
 
 

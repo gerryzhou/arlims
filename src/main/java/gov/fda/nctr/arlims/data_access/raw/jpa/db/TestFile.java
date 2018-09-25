@@ -18,10 +18,11 @@ public class TestFile
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "TEST_ID", foreignKey = @ForeignKey(name="FK_TSTFILE_TST")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false)
+    @JoinColumn(name = "TEST_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TSTFILE_TST")) @NotNull
     private Test test;
 
-    @Column(name = "TEST_ID", insertable = false, updatable = false)
+    @Column(name = "TEST_ID", insertable = false, updatable = false, nullable = false)
     private Long testId;
 
     @Size(max = 50)

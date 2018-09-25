@@ -43,15 +43,17 @@ create index IX_AUDENT_OBJT
 
 create table LAB_GROUP
 (
-  ID                  NUMBER(19) generated as identity
+  ID                    NUMBER(19) generated as identity
     primary key,
-  ADDRESS_CITY        VARCHAR2(200 char),
-  ADDRESS_STATE       VARCHAR2(2 char),
-  ADDRESS_STREET      VARCHAR2(200 char),
-  ADDRESS_ZIP         VARCHAR2(11 char),
-  BUILDINGS_AND_ROOMS VARCHAR2(200 char),
-  DESCRIPTION         VARCHAR2(100 char),
-  NAME                VARCHAR2(20 char) not null
+  ADDRESS_CITY          VARCHAR2(200 char),
+  ADDRESS_STATE         VARCHAR2(2 char),
+  ADDRESS_STREET        VARCHAR2(200 char),
+  ADDRESS_ZIP           VARCHAR2(11 char),
+  BUILDINGS_AND_ROOMS   VARCHAR2(200 char),
+  DESCRIPTION           VARCHAR2(100 char),
+  FACTS_ORG_NAME        VARCHAR2(20 char) not null,
+  FACTS_PARENT_ORG_NAME VARCHAR2(20 char) not null,
+  NAME                  VARCHAR2(20 char) not null
     constraint UN_LABGRP_NAME
     unique
 )
@@ -66,7 +68,7 @@ create table EMPLOYEE
     constraint UN_EMP_FDAEMAILACCN
     unique,
   FIRST_NAME             VARCHAR2(60 char)  not null,
-  LAB_GROUP_ID           NUMBER(19)
+  LAB_GROUP_ID           NUMBER(19)         not null
     constraint FK_EMP_LABGROUP
     references LAB_GROUP,
   LAST_NAME              VARCHAR2(60 char)  not null,
@@ -91,7 +93,7 @@ create table LAB_RESOURCE
   CODE          VARCHAR2(50 char) not null
     primary key,
   DESCRIPTION   VARCHAR2(100 char),
-  LAB_GROUP_ID  NUMBER(19)
+  LAB_GROUP_ID  NUMBER(19)        not null
     constraint FK_LABRSC_LABGROUP
     references LAB_GROUP,
   RESOURCE_TYPE VARCHAR2(60 char) not null
@@ -137,34 +139,32 @@ create table SAMPLE
 (
   ID                        NUMBER(19) generated as identity
     primary key,
-  FACTS_STATUS              VARCHAR2(30 char) not null,
-  FACTS_STATUS_DATE         DATE              not null,
-  LAB_GROUP_ID              NUMBER(19)
+  FACTS_STATUS              VARCHAR2(1 char)   not null,
+  FACTS_STATUS_TIMESTAMP    TIMESTAMP(6)       not null,
+  LAB_GROUP_ID              NUMBER(19)         not null
     constraint FK_SMP_LABGROUP
     references LAB_GROUP,
-  LAST_REFRESHED_FROM_FACTS TIMESTAMP(6)      not null,
+  LAST_REFRESHED_FROM_FACTS TIMESTAMP(6)       not null,
   LID                       VARCHAR2(20 char),
-  PAC                       VARCHAR2(20 char) not null,
+  OPERATION_CODE            VARCHAR2(255 char) not null,
+  PAC                       VARCHAR2(20 char)  not null,
   PAF                       VARCHAR2(20 char),
   PRODUCT_NAME              VARCHAR2(100 char),
-  RECEIVED                  DATE,
-  RECEIVED_BY               VARCHAR2(100 char),
-  SAMPLE_NUM                VARCHAR2(20 char) not null,
+  SAMPLE_ANALYSIS_ID        NUMBER(19)         not null,
+  SAMPLE_TRACKING_NUM       NUMBER(19)         not null,
+  SAMPLE_TRACKING_SUB_NUM   NUMBER(19)         not null,
   SAMPLING_ORG              VARCHAR2(30 char),
-  SUBJECT                   VARCHAR2(4000 char)
+  SPLIT_IND                 VARCHAR2(1 char),
+  SUBJECT                   VARCHAR2(4000 char),
+  WORK_ID                   NUMBER(19)         not null
+    constraint UN_SMP_WORKID
+    unique,
+  WORK_REQUEST_ID           NUMBER(19)         not null
 )
 /
 
 create index IX_SMP_LABGRPID
   on SAMPLE (LAB_GROUP_ID)
-/
-
-create index IX_SMP_SMPNUMPAC
-  on SAMPLE (SAMPLE_NUM, PAC)
-/
-
-create index IX_SMP_RECEIVED
-  on SAMPLE (RECEIVED)
 /
 
 create index IX_SMP_FACTSSTATUS
@@ -176,11 +176,11 @@ create table SAMPLE_ASSIGNMENT
   ID            NUMBER(19) generated as identity
     primary key,
   ASSIGNED_DATE DATE,
-  EMPLOYEE_ID   NUMBER(19)
+  EMPLOYEE_ID   NUMBER(19) not null
     constraint FK_SMPAST_EMP
     references EMPLOYEE,
   LEAD          NUMBER(1),
-  SAMPLE_ID     NUMBER(19)
+  SAMPLE_ID     NUMBER(19) not null
     constraint FK_SMPAST_SMP
     references SAMPLE,
   constraint UN_SMPAST_SMPIDEMPID
@@ -190,110 +190,6 @@ create table SAMPLE_ASSIGNMENT
 
 create index IX_SMPAST_EMPID
   on SAMPLE_ASSIGNMENT (EMPLOYEE_ID)
-/
-
-create table SAMPLE_MANAGED_RESOURCE
-(
-  ID            NUMBER(19) generated as identity
-    primary key,
-  EMPLOYEE_ID   NUMBER(19)
-    constraint FK_SMPMANRSC_EMP
-    references EMPLOYEE,
-  LIST_NAME     VARCHAR2(50 char) not null,
-  RESOURCE_CODE VARCHAR2(255 char)
-    constraint FK_SMPMANRSC_LABRSC
-    references LAB_RESOURCE,
-  SAMPLE_ID     NUMBER(19)
-    constraint FK_SMPMANRSC_SMP
-    references SAMPLE
-)
-/
-
-create index IX_SMPMANRSC_SMPIDEMPIDLSTN
-  on SAMPLE_MANAGED_RESOURCE (SAMPLE_ID, EMPLOYEE_ID, LIST_NAME)
-/
-
-create index IX_SMPMANRSC_RSCCD
-  on SAMPLE_MANAGED_RESOURCE (RESOURCE_CODE)
-/
-
-create table SAMPLE_UNMANAGED_RESOURCE
-(
-  ID            NUMBER(19) generated as identity
-    primary key,
-  EMPLOYEE_ID   NUMBER(19)
-    constraint FK_SMPUNMRSC_EMP
-    references EMPLOYEE,
-  LIST_NAME     VARCHAR2(50 char) not null,
-  RESOURCE_CODE VARCHAR2(50 char) not null,
-  RESOURCE_TYPE VARCHAR2(60 char),
-  SAMPLE_ID     NUMBER(19)
-    constraint FK_SMPUNMRSC_SMP
-    references SAMPLE
-)
-/
-
-create index IX_SMPUNMRSC_SMPIDEMPIDLSTN
-  on SAMPLE_UNMANAGED_RESOURCE (SAMPLE_ID, EMPLOYEE_ID, LIST_NAME)
-/
-
-create index IX_SMPUNMRSC_RSCCD
-  on SAMPLE_UNMANAGED_RESOURCE (RESOURCE_CODE)
-/
-
-create index IX_SMPUNMRSC_RSCT
-  on SAMPLE_UNMANAGED_RESOURCE (RESOURCE_TYPE)
-/
-
-create table SAMPLE_LIST
-(
-  ID                NUMBER(19) generated as identity
-    primary key,
-  ACTIVE            NUMBER(1)         not null,
-  CREATED           TIMESTAMP(6)      not null,
-  NAME              VARCHAR2(30 char) not null
-    constraint UN_SMPLST_NAME
-    unique,
-  CREATED_BY_EMP_ID NUMBER(19)        not null
-    constraint FK_SMPLST_EMP_CREATED
-    references EMPLOYEE,
-  LAB_GROUP_ID      NUMBER(19)        not null
-    constraint FK_SMPLST_LABGRP
-    references LAB_GROUP
-)
-/
-
-create table SAMPLE_LIST_SAMPLE
-(
-  SAMPLE_LIST_ID NUMBER(19) not null
-    constraint FK_SMPLSTSMP_SMPLST
-    references SAMPLE_LIST,
-  SAMPLE_ID      NUMBER(19) not null
-    constraint FK_SMPLSTSMP_SMP
-    references SAMPLE,
-  SAMPLES_ORDER  NUMBER(10) not null,
-  primary key (SAMPLE_LIST_ID, SAMPLES_ORDER)
-)
-/
-
-create index IX_SMPLSTSMP_SMPLSTID
-  on SAMPLE_LIST_SAMPLE (SAMPLE_LIST_ID)
-/
-
-create index IX_SMPLSTSMP_SMPID
-  on SAMPLE_LIST_SAMPLE (SAMPLE_ID)
-/
-
-create index IX_SMPLST_LABGROUPID
-  on SAMPLE_LIST (LAB_GROUP_ID)
-/
-
-create index IX_SMPLST_CREATEDEMPID
-  on SAMPLE_LIST (CREATED_BY_EMP_ID)
-/
-
-create index IX_SMPLST_CREATED
-  on SAMPLE_LIST (CREATED)
 /
 
 create table TEST_TYPE
@@ -317,13 +213,13 @@ create table LAB_GROUP_TEST_TYPE
 (
   ID                      NUMBER(19) generated as identity
     primary key,
-  LAB_GROUP_ID            NUMBER(19)
-    constraint FK_LGRPTSTT_LABGROUP
-    references LAB_GROUP,
   REPORT_NAMES_BAR_SEP    VARCHAR2(4000 char),
   TEST_CONFIGURATION_JSON CLOB
     constraint CK_LGRPTSTT_TSTOPTSJSON_ISJSON
     check (test_configuration_json is json format json strict),
+  LAB_GROUP_ID            NUMBER(19) not null
+    constraint FK_LGRPTSTT_LABGROUP
+    references LAB_GROUP,
   TEST_TYPE_ID            NUMBER(19) not null
     constraint FK_LGRPTSTT_LABTESTTYPE
     references TEST_TYPE,
@@ -342,14 +238,14 @@ create table TEST
     primary key,
   BEGIN_DATE               DATE,
   CREATED                  TIMESTAMP(6)      not null,
-  CREATED_BY_EMP_ID        NUMBER(19)
+  CREATED_BY_EMP_ID        NUMBER(19)        not null
     constraint FK_TST_EMP_CREATED
     references EMPLOYEE,
-  LAB_GROUP_ID             NUMBER(19)
+  LAB_GROUP_ID             NUMBER(19)        not null
     constraint FK_TST_LABGRP
     references LAB_GROUP,
   LAST_SAVED               TIMESTAMP(6)      not null,
-  LAST_SAVED_BY_EMP_ID     NUMBER(19)
+  LAST_SAVED_BY_EMP_ID     NUMBER(19)        not null
     constraint FK_TST_EMP_LASTSAVED
     references EMPLOYEE,
   NOTE                     VARCHAR2(200 char),
@@ -357,7 +253,7 @@ create table TEST
   REVIEWED_BY_EMP_ID       NUMBER(19)
     constraint FK_TST_EMP_REVIEWED
     references EMPLOYEE,
-  SAMPLE_ID                NUMBER(19)
+  SAMPLE_ID                NUMBER(19)        not null
     constraint FK_TST_RCVSMP
     references SAMPLE,
   SAVED_TO_FACTS           TIMESTAMP(6),
@@ -432,7 +328,7 @@ create table TEST_FILE
   DATA     BLOB               not null,
   NAME     VARCHAR2(200 char) not null,
   ROLE     VARCHAR2(50 char),
-  TEST_ID  NUMBER(19)
+  TEST_ID  NUMBER(19)         not null
     constraint FK_TSTFILE_TST
     references TEST,
   UPLOADED TIMESTAMP(6)       not null
@@ -441,54 +337,5 @@ create table TEST_FILE
 
 create index IX_TSTFILE_TSTID
   on TEST_FILE (TEST_ID)
-/
-
-create table TEST_MANAGED_RESOURCE
-(
-  ID            NUMBER(19) generated as identity
-    primary key,
-  RESOURCE_CODE VARCHAR2(255 char)
-    constraint FK_TSTMANRSC_LABRSC
-    references LAB_RESOURCE,
-  TEST_ID       NUMBER(19)
-    constraint FK_TSTMANRSC_TST
-    references TEST,
-  constraint UN_TSTMANRSC_TSTIDRSCCD
-  unique (TEST_ID, RESOURCE_CODE)
-)
-/
-
-create index IX_TSTMANRSC_TSTID
-  on TEST_MANAGED_RESOURCE (TEST_ID)
-/
-
-create index IX_TSTMANRSC_RSCCD
-  on TEST_MANAGED_RESOURCE (RESOURCE_CODE)
-/
-
-create table TEST_UNMANAGED_RESOURCE
-(
-  ID            NUMBER(19) generated as identity
-    primary key,
-  RESOURCE_CODE VARCHAR2(50 char) not null,
-  RESOURCE_TYPE VARCHAR2(60 char),
-  TEST_ID       NUMBER(19)
-    constraint FK_TSTUNMRSC_TST
-    references TEST,
-  constraint UN_TSTUNMRSC_TSTIDRSCCDRSCT
-  unique (TEST_ID, RESOURCE_CODE, RESOURCE_TYPE)
-)
-/
-
-create index IX_TSTUNMRSC_TSTID
-  on TEST_UNMANAGED_RESOURCE (TEST_ID)
-/
-
-create index IX_TSTUNMRSC_RSCCD
-  on TEST_UNMANAGED_RESOURCE (RESOURCE_CODE)
-/
-
-create index IX_TSTUNMRSC_RSCT
-  on TEST_UNMANAGED_RESOURCE (RESOURCE_TYPE)
 /
 

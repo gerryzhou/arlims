@@ -29,37 +29,42 @@ public class Test
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "SAMPLE_ID", foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "SAMPLE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
     private Sample sample;
 
-    @Column(name = "SAMPLE_ID", insertable = false, updatable = false)
+    @Column(name = "SAMPLE_ID", insertable = false, updatable = false, nullable = false)
     private Long sampleId;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_TST_TSTT")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "TEST_TYPE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_TSTT")) @NotNull
     private TestType testType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_TST_LABGRP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "LAB_GROUP_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_LABGRP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
+    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false, nullable = false)
     private Long labGroupId;
 
     @Column(name = "CREATED") @NotNull
     private Instant created;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "CREATED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_CREATED")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false)
+    @JoinColumn(name = "CREATED_BY_EMP_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_EMP_CREATED")) @NotNull
     private Employee createdByEmployee;
 
-    @Column(name = "CREATED_BY_EMP_ID", insertable = false, updatable = false)
+    @Column(name = "CREATED_BY_EMP_ID", insertable = false, updatable = false, nullable = false)
     private Long createdByEmpId;
 
     @Column(name = "LAST_SAVED") @NotNull
     private Instant lastSaved;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "LAST_SAVED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_LASTSAVED")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false)
+    @JoinColumn(name = "LAST_SAVED_BY_EMP_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_EMP_LASTSAVED")) @NotNull
     private Employee lastSavedByEmployee;
 
-    @Column(name = "LAST_SAVED_BY_EMP_ID", insertable = false, updatable = false)
+    @Column(name = "LAST_SAVED_BY_EMP_ID", insertable = false, updatable = false, nullable = false)
     private Long lastSavedByEmpId;
 
     @Column(name = "BEGIN_DATE")
@@ -79,7 +84,8 @@ public class Test
 
     private Instant reviewed;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "REVIEWED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_REVIEWED"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "REVIEWED_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_REVIEWED"))
     private Employee reviewedByEmployee;
 
     @Column(name = "REVIEWED_BY_EMP_ID", insertable = false, updatable = false)
@@ -88,7 +94,8 @@ public class Test
     @Column(name = "SAVED_TO_FACTS")
     private Instant savedToFacts;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "SAVED_TO_FACTS_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_SAVEDTOFACTS"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SAVED_TO_FACTS_BY_EMP_ID", foreignKey = @ForeignKey(name="FK_TST_EMP_SAVEDTOFACTS"))
     private Employee savedToFactsByEmployee;
 
     @Column(name = "SAVED_TO_FACTS_BY_EMP_ID", insertable = false, updatable = false)

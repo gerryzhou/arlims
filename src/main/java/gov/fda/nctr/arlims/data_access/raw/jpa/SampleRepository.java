@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.data_access.raw.jpa;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,6 @@ public interface SampleRepository extends JpaRepository<Sample,Long>
 
     List<Sample> findByFactsStatusIn(List<String> includeStatuses);
 
-    List<Sample> findByWorkIdIn(List<Long> workIds);
+    List<Sample> findByWorkIdIn(Collection<Long> workIds);
 }
 

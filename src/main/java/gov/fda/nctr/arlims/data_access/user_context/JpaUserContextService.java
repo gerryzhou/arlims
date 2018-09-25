@@ -52,7 +52,8 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 
     private final Pattern barPattern = Pattern.compile("\\|");
 
-    private static List<String> ACTIVE_SAMPLE_STATUSES = Arrays.asList("Assigned", "In-progress", "Original complete");
+    private static List<String> USER_CONTEXT_SAMPLE_STATUSES = Arrays.asList("S", "I", "O");
+
 
     public JpaUserContextService
         (
@@ -249,7 +250,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     private List<Sample> getLabGroupActiveSamples(LabGroup labGroup, List<UserReference> labGroupUsers)
     {
         List<gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample> dbSamples =
-            sampleRepo.findByLabGroupIdAndFactsStatusIn(labGroup.getId(), ACTIVE_SAMPLE_STATUSES);
+            sampleRepo.findByLabGroupIdAndFactsStatusIn(labGroup.getId(), USER_CONTEXT_SAMPLE_STATUSES);
 
         List<Long> sampleIds = dbSamples.stream().map(s -> s.getId()).collect(toList());
 
@@ -305,7 +306,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                         opt(dbSample.getLid()),
                         opt(dbSample.getPaf()),
                         dbSample.getProductName(),
-                        opt(dbSample.getReceived()),
+                        opt(dbSample.getSplitInd()),
                         dbSample.getFactsStatus(),
                         dbSample.getFactsStatusTimestamp(),
                         dbSample.getLastRefreshedFromFacts(),
@@ -366,7 +367,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                     new SampleAssignment(
                         a.getSampleId(),
                         empShortName,
-                        opt(a.getAssignedDate()),
+                        opt(a.getAssignedInstant()),
                         opt(a.getLead())
                     );
             })

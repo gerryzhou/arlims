@@ -28,7 +28,7 @@ import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 
 
 @Service
-@Profile({"!dev"}) // LABS-DS api is unreachable from dev workstation (as opposed to "dev" server).
+@Profile({"!dev"}) // LABS-DS api is unreachable from dev workstation (as opposed to dev server).
 public class LabsDSFactsAccessService extends ServiceBase implements FactsAccessService
 {
     private final FactsApiConfig apiConfig;
@@ -44,8 +44,9 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     private final ObjectReader jsonReader;
 
     private static final String LAB_INBOX_RESOURCE = "LabsInbox";
+    private static final String WORK_DETAILS_RESOURCE = "WorkDetails";
 
-    private static final String UPPER_ALPHA_NUM_CHARS ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String UPPER_ALPHANUM ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
     public LabsDSFactsAccessService
@@ -73,11 +74,11 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         this.jsonReader = jsonSerializer.reader();
     }
 
-    public List<LabInboxItem> getLabInboxItems()
+    public List<LabInboxItem> getLabInboxItems(List<String> statusCodes)
     {
         List<LabInboxItem> resInboxItems = new ArrayList<>();
 
-        List<String> orgNames = jdbc.queryForList("select distinct facts_org_name from lab_group", String.class);
+        List<String> orgNames = jdbc.queryForList("select distinct facts_parent_org_name from lab_group", String.class);
 
         String includeFields =
             "sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject,pacCode," +
@@ -91,6 +92,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             String url =
                 UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
                 .queryParam("orgName", orgName)
+                .queryParam("statusCodes", String.join(",", statusCodes))
                 .queryParam("objectFilters", includeFields)
                 .toUriString();
 
@@ -106,6 +108,27 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         }
 
         return resInboxItems;
+    }
+
+    @Override
+    public Optional<String> getWorkStatus(long workId)
+    {
+        String url =
+            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + WORK_DETAILS_RESOURCE)
+            .queryParam("workId", workId)
+            .queryParam("objectFilters", "statusCode")
+            .toUriString();
+
+        HttpEntity reqEntity = new HttpEntity(newRequestHeaders());
+
+        ResponseEntity<StatusCodeObj[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, StatusCodeObj[].class);
+
+        StatusCodeObj[] statusCodeObjs = resp.getBody();
+
+        if ( statusCodeObjs.length == 1 )
+            return Optional.of(statusCodeObjs[0].statusCode);
+        else
+            return Optional.empty();
     }
 
     private HttpHeaders newRequestHeaders()
@@ -133,7 +156,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         StringBuilder sb = new StringBuilder(length);
 
         for (int i = 0; i < length; i++)
-            sb.append(UPPER_ALPHA_NUM_CHARS.charAt(secureRandom.nextInt(UPPER_ALPHA_NUM_CHARS.length())));
+            sb.append(UPPER_ALPHANUM.charAt(secureRandom.nextInt(UPPER_ALPHANUM.length())));
 
         return sb.toString();
     }
@@ -153,4 +176,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     }
 }
 
-
+class StatusCodeObj
+{
+    String statusCode;
+}

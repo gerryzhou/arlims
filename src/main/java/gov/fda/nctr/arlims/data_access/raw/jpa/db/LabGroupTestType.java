@@ -20,13 +20,12 @@ public class LabGroupTestType
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional=false) @JoinColumn(name = "LAB_GROUP_ID", foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABGROUP")) @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional=false)
+    @JoinColumn(name = "LAB_GROUP_ID", nullable = false, foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
-    @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false)
-    private Long labGroupId;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional=false) @JoinColumn(name = "TEST_TYPE_ID", foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABTESTTYPE")) @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional=false)
+    @JoinColumn(name = "TEST_TYPE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABTESTTYPE")) @NotNull
     private TestType testType;
 
     @Lob @Basic(fetch = FetchType.LAZY)
@@ -46,7 +45,6 @@ public class LabGroupTestType
         )
     {
         this.labGroup = labGroup;
-        this.labGroupId = labGroup.getId();
         this.testType = testType;
         this.testConfigurationJson = testConfigurationJson;
         this.reportNamesBarSep = reportNamesBarSep;
@@ -54,8 +52,6 @@ public class LabGroupTestType
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public Long getLabGroupId() { return labGroupId; }
 
     public TestType getTestType() { return testType; }
     public void setTestType(TestType testType) { this.testType = testType; }
