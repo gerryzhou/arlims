@@ -35,9 +35,9 @@ public class ScheduledTasksService extends ServiceBase implements SchedulingConf
 
         scheduler.setPoolSize(threadPoolSize);
 
-        log.info("Reserving " + threadPoolSize + " threads for FACTS scheduling.");
+        log.info("Reserving " + threadPoolSize + " threads for scheduled tasks.");
 
-        scheduler.setThreadNamePrefix("facts-scheduler-");
+        scheduler.setThreadNamePrefix("app-task-scheduler-");
 
         scheduler.initialize();
 
