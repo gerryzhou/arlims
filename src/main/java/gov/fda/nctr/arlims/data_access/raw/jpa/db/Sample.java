@@ -131,6 +131,9 @@ public class Sample
     public Long getWorkId() { return workId; }
     public void setWorkId(Long workId) { this.workId = workId; }
 
+    public LabGroup getLabGroup() { return labGroup; }
+    public void setLabGroup(LabGroup labGroup) { this.labGroup = labGroup; }
+
     public Long getLabGroupId() { return labGroupId; }
 
     public Long getSampleTrackingNumber() { return sampleTrackingNum; }
