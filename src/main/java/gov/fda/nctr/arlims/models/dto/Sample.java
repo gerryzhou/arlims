@@ -35,10 +35,6 @@ public class Sample
 
     private final List<LabTestMetadata> tests;
 
-    private final List<LabResourceListMetadata> associatedUnmanagedResourceLists;
-
-    private final List<LabResourceListMetadata> associatedManagedResourceLists;
-
     public Sample
         (
             long id,
@@ -54,9 +50,7 @@ public class Sample
             Optional<String> samplingOrganization,
             Optional<String> subject,
             List<SampleAssignment> assignments,
-            List<LabTestMetadata> tests,
-            List<LabResourceListMetadata> associatedUnmanagedResourceLists,
-            List<LabResourceListMetadata> associatedManagedResourceLists
+            List<LabTestMetadata> tests
         )
     {
         this.id = id;
@@ -73,8 +67,6 @@ public class Sample
         this.subject = subject;
         this.assignments = assignments;
         this.tests = tests;
-        this.associatedUnmanagedResourceLists = associatedUnmanagedResourceLists;
-        this.associatedManagedResourceLists = associatedManagedResourceLists;
     }
 
     public long getId() { return id; }
@@ -104,8 +96,4 @@ public class Sample
     public List<SampleAssignment> getAssignments() { return assignments; }
 
     public List<LabTestMetadata> getTests() { return tests; }
-
-    public List<LabResourceListMetadata> getAssociatedUnmanagedResourceLists() { return associatedUnmanagedResourceLists; }
-
-    public List<LabResourceListMetadata> getAssociatedManagedResourceLists() { return associatedManagedResourceLists; }
 }

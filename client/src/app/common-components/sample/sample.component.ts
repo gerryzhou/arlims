@@ -56,8 +56,6 @@ export class SampleComponent implements OnChanges {
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasAssociatedItems: boolean;
 
-   numAssociatedResourceLists: number;
-
    displayFactsStatusTimestamp: string;
    factsStatusText: string;
    factsStatusCssClass: string;
@@ -67,11 +65,8 @@ export class SampleComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.numAssociatedResourceLists =
-         this.sample.associatedManagedResourceLists.length +
-         this.sample.associatedUnmanagedResourceLists.length;
       this.hasExtendedSampleMetadata = !!this.sample.subject;
-      this.hasAssociatedItems = this.sample.tests.length > 0 || this.numAssociatedResourceLists > 0;
+      this.hasAssociatedItems = this.sample.tests.length > 0;
       this.displayFactsStatusTimestamp =
          this.sample.factsStatusTimestamp ? moment(this.sample.factsStatusTimestamp).format(' MMM D h:mm a')
          : '';

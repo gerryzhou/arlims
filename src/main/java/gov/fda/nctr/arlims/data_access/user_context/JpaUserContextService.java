@@ -1,21 +1,17 @@
 package gov.fda.nctr.arlims.data_access.user_context;
 
-import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -261,12 +257,6 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
         Map<Long, List<SampleAssignment>> sampleAssignmentsBySampleId =
             getSampleAssignmentsBySampleId(sampleIds, usersById);
 
-        Map<Long, List<LabResourceListMetadata>> unmanagedResourceListsBySampleId =
-            new HashMap<>(); // getUnmanagedResourceListsBySampleId(sampleIds);
-
-        Map<Long, List<LabResourceListMetadata>> managedResourceListsBySampleId =
-            new HashMap<>(); // getManagedResourceListsBySampleId(sampleIds);
-
         Map<Long, List<Test>> testsBySampleId =
             getTestsBySampleId(sampleIds);
 
@@ -289,12 +279,6 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                     })
                     .collect(toList());
 
-                List<LabResourceListMetadata> unmanagedResourceLists =
-                    unmanagedResourceListsBySampleId.getOrDefault(sampleId, emptyList());
-
-                List<LabResourceListMetadata> managedResourceLists =
-                    managedResourceListsBySampleId.getOrDefault(sampleId, emptyList());
-
                 String sampleNum = dbSample.getSampleTrackingNumber() + "-" +
                                    dbSample.getSampleTrackingSubNumber();
 
@@ -313,9 +297,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                         opt(dbSample.getSamplingOrganization()),
                         opt(dbSample.getSubject()),
                         assignments,
-                        tests,
-                        unmanagedResourceLists,
-                        managedResourceLists
+                        tests
                     );
             })
             .collect(toList());
@@ -372,64 +354,6 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                     );
             })
             .collect(groupingBy(SampleAssignment::getSampleId));
-    }
-
-    private Map<Long, List<LabResourceListMetadata>> getUnmanagedResourceListsBySampleId(List<Long> sampleIds)
-    {
-        String qry =
-            "select r.sample_id, e.short_name, r.list_name, count(*) num_resources\n" +
-            "from sample_unmanaged_resource r\n" +
-            "join employee e on e.id = r.employee_id\n" +
-            "where r.sample_id in (:ids)\n" +
-            "group by r.sample_id, e.short_name, r.list_name";
-
-        RowMapper<LabResourceListMetadata> listMdRowMapper = (rs,i) ->
-            new LabResourceListMetadata(rs.getString(3), rs.getString(2), rs.getInt(4));
-
-        return
-            jdbcTemplate.query(
-                qry,
-                singletonMap("ids", sampleIds),
-                getLabResourceListsBySampleIdResultSetExtractor(1, listMdRowMapper)
-            );
-    }
-
-    private Map<Long, List<LabResourceListMetadata>> getManagedResourceListsBySampleId(List<Long> sampleIds)
-    {
-        String qry =
-            "select r.sample_id, e.short_name, r.list_name, count(*) num_resources\n" +
-            "from sample_managed_resource r\n" +
-            "join employee e on e.id = r.employee_id\n" +
-            "where r.sample_id in (:ids)\n" +
-            "group by r.sample_id, e.short_name, r.list_name";
-
-        RowMapper<LabResourceListMetadata> listMdRowMapper = (rs,i) ->
-            new LabResourceListMetadata(rs.getString(3), rs.getString(2), rs.getInt(4));
-
-        return
-            jdbcTemplate.query(
-                qry,
-                singletonMap("ids", sampleIds),
-                getLabResourceListsBySampleIdResultSetExtractor(1, listMdRowMapper)
-            );
-    }
-
-    private ResultSetExtractor<Map<Long, List<LabResourceListMetadata>>> getLabResourceListsBySampleIdResultSetExtractor
-        (
-            int sampleIdColNum,
-            RowMapper<LabResourceListMetadata> listMdRowMapper
-        )
-    {
-        return (ResultSet rs) -> {
-            Map<Long, List<LabResourceListMetadata>> listMdsBySampleId = new HashMap<>();
-            int i = 0;
-            while (rs.next())
-            {
-                listMdsBySampleId.computeIfAbsent(rs.getLong(sampleIdColNum), k -> new ArrayList<>())
-                    .add(listMdRowMapper.mapRow(rs, ++i));
-            }
-            return listMdsBySampleId;
-        };
     }
 
     private List<LabTestType> getLabGroupTestTypes(LabGroup labGroup)
@@ -534,7 +458,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     {
         List<RoleName> roleNames = emp.getRoles().stream().map(Role::getName).collect(toList());
 
-        AppUser user =
+        return
             new AppUser(
                 emp.getId(),
                 emp.getFdaEmailAccountName(),
@@ -546,8 +470,6 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                 roleNames,
                 Instant.now()
             );
-
-        return user;
     }
 
     private static <T> Optional<T> opt(T t) { return Optional.ofNullable(t); }

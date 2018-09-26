@@ -1,4 +1,4 @@
-Recreate db objects, re-insert test data but first remove sample creation from data.sql.
+Recreate db objects, re-insert test data but with only one sample created.
 Test that samples are created and updated properly from fake facts access service.
 
 
@@ -24,18 +24,10 @@ What to do if an employee referenced in an assignment does not exist?
   Maybe just assign employee to special lab group for unassigned samples.
 
 
-Sample Changes
---------------
-  - received, receivedBy
-  + String splitInd;
-
-
 Commit Notes
 ------------
-Remove unused tables.
-Data model fields added and removed: add facts parent org name field to lab group, add splitInd to sample, remove received/by from sample.
-Adjust JPA annotations so parent entities get proper not-null constraints when id field is exposed separately.
-Most of initial inbox sync impl finished.
+
+
 ------------
 
 

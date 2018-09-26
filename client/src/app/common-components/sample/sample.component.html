@@ -64,7 +64,7 @@
       </div>
    </div>
 
-   <!-- tests and associated lab resources area -->
+   <!-- tests and any other associated lab resources area -->
    <div *ngIf="showAssociatedItems">
 
       <div class="tests">
@@ -78,16 +78,6 @@
                [labGroupTestTypes]="labGroupTestTypes">
             </app-test-metadata>
          </div>
-      </div>
-
-      <div class="associated-lab-resource-lists" *ngIf="numAssociatedResourceLists > 0">
-         <span class="label">Associated Lab Resources: </span>
-         <mat-chip-list>
-            <mat-chip *ngFor="let resourceList of sample.associatedUnmanagedResourceLists" class="resource-list">
-               <span class="items-count">{{resourceList.resourcesCount}} items</span>
-               <span class="list-name">{{resourceList.listName}}</span>
-            </mat-chip>
-         </mat-chip-list>
       </div>
 
       <div class="sample-actions">
