@@ -173,14 +173,14 @@ create index IX_SMP_FACTSSTATUS
 
 create table SAMPLE_ASSIGNMENT
 (
-  ID            NUMBER(19) generated as identity
+  ID               NUMBER(19) generated as identity
     primary key,
-  ASSIGNED_DATE DATE,
-  EMPLOYEE_ID   NUMBER(19) not null
+  ASSIGNED_INSTANT TIMESTAMP(6),
+  EMPLOYEE_ID      NUMBER(19) not null
     constraint FK_SMPAST_EMP
     references EMPLOYEE,
-  LEAD          NUMBER(1),
-  SAMPLE_ID     NUMBER(19) not null
+  LEAD             NUMBER(1),
+  SAMPLE_ID        NUMBER(19) not null
     constraint FK_SMPAST_SMP
     references SAMPLE,
   constraint UN_SMPAST_SMPIDEMPID
