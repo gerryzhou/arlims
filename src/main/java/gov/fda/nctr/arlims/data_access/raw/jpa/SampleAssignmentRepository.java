@@ -13,6 +13,6 @@ public interface SampleAssignmentRepository extends JpaRepository<SampleAssignme
 {
     List<SampleAssignment> findBySampleIdIn(List<Long> sampleIds);
 
-    void deleteForSampleIdEquals(Long sampleId);
+    void deleteBySampleIdEquals(Long sampleId);
 }
 

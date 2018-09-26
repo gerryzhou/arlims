@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.EmployeeRepository;
-import gov.fda.nctr.arlims.data_access.raw.jpa.LabGroupRepository;
 import gov.fda.nctr.arlims.data_access.raw.jpa.SampleAssignmentRepository;
 import gov.fda.nctr.arlims.data_access.raw.jpa.SampleRepository;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
@@ -26,7 +25,6 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
     private FactsAccessService factsAccessService;
     private SampleRepository sampleRepository;
     private SampleAssignmentRepository sampleAssignmentRepository;
-    private LabGroupRepository labGroupRepository;
     private EmployeeRepository employeeRepository;
 
     private static final List<String> REFRESHABLE_SAMPLE_STATUS_CODES = Arrays.asList("S", "I", "O");
@@ -37,14 +35,12 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             FactsAccessService factsAccessService,
             SampleRepository sampleRepository,
             SampleAssignmentRepository sampleAssignmentRepository,
-            LabGroupRepository labGroupRepository,
             EmployeeRepository employeeRepository
         )
     {
         this.factsAccessService = factsAccessService;
         this.sampleRepository = sampleRepository;
         this.sampleAssignmentRepository = sampleAssignmentRepository;
-        this.labGroupRepository = labGroupRepository;
         this.employeeRepository = employeeRepository;
     }
 
@@ -52,6 +48,8 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
     public void refreshSamplesFromFacts()
     {
         List<LabInboxItem> labInboxItems = factsAccessService.getLabInboxItems(REFRESHABLE_SAMPLE_STATUS_CODES);
+
+        log.info("Found " + labInboxItems.size() + " FACTS lab inbox items.");
 
         Map<Long, LabInboxItem> labInboxItemsByOpId =
             labInboxItems.stream()
@@ -61,24 +59,32 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             sampleRepository.findByWorkIdIn(labInboxItemsByOpId.keySet()).stream()
             .collect(toMap(Sample::getWorkId, Function.identity()));
 
+        Map<Long, Sample> activeSamplesByOpId =
+            sampleRepository.findByFactsStatusIn(REFRESHABLE_SAMPLE_STATUS_CODES).stream()
+            .collect(toMap(Sample::getWorkId, Function.identity()));
+
         for ( Sample sample : matchedSamplesByOpId.values() )
             updateSample(sample, labInboxItemsByOpId.get(sample.getWorkId()));
+
+        Set<Long> unmatchedActiveSampleOpIds = setMinus(activeSamplesByOpId.keySet(), matchedSamplesByOpId.keySet());
+        for ( Long opId : unmatchedActiveSampleOpIds )
+            updateUnmatchedSampleStatus(activeSamplesByOpId.get(opId));
 
         Set<Long> unmatchedInboxOpIds = setMinus(labInboxItemsByOpId.keySet(), matchedSamplesByOpId.keySet());
         for ( Long opId : unmatchedInboxOpIds )
             createSample(labInboxItemsByOpId.get(opId));
 
-        Map<Long, Sample> activeSamplesByOpId =
-            sampleRepository.findByFactsStatusIn(REFRESHABLE_SAMPLE_STATUS_CODES).stream()
-            .collect(toMap(Sample::getWorkId, Function.identity()));
-
-        Set<Long> unmatchedActiveSampleOpIds = setMinus(activeSamplesByOpId.keySet(), matchedSamplesByOpId.keySet());
-        for ( Long opId : unmatchedActiveSampleOpIds )
-            updateUnmatchedSampleStatus(activeSamplesByOpId.get(opId));
+        log.info("Completed refresh of sample information from FACTS lab inbox: " +
+            matchedSamplesByOpId.size() + " samples updated, " +
+            unmatchedInboxOpIds.size() + " samples created, " +
+            unmatchedActiveSampleOpIds.size() + " unmatched sample statuses updated."
+        );
     }
 
     private void createSample(LabInboxItem labInboxItem)
     {
+        log.info("Creating sample for lab inbox item " + describeLabInboxItem(labInboxItem));
+
         Employee emp = employeeRepository.findByFactsPersonId(labInboxItem.getAssignedToPersonId()).orElseThrow(() ->
             new RuntimeException(
                 "Assigned employee " + labInboxItem.getAssignedToPersonId() + " not found for lab inbox item " +
@@ -110,6 +116,16 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             )
         );
 
+        if ( !labGroup.getFactsParentOrgName().equals(labInboxItem.getAccomplishingOrg()) )
+        {
+            log.warn(
+                "New sample "  + describeSample(sample) + " is being put in lab group with parent organization " +
+                "\"" + labGroup.getFactsParentOrgName() + "\" which differs from that specified in the source lab " +
+                "inbox item " + describeLabInboxItem(labInboxItem) + ". The lab group was found by the assigned " +
+                "employee #" + labInboxItem.getAssignedToPersonId() + "."
+            );
+        }
+
         sampleAssignmentRepository.save(
             new SampleAssignment(sample, emp, labInboxItem.getAssignedToStatusDate(), true)
         );
@@ -117,6 +133,8 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
 
     private void updateSample(Sample sample, LabInboxItem labInboxItem)
     {
+        log.info("Updating sample from lab inbox item " + describeLabInboxItem(labInboxItem));
+
         if ( !sample.getSampleTrackingNumber().equals(labInboxItem.getSampleTrackingNum()) ||
              !sample.getSampleTrackingSubNumber().equals(labInboxItem.getSampleTrackingSubNum()) )
         {
@@ -142,8 +160,6 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
 
         sample.setLastRefreshedFromFacts(Instant.now());
 
-        sample = sampleRepository.save(sample);
-
         Employee emp = employeeRepository.findByFactsPersonId(labInboxItem.getAssignedToPersonId()).orElseThrow(() ->
             new RuntimeException(
                 "Assigned employee " + labInboxItem.getAssignedToPersonId() + " not found for lab inbox item " +
@@ -151,13 +167,43 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             )
         );
 
+        // Change the lab group based on the assigned employee if necessary.
+
+        LabGroup empLabGroup = emp.getLabGroup();
+
+        if ( !empLabGroup.getName().equals(sample.getLabGroup().getName()) )
+        {
+            String origLabGroupName = sample.getLabGroup().getName();
+
+            sample.setLabGroup(empLabGroup);
+
+            log.info(
+                "Updated sample "  + describeSample(sample) + " is being moved from lab group " +
+                "\"" + origLabGroupName + "\" to lab group \"" + empLabGroup.getName() + "\" based on the " +
+                "assigned employee #" + labInboxItem.getAssignedToPersonId() + "."
+            );
+        }
+
+        // Warn if the lab group parent organization does not match that specified in the inbox item.
+        if ( !sample.getLabGroup().getFactsParentOrgName().equals(labInboxItem.getAccomplishingOrg()) )
+        {
+            log.warn(
+                "Updated sample "  + describeSample(sample) + " is in lab group with parent organization " +
+                "\"" + sample.getLabGroup().getFactsParentOrgName() + "\" which differs from that specified in the " +
+                "source lab inbox item " + describeLabInboxItem(labInboxItem) + ". The lab group was found by the " +
+                "assigned employee #" + labInboxItem.getAssignedToPersonId() + "."
+            );
+        }
+
+        sample = sampleRepository.save(sample);
+
         Set<SampleAssignment> existingAssignments = sample.getAssignments();
         SampleAssignment inboxAssignment = new SampleAssignment(sample, emp, labInboxItem.getAssignedToStatusDate(), true);
 
         if ( existingAssignments.size() != 1 ||
              !sampleAssignmentsEqual(existingAssignments.iterator().next(), inboxAssignment) )
         {
-            sampleAssignmentRepository.deleteForSampleIdEquals(sample.getId());
+            sampleAssignmentRepository.deleteBySampleIdEquals(sample.getId());
 
             sampleAssignmentRepository.save(inboxAssignment);
         }
@@ -165,6 +211,8 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
 
     private void updateUnmatchedSampleStatus(Sample sample)
     {
+        log.info("Updating status for unmatched database sample " + describeSample(sample));
+
         String statusCode = factsAccessService.getWorkStatus(sample.getWorkId()).orElse("U");
 
         if ( statusCode.equals("U") )
@@ -176,10 +224,23 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
         sampleRepository.save(sample);
     }
 
+    private String describeLabInboxItem(LabInboxItem labInboxItem)
+    {
+        return
+        "[" + labInboxItem.getSampleTrackingNum() + "-" + labInboxItem.getSampleTrackingSubNum() +
+        " \"" + labInboxItem.getCfsanProductDesc() + "\"" +
+        ", org=\"" + labInboxItem.getAccomplishingOrg() + "\"" +
+        ", work-id=" + labInboxItem.getWorkId() + "]";
+    }
+
     private static String describeSample(Sample sample)
     {
-        return sample.getSampleTrackingNumber() + "-" + sample.getSampleTrackingSubNumber() +
-            "(op=" + sample.getWorkId() + ")";
+        return
+            "[" + sample.getSampleTrackingNumber() + "-" + sample.getSampleTrackingSubNumber() +
+            " \"" + sample.getProductName() + "\"" +
+            ", lab-group=\"" + sample.getLabGroup().getName() + "\"" +
+            ", parent-org=\"" + sample.getLabGroup().getFactsParentOrgName() + "\"" +
+            ", work-id=" + sample.getWorkId() + "]";
     }
 
     private static boolean sampleAssignmentsEqual(SampleAssignment next, SampleAssignment inboxAssignment)

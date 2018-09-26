@@ -1,5 +1,5 @@
-Recreate db objects, re-insert test data but with only one sample created.
-Test that samples are created and updated properly from fake facts access service.
+When refreshing samples, warn if a sample's lab group parent org does not match accomplishing org from inbox item.
+
 
 
 

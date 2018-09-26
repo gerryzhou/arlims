@@ -17,9 +17,10 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long>
     Optional<Employee> findWithLabGroupByFdaEmailAccountName(@Param("username") String username);
 
     @Query(value = "SELECT e FROM Employee e JOIN FETCH e.roles where e.fdaEmailAccountName = :username")
-    Optional<Employee> findWithRolesByFdaEmailAccountName(String username);
+    Optional<Employee> findWithRolesByFdaEmailAccountName(@Param("username") String username);
 
-    Optional<Employee> findByFactsPersonId(long personId);
+    @Query(value = "SELECT e FROM Employee e JOIN FETCH e.labGroup where e.factsPersonId = :personId")
+    Optional<Employee> findByFactsPersonId(@Param("personId") long personId);
 }
 
 
