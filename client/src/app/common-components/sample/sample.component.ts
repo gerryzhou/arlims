@@ -136,13 +136,16 @@ export class SampleComponent implements OnChanges {
 
    private factsStatusTextFromCode(factsStatus: string)
    {
-      // TODO: Verify and complete this status code => status text mappings.
       switch (factsStatus)
       {
-         case 'A': return 'Accepted';
-         case 'S': return 'Assigned';
-         case 'I': return 'In Progress';
-         case 'O': return 'Original Complete';
+         // most common, "active" codes
+         case 'S': return 'Assigned';          // assigned to individual analyst(s)
+         case 'I': return 'In Progress';       // analyst(s) work in progress
+         case 'O': return 'Original Complete'; // analyst work completed, ready for final review and sign-off
+         // less-used codes
+         case 'P': return 'Pending';  // initial status, prior to being received at lab facility
+         case 'A': return 'Accepted'; // received at facility but not yet assigned: ready for admin to assign to user
+         case 'C': return 'Complete'; // final status, all done
          default: return factsStatus;
       }
    }
