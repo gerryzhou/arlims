@@ -1,6 +1,7 @@
 package gov.fda.nctr.arlims.data_access.facts.models.dto;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -26,7 +27,8 @@ public class LabInboxItem
     private Long requestedOperationNum;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
     private Instant requestDate;
-    private Optional<Instant> scheduledCompletionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    private Optional<LocalDate> scheduledCompletionDate;
     private String samplingOrg;
     private String accomplishingOrg;
     private Long accomplishingOrgId;
@@ -61,7 +63,7 @@ public class LabInboxItem
             Long sampleAnalysisId,
             Long requestedOperationNum,
             Instant requestDate,
-            Optional<Instant> scheduledCompletionDate,
+            Optional<LocalDate> scheduledCompletionDate,
             String samplingOrg,
             String accomplishingOrg,
             Long accomplishingOrgId,
@@ -137,7 +139,7 @@ public class LabInboxItem
 
     public Instant getRequestDate() { return requestDate; }
 
-    public Optional<Instant> getScheduledCompletionDate() { return scheduledCompletionDate; }
+    public Optional<LocalDate> getScheduledCompletionDate() { return scheduledCompletionDate; }
 
     public String getSamplingOrg() { return samplingOrg; }
 

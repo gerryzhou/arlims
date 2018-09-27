@@ -192,6 +192,32 @@ create index IX_SMPAST_EMPID
   on SAMPLE_ASSIGNMENT (EMPLOYEE_ID)
 /
 
+create table SAMPLE_REFRESH_ERROR
+(
+  ID                           NUMBER(19) generated as identity
+    primary key,
+  ACTION                       VARCHAR2(50 char) not null,
+  ERROR                        VARCHAR2(4000 char),
+  INBOX_ITEM_ACCOMPLISHING_ORG VARCHAR2(50 char),
+  INBOX_ITEM_JSON              CLOB,
+  SAMPLE_JSON                  CLOB,
+  SAMPLE_PARENT_ORG            VARCHAR2(50 char),
+  TIMESTAMP                    TIMESTAMP(6)      not null
+)
+/
+
+create index IX_SMPRFRERR_TIMESTAMP
+  on SAMPLE_REFRESH_ERROR (TIMESTAMP)
+/
+
+create index IX_SMPRFRERR_SMPPORG
+  on SAMPLE_REFRESH_ERROR (SAMPLE_PARENT_ORG)
+/
+
+create index IX_SMPRFRERR_ITEMPORG
+  on SAMPLE_REFRESH_ERROR (INBOX_ITEM_ACCOMPLISHING_ORG)
+/
+
 create table TEST_TYPE
 (
   ID          NUMBER(19) generated as identity

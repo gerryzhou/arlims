@@ -50,4 +50,65 @@ public class AuditEntry
 
     @Lob @Column(name = "OBJECT_TO_VALUE_JSON")
     private String objectToValueJson;
+
+    protected AuditEntry() {}
+
+    public AuditEntry
+        (
+            @NotNull Instant timestamp,
+            @NotNull Long labGroupId,
+            Long testId,
+            @NotNull Long actingEmpId,
+            @Size(max = 150) @NotNull String actingUsername,
+            @Size(max = 50) @NotNull String action,
+            @Size(max = 50) @NotNull String objectType,
+            String objectContextMetadataJson,
+            String objectFromValueJson,
+            String objectToValueJson
+        )
+    {
+        this.timestamp = timestamp;
+        this.labGroupId = labGroupId;
+        this.testId = testId;
+        this.actingEmpId = actingEmpId;
+        this.actingUsername = actingUsername;
+        this.action = action;
+        this.objectType = objectType;
+        this.objectContextMetadataJson = objectContextMetadataJson;
+        this.objectFromValueJson = objectFromValueJson;
+        this.objectToValueJson = objectToValueJson;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Instant getTimestamp() { return timestamp; }
+    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+
+    public Long getLabGroupId() { return labGroupId; }
+    public void setLabGroupId(Long labGroupId) { this.labGroupId = labGroupId; }
+
+    public Long getTestId() { return testId; }
+    public void setTestId(Long testId) { this.testId = testId; }
+
+    public Long getActingEmpId() { return actingEmpId; }
+    public void setActingEmpId(Long actingEmpId) { this.actingEmpId = actingEmpId; }
+
+    public String getActingUsername() { return actingUsername; }
+    public void setActingUsername(String actingUsername) { this.actingUsername = actingUsername; }
+
+    public String getAction() { return action; }
+    public void setAction(String action) { this.action = action; }
+
+    public String getObjectType() { return objectType; }
+    public void setObjectType(String objectType) { this.objectType = objectType; }
+
+    public String getObjectContextMetadataJson() { return objectContextMetadataJson; }
+    public void setObjectContextMetadataJson(String objectContextMetadataJson) { this.objectContextMetadataJson = objectContextMetadataJson; }
+
+    public String getObjectFromValueJson() { return objectFromValueJson; }
+    public void setObjectFromValueJson(String objectFromValueJson) { this.objectFromValueJson = objectFromValueJson; }
+
+    public String getObjectToValueJson() { return objectToValueJson; }
+    public void setObjectToValueJson(String objectToValueJson) { this.objectToValueJson = objectToValueJson; }
 }

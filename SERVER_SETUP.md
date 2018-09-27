@@ -1,3 +1,18 @@
+# Dev/Test Server Access
+Login to Citrix via alt-PIV card at:
+
+    https://citrixaccess.fda.gov/Citrix/PRIVUSERSWeb/default.htm
+
+Navigate into WODC-MGMT and open WinSCP.
+In options -> preferences -> Environment -> Interface, choose dual pane layout.
+In local (left) pane, select the drive for the local workstation (running the
+Citrix client), navigate to the dist file for the application as produced by 
+
+    mvn clean package
+    
+and drag the dist file from the target directory onto the right (remote) pane
+to transfer it to your home directory on the server.
+
 # Install Java
 
     sudo su -
@@ -11,8 +26,12 @@
 # Setup application directory
 
     # sudo su -
-    # Copy alis-dist.tgz from somewhere into /u01/LIMS_APi/.
+    cp ~ad_app_<you>/alis-dist.tgz /u01/LIMS_APi 
     cd /u01/LIMS_APi
+    # Stop the service if it's already deployed and running, maybe make a backup 
+    # copy of the existing properties file.
+    # systemctl stop alis.service
+    # cp alis/application.properties backups/
     tar xzvf alis-dist.tgz
     chown -R alis.alis alis/
 
@@ -21,6 +40,12 @@ Specify database connection information, file paths etc.
     
     sudo -u alis bash
     vim application.properties
+
+Or merge/copy property values from a backup copy of the properties (watch for
+new properties in application.properties from the distribution package):
+
+    cp backups/application.properties alis/
+    
 
 The application should now be able to be started, as a trial run, via:
 
@@ -49,3 +74,27 @@ Check status:
 
     systemctl status alis
 
+
+# Redeployment to dev server
+
+Build via `mvn clean package`.
+
+Start WinSCP in Citrix.
+
+Choose local drive in left pane, navigate to dist file in project's `target/`
+directory, drag to right pane to transfer to server.
+
+Start Putty via Citrix, select server and login.
+
+    # sudo su -
+    cp ~ad_app_<you>/alis-dist.tgz /u01/LIMS_APi 
+    cd /u01/LIMS_APi
+    systemctl stop alis
+    # rm alis/logs/*.log
+    # cp alis/application.properties backups/
+    tar xzvf alis-dist.tgz
+    cp backups/application.properties alis/
+    chown -R alis.alis alis/
+    systemctl start alis
+    # tail -f alis/alis.log
+    

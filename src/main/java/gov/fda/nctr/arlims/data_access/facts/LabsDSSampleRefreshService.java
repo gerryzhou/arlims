@@ -3,20 +3,23 @@ package gov.fda.nctr.arlims.data_access.facts;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import javax.transaction.Transactional;
 
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.EmployeeRepository;
 import gov.fda.nctr.arlims.data_access.raw.jpa.SampleAssignmentRepository;
+import gov.fda.nctr.arlims.data_access.raw.jpa.SampleRefreshErrorRepository;
 import gov.fda.nctr.arlims.data_access.raw.jpa.SampleRepository;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.LabGroup;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.SampleAssignment;
+import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
 
 
 @Service
@@ -25,7 +28,9 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
     private FactsAccessService factsAccessService;
     private SampleRepository sampleRepository;
     private SampleAssignmentRepository sampleAssignmentRepository;
+    private SampleRefreshErrorRepository sampleRefreshErrorRepository;
     private EmployeeRepository employeeRepository;
+    private ObjectMapper jsonSerializer;
 
     private static final List<String> REFRESHABLE_SAMPLE_STATUS_CODES = Arrays.asList("S", "I", "O");
 
@@ -35,13 +40,17 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             FactsAccessService factsAccessService,
             SampleRepository sampleRepository,
             SampleAssignmentRepository sampleAssignmentRepository,
+            SampleRefreshErrorRepository sampleRefreshErrorRepository,
             EmployeeRepository employeeRepository
         )
     {
         this.factsAccessService = factsAccessService;
         this.sampleRepository = sampleRepository;
         this.sampleAssignmentRepository = sampleAssignmentRepository;
+        this.sampleRefreshErrorRepository = sampleRefreshErrorRepository;
         this.employeeRepository = employeeRepository;
+
+        this.jsonSerializer = Jackson2ObjectMapperBuilder.json().build();
     }
 
     @Transactional
@@ -49,8 +58,9 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
     {
         List<LabInboxItem> labInboxItems = factsAccessService.getLabInboxItems(REFRESHABLE_SAMPLE_STATUS_CODES);
 
-        log.info("Found " + labInboxItems.size() + " FACTS lab inbox items.");
+        log.info("Refreshing samples with " + labInboxItems.size() + " FACTS lab inbox items.");
 
+        // TODO: Need to handle possible repeated op id here (map collector expects keys to only occur once)?
         Map<Long, LabInboxItem> labInboxItemsByOpId =
             labInboxItems.stream()
             .collect(toMap(LabInboxItem::getWorkId, Function.identity()));
@@ -63,22 +73,75 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             sampleRepository.findByFactsStatusIn(REFRESHABLE_SAMPLE_STATUS_CODES).stream()
             .collect(toMap(Sample::getWorkId, Function.identity()));
 
-        for ( Sample sample : matchedSamplesByOpId.values() )
-            updateSample(sample, labInboxItemsByOpId.get(sample.getWorkId()));
 
-        Set<Long> unmatchedActiveSampleOpIds = setMinus(activeSamplesByOpId.keySet(), matchedSamplesByOpId.keySet());
-        for ( Long opId : unmatchedActiveSampleOpIds )
-            updateUnmatchedSampleStatus(activeSamplesByOpId.get(opId));
+        // Create new samples for inbox items that have no matching sample.
 
-        Set<Long> unmatchedInboxOpIds = setMinus(labInboxItemsByOpId.keySet(), matchedSamplesByOpId.keySet());
-        for ( Long opId : unmatchedInboxOpIds )
-            createSample(labInboxItemsByOpId.get(opId));
+        List<LabInboxItem> unmatchedInboxItems =
+            labInboxItemsByOpId.values().stream()
+            .filter(item -> !matchedSamplesByOpId.containsKey(item.getWorkId()))
+            .collect(toList());
+
+        SuccessFailCounts createCounts = createSamplesForInboxItems(unmatchedInboxItems);
+
+
+        // Update samples which are matched to inbox items.
+
+        SuccessFailCounts updateCounts = updateSamplesForInboxItems(matchedSamplesByOpId.values(), labInboxItemsByOpId);
+
+
+        // Update statuses for active samples that don't have a matching inbox item.
+
+        List<Sample> unmatchedActiveSamples =
+            activeSamplesByOpId.values().stream()
+            .filter(sample -> !matchedSamplesByOpId.containsKey(sample.getWorkId()))
+            .collect(toList());
+
+        SuccessFailCounts unmatchedSampleStatusUpdateCounts = updateSampleStatuses(unmatchedActiveSamples);
+
 
         log.info("Completed refresh of sample information from FACTS lab inbox: " +
-            matchedSamplesByOpId.size() + " samples updated, " +
-            unmatchedInboxOpIds.size() + " samples created, " +
-            unmatchedActiveSampleOpIds.size() + " unmatched sample statuses updated."
+            createCounts.succeeded + " samples created, " +
+            (createCounts.failed> 0 ? createCounts.failed + " samples failed to be created," : "" ) +
+            updateCounts.succeeded + " samples updated, " +
+            (updateCounts.failed > 0 ? updateCounts.failed + " failed to be updated," : "" ) +
+            unmatchedSampleStatusUpdateCounts.succeeded + " unmatched sample statuses updated" +
+            (unmatchedSampleStatusUpdateCounts.failed > 0 ?
+                ", " + unmatchedSampleStatusUpdateCounts.failed   + " unmatched sample statuses failed to be updated."
+                : "." )
         );
+    }
+
+    private SuccessFailCounts createSamplesForInboxItems(List<LabInboxItem> inboxItems)
+    {
+        int succeeded = 0, failed = 0;
+
+        for ( LabInboxItem inboxItem : inboxItems )
+        {
+            try
+            {
+                createSample(inboxItem);
+
+                ++succeeded;
+            }
+            catch(Exception e)
+            {
+                sampleRefreshErrorRepository.save(
+                    new SampleRefreshError(
+                        Instant.now(),
+                        "create-sample",
+                        e.getMessage(),
+                        null,
+                        inboxItem.getAccomplishingOrg(),
+                        null,
+                        toJsonString(inboxItem)
+                    )
+                );
+
+                ++failed;
+            }
+        }
+
+        return new SuccessFailCounts(succeeded, failed);
     }
 
     private void createSample(LabInboxItem labInboxItem)
@@ -130,6 +193,46 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             new SampleAssignment(sample, emp, labInboxItem.getAssignedToStatusDate(), true)
         );
     }
+
+    private SuccessFailCounts updateSamplesForInboxItems
+        (
+            Collection<Sample> samples,
+            Map<Long, LabInboxItem> labInboxItemsByOpId
+        )
+    {
+        int succeeded = 0, failed = 0;
+
+        for ( Sample sample : samples )
+        {
+            LabInboxItem inboxItem = labInboxItemsByOpId.get(sample.getWorkId());
+
+            try
+            {
+                updateSample(sample, inboxItem);
+
+                ++succeeded;
+            }
+            catch(Exception e)
+            {
+                sampleRefreshErrorRepository.save(
+                    new SampleRefreshError(
+                        Instant.now(),
+                        "update-sample",
+                        e.getMessage(),
+                        sample.getLabGroup().getFactsParentOrgName(),
+                        inboxItem.getAccomplishingOrg(),
+                        toJsonString(sample),
+                        toJsonString(inboxItem)
+                    )
+                );
+
+                ++failed;
+            }
+        }
+
+        return new SuccessFailCounts(succeeded, failed);
+    }
+
 
     private void updateSample(Sample sample, LabInboxItem labInboxItem)
     {
@@ -209,6 +312,39 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
         }
     }
 
+    private SuccessFailCounts updateSampleStatuses(List<Sample> samples)
+    {
+        int succeeded = 0, failed = 0;
+
+        for ( Sample sample : samples )
+        {
+            try
+            {
+                updateUnmatchedSampleStatus(sample);
+
+                ++succeeded;
+            }
+            catch(Exception e)
+            {
+                sampleRefreshErrorRepository.save(
+                    new SampleRefreshError(
+                        Instant.now(),
+                        "update-unmatched-sample-status",
+                        e.getMessage(),
+                        sample.getLabGroup().getFactsParentOrgName(),
+                        null,
+                        toJsonString(sample),
+                        null
+                    )
+                );
+
+                ++failed;
+            }
+        }
+
+        return new SuccessFailCounts(succeeded, failed);
+    }
+
     private void updateUnmatchedSampleStatus(Sample sample)
     {
         log.info("Updating status for unmatched database sample " + describeSample(sample));
@@ -224,7 +360,20 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
         sampleRepository.save(sample);
     }
 
-    private String describeLabInboxItem(LabInboxItem labInboxItem)
+    private String toJsonString(Object o)
+    {
+        try
+        {
+            return jsonSerializer.writeValueAsString(o);
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private static String describeLabInboxItem(LabInboxItem labInboxItem)
     {
         return
         "[" + labInboxItem.getSampleTrackingNum() + "-" + labInboxItem.getSampleTrackingSubNum() +
@@ -251,13 +400,16 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
             next.getLead() == inboxAssignment.getLead() &&
             next.getAssignedInstant().equals(inboxAssignment.getAssignedInstant());
     }
-
-
-    private static <T> Set<T> setMinus(Set<T> s1, Set<T> s2)
-    {
-        Set<T> res = new HashSet<>(s1);
-        res.removeAll(s2);
-        return res;
-    }
 }
 
+class SuccessFailCounts
+{
+    int succeeded;
+    int failed;
+
+    public SuccessFailCounts(int succeeded, int failed)
+    {
+        this.succeeded = succeeded;
+        this.failed = failed;
+    }
+}

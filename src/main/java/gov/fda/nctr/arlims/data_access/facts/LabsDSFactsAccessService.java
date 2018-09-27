@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -52,14 +53,20 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     public LabsDSFactsAccessService
         (
             FactsApiConfig apiConfig,
-            JdbcTemplate jdbc
+            JdbcTemplate jdbc,
+            RestTemplateBuilder restTemplateBuilder
         )
     {
         this.apiConfig = apiConfig;
         this.jdbc = jdbc;
-
-        this.restTemplate = new RestTemplate();
-        this.restTemplate.setErrorHandler(getResponseErrorHandler());
+        this.restTemplate =
+            restTemplateBuilder
+            .setConnectTimeout(apiConfig.getConnectTimeout())
+            .setReadTimeout(apiConfig.getReadTimeout())
+            .build();
+        restTemplate.setErrorHandler(getResponseErrorHandler());
+        log.info("Setting API call connection timeout to " + apiConfig.getConnectTimeout() + ".");
+        log.info("Setting API call read timeout to " + apiConfig.getReadTimeout() + ".");
 
         HttpHeaders hdrs = new HttpHeaders();
         hdrs.add(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -81,8 +88,8 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         List<String> orgNames = jdbc.queryForList("select distinct facts_parent_org_name from lab_group", String.class);
 
         String includeFields =
-            "sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject,pacCode," +
-            "problemAreaFlag,lidCode,splitInd,workId,workRqstId,operationCode,sampleAnalysisId," +
+            "workId,sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject,pacCode," +
+            "problemAreaFlag,lidCode,splitInd,workRqstId,operationCode,sampleAnalysisId," +
             "requestedOperationNum,requestDate,scheduledCompletionDate,samplingOrg,accomplishingOrg," +
             "accomplishingOrgId,fdaOrganizationId,responsibleFirmCode,rvMeaning,assignedToLeadInd," +
             "assignedToPersonId,assignedToStatusCode,assignedToStatusDate,assignedToWorkAssignmentDate";
@@ -98,11 +105,16 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
             HttpEntity reqEntity = new HttpEntity(newRequestHeaders());
 
+            log.info("Making api request: " + reqEntity.toString());
+
+            log.info("Retrieving inbox items for " + orgName + ".");
+
             ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, LabInboxItem[].class);
 
             LabInboxItem[] inboxItems = resp.getBody();
 
-            log.info("Retrieved " + inboxItems.length + " inbox items for organization " + orgName + ".");
+            if ( apiConfig.getLogLabInboxResults() )
+                log.info("Retrieved " + inboxItems.length + " inbox items for " + orgName + ":" + inboxItems);
 
             Arrays.stream(inboxItems).forEach(resInboxItems::add);
         }

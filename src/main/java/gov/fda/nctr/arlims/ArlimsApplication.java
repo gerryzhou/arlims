@@ -20,7 +20,6 @@ public class ArlimsApplication
         SpringApplication.run(ArlimsApplication.class, args);
     }
 
-
     // We assume resources that are not found are caused by deep links into the client app making it here to the server,
     // either because the app isn't running yet (from the use of a stashed url for example) or the browser page is being
     // force refreshed. So we send index.html for resources that aren't found, to start the client app and let it try to

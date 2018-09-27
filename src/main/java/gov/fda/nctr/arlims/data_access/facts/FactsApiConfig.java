@@ -25,6 +25,13 @@ public class FactsApiConfig
     @NotEmpty
     private String baseUrl;
 
+    private int connectTimeout = 0;
+
+    private int readTimeout = 0;
+
+    private boolean logLabInboxResults = false;
+
+
     public String getAppOidUsername() { return appOidUsername; }
     public void setAppOidUsername(String appOidUsername) { this.appOidUsername = appOidUsername; }
 
@@ -36,4 +43,13 @@ public class FactsApiConfig
 
     public String getBaseUrl() { return baseUrl; }
     public void setBaseUrl(String baseUrl) { this.baseUrl = baseUrl; }
+
+    public int getConnectTimeout() { return connectTimeout; }
+    public void setConnectTimeout(int connectTimeout) { this.connectTimeout = connectTimeout; }
+
+    public int getReadTimeout() { return readTimeout; }
+    public void setReadTimeout(int readTimeout) { this.readTimeout = readTimeout; }
+
+    public boolean getLogLabInboxResults() { return logLabInboxResults; }
+    public void setLogLabInboxResults(boolean logLabInboxResults) { this.logLabInboxResults = logLabInboxResults; }
 }
