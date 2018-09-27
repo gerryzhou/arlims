@@ -60,10 +60,10 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
 
         log.info("Refreshing samples with " + labInboxItems.size() + " FACTS lab inbox items.");
 
-        // TODO: Need to handle possible repeated op id here (map collector expects keys to only occur once)?
         Map<Long, LabInboxItem> labInboxItemsByOpId =
             labInboxItems.stream()
-            .collect(toMap(LabInboxItem::getWorkId, Function.identity()));
+            .filter(item -> item.getSampleTrackingNum() != null)
+            .collect(toMap(LabInboxItem::getWorkId, Function.identity(), this::checkHasSameSampleAssignment));
 
         Map<Long, Sample> matchedSamplesByOpId =
             sampleRepository.findByWorkIdIn(labInboxItemsByOpId.keySet()).stream()
@@ -109,6 +109,16 @@ public class LabsDSSampleRefreshService extends ServiceBase implements SampleRef
                 ", " + unmatchedSampleStatusUpdateCounts.failed   + " unmatched sample statuses failed to be updated."
                 : "." )
         );
+    }
+
+    private LabInboxItem checkHasSameSampleAssignment(LabInboxItem item1, LabInboxItem item2)
+    {
+        if ( item1.hasSameSampleAssignment(item2) )
+            return item1;
+        else
+            throw new RuntimeException(
+                "Inbox items have same op id but different sample assignments: " + item1 + ", " + item2
+            );
     }
 
     private SuccessFailCounts createSamplesForInboxItems(List<LabInboxItem> inboxItems)

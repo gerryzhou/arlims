@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims.data_access.facts.models.dto;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -164,6 +165,14 @@ public class LabInboxItem
     public Instant getAssignedToStatusDate() { return assignedToStatusDate; }
 
     public Instant getAssignedToWorkAssignmentDate() { return assignedToWorkAssignmentDate; }
+
+    public boolean hasSameSampleAssignment(LabInboxItem item)
+    {
+        return
+            Objects.equals(sampleTrackingNum, item.getSampleTrackingNum()) &&
+            Objects.equals(sampleTrackingSubNum, item.getSampleTrackingSubNum()) &&
+            Objects.equals(getAssignedToPersonId(), item.getAssignedToPersonId());
+    }
 
     @Override
     public String toString()

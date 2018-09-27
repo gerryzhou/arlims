@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
+import static java.util.stream.Collectors.joining;
 
 
 @Service
@@ -114,7 +115,10 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             LabInboxItem[] inboxItems = resp.getBody();
 
             if ( apiConfig.getLogLabInboxResults() )
-                log.info("Retrieved " + inboxItems.length + " inbox items for " + orgName + ":" + inboxItems);
+                log.info(
+                    "Retrieved " + inboxItems.length + " inbox items for " + orgName + ":" +
+                    Arrays.stream(inboxItems).map(Object::toString).collect(joining(", "))
+                );
 
             Arrays.stream(inboxItems).forEach(resInboxItems::add);
         }
