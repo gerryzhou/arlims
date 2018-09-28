@@ -14,7 +14,7 @@ public class LabInboxItem
     private Long sampleTrackingSubNum;
     private String cfsanProductDesc;
     private String statusCode;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant statusDate;
     private Optional<String> subject;
     private String pacCode;
@@ -26,9 +26,9 @@ public class LabInboxItem
     private String operationCode;
     private Long sampleAnalysisId;
     private Long requestedOperationNum;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant requestDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Optional<LocalDate> scheduledCompletionDate;
     private String samplingOrg;
     private String accomplishingOrg;
@@ -37,11 +37,13 @@ public class LabInboxItem
     private String responsibleFirmCode;
     private String rvMeaning;
     private Long assignedToPersonId;
+    private String assignedToFirstName;
+    private String assignedToLastName;
     private String assignedToLeadInd;
     private String assignedToStatusCode;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant assignedToStatusDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant assignedToWorkAssignmentDate;
 
     protected LabInboxItem() {}
@@ -72,6 +74,8 @@ public class LabInboxItem
             String responsibleFirmCode,
             String rvMeaning,
             Long assignedToPersonId,
+            String assignedToFirstName,
+            String assignedToLastName,
             String assignedToLeadInd,
             String assignedToStatusCode,
             Instant assignedToStatusDate,
@@ -102,6 +106,8 @@ public class LabInboxItem
         this.responsibleFirmCode = responsibleFirmCode;
         this.rvMeaning = rvMeaning;
         this.assignedToPersonId = assignedToPersonId;
+        this.assignedToFirstName = assignedToFirstName;
+        this.assignedToLastName = assignedToLastName;
         this.assignedToLeadInd = assignedToLeadInd;
         this.assignedToStatusCode = assignedToStatusCode;
         this.assignedToStatusDate = assignedToStatusDate;
@@ -157,6 +163,10 @@ public class LabInboxItem
     // TODO: These fields should be optional.
 
     public Long getAssignedToPersonId() { return assignedToPersonId; }
+
+    public String getAssignedToFirstName() { return assignedToFirstName; }
+
+    public String getAssignedToLastName() { return assignedToLastName; }
 
     public String getAssignedToLeadInd() { return assignedToLeadInd; }
 

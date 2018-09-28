@@ -28,24 +28,18 @@ to transfer it to your home directory on the server.
     # sudo su -
     cp ~ad_app_<you>/alis-dist.tgz /u01/LIMS_APi 
     cd /u01/LIMS_APi
-    # Stop the service if it's already deployed and running, maybe make a backup 
-    # copy of the existing properties file.
-    # systemctl stop alis.service
-    # cp alis/application.properties backups/
     tar xzvf alis-dist.tgz
     chown -R alis.alis alis/
 
 Edit application.properties to customize the app for its environment.
 Specify database connection information, file paths etc.
     
+    # sudo su -
     sudo -u alis bash
-    vim application.properties
-
-Or merge/copy property values from a backup copy of the properties (watch for
-new properties in application.properties from the distribution package):
-
-    cp backups/application.properties alis/
-    
+    vim alis/application.properties
+    # Make a backup copy to restore after future updates.
+    mkdir backups
+    cp alis/application.properties backups/
 
 The application should now be able to be started, as a trial run, via:
 
@@ -62,7 +56,7 @@ if it was built with a custom context name.
 Review alis.service to verify paths are correct for the host system, then copy
 into the systemd system directory:
 
-    sudo su -
+    # sudo su -
     cp alis.service /etc/systemd/system
     
     systemctl daemon-reload
@@ -96,5 +90,5 @@ Start Putty via Citrix, select server and login.
     cp backups/application.properties alis/
     chown -R alis.alis alis/
     systemctl start alis
-    # tail -f alis/alis.log
+    # tail -f alis/logs/alis.log
     

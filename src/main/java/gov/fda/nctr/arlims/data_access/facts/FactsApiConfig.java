@@ -31,7 +31,6 @@ public class FactsApiConfig
 
     private boolean logLabInboxResults = false;
 
-
     public String getAppOidUsername() { return appOidUsername; }
     public void setAppOidUsername(String appOidUsername) { this.appOidUsername = appOidUsername; }
 

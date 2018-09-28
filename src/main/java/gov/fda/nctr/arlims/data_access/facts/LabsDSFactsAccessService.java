@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
+import static java.util.stream.Collectors.joining;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
@@ -19,6 +20,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.hobsoft.spring.resttemplatelogger.LoggingCustomizer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
-import static java.util.stream.Collectors.joining;
 
 
 @Service
@@ -64,14 +65,14 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             restTemplateBuilder
             .setConnectTimeout(apiConfig.getConnectTimeout())
             .setReadTimeout(apiConfig.getReadTimeout())
+            .customizers(new LoggingCustomizer())
             .build();
         restTemplate.setErrorHandler(getResponseErrorHandler());
+
         log.info("Setting API call connection timeout to " + apiConfig.getConnectTimeout() + ".");
         log.info("Setting API call read timeout to " + apiConfig.getReadTimeout() + ".");
 
         HttpHeaders hdrs = new HttpHeaders();
-        hdrs.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        hdrs.add(HttpHeaders.ACCEPT, "application/json");
         hdrs.add(HttpHeaders.AUTHORIZATION, authorizationHeaderValue(apiConfig));
         hdrs.add("sourceApplicationID", apiConfig.getAppId());
         this.fixedHeaders = hdrs;
@@ -106,8 +107,6 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
             HttpEntity reqEntity = new HttpEntity(newRequestHeaders());
 
-            log.info("Making api request: " + reqEntity.toString());
-
             log.info("Retrieving inbox items for " + orgName + ".");
 
             ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, LabInboxItem[].class);
@@ -116,8 +115,8 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
             if ( apiConfig.getLogLabInboxResults() )
                 log.info(
-                    "Retrieved " + inboxItems.length + " inbox items for " + orgName + ":" +
-                    Arrays.stream(inboxItems).map(Object::toString).collect(joining(", "))
+                    "Retrieved " + inboxItems.length + " inbox items for " + orgName + ":\n  " +
+                    Arrays.stream(inboxItems).map(Object::toString).collect(joining("\n  "))
                 );
 
             Arrays.stream(inboxItems).forEach(resInboxItems::add);

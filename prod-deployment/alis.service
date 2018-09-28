@@ -4,10 +4,10 @@ After=syslog.target network.target
 
 [Service]
 Type=simple
-PIDFile=/u01/lims-api/alis/RUNNING_PID
-#EnvironmentFile=/u01/lims-api/alis/alis-env.conf
+PIDFile=/u01/LIMS_APi/alis/RUNNING_PID
+#EnvironmentFile=/u01/LIMS_APi/alis/alis-env.conf
 User=alis
-WorkingDirectory=/u01/lims-api/alis/
+WorkingDirectory=/u01/LIMS_APi/alis/
 ExecStart=/bin/java -jar alis.jar
 
 Restart=on-abort
