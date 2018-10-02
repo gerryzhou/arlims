@@ -47,7 +47,7 @@ public class TestController extends ControllerBase
     @PostMapping("new")
     public CreatedTestMetadata createTest
         (
-            @RequestParam("sampleId") long sampleId,
+            @RequestParam("sampleId") long sampleOpId,
             @RequestParam("testTypeCode") LabTestTypeCode testTypeCode,
             @RequestParam("testBeginDate") String testBeginDate,
             Authentication authentication
@@ -55,9 +55,9 @@ public class TestController extends ControllerBase
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        long createdTestId = testDataService.createTest(sampleId, testTypeCode, testBeginDate, currentUser);
+        long createdTestId = testDataService.createTest(sampleOpId, testTypeCode, testBeginDate, currentUser);
 
-        return new CreatedTestMetadata(sampleId, createdTestId);
+        return new CreatedTestMetadata(sampleOpId, createdTestId);
     }
 
     @DeleteMapping("{testId:\\d+}")

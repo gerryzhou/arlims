@@ -12,14 +12,14 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(
     indexes = {
-        @Index(name = "IX_SMP_LABGRPID", columnList = "LAB_GROUP_ID"),
-        @Index(name = "IX_SMP_FACTSSTATUS", columnList = "FACTS_STATUS")
+        @Index(name = "IX_SMPOP_LABGRPID", columnList = "LAB_GROUP_ID"),
+        @Index(name = "IX_SMPOP_FACTSSTATUS", columnList = "FACTS_STATUS")
     },
     uniqueConstraints = {
-        @UniqueConstraint(name="UN_SMP_WORKID", columnNames = {"WORK_ID"}),
+        @UniqueConstraint(name="UN_SMPOP_WORKID", columnNames = {"WORK_ID"}),
     }
 )
-public class Sample
+public class SampleOp
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class Sample
     private Long workId; // a.k.a. "work operation id" or "operation id"
 
     @ManyToOne(fetch = FetchType.LAZY, optional=false)
-    @JoinColumn(name = "LAB_GROUP_ID", nullable=false, foreignKey = @ForeignKey(name="FK_SMP_LABGROUP")) @NotNull
+    @JoinColumn(name = "LAB_GROUP_ID", nullable=false, foreignKey = @ForeignKey(name="FK_SMPOP_LABGROUP")) @NotNull
     private LabGroup labGroup;
 
     @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false, nullable = false)
@@ -79,12 +79,12 @@ public class Sample
     @NotNull
     private Long workRequestId;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sample")
-    private Set<SampleAssignment> assignments = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sampleOp")
+    private Set<SampleOpAssignment> assignments = new HashSet<>();
 
-    protected Sample() {}
+    protected SampleOp() {}
 
-    public Sample
+    public SampleOp
         (
             @NotNull Long workId,
             @NotNull LabGroup labGroup,
@@ -181,6 +181,6 @@ public class Sample
     public Long getWorkRequestId() { return workRequestId; }
     public void setWorkRequestId(Long workRequestId) { this.workRequestId = workRequestId; }
 
-    public Set<SampleAssignment> getAssignments() { return assignments; }
-    public void setAssignments(Set<SampleAssignment> assignments) { this.assignments = assignments; }
+    public Set<SampleOpAssignment> getAssignments() { return assignments; }
+    public void setAssignments(Set<SampleOpAssignment> assignments) { this.assignments = assignments; }
 }

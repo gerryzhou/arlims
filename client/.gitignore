@@ -28,7 +28,7 @@
 /coverage
 /libpeerconnection.log
 npm-debug.log
-yarn-error.log
+yarn-notice.log
 testem.log
 /typings
 

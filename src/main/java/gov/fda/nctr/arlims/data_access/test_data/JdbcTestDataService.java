@@ -52,7 +52,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     @Override
     public long createTest
         (
-            long sampleId,
+            long sampleOpId,
             LabTestTypeCode testTypeCode,
             String testBeginDate,
             AppUser user
@@ -62,7 +62,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         String sql =
             "insert into test " +
-                "(sample_id, test_type_id, lab_group_id, begin_date, test_data_md5," +
+                "(sample_op_id, test_type_id, lab_group_id, begin_date, test_data_md5," +
                 "created, created_by_emp_id, last_saved, last_saved_by_emp_id)\n" +
             "values(" +
                 "?," +
@@ -75,7 +75,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         PreparedStatementCreator psc = conn -> {
             final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
-            ps.setLong(1, sampleId);
+            ps.setLong(1, sampleOpId);
             ps.setString(2, testTypeCode.toString());
             ps.setLong(3, user.getEmployeeId());
             ps.setString(4, testBeginDate);
@@ -273,7 +273,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     {
         String sql =
             "select " +
-            "t.sample_id, s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, " +
+            "t.sample_op_id, s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, " +
             "s.pac, s.product_name, tt.code, tt.name, tt.short_name, t.created, " +
             "ce.short_name created_by_emp, t.last_saved, se.short_name last_saved_emp, " +
             "(select count(*) from test_file tf where tf.test_id = t.id) attached_files_count," +
@@ -281,7 +281,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             "t.note, t.stage_statuses_json, t.reviewed, re.short_name reviewed_by_emp, " +
             "t.saved_to_facts, fe.short_name saved_to_facts_by_emp\n" +
             "from Test t\n" +
-            "join Sample s on t.sample_id = s.id\n" +
+            "join Sample s on t.sample_op_id = s.id\n" +
             "join Test_Type tt on t.test_type_id = tt.id\n" +
             "join Employee ce on ce.id = t.created_by_emp_id\n" +
             "join Employee se on se.id = t.last_saved_by_emp_id\n" +
@@ -608,14 +608,14 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     {
         String contextSql =
             "select\n" +
-              "s.id sample_id, s.facts_status sample_facts_status, s.lab_group_id lab_group_id, lg.name lab_group, " +
+              "s.id sample_op_id, s.facts_status sample_facts_status, s.lab_group_id lab_group_id, lg.name lab_group, " +
               "s.last_refreshed_from_facts, s.lid, s.pac, s.paf, s.product_name, " +
               "s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, s.sampling_org, " +
               "t.id test_id, t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
               "tt.name test_type_name, tt.code \"TEST_TYPE_CODE\"\n" +
             "from sample s\n" +
             "join lab_group lg on s.lab_group_id = lg.id\n" +
-            "join test t on t.sample_id = s.id\n" +
+            "join test t on t.sample_op_id = s.id\n" +
             "join test_type tt on t.test_type_id = tt.id\n" +
             "where t.id = ?";
 

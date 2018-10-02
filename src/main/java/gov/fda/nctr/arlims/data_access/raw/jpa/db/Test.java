@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(
     indexes = {
-        @Index(name = "IX_TST_SMPID", columnList = "SAMPLE_ID"),
+        @Index(name = "IX_TST_SMPOPID", columnList = "SAMPLE_OP_ID"),
         @Index(name = "IX_TST_TESTTYPEID", columnList = "TEST_TYPE_ID"),
         @Index(name = "IX_TST_LABGRPID", columnList = "LAB_GROUP_ID"),
         @Index(name = "IX_TST_CREATED", columnList = "CREATED"),
@@ -30,11 +30,11 @@ public class Test
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "SAMPLE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
-    private Sample sample;
+    @JoinColumn(name = "SAMPLE_OP_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_RCVSMP")) @NotNull
+    private SampleOp sampleOp;
 
-    @Column(name = "SAMPLE_ID", insertable = false, updatable = false, nullable = false)
-    private Long sampleId;
+    @Column(name = "SAMPLE_OP_ID", insertable = false, updatable = false, nullable = false)
+    private Long sampleOpId;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "TEST_TYPE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_TST_TSTT")) @NotNull
@@ -105,7 +105,7 @@ public class Test
 
     public Test
         (
-            @NotNull Sample sample,
+            @NotNull SampleOp sampleOp,
             @NotNull TestType testType,
             @NotNull LabGroup labGroup,
             @NotNull Instant created,
@@ -117,8 +117,8 @@ public class Test
             String stageStatusesJson
         )
     {
-        this.sample = sample;
-        this.sampleId = sample.getId();
+        this.sampleOp = sampleOp;
+        this.sampleOpId = sampleOp.getId();
         this.testType = testType;
         this.labGroup = labGroup;
         this.labGroupId = labGroup.getId();
@@ -144,10 +144,10 @@ public class Test
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Sample getSample() { return sample; }
-    public void setSample(Sample sample) { this.sample = sample; }
+    public SampleOp getSampleOp() { return sampleOp; }
+    public void setSampleOp(SampleOp sampleOp) { this.sampleOp = sampleOp; }
 
-    public Long getSampleId() { return sampleId; }
+    public Long getSampleOpId() { return sampleOpId; }
 
     public TestType getTestType() { return testType; }
     public void setTestType(TestType testType) { this.testType = testType; }

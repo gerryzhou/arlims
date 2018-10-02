@@ -66,7 +66,7 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
     'imp_slm_vidas.pdf'
   );
 
--- insert into sample(lab_group_id, sample_tracking_num, sample_tracking_sub_num,
+-- insert into sample_op(lab_group_id, sample_tracking_num, sample_tracking_sub_num,
 --                    pac, lid, paf, product_name, facts_status, facts_status_timestamp, last_refreshed_from_facts,
 --                    sampling_org, subject, operation_code, work_id, sample_analysis_id, work_request_id)
 --   values(1, 123456, 0, 'C12345', null, 'MIC', 'Golanga', 'I', CURRENT_DATE-3, CURRENT_TIMESTAMP-2,

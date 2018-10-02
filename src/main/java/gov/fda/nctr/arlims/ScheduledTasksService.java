@@ -8,7 +8,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
-import gov.fda.nctr.arlims.data_access.facts.SampleRefreshService;
+import gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.SampleOpRefreshService;
 
 
 @Service
@@ -16,16 +16,16 @@ public class ScheduledTasksService extends ServiceBase implements SchedulingConf
 {
     private int threadPoolSize;
 
-    private SampleRefreshService sampleRefreshService;
+    private SampleOpRefreshService sampleOpRefreshService;
 
     public ScheduledTasksService
         (
             @Value("${scheduling.thread-pool-size:5}") int threadPoolSize,
-            SampleRefreshService sampleRefreshService
+            SampleOpRefreshService sampleOpRefreshService
         )
     {
         this.threadPoolSize = threadPoolSize;
-        this.sampleRefreshService = sampleRefreshService;
+        this.sampleOpRefreshService = sampleOpRefreshService;
     }
 
     @Override
@@ -46,12 +46,12 @@ public class ScheduledTasksService extends ServiceBase implements SchedulingConf
 
 
     @Scheduled(cron = "${scheduling.facts-sample-refresh.cron}")
-    public void refreshSamplesFromFacts()
+    public void refreshSampleOpsFromFacts()
     {
 
         log.info("[scheduled task start] Refreshing sample and employee assignment information from FACTS.");
 
-        sampleRefreshService.refreshSamplesFromFacts();
+        sampleOpRefreshService.refreshSampleOpsFromFacts();
 
         log.info("[scheduled task end] Finished refreshing sample and employee assignment information from FACTS.");
     }

@@ -1,10 +1,31 @@
+Commit Notes
+------------
+Rename Sample => SampleOp everywhere on server side excepting dto package.
+Rename SampleRefreshError => SampleOpRefreshNotice.
+
+LabsDSSampleOpRefreshService
+  @Transactional methods are not starting transactions because they are being called internally.
+  Separate the methods into a helper "ops" class.
+
 Sample Refresh Error
 --------------------
-When trying to write to refresh error table:
-  LabsDSSampleRefreshService.toJsonString() is failing to serialize LabInboxItem:
-    JsonMappingException: Unsupported field: YearOfEra (through reference chain: gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem["statusDate"])
-  Try new dist build (of 1:5x pm Fri) which tries setting the timezone for the Instant fields to avoid this error.
+Why are updates of the fake data failing?
+2018-10-01 15:26:00.055  INFO 11216 --- [ask-scheduler-1] g.f.n.a.d.f.LabsDSSampleOpRefreshService : Updating sample op from lab inbox items group [803970-0 TURKEY BREAST, assigned-to=[{Yian Shooster, id=1234567}], org="NFFL", work-id=6487464]
+Hibernate: select employee0_.id as id1_1_0_, labgroup1_.id as id1_4_1_, employee0_.facts_person_id as facts_person_id2_1_0_, employee0_.fda_email_account_name as fda_email_account_3_1_0_, employee0_.first_name as first_name4_1_0_, employee0_.lab_group_id as lab_group_id5_1_0_, employee0_.last_name as last_name6_1_0_, employee0_.middle_name as middle_name7_1_0_, employee0_.password as password8_1_0_, employee0_.short_name as short_name9_1_0_, labgroup1_.address_city as address_city2_4_1_, labgroup1_.address_state as address_state3_4_1_, labgroup1_.address_street as address_street4_4_1_, labgroup1_.address_zip as address_zip5_4_1_, labgroup1_.buildings_and_rooms as buildings_and_room6_4_1_, labgroup1_.description as description7_4_1_, labgroup1_.facts_org_name as facts_org_name8_4_1_, labgroup1_.facts_parent_org_name as facts_parent_org_n9_4_1_, labgroup1_.name as name10_4_1_ from employee employee0_ inner join lab_group labgroup1_ on employee0_.lab_group_id=labgroup1_.id where employee0_.facts_person_id=?
+2018-10-01 15:26:00.055  WARN 11216 --- [ask-scheduler-1] g.f.n.a.d.f.LabsDSSampleOpRefreshService : Updated sample op [803970-0 "TURKEY BREAST", lab-group="ARL-MICRO1", parent-org="ARKL", work-id=6487464] is in lab group with parent organization "ARKL" which differs from that specified in the source lab inbox item [803970-0 TURKEY BREAST, assigned-to=[{Yian Shooster, id=1234567}], org="NFFL", work-id=6487464]. The lab group was found by the assigned employee #1234567.
+Hibernate: select sampleopas0_.id as id1_7_, sampleopas0_.assigned_instant as assigned_instant2_7_, sampleopas0_.employee_id as employee_id3_7_, sampleopas0_.lead as lead4_7_, sampleopas0_.sample_op_id as sample_op_id5_7_ from sample_op_assignment sampleopas0_ where sampleopas0_.sample_op_id=?
+Hibernate: select employee0_.id as id1_1_0_, labgroup1_.id as id1_4_1_, employee0_.facts_person_id as facts_person_id2_1_0_, employee0_.fda_email_account_name as fda_email_account_3_1_0_, employee0_.first_name as first_name4_1_0_, employee0_.lab_group_id as lab_group_id5_1_0_, employee0_.last_name as last_name6_1_0_, employee0_.middle_name as middle_name7_1_0_, employee0_.password as password8_1_0_, employee0_.short_name as short_name9_1_0_, labgroup1_.address_city as address_city2_4_1_, labgroup1_.address_state as address_state3_4_1_, labgroup1_.address_street as address_street4_4_1_, labgroup1_.address_zip as address_zip5_4_1_, labgroup1_.buildings_and_rooms as buildings_and_room6_4_1_, labgroup1_.description as description7_4_1_, labgroup1_.facts_org_name as facts_org_name8_4_1_, labgroup1_.facts_parent_org_name as facts_parent_org_n9_4_1_, labgroup1_.name as name10_4_1_ from employee employee0_ inner join lab_group labgroup1_ on employee0_.lab_group_id=labgroup1_.id where employee0_.facts_person_id=?
+Hibernate: insert into sample_op_assignment (assigned_instant, employee_id, lead, sample_op_id) values (?, ?, ?, ?)
+2018-10-01 15:26:00.117  WARN 11216 --- [ask-scheduler-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1, SQLState: 23000
+2018-10-01 15:26:00.117 ERROR 11216 --- [ask-scheduler-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ORA-00001: unique constraint (LABELNG.UN_SMPOPAST_SMPIDEMPID) violated
+2018-10-01 15:26:00.133  WARN 11216 --- [ask-scheduler-1] g.f.n.a.d.f.LabsDSSampleOpRefreshService : Failed to update sample op for lab inbox items group
+  [803970-0 TURKEY BREAST, assigned-to=[{Yian Shooster, id=1234567}], org="NFFL", work-id=6487464]
+  constraint [LABELNG.UN_SMPOPAST_SMPIDEMPID]
 
+
+New Feature Soon for Demo
+-------------------------
+Allow searching for sample information for a given lot # of a reagent (media).
 
 
 Work Done
@@ -99,7 +120,7 @@ QR Codes
     Depends on jquery and shieldui, supports all sizes of QR codes.
     http://demos.shieldui.com/web/qrcode/api
   Version 40 bar code with 1276 bytes of data:
-    https://softwareengineering.stackexchange.com/questions/251062/how-many-bytes-can-i-fit-into-a-qr-code-with-low-error-correction
+    https://softwareengineering.stackexchange.com/questions/251062/how-many-bytes-can-i-fit-into-a-qr-code-with-low-notice-correction
 
 Make a grid of QR codes for input text data.
   Try inline block layout for the qr codes.

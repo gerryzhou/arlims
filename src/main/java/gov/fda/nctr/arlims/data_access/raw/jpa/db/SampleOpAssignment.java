@@ -7,29 +7,29 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(
-    name = "SAMPLE_ASSIGNMENT",
+    name = "SAMPLE_OP_ASSIGNMENT",
     uniqueConstraints = {
-        @UniqueConstraint(name="UN_SMPAST_SMPIDEMPID", columnNames = {"SAMPLE_ID", "EMPLOYEE_ID"}),
+        @UniqueConstraint(name="UN_SMPOPAST_SMPIDEMPID", columnNames = {"SAMPLE_OP_ID", "EMPLOYEE_ID"}),
     },
     indexes = {
-        @Index(name = "IX_SMPAST_EMPID", columnList = "EMPLOYEE_ID"),
+        @Index(name = "IX_SAMPOPAST_EMPID", columnList = "EMPLOYEE_ID"),
     }
 )
-public class SampleAssignment
+public class SampleOpAssignment
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional=false)
-    @JoinColumn(name = "SAMPLE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_SMPAST_SMP")) @NotNull
-    private Sample sample;
+    @JoinColumn(name = "SAMPLE_OP_ID", nullable = false, foreignKey = @ForeignKey(name="FK_SAMPOPAST_SMPOP")) @NotNull
+    private SampleOp sampleOp;
 
-    @Column(name = "SAMPLE_ID", insertable = false, updatable = false, nullable = false)
-    private Long sampleId;
+    @Column(name = "SAMPLE_OP_ID", insertable = false, updatable = false, nullable = false)
+    private Long sampleOpId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional=false)
-    @JoinColumn(name = "EMPLOYEE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_SMPAST_EMP")) @NotNull
+    @JoinColumn(name = "EMPLOYEE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_SAMPOPAST_EMP")) @NotNull
     private Employee employee;
 
     @Column(name = "EMPLOYEE_ID", insertable = false, updatable = false, nullable = false)
@@ -39,18 +39,18 @@ public class SampleAssignment
 
     private Boolean lead;
 
-    protected SampleAssignment() {}
+    protected SampleOpAssignment() {}
 
-    public SampleAssignment
+    public SampleOpAssignment
         (
-            @NotNull Sample sample,
+            @NotNull SampleOp sampleOp,
             @NotNull Employee employee,
             Instant assignedInstant,
             Boolean lead
         )
     {
-        this.sample = sample;
-        this.sampleId = sample.getId();
+        this.sampleOp = sampleOp;
+        this.sampleOpId = sampleOp.getId();
         this.employee = employee;
         this.employeeId = employee.getId();
         this.assignedInstant = assignedInstant;
@@ -60,11 +60,11 @@ public class SampleAssignment
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Sample getSample() { return sample; }
-    public void setSample(Sample sample) { this.sample = sample; }
+    public SampleOp getSampleOp() { return sampleOp; }
+    public void setSampleOp(SampleOp sampleOp) { this.sampleOp = sampleOp; }
 
-    public Long getSampleId() { return sampleId; }
-    public void setSampleId(Long sampleId) { this.sampleId = sampleId; }
+    public Long getSampleOpId() { return sampleOpId; }
+    public void setSampleOpId(Long sampleOpId) { this.sampleOpId = sampleOpId; }
 
     public Employee getEmployee() { return employee; }
     public void setEmployee(Employee employee) { this.employee = employee; }

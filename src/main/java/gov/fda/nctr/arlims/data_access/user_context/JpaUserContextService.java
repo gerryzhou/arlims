@@ -20,14 +20,12 @@ import org.springframework.stereotype.Service;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.Employee;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.Role;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.LabGroup;
-import gov.fda.nctr.arlims.data_access.raw.jpa.db.Test;
+import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
 import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.LabResource;
+import gov.fda.nctr.arlims.models.dto.SampleAssignment;
 
 
 @Service
@@ -35,8 +33,8 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 {
     private final EmployeeRepository employeeRepo;
     private final LabGroupRepository labGroupRepo;
-    private final SampleRepository sampleRepo;
-    private final SampleAssignmentRepository sampleAssignmentRepo;
+    private final SampleOpRepository sampleOpRepo;
+    private final SampleOpAssignmentRepository sampleOpAssignmentRepo;
     private final TestRepository testRepo;
     private final LabResourceRepository labResourceRepo;
     private final RoleRepository roleRepo;
@@ -48,15 +46,15 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 
     private final Pattern barPattern = Pattern.compile("\\|");
 
-    private static List<String> USER_CONTEXT_SAMPLE_STATUSES = Arrays.asList("S", "I", "O");
+    private static List<String> USER_CONTEXT_SAMPLE_OP_STATUSES = Arrays.asList("S", "I", "O");
 
 
     public JpaUserContextService
         (
             EmployeeRepository employeeRepo,
             LabGroupRepository labGroupRepo,
-            SampleRepository sampleRepo,
-            SampleAssignmentRepository sampleAssignmentRepo,
+            SampleOpRepository sampleOpRepo,
+            SampleOpAssignmentRepository sampleOpAssignmentRepo,
             TestRepository testRepo,
             LabResourceRepository labResourceRepo,
             RoleRepository roleRepo,
@@ -67,8 +65,8 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     {
         this.employeeRepo = employeeRepo;
         this.labGroupRepo = labGroupRepo;
-        this.sampleRepo = sampleRepo;
-        this.sampleAssignmentRepo = sampleAssignmentRepo;
+        this.sampleOpRepo = sampleOpRepo;
+        this.sampleOpAssignmentRepo = sampleOpAssignmentRepo;
         this.testRepo = testRepo;
         this.labResourceRepo = labResourceRepo;
         this.roleRepo = roleRepo;
@@ -245,34 +243,31 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 
     private List<Sample> getLabGroupActiveSamples(LabGroup labGroup, List<UserReference> labGroupUsers)
     {
-        List<gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample> dbSamples =
-            sampleRepo.findByLabGroupIdAndFactsStatusIn(labGroup.getId(), USER_CONTEXT_SAMPLE_STATUSES);
+        List<SampleOp> dbSampleOps =
+            sampleOpRepo.findByLabGroupIdAndFactsStatusIn(labGroup.getId(), USER_CONTEXT_SAMPLE_OP_STATUSES);
 
-        List<Long> sampleIds = dbSamples.stream().map(s -> s.getId()).collect(toList());
+        List<Long> sampleOpIds = dbSampleOps.stream().map(SampleOp::getId).collect(toList());
 
         Map<Long, UserReference> usersById =
             labGroupUsers.stream()
             .collect(Collectors.toMap(UserReference::getEmployeeId, userRef -> userRef));
 
-        Map<Long, List<SampleAssignment>> sampleAssignmentsBySampleId =
-            getSampleAssignmentsBySampleId(sampleIds, usersById);
+        Map<Long, List<SampleAssignment>> sampleAssignmentsBySampleOpId = getSampleAssignmentsBySampleOpId(sampleOpIds, usersById);
 
-        Map<Long, List<Test>> testsBySampleId =
-            getTestsBySampleId(sampleIds);
+        Map<Long, List<Test>> testsBySampleOpId = getTestsBySampleOpId(sampleOpIds);
 
-        Map<Long, Integer> attachedFileCountsByTestId =
-            getAttachedFileCountsByTestId(sampleIds);
+        Map<Long, Integer> attachedFileCountsByTestId = getAttachedFileCountsByTestId(sampleOpIds);
 
         return
-            dbSamples.stream()
+            dbSampleOps.stream()
             .map(dbSample -> {
-                long sampleId = dbSample.getId();
+                long sampleOpId = dbSample.getId();
 
                 List<SampleAssignment> assignments =
-                    sampleAssignmentsBySampleId.getOrDefault(sampleId, emptyList());
+                    sampleAssignmentsBySampleOpId.getOrDefault(sampleOpId, emptyList());
 
                 List<LabTestMetadata> tests =
-                    testsBySampleId.getOrDefault(sampleId, emptyList()).stream()
+                    testsBySampleOpId.getOrDefault(sampleOpId, emptyList()).stream()
                     .map(test -> {
                         int numAttachedFiles = attachedFileCountsByTestId.getOrDefault(test.getId(),0);
                         return makeLabTestMetadata(test, dbSample, numAttachedFiles, usersById);
@@ -303,18 +298,18 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
             .collect(toList());
     }
 
-    private Map<Long, Integer> getAttachedFileCountsByTestId(List<Long> testSampleIds)
+    private Map<Long, Integer> getAttachedFileCountsByTestId(List<Long> testSampleOpIds)
     {
         Map<Long, Integer> res = new HashMap<>();
 
         String sql =
             "select tf.test_id, count(*) files\n" +
             "from test_file tf\n" +
-            "where tf.test_id in (select t.id from test t where t.sample_id in (:sampleIds))\n" +
+            "where tf.test_id in (select t.id from test t where t.sample_op_id in (:sampleOpIds))\n" +
             "group by tf.test_id";
 
         Map<String,Object> params = new HashMap<>();
-        params.put("sampleIds", testSampleIds);
+        params.put("sampleOpIds", testSampleOpIds);
 
         jdbcTemplate.query(sql, params, rs -> {
             res.put(rs.getLong(1), rs.getInt(2));
@@ -323,22 +318,22 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
         return res;
     }
 
-    private Map<Long, List<Test>> getTestsBySampleId(List<Long> sampleIds)
+    private Map<Long, List<Test>> getTestsBySampleOpId(List<Long> sampleOpIds)
     {
         return
-            testRepo.findBySampleIdIn(sampleIds).stream()
-            .collect(groupingBy(Test::getSampleId));
+            testRepo.findBySampleOpIdIn(sampleOpIds).stream()
+            .collect(groupingBy(Test::getSampleOpId));
 
     }
 
-    private Map<Long, List<SampleAssignment>> getSampleAssignmentsBySampleId
+    private Map<Long, List<SampleAssignment>> getSampleAssignmentsBySampleOpId
         (
-            List<Long> sampleIds,
+            List<Long> sampleOpIds,
             Map<Long, UserReference> usersById
         )
     {
         return
-            sampleAssignmentRepo.findBySampleIdIn(sampleIds).stream()
+            sampleOpAssignmentRepo.findBySampleOpIdIn(sampleOpIds).stream()
             .map(a -> {
                 String empShortName =
                     opt(usersById.get(a.getEmployeeId()))
@@ -347,7 +342,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 
                 return
                     new SampleAssignment(
-                        a.getSampleId(),
+                        a.getSampleOpId(),
                         empShortName,
                         opt(a.getAssignedInstant()),
                         opt(a.getLead())
@@ -401,7 +396,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     private LabTestMetadata makeLabTestMetadata
         (
             Test t,
-            gov.fda.nctr.arlims.data_access.raw.jpa.db.Sample s,
+            SampleOp s,
             int attachedFilesCount,
             Map<Long, UserReference> usersById
         )
