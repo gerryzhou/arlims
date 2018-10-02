@@ -82,6 +82,37 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"subject\": null,\n" +
                 "\"workId\": 6587465,\n" +
                 "\"workRqstId\": 1408255,\n" +
+                "\"assignedToFirstName\": \"John\",\n" +
+                "\"assignedToLastName\": \"Doe\",\n" +
+                "\"pacCodeDescription\": \"Toxic Elements in Foods (Domestic & Import)\",\n" +
+                "\"assignedToAnlystTypeCode\": \"O\",\n" +
+                "\"assignedToPersonId\": 1234568,\n" +
+                "\"assignedToLeadInd\": \"N\",\n" +
+                "\"assignedToStatusCode\": \"I\",\n" +
+                "\"assignedToStatusDate\": \"2018-04-16 00:00:00.000-0400\",\n" +
+                "\"assignedToWorkAssignmentDate\": \"2018-04-16 11:04:16.000-0400\"" +
+                "},{" +
+                "\"accomplishingOrg\": \"NFFL\",\n" +
+                "\"accomplishingOrgId\": 123,\n" +
+                "\"cfsanProductDesc\": \"SMOKED SALMON\",\n" +
+                "\"operationCode\": \"43\",\n" +
+                "\"pacCode\": \"04019B\",\n" +
+                "\"lidCode\": null,\n" +
+                "\"splitInd\": null,\n" +
+                "\"problemAreaFlag\": \"ELE\",\n" +
+                "\"requestDate\": \"2015-12-09 00:00:00.000-0500\",\n" +
+                "\"responsibleFirmCode\": \"O\",\n" +
+                "\"rvMeaning\": \"In Progress\",\n" +
+                "\"sampleAnalysisId\": 875825,\n" +
+                "\"sampleTrackingNum\": 804971,\n" +
+                "\"sampleTrackingSubNum\": 0,\n" +
+                "\"samplingDistrictOrgId\": 20,\n" +
+                "\"samplingOrg\": \"NYK-DO\",\n" +
+                "\"statusCode\": \"I\",\n" +
+                "\"statusDate\": \"2018-03-16 11:08:59.000-0400\",\n" +
+                "\"subject\": null,\n" +
+                "\"workId\": 6587465,\n" +
+                "\"workRqstId\": 1408255,\n" +
                 "\"assignedToFirstName\": \"Lydia\",\n" +
                 "\"assignedToLastName\": \"Vinot\",\n" +
                 "\"pacCodeDescription\": \"Toxic Elements in Foods (Domestic & Import)\",\n" +

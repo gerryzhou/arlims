@@ -219,17 +219,14 @@ public class TransactionalRefreshOps extends ServiceBase
             {
                 assignment.setAssignedInstant(inboxItem.getAssignedToStatusDate());
                 assignment.setLead(Objects.equals(inboxItem.getAssignedToLeadInd(), "Y"));
-                log.info("Before sampleOpAssignmentRepository.save(assignment)");
+
                 sampleOpAssignmentRepository.save(assignment);
-                log.info("After sampleOpAssignmentRepository.save(assignment)");
 
                 unprocessedInboxItemsByPersonId.remove(inboxItem.getAssignedToPersonId());
             }
             else
             {
-                log.info("Before sampleOpAssignmentRepository.delete(assignment)");
                 sampleOpAssignmentRepository.delete(assignment);
-                log.info("After sampleOpAssignmentRepository.delete(assignment)");
             }
         }
 
@@ -248,17 +245,13 @@ public class TransactionalRefreshOps extends ServiceBase
                     boolean lead = "Y".equals(labInboxItem.getAssignedToLeadInd());
                     Instant assigned = labInboxItem.getAssignedToStatusDate();
 
-                    log.info("Before sampleOpAssignmentRepository.save(new SampleOpAssignment(savedSampleOp, maybeEmp.get(), assigned, lead))");
                     sampleOpAssignmentRepository.save(new SampleOpAssignment(sampleOp, maybeEmp.get(), assigned, lead));
-                    log.info("After sampleOpAssignmentRepository.save(new SampleOpAssignment(savedSampleOp, maybeEmp.get(), assigned, lead))");
                 }
                 else // employee not found
                 {
-                    log.info("Before logAssignedEmployeeNotFound('update-sample-op')");
                     logAssignedEmployeeNotFound("update-sample-op", labInboxItem, Optional.empty(), Optional.of(
                         "This employee assignment could not be created."
                     ));
-                    log.info("After logAssignedEmployeeNotFound('update-sample-op')");
                 }
             }
         });
