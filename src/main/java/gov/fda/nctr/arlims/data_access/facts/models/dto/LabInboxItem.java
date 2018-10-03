@@ -160,8 +160,6 @@ public class LabInboxItem
 
     public String getRvMeaning() { return rvMeaning; }
 
-    // TODO: These fields should be optional.
-
     public Long getAssignedToPersonId() { return assignedToPersonId; }
 
     public String getAssignedToFirstName() { return assignedToFirstName; }
