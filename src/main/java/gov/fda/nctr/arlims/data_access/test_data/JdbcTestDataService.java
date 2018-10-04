@@ -280,12 +280,12 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             "TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date, " +
             "t.note, t.stage_statuses_json, t.reviewed, re.short_name reviewed_by_emp, " +
             "t.saved_to_facts, fe.short_name saved_to_facts_by_emp\n" +
-            "from Test t\n" +
-            "join Sample s on t.sample_op_id = s.id\n" +
-            "join Test_Type tt on t.test_type_id = tt.id\n" +
-            "join Employee ce on ce.id = t.created_by_emp_id\n" +
-            "join Employee se on se.id = t.last_saved_by_emp_id\n" +
-            "left join Employee re on re.id = t.reviewed_by_emp_id\n" +
+            "from test t\n" +
+            "join sample_op s on t.sample_op_id = s.id\n" +
+            "join test_type tt on t.test_type_id = tt.id\n" +
+            "join employee ce on ce.id = t.created_by_emp_id\n" +
+            "join employee se on se.id = t.last_saved_by_emp_id\n" +
+            "left join employee re on re.id = t.reviewed_by_emp_id\n" +
             "left join employee fe on fe.id = t.last_saved_by_emp_id\n" +
             "where t.id = ?";
 
@@ -613,7 +613,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
               "s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, s.sampling_org, " +
               "t.id test_id, t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
               "tt.name test_type_name, tt.code \"TEST_TYPE_CODE\"\n" +
-            "from sample s\n" +
+            "from sample_op s\n" +
             "join lab_group lg on s.lab_group_id = lg.id\n" +
             "join test t on t.sample_op_id = s.id\n" +
             "join test_type tt on t.test_type_id = tt.id\n" +
