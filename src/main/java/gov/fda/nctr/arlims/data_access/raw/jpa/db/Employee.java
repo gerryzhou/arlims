@@ -9,11 +9,11 @@ import javax.validation.constraints.*;
 @Table(
     uniqueConstraints = {
         @UniqueConstraint(name="UN_EMP_FDAEMAILACCN", columnNames = {"FDA_EMAIL_ACCOUNT_NAME"}),
-        @UniqueConstraint(name="UN_EMP_SHORTNAMELABGRP", columnNames = {"SHORT_NAME", "LAB_GROUP_ID"})
+        @UniqueConstraint(name="UN_EMP_SHORTNAMELABGRP", columnNames = {"SHORT_NAME", "LAB_GROUP_ID"}),
+        @UniqueConstraint(name="UN_EMP_FACTSPERSONID", columnNames = {"FACTS_PERSON_ID"}),
     },
     indexes = {
         @Index(name = "IX_EMP_LABGROUPID", columnList = "LAB_GROUP_ID"),
-        @Index(name = "IX_EMP_FACTSPERSONID", columnList = "FACTS_PERSON_ID"),
     }
 )
 public class Employee

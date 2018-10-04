@@ -16,9 +16,7 @@ import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
-import static gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.ReportingUtils.describeLabInboxItemGroup;
-import static gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.ReportingUtils.describeSampleOp;
-import static gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.ReportingUtils.toJsonString;
+import static gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.ReportingUtils.*;
 
 
 @Service
@@ -121,14 +119,15 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
             {
                 log.warn(
                     "Failed to create sample op for lab inbox items " + describeLabInboxItemGroup(inboxItemsOneOpId) +
-                    ": " + e.getMessage()
+                    ": " + describeError(e),
+                    e
                 );
 
                 sampleOpRefreshNoticeRepository.save(
                     new SampleOpRefreshNotice(
                         Instant.now(),
                         "create-sample-op",
-                        e.getMessage(),
+                        describeError(e),
                         null,
                         inboxItemsOneOpId.get(0).getAccomplishingOrg(),
                         null,
@@ -165,14 +164,15 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
             {
                 log.warn(
                     "Failed to update sample op " + describeSampleOp(sampleOp) + " for lab inbox items group "
-                    + describeLabInboxItemGroup(inboxItems) + ": " + e.getMessage()
+                    + describeLabInboxItemGroup(inboxItems) + ": " + describeError(e),
+                    e
                 );
 
                 sampleOpRefreshNoticeRepository.save(
                     new SampleOpRefreshNotice(
                         Instant.now(),
                         "update-sample-op",
-                        e.getMessage(),
+                        describeError(e),
                         sampleOp.getLabGroup().getFactsParentOrgName(),
                         inboxItems.get(0).getAccomplishingOrg(),
                         toJsonString(jsonSerializer, new ReportingSampleOp(sampleOp)),
@@ -201,13 +201,13 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
             }
             catch(Exception e)
             {
-                log.warn("Failed to update status for sample op " + sampleOp + ": " + e.getMessage());
+                log.warn("Failed to update status for sample op " + sampleOp + ": " + describeError(e), e);
 
                 sampleOpRefreshNoticeRepository.save(
                     new SampleOpRefreshNotice(
                         Instant.now(),
                         "update-unmatched-sample-op-status",
-                        e.getMessage(),
+                        describeError(e),
                         sampleOp.getLabGroup().getFactsParentOrgName(),
                         null,
                         toJsonString(jsonSerializer, new ReportingSampleOp(sampleOp)),

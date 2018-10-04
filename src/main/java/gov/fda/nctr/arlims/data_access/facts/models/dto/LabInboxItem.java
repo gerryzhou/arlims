@@ -1,118 +1,87 @@
 package gov.fda.nctr.arlims.data_access.facts.models.dto;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 
 public class LabInboxItem
 {
     private Long sampleTrackingNum;
+
     private Long sampleTrackingSubNum;
+
     private String cfsanProductDesc;
+
     private String statusCode;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant statusDate;
-    private Optional<String> subject;
+
+    private String subject;
+
     private String pacCode;
+
     private String problemAreaFlag;
-    private Optional<String> lidCode;
-    private Optional<String> splitInd;
+
+    private String lidCode;
+
+    private String splitInd;
+
     private Long workId;
+
     private Long workRqstId;
+
     private String operationCode;
+
     private Long sampleAnalysisId;
+
     private Long requestedOperationNum;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant requestDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
-    private Optional<LocalDate> scheduledCompletionDate;
+
+    // API provides completion date as timestamp with timezone for what is really just a date.
+    @JsonDeserialize(using = JsonTimestampToLocalDateDeserializer.class)
+    private LocalDate scheduledCompletionDate;
+
     private String samplingOrg;
+
     private String accomplishingOrg;
+
     private Long accomplishingOrgId;
-    private Optional<Long> fdaOrganizationId;
+
+    private Long fdaOrganizationId;
+
     private String responsibleFirmCode;
+
     private String rvMeaning;
+
     private Long assignedToPersonId;
+
     private String assignedToFirstName;
+
     private String assignedToLastName;
+
     private String assignedToLeadInd;
+
     private String assignedToStatusCode;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant assignedToStatusDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant assignedToWorkAssignmentDate;
 
     protected LabInboxItem() {}
-
-    public LabInboxItem
-        (
-            Long sampleTrackingNum,
-            Long sampleTrackingSubNum,
-            String cfsanProductDesc,
-            String statusCode,
-            Instant statusDate,
-            Optional<String> subject,
-            String pacCode,
-            String problemAreaFlag,
-            Optional<String> lidCode,
-            Optional<String> splitInd,
-            Long workId,
-            Long workRqstId,
-            String operationCode,
-            Long sampleAnalysisId,
-            Long requestedOperationNum,
-            Instant requestDate,
-            Optional<LocalDate> scheduledCompletionDate,
-            String samplingOrg,
-            String accomplishingOrg,
-            Long accomplishingOrgId,
-            Optional<Long> fdaOrganizationId,
-            String responsibleFirmCode,
-            String rvMeaning,
-            Long assignedToPersonId,
-            String assignedToFirstName,
-            String assignedToLastName,
-            String assignedToLeadInd,
-            String assignedToStatusCode,
-            Instant assignedToStatusDate,
-            Instant assignedToWorkAssignmentDate
-        )
-    {
-        this.sampleTrackingNum = sampleTrackingNum;
-        this.sampleTrackingSubNum = sampleTrackingSubNum;
-        this.cfsanProductDesc = cfsanProductDesc;
-        this.statusCode = statusCode;
-        this.statusDate = statusDate;
-        this.subject = subject;
-        this.pacCode = pacCode;
-        this.problemAreaFlag = problemAreaFlag;
-        this.lidCode = lidCode;
-        this.splitInd = splitInd;
-        this.workId = workId;
-        this.workRqstId = workRqstId;
-        this.operationCode = operationCode;
-        this.sampleAnalysisId = sampleAnalysisId;
-        this.requestedOperationNum = requestedOperationNum;
-        this.requestDate = requestDate;
-        this.scheduledCompletionDate = scheduledCompletionDate;
-        this.samplingOrg = samplingOrg;
-        this.accomplishingOrg = accomplishingOrg;
-        this.accomplishingOrgId = accomplishingOrgId;
-        this.fdaOrganizationId = fdaOrganizationId;
-        this.responsibleFirmCode = responsibleFirmCode;
-        this.rvMeaning = rvMeaning;
-        this.assignedToPersonId = assignedToPersonId;
-        this.assignedToFirstName = assignedToFirstName;
-        this.assignedToLastName = assignedToLastName;
-        this.assignedToLeadInd = assignedToLeadInd;
-        this.assignedToStatusCode = assignedToStatusCode;
-        this.assignedToStatusDate = assignedToStatusDate;
-        this.assignedToWorkAssignmentDate = assignedToWorkAssignmentDate;
-    }
 
     public Long getSampleTrackingNum() { return sampleTrackingNum; }
 
@@ -124,15 +93,15 @@ public class LabInboxItem
 
     public Instant getStatusDate() { return statusDate; }
 
-    public Optional<String> getSubject() { return subject; }
+    public String getSubject() { return subject; }
 
     public String getPacCode() { return pacCode; }
 
     public String getProblemAreaFlag() { return problemAreaFlag; }
 
-    public Optional<String> getLidCode() { return lidCode; }
+    public String getLidCode() { return lidCode; }
 
-    public Optional<String> getSplitInd() { return splitInd; }
+    public String getSplitInd() { return splitInd; }
 
     public Long getWorkId() { return workId; }
 
@@ -146,7 +115,11 @@ public class LabInboxItem
 
     public Instant getRequestDate() { return requestDate; }
 
-    public Optional<LocalDate> getScheduledCompletionDate() { return scheduledCompletionDate; }
+//    @JsonIgnore
+//    public Optional<LocalDate> getScheduledCompletionDate() { return Optional.ofNullable(scheduledCompletionDate); }
+
+    public LocalDate getScheduledCompletionDate() { return scheduledCompletionDate; }
+
 
     public String getSamplingOrg() { return samplingOrg; }
 
@@ -154,7 +127,7 @@ public class LabInboxItem
 
     public Long getAccomplishingOrgId() { return accomplishingOrgId; }
 
-    public Optional<Long> getFdaOrganizationId() { return fdaOrganizationId; }
+    public Long getFdaOrganizationId() { return fdaOrganizationId; }
 
     public String getResponsibleFirmCode() { return responsibleFirmCode; }
 
@@ -215,5 +188,21 @@ public class LabInboxItem
         ", assignedToStatusDate=" + assignedToStatusDate +
         ", assignedToWorkAssignmentDate=" + assignedToWorkAssignmentDate +
         '}';
+    }
+}
+
+class JsonTimestampToLocalDateDeserializer extends JsonDeserializer<LocalDate>
+{
+    @Override
+    public LocalDate deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException
+    {
+        TextNode node = jp.getCodec().readTree(jp);
+        String dateString = node.textValue();
+
+        int spaceIx = dateString.indexOf(' ');
+        if ( spaceIx == -1 )
+            return LocalDate.parse(dateString);
+        else
+            return LocalDate.parse(dateString.substring(0, spaceIx));
     }
 }

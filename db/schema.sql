@@ -63,7 +63,9 @@ create table EMPLOYEE
 (
   ID                     NUMBER(19) generated as identity
     primary key,
-  FACTS_PERSON_ID        NUMBER(19),
+  FACTS_PERSON_ID        NUMBER(19)
+    constraint UN_EMP_FACTSPERSONID
+    unique,
   FDA_EMAIL_ACCOUNT_NAME VARCHAR2(150 char) not null
     constraint UN_EMP_FDAEMAILACCN
     unique,
@@ -82,10 +84,6 @@ create table EMPLOYEE
 
 create index IX_EMP_LABGROUPID
   on EMPLOYEE (LAB_GROUP_ID)
-/
-
-create index IX_EMP_FACTSPERSONID
-  on EMPLOYEE (FACTS_PERSON_ID)
 /
 
 create table LAB_RESOURCE

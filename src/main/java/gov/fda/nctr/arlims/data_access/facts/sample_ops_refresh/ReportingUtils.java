@@ -54,4 +54,16 @@ public class ReportingUtils
             ", parent-org=\"" + sampleOp.getLabGroup().getFactsParentOrgName() + "\"" +
             ", work-id=" + sampleOp.getWorkId() + "]";
     }
+
+    public static String describeError(Throwable e)
+    {
+        if ( e.getMessage() != null )
+            return e.getMessage();
+        else if ( e.getCause() != null )
+        {
+            return describeError(e.getCause());
+        }
+        else return e.toString();
+    }
+
 }
