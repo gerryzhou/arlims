@@ -137,8 +137,7 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
             {
                 log.warn(
                     "Failed to create sample op for lab inbox items " + describeLabInboxItemGroup(inboxItemsOneOpId) +
-                    ": " + describeError(e),
-                    e
+                    ": " + describeError(e)
                 );
 
                 sampleOpRefreshNoticeRepository.save(
@@ -182,8 +181,7 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
             {
                 log.warn(
                     "Failed to update sample op " + describeSampleOp(sampleOp) + " for lab inbox items group "
-                    + describeLabInboxItemGroup(inboxItems) + ": " + describeError(e),
-                    e
+                    + describeLabInboxItemGroup(inboxItems) + ": " + describeError(e)
                 );
 
                 sampleOpRefreshNoticeRepository.save(
@@ -219,7 +217,7 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
             }
             catch(Exception e)
             {
-                log.warn("Failed to update status for sample op " + sampleOp + ": " + describeError(e), e);
+                log.warn("Failed to update status for sample op " + sampleOp + ": " + describeError(e));
 
                 sampleOpRefreshNoticeRepository.save(
                     new SampleOpRefreshNotice(
@@ -242,10 +240,10 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
 
     private void warnFetchOfRefreshableSamplesFailed(Throwable t)
     {
-        log.warn("Failed to load refreshable samples from database due to error: " + t.getMessage(), t);
+        log.warn("Failed to load refreshable samples from database due to error: " + describeError(t));
 
         transactionalOps.writeSampleOpRefreshNotice(
-            "Could not load refreshable samples from database: " + t.getMessage(),
+            "Could not load refreshable samples from database: " + describeError(t),
             "refresh-sample-ops-from-labs-inbox",
             Optional.empty(),
             Collections.emptyList()
@@ -254,10 +252,10 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
 
     private void warnFetchOfLabInboxItemsFailed(Throwable t)
     {
-        log.warn("Failed to fetch lab inbox items due to error: " + t.getMessage(), t);
+        log.warn("Failed to fetch lab inbox items due to error: " + describeError(t));
 
         transactionalOps.writeSampleOpRefreshNotice(
-            "Could not fetch lab inbox item from LABS-DS api: " + t.getMessage(),
+            "Could not fetch lab inbox item from LABS-DS api: " + describeError(t),
             "refresh-sample-ops-from-labs-inbox",
             Optional.empty(),
             Collections.emptyList()
