@@ -1,7 +1,31 @@
+Positive Samples Workflow
+-------------------------
+One complete workflow per test unit.
+One set of controls no matter how many test units were positive.
 
-Commit Notes
-------------
+For each composite c:
+For each incubation media m:
+For each kind of agar plate a:
+  Initially we have a plate for (c,m,a), through the stage of making call on Typical/Atypical vs. Not Typical/No Growth (p.2 middle)
+  E.g.: For Composite #3, RV orig inc. media, agar plate BS: Typical
+If Typical/Atypical call, then for each (c,m,a):
+For each isolate # i:
+  We do a TSI test and LIA slant tube tests on (c,m,a,i).
+  And record results for Slant, Butt, H2S and Gas (see table for valid results).
 
+Another 2 controls have to be specified for page 3, one for oxidase and one for api/vitek.
+
+
+Each type of incubation media (RV,TT) gets its own HE, XLD, and BS plate.
+So 6 plates
+
+
+LABS-DS API Needs
+-----------------
+Need to know which fields might be null in lab inbox result objects.
+Need a way of fetching all lab inbox results, why limit of 50 results? Scroll-token api?
+
+Need to write a sample_op_refresh_notice record when api times out (or any other error at same level).
 
 
 New Feature Soon for Demo
@@ -24,12 +48,6 @@ Sample refresh from FACTS
   Syncing algorithm basically finished, needs final testing.
   Problem reporting to Oracle table as well as app logs.
   Samples assigned to unregistered employees are assigned to administrative lab group.
-
-
-LABS-DS API Needs
------------------
-Need to know which fields might be null in lab inbox result objects.
-Need a way of fetching all lab inbox results, why limit of 50 results? Scroll-token api?
 
 
 
