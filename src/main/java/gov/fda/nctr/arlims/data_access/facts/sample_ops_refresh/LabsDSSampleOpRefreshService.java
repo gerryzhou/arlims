@@ -50,24 +50,42 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
 
     public void refreshSampleOpsFromFacts()
     {
-        List<LabInboxItem> labInboxItems = factsAccessService.getLabInboxItems(REFRESHABLE_SAMPLE_OP_STATUS_CODES);
+        List<LabInboxItem> labInboxItems;
+        try
+        {
+            labInboxItems = factsAccessService.getLabInboxItems(REFRESHABLE_SAMPLE_OP_STATUS_CODES);
+        }
+        catch(Throwable t)
+        {
+            warnFetchOfLabInboxItemsFailed(t);
+            throw t;
+        }
 
         log.info("Refreshing samples and employee assignments from " + labInboxItems.size() + " FACTS lab inbox items.");
 
-        Map<Long, List<LabInboxItem>> labInboxItemsByOpId =
+        Map<Long,List<LabInboxItem>> labInboxItemsByOpId =
             labInboxItems.stream()
             .filter(item -> item.getSampleTrackingNum() != null)
             .collect(groupingBy(LabInboxItem::getWorkId)); // collect work assignments to multiple employees by op id
 
-        Map<Long, SampleOp> matchedSampleOpsByOpId =
-            sampleOpRepository.findByWorkIdIn(labInboxItemsByOpId.keySet()).stream()
-            .collect(toMap(SampleOp::getWorkId, Function.identity()));
+        Map<Long,SampleOp> matchedSampleOpsByOpId;
+        List<SampleOp> unmatchedActiveSampleOps;
+        try
+        {
+            matchedSampleOpsByOpId =
+                sampleOpRepository.findByWorkIdIn(labInboxItemsByOpId.keySet()).stream()
+                .collect(toMap(SampleOp::getWorkId, Function.identity()));
 
-        List<SampleOp> unmatchedActiveSampleOps =
-            sampleOpRepository.findByFactsStatusIn(REFRESHABLE_SAMPLE_OP_STATUS_CODES).stream()
-            .filter(sample -> !matchedSampleOpsByOpId.containsKey(sample.getWorkId()))
-            .collect(toList());
-
+            unmatchedActiveSampleOps =
+                sampleOpRepository.findByFactsStatusIn(REFRESHABLE_SAMPLE_OP_STATUS_CODES).stream()
+                .filter(sample -> !matchedSampleOpsByOpId.containsKey(sample.getWorkId()))
+                .collect(toList());
+        }
+        catch(Throwable t)
+        {
+            warnFetchOfRefreshableSamplesFailed(t);
+            throw t;
+        }
 
         // Create new samples for inbox items that have no matching sample by op id.
 
@@ -220,6 +238,30 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
         }
 
         return new SuccessFailCounts(succeeded, failed);
+    }
+
+    private void warnFetchOfRefreshableSamplesFailed(Throwable t)
+    {
+        log.warn("Failed to load refreshable samples from database due to error: " + t.getMessage(), t);
+
+        transactionalOps.writeSampleOpRefreshNotice(
+            "Could not load refreshable samples from database: " + t.getMessage(),
+            "refresh-sample-ops-from-labs-inbox",
+            Optional.empty(),
+            Collections.emptyList()
+        );
+    }
+
+    private void warnFetchOfLabInboxItemsFailed(Throwable t)
+    {
+        log.warn("Failed to fetch lab inbox items due to error: " + t.getMessage(), t);
+
+        transactionalOps.writeSampleOpRefreshNotice(
+            "Could not fetch lab inbox item from LABS-DS api: " + t.getMessage(),
+            "refresh-sample-ops-from-labs-inbox",
+            Optional.empty(),
+            Collections.emptyList()
+        );
     }
 }
 

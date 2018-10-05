@@ -363,7 +363,8 @@ public class TransactionalRefreshOps extends ServiceBase
         writeSampleOpRefreshNotice(notice, action, Optional.of(sampleOp), inboxItems);
     }
 
-    private void writeSampleOpRefreshNotice
+    @Transactional
+    public void writeSampleOpRefreshNotice
         (
             String notice,
             String action,
@@ -377,9 +378,9 @@ public class TransactionalRefreshOps extends ServiceBase
                 action,
                 notice,
                 maybeSample.map(sample -> sample.getLabGroup().getFactsParentOrgName()).orElse(null),
-                labInboxItems.get(0).getAccomplishingOrg(),
+                labInboxItems.size() > 0 ? labInboxItems.get(0).getAccomplishingOrg() : null,
                 maybeSample.map(sample -> toJsonString(jsonSerializer, new ReportingSampleOp(sample))).orElse(null),
-                toJsonString(jsonSerializer, labInboxItems)
+                labInboxItems.size() > 0 ? toJsonString(jsonSerializer, labInboxItems) : null
             )
         );
     }
