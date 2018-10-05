@@ -1,31 +1,78 @@
+
 Positive Samples Workflow
 -------------------------
+Q: Need details for "Re-streak (If Mixed)" condition: what is tested and what is restarted?
+   Limited to just the failed agar type or all? All media types restarted, and isolates?
+   The reset is only for the single isolate that had mixed results, only go back and do 2 more tubes (TSI, LIA).
+
+Add as optional "Plates" stage before "Wrapup".
+  Don't report this stage if all Vidas results were negative (or alternately, unless some result is positive).
+  Or add another stage status code meaning not-applicable.
+
+Get salmonella selective agar plates ({agar: 'HE'}, {agar: 'XLD'}, {agar: 'BS', timepointHours: [24, 48]}) and tube types ['TSI', 'LIA'] from lab group config.
+
+positiveTestUnitContinuedTests: // Allow adding and removing members, default to # positive test units from Vidas stage but don't try to keep it in sync if Vidas results are changed.
+  [ # indexed by positive test unit number
+    {
+      testUnitNumber: number,
+
+      mediaTests:
+        [
+          {
+            mediaTypeCode: string // RV|TT|... (get choices from from previous stages of test data)
+            mediaBatchNum: string // TODO: Not sure if this is needed.
+
+            agarPlateTests:
+              [
+                {
+                  selectiveAgar: string
+                  timepoint: number | null
+
+                  // TODO: Verify that this is property of the plate generally and not the colony.
+                  colonyAppearance: [Typical(T)|Atypical(AT)|Not Typical(NT)|No Growth(NG)]
+
+                  isolateTests: // should be zero length iff colonyAppearance is NT or NG
+                    [ # indexed by isolate/"pick" #
+                      {
+                        tubeResults:
+                          [
+                            {
+                              tubeType: TSI|LIA (from lab group config)
+                              result: { slant: K|A, butt: K|A, h2s: pos|neg, gas: pos|neg }
+                            }
+                          ]
+                      }
+                    ] // isolateTests
+                }
+              ] // agarPlateTests
+          }
+        ] // mediaTests
+    }
+  ] // positive test unit continuations
+
+
+One plate test expandable section or tab per positive composite.
+  If expandable section, collapsed if not started or all finished.
+  If tab, should show some sort of status about plate stage and/or when last modified.
+  Content is a view showing the latest stage (only) of HE, XLD, BS plate testing in a row display.
+    Expandable to show full history for each plate (individually?)
+
+
 One complete workflow per test unit.
 One set of controls no matter how many test units were positive.
-
+  Need more detail about which stages have controls.
 For each composite c:
 For each incubation media m:
-For each kind of agar plate a:
+For each kind of selective agar plate a:
   Initially we have a plate for (c,m,a), through the stage of making call on Typical/Atypical vs. Not Typical/No Growth (p.2 middle)
   E.g.: For Composite #3, RV orig inc. media, agar plate BS: Typical
 If Typical/Atypical call, then for each (c,m,a):
 For each isolate # i:
-  We do a TSI test and LIA slant tube tests on (c,m,a,i).
+  We do a TSI test and LIA slant tube tests on (c,a,m,i).
   And record results for Slant, Butt, H2S and Gas (see table for valid results).
 
 Another 2 controls have to be specified for page 3, one for oxidase and one for api/vitek.
 
-
-Each type of incubation media (RV,TT) gets its own HE, XLD, and BS plate.
-So 6 plates
-
-
-LABS-DS API Needs
------------------
-Need to know which fields might be null in lab inbox result objects.
-Need a way of fetching all lab inbox results, why limit of 50 results? Scroll-token api?
-
-Need to write a sample_op_refresh_notice record when api times out (or any other error at same level).
 
 
 New Feature Soon for Demo
