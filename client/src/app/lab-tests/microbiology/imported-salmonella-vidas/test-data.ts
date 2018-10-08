@@ -1,4 +1,4 @@
-import {FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
+import {countValueOccurrences, FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SamplingMethod} from '../sampling-methods';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 
@@ -9,6 +9,7 @@ export interface TestData {
    mBrothData:   MBrothData;
    vidasData:    VidasData;
    controlsData: ControlsData;
+   posContData: PositivesContinuationData;
    wrapupData:   WrapupData;
 }
 
@@ -72,6 +73,55 @@ export interface ControlsData {
    bacterialControlsUsed?: boolean | null;
 }
 
+export interface PositivesContinuationData
+{
+   positiveTestUnitContinuations: PositiveTestUnitContinuationTests[];
+}
+
+export interface PositiveTestUnitContinuationTests
+{
+   positiveTestUnitNumber: number;
+   rvSourcedTests: SelectiveAgarsTestSuite;
+   ttSourcedTests: SelectiveAgarsTestSuite;
+   conclusionSalmonellaDetected: boolean;
+}
+
+export interface SelectiveAgarsTestSuite {
+   he: SelectiveAgarTests;
+   xld: SelectiveAgarTests;
+   bs_24h: SelectiveAgarTests;
+   bs_48h: SelectiveAgarTests;
+}
+
+export interface SelectiveAgarTests {
+   colonyAppearance: 'T' | 'AT'| 'NT'| 'NG';
+   isolateTests: IsolateTestSequence[];
+}
+
+export interface IsolateTestSequence {
+   // colonyAppearance: 'T' | 'AT'| 'NT'| 'NG' | null;
+   tsiTubeTest: SlantTubeTest;
+   liaTubeTest: SlantTubeTest;
+   // ureaDetection: boolean; // TODO
+   oxidaseDetection: boolean;
+   vitekDetection: boolean;
+   api20eDetection: boolean;
+   serologyTest: SerologyTest;
+}
+
+export interface SlantTubeTest {
+   slant: string;
+   butt: string;
+   h2s: string;
+   gas: string;
+}
+
+export interface SerologyTest {
+   polyHAZ: string;
+   polyAIPlusVi: string;
+   polyO: string;
+}
+
 export interface WrapupData {
    reserveSampleDisposition?: ReserveSampleDisposition | null;
    reserveSampleDestinations?: string | null;
@@ -83,6 +133,7 @@ export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY'
 export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_AFTER_ANALYSIS' | 'ISOLATES_SENT' | 'OTHER';
 
 // Empty test data should define all fields necessary to reach the leaf data elements which are bound
+
 // to form controls, other than the leaf data elements themselves.
 export function emptyTestData(): TestData {
    return {
@@ -92,6 +143,7 @@ export function emptyTestData(): TestData {
       mBrothData: {},
       vidasData: {},
       controlsData: {},
+      posContData: {positiveTestUnitContinuations: []},
       wrapupData: {},
    };
 }
@@ -142,13 +194,14 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
       mBrothData: new FormGroup({
          mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
          mBrothWaterBathId: new FormControl(testData.mBrothData.mBrothWaterBathId),
-         waterBathStarted: new FormControl(testData.mBrothData.waterBathStarted), // TODO: Add ISO timestamp validator.
+         waterBathStarted: new FormControl(testData.mBrothData.waterBathStarted),
       }),
       vidasData: new FormGroup({
          instrumentId: new FormControl(testData.vidasData.instrumentId),
          kitIds: new FormControl(testData.vidasData.kitIds),
          testUnitDetections: new FormArray(
-            (testData.vidasData.testUnitDetections || [null]).map(detected => new FormControl(detected))
+            (testData.vidasData.testUnitDetections || [null])
+               .map(detected => new FormControl(detected))
          ),
          positiveControlDetection: new FormControl(testData.vidasData.positiveControlDetection),
          mediumControlDetection: new FormControl(testData.vidasData.mediumControlDetection),
@@ -163,6 +216,12 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
          collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
       }),
+      posContData: new FormGroup( {
+         continuationTests: new FormArray(
+            (testData.posContData.positiveTestUnitContinuations || [])
+               .map(makePositiveTestUnitContinuationTestsFormGroup)
+         ),
+      }),
       wrapupData: new FormGroup({
          reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
@@ -171,6 +230,69 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
    });
 }
 
+// Make continuation testing form group for one positive test unit.
+function makePositiveTestUnitContinuationTestsFormGroup(posContTests: PositiveTestUnitContinuationTests): FormGroup
+{
+   return new FormGroup({
+      positiveTestUnitNumber: new FormControl(posContTests.positiveTestUnitNumber),
+      rvSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.rvSourcedTests),
+      ttSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.ttSourcedTests),
+      conclusionSalmonellaDetected: new FormControl(posContTests.conclusionSalmonellaDetected),
+   });
+}
+
+function makeSelectiveAgarsTestSuiteFormGroup(selAgarsTestSuite: SelectiveAgarsTestSuite): FormGroup
+{
+   return new FormGroup({
+      he: makeSelectiveAgarTestsFormGroup(selAgarsTestSuite.he),
+      xld: makeSelectiveAgarTestsFormGroup(selAgarsTestSuite.xld),
+      bs_24h: makeSelectiveAgarTestsFormGroup(selAgarsTestSuite.bs_24h),
+      bs_48h: makeSelectiveAgarTestsFormGroup(selAgarsTestSuite.bs_48h),
+   });
+}
+
+function makeSelectiveAgarTestsFormGroup(selAgarTests: SelectiveAgarTests): FormGroup
+{
+   return new FormGroup({
+      colonyAppearance: new FormControl(selAgarTests.colonyAppearance),
+      isolateTests: new FormArray(
+         (selAgarTests.isolateTests || [])
+            .map(makeIsolateTestSequenceFormGroup)
+      ),
+   });
+}
+
+function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTestSequence): FormGroup
+{
+   return new FormGroup({
+      tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.tsiTubeTest),
+      liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.liaTubeTest),
+      // ureaDetection: new FormControl(isolateTestSequence.ureaDetection), // TODO
+      oxidaseDetection: new FormControl(isolateTestSequence.oxidaseDetection),
+      vitekDetection: new FormControl(isolateTestSequence.vitekDetection),
+      api20eDetection: new FormControl(isolateTestSequence.api20eDetection),
+      serologyTest: makeSerologyFormGroup(isolateTestSequence.serologyTest),
+   });
+}
+
+function makeSlantTubeTestFormGroup(slantTubeTest: SlantTubeTest): FormGroup
+{
+   return new FormGroup({
+      slant: new FormControl(slantTubeTest.slant),
+      butt: new FormControl(slantTubeTest.butt),
+      h2s: new FormControl(slantTubeTest.h2s),
+      gas: new FormControl(slantTubeTest.gas),
+   });
+}
+
+function makeSerologyFormGroup(serologyTest: SerologyTest): FormGroup
+{
+   return new FormGroup({
+      polyHAZ: new FormControl(serologyTest.polyHAZ),
+      polyAIPlusVi: new FormControl(serologyTest.polyAIPlusVi),
+      polyO: new FormControl(serologyTest.polyO),
+   });
+}
 
 interface Stage {
    name: string;
@@ -184,6 +306,7 @@ export const TEST_STAGES: Stage[] = [
    {name: 'M-BROTH',  statusCodeFn: mBrothStatusCode},
    {name: 'VIDAS',    statusCodeFn: vidasStatusCode},
    {name: 'CONTROLS', statusCodeFn: controlsStatusCode},
+   {name: 'POS-CONT', statusCodeFn: posContStatusCode},
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 
@@ -325,6 +448,120 @@ function controlsStatusCode(testData: TestData): FieldValuesStatusCode
          return 'c';
       }
    }
+}
+
+function posContStatusCode(testData: TestData): FieldValuesStatusCode
+{
+   const positivesData = testData.posContData;
+   if ( !positivesData.positiveTestUnitContinuations || positivesData.positiveTestUnitContinuations.length === 0 )
+      return 'e';
+
+   const vidasPositives = countValueOccurrences(testData.vidasData.testUnitDetections, true);
+   if ( vidasPositives !== positivesData.positiveTestUnitContinuations.length )
+      return 'i';
+
+   for ( const contTests of positivesData.positiveTestUnitContinuations )
+   {
+      if ( !positiveTestUnitContinuationTestsComplete(contTests) )
+         return 'i';
+   }
+
+   return 'c';
+}
+
+function positiveTestUnitContinuationTestsComplete(contTests: PositiveTestUnitContinuationTests): boolean
+{
+   return (
+      selectiveAgarsTestSuiteComplete(contTests.rvSourcedTests) &&
+      selectiveAgarsTestSuiteComplete(contTests.ttSourcedTests) &&
+      contTests.conclusionSalmonellaDetected != null &&
+      contTests.positiveTestUnitNumber != null
+   );
+}
+
+function selectiveAgarsTestSuiteComplete(selAgarsTestSuite: SelectiveAgarsTestSuite): boolean
+{
+   return (
+      selectiveAgarTestsComplete(selAgarsTestSuite.he) &&
+      selectiveAgarTestsComplete(selAgarsTestSuite.xld) &&
+      selectiveAgarTestsComplete(selAgarsTestSuite.bs_24h) &&
+      selectiveAgarTestsComplete(selAgarsTestSuite.bs_48h)
+   );
+}
+
+function selectiveAgarTestsComplete(selAgarTests: SelectiveAgarTests): boolean
+{
+   if ( selAgarTests.colonyAppearance === 'NT' || selAgarTests.colonyAppearance === 'NG' )
+     return true;
+
+   if ( selAgarTests.isolateTests.length < 2 )
+      return false;
+
+   for ( const isolateTestSeq of selAgarTests.isolateTests )
+   {
+      if (!isolateTestSequenceComplete(isolateTestSeq))
+         return false;
+   }
+
+   return true;
+}
+
+function isolateTestSequenceComplete(isolate: IsolateTestSequence): boolean
+{
+   // Nothing else to be done if some slant tube result patterns occur.
+   const tsiComplete = slantTubeTestComplete(isolate.tsiTubeTest);
+   const liaComplete = slantTubeTestComplete(isolate.liaTubeTest);
+   if ( tsiComplete && isSlantTubeStopPattern(isolate.tsiTubeTest) ||
+        liaComplete && isSlantTubeStopPattern(isolate.liaTubeTest) )
+      return true;
+
+   if ( !tsiComplete || !liaComplete )
+      return false;
+
+   // TODO: Urea test ?
+
+   // Nothing else needs to be done if oxidase test yields positive.
+   if ( isolate.oxidaseDetection === true )
+      return true;
+
+   // Require at least one of vitek and api tests.
+   if ( isolate.vitekDetection == null && isolate.api20eDetection == null )
+      return false;
+
+   // If neither of vitek and api tests are positive, no more testing is needed.
+   if ( !isolate.vitekDetection && !isolate.api20eDetection )
+      return true;
+
+   if ( !serologyTestComplete(isolate.serologyTest) )
+      return false;
+
+   // TODO: PFGE, WGS (shown in workflow)?
+
+   return true;
+}
+
+function isSlantTubeStopPattern(slantTest: SlantTubeTest): boolean
+{
+   return false;  // TODO
+}
+
+function slantTubeTestComplete(slantTest: SlantTubeTest): boolean
+{
+   return (
+      slantTest.slant != null &&
+      slantTest.butt != null &&
+      slantTest.h2s != null &&
+      slantTest.gas != null
+   );
+}
+
+function serologyTestComplete(serologyTest: SerologyTest): boolean
+{
+   return (
+     serologyTest.polyHAZ != null &&
+     serologyTest.polyAIPlusVi != null &&
+     serologyTest.polyO != null
+   );
 }
 
 function wrapupStatusCode(testData: TestData): FieldValuesStatusCode
