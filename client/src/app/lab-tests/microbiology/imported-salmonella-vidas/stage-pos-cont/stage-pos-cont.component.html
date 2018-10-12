@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+
+   <div> <!--TODO: Add button to add tests for any positives which are missing vs. vidas results. -->
+      Vidas positive test unit numbers: {{vidasPositiveSampleTestUnitNumbers}}
+   </div>
+
+   <div>
+      <div class="one-pos-test-unit-tests" *ngFor="let posTestUnitFG of testsFormArray.controls">
+         <app-one-pos-test-unit-cont-tests [form]="posTestUnitFG"></app-one-pos-test-unit-cont-tests>
+      </div>
+   </div>
+
+   <button mat-button (click)="addPositiveTestUnitContinuationTestsFormGroup()">Add positive sub/composite</button>
+
+</form>

@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {VidasData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {LabResource} from '../../../../../generated/dto';
+import {arraysEqual} from '../../../../shared/util/data-objects';
 
 @Component({
    selector: 'app-stage-vidas',
@@ -35,6 +36,10 @@ export class StageVidasComponent implements OnChanges {
 
    @Input()
    spiking: boolean | null = null;
+
+   @Output()
+   positiveSampleTestUnitNumbersChange = new EventEmitter<number[]>();
+   lastEmittedPositiveSampleTestUnitNumbers: number[] = null;
 
    excessSampleTestUnitControlsCount: number | null = 0;
 
@@ -92,14 +97,20 @@ export class StageVidasComponent implements OnChanges {
       }
 
       this.updateExcessSampleTestUnitControlsCount();
+
+      if ( !stopOnControlWithValue )
+         this.testUnitDetectionsChanged();
    }
 
    removeTestUnitControlAtIndex(i: number)
    {
       const detectionCtrls = this.form.get('testUnitDetections') as FormArray;
+      const wasPos = detectionCtrls.at(i).value === true;
       detectionCtrls.removeAt(i);
 
       this.updateExcessSampleTestUnitControlsCount();
+      if ( wasPos )
+         this.testUnitDetectionsChanged();
    }
 
    private updateExcessSampleTestUnitControlsCount()
@@ -111,4 +122,31 @@ export class StageVidasComponent implements OnChanges {
             : null;
    }
 
+   positiveTestUnitNumbers(): number[]
+   {
+      const positiveTestUnitNumbers: number[] = [];
+
+      const detections = this.testUnitDetectionsControl.getRawValue();
+      if ( detections )
+      {
+         detections.forEach((detection, ix) => {
+            if (detection === true) positiveTestUnitNumbers.push(ix + 1);
+         });
+      }
+
+      return positiveTestUnitNumbers;
+   }
+
+   testUnitDetectionsChanged()
+   {
+      const positives: number[] = this.positiveTestUnitNumbers();
+
+      if ( this.lastEmittedPositiveSampleTestUnitNumbers == null ||
+           !arraysEqual(this.lastEmittedPositiveSampleTestUnitNumbers, positives) )
+      {
+         this.positiveSampleTestUnitNumbersChange.emit(positives);
+         this.lastEmittedPositiveSampleTestUnitNumbers = positives.slice();
+      }
+   }
 }
+

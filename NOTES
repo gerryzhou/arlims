@@ -1,10 +1,24 @@
+Colony appearance is really per-colony as indicated in form.
+
+For controls, only need to fill the row for one sel. agar type.
+  Keep all agar types available but can be considered complete if at least one are complete and rest are empty).
+  Controls always complete the full isolate test sequence, there are no stop conditions.
+
+
+Need to be able to represent repeated tries per isolate.
+  Add one or more fields indicating why an isolate is incomplete.
+    slant tubes conclusive
+    oxidase negative
+    api_vitek_negative
+    failure_necessitating_restreak
+  failure reason
+    no_id
+    unacceptable
+    doubtful
+
+
 Positive Samples Workflow
 -------------------------
-Add as optional "Plates" stage before "Wrapup".
-  Don't report this stage if all Vidas results were negative (or alternately, unless some result is positive).
-  Or add another stage status code meaning not-applicable.
-
-
 One plate test expandable section or tab per positive composite.
   If expandable section, collapsed if not started or all finished.
   If tab, should show some sort of status about plate stage and/or when last modified.

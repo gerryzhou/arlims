@@ -132,7 +132,7 @@ function isDate(obj): boolean
    return {}.toString.apply(obj) === '[object Date]';
 }
 
-function arraysEqual(a: any[], b: any[])
+export function arraysEqual(a: any[], b: any[])
 {
    if (a === b) { return true; }
    if (a == null || b == null || a.length !== b.length ) return false;

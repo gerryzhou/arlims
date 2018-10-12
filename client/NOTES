@@ -1,6 +1,6 @@
-test-data.ts
-------------
-Create function to create an empty test suite ready for data entry, with default number of isolates for the lab group.
+Add fields to IsolateTestSeq indicating that the sequence failed and requires starting over with a new sequence (re-streaking), and why.
+Review test data structures.
+Update form groups for data structure changes.
 
 
 Commit Notes
@@ -13,6 +13,11 @@ Commit Notes
 *** Positives need to be handled as next priority.
    Having seprate test type for positives is fine but the related tests need to be kept together and in proper sequence.
    Add test group/sequence field(s) to order and group tests within samples.
+
+Array comparisons in test-data.ts
+   Array comparisons may need to be done in a different way because arrays are used at top and intermediate levels in pos cont data.
+     Contents need to be matched not by index but by data within the elements (e.g. positiveTestUnitNumber).
+     Contents for matched items then need to be compared structurally.
 
 
 Audit log section of form review report

@@ -1,0 +1,27 @@
+<mat-card>
+
+   <form [formGroup]="form">
+
+      <div>
+         <h3>Positive Sub/Composite # </h3>
+         <mat-form-field>
+            <input formControlName="positiveTestUnitNumber" type="number" min="1" matInput
+                   placeholder="sub/composite number">
+         </mat-form-field>
+      </div>
+
+      <div class="rv-tt-grid">
+
+         <div class="rv-label">RV</div>
+
+         <app-sel-agars-test-suite [form]="form.controls['rvSourcedTests']"></app-sel-agars-test-suite>
+
+         <div class="tt-label">TT</div>
+
+         <app-sel-agars-test-suite [form]="form.controls['ttSourcedTests']"></app-sel-agars-test-suite>
+
+      </div>
+
+   </form>
+
+</mat-card>

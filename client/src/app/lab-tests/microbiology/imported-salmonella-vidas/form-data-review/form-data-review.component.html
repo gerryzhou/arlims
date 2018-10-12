@@ -61,10 +61,19 @@
    <div>
       <h3>CONTROLS</h3>
       <app-stage-controls class="test-stage"
-         [form]="testDataForm.get('controlsData')"
+         [form]="testDataForm.get('controls')"
          [conflicts]="conflictsTestData.controlsData"
          [conflictsWhoWhen]="conflictsEmployeeTimestamp">
       </app-stage-controls>
+   </div>
+
+   <div>
+      <h3>POSITIVES CONTINUATIONS</h3>
+      <app-stage-pos-cont class="test-stage"
+         [form]="testDataForm.get('posContData')"
+         [conflicts]="conflictsTestData.posContData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+      </app-stage-pos-cont>
    </div>
 
    <div>

@@ -64,17 +64,28 @@
             [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
             [conflicts]="conflictsTestData.vidasData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [showUnsetAffordances]="showUnsetAffordances"
+            (positiveSampleTestUnitNumbersChange)="onVidasPositiveSampleTestUnitNumbersChanged($event)">
          </app-stage-vidas>
       </mat-step>
 
       <mat-step label="CONTROLS">
          <app-stage-controls class="test-stage"
-            [form]="testDataForm.get('controlsData')"
+            [form]="testDataForm.get('controls')"
             [conflicts]="conflictsTestData.controlsData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-controls>
+      </mat-step>
+
+      <mat-step label="POS-CONT">
+         <app-stage-pos-cont class="test-stage"
+            [form]="testDataForm.get('posContData')"
+            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers">
+            [conflicts]="conflictsTestData.posContData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances"
+         </app-stage-pos-cont>
       </mat-step>
 
       <mat-step label="WRAPUP">

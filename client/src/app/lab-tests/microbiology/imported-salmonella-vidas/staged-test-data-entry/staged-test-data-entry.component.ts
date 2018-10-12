@@ -4,16 +4,16 @@ import {FormGroup} from '@angular/forms';
 import {MatStepper} from '@angular/material';
 import * as moment from 'moment';
 
+import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
 import {LabResource} from '../../../../../generated/dto';
-import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
    emptyTestData,
    firstNonCompleteTestStageName,
-   getTestStageStatuses,
+   getTestStageStatuses, getVidasPositiveTestUnitNumbers,
    makeTestDataFormGroup,
    TEST_STAGES,
    TestData
@@ -25,6 +25,7 @@ import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from '../stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from '../stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from '../stage-controls/stage-controls.component';
+import {StagePosContComponent} from '../stage-pos-cont/stage-pos-cont.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
@@ -52,6 +53,8 @@ export class StagedTestDataEntryComponent implements OnInit {
    sampleTestUnitsCount: number | null;
    sampleTestUnitsType: string | null;
 
+   vidasPositiveSampleTestUnitNumbers: number[] | null;
+
    readonly stage: string | null;
    readonly stageIndex: number | null;
 
@@ -66,7 +69,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter;
 
-   // Keep component refs for stepper and individual test stages to dispatch hotkeys to functions on the currently selected component.
+   // Keep component refs for individual test stages to dispatch hotkeys to functions on the currently selected component.
    @ViewChild('testStageStepper') testStageStepper: MatStepper;
    @ViewChild(StagePrepComponent)     prepComp: StagePrepComponent;
    @ViewChild(StagePreEnrComponent)   preEnrComp: StagePreEnrComponent;
@@ -74,6 +77,7 @@ export class StagedTestDataEntryComponent implements OnInit {
    @ViewChild(StageMBrothComponent)   mBrothComp: StageMBrothComponent;
    @ViewChild(StageVidasComponent)    vidasComp: StageVidasComponent;
    @ViewChild(StageControlsComponent) controlsComp: StageControlsComponent;
+   @ViewChild(StagePosContComponent)  posContComp: StagePosContComponent;
    @ViewChild(StageWrapupComponent)   wrapupComp: StageWrapupComponent;
    stageComps: any[];
 
@@ -106,6 +110,9 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.sampleTestUnitsCount = sampleTestUnits.testUnitsCount;
       this.sampleTestUnitsType = sampleTestUnits.testUnitsType;
 
+      this.vidasPositiveSampleTestUnitNumbers =
+         this.originalTestData ? getVidasPositiveTestUnitNumbers(this.originalTestData.vidasData) : [];
+
       const labResources = labGroupTestData.labResourcesByType;
       this.balances = labResources.get(UserContextService.BALANCE_RESOURCE_TYPE);
       this.incubators = labResources.get(UserContextService.INCUBATOR_RESOURCE_TYPE);
@@ -125,6 +132,7 @@ export class StagedTestDataEntryComponent implements OnInit {
          this.mBrothComp,
          this.vidasComp,
          this.controlsComp,
+         this.posContComp,
          this.wrapupComp
       ];
    }
@@ -184,6 +192,11 @@ export class StagedTestDataEntryComponent implements OnInit {
    {
       this.sampleTestUnitsCount = testUnitsChange.testUnitsCount;
       this.sampleTestUnitsType = testUnitsChange.testUnitsType;
+   }
+
+   onVidasPositiveSampleTestUnitNumbersChanged(positiveTestUnits: number[])
+   {
+      this.vidasPositiveSampleTestUnitNumbers = positiveTestUnits;
    }
 
    clearConflictsData()
