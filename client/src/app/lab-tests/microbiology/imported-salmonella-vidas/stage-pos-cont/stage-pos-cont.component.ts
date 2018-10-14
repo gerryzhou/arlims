@@ -2,8 +2,11 @@ import {Component, Input, OnChanges} from '@angular/core';
 import {FormArray, FormGroup} from '@angular/forms';
 
 import {
-   makeEmptyIsolateTestSequence, makePositiveTestUnitContinuationTestsFormGroup,
-   PositiveContinuationData,
+   makeEmptyIsolateTestSequence,
+   makeEmptyPositivesContinuationControls,
+   makePositivesContinuationControlsFormGroup,
+   makePositiveTestUnitContinuationTestsFormGroup,
+   PositivesContinuationData,
    PositiveTestUnitContinuationTests,
    SelectiveAgarsTestSuite,
 } from '../test-data';
@@ -23,7 +26,7 @@ export class StagePosContComponent implements OnChanges {
    vidasPositiveSampleTestUnitNumbers: number[] | null = null;
 
    @Input()
-   conflicts: PositiveContinuationData;
+   conflicts: PositivesContinuationData;
 
    @Input()
    conflictsWhoWhen: EmployeeTimestamp;
@@ -32,6 +35,7 @@ export class StagePosContComponent implements OnChanges {
    showUnsetAffordances = false;
 
    testsFormArray: FormArray;
+   controlsFormGroupInitialized: boolean;
 
    readonly defaultNumIsolatesPerSelectiveAgarPlate = 2;
 
@@ -41,28 +45,34 @@ export class StagePosContComponent implements OnChanges {
    ngOnChanges()
    {
       this.testsFormArray = this.form.controls['positiveTestUnitContinuationTestss'] as FormArray;
+      this.controlsFormGroupInitialized = this.form.controls['controls'] != null;
+   }
+
+   initPositivesContinuationControlsFormGroup()
+   {
+      if ( !this.controlsFormGroupInitialized )
+      {
+         const posContControls = makeEmptyPositivesContinuationControls();
+         const posContConstrolsFormGroup = makePositivesContinuationControlsFormGroup(posContControls);
+         this.form.addControl('controls', posContConstrolsFormGroup);
+         this.controlsFormGroupInitialized = true;
+      }
+      else
+         console.log('Ignoring attempt to add positives continuation controls form group when this form group is already present.');
    }
 
    addPositiveTestUnitContinuationTestsFormGroup()
    {
-      const newContTests: PositiveTestUnitContinuationTests = this.makePositiveTestUnitContinuationTests();
+      const newContTests: PositiveTestUnitContinuationTests = this.makeOnePositiveTestUnitContinuationTests();
 
-      const newFormGroup = makePositiveTestUnitContinuationTestsFormGroup(newContTests);
-
-      this.testsFormArray.push(newFormGroup);
+      this.testsFormArray.push(makePositiveTestUnitContinuationTestsFormGroup(newContTests));
    }
 
 
-   addIsolateTestSequenceFormGroup(toFormArray: FormArray)
-   {
-      // TODO
-   }
-
-   // TODO: Modify the below for data structure changes in test_data.ts.
-   private makePositiveTestUnitContinuationTests(): PositiveTestUnitContinuationTests
+   private makeOnePositiveTestUnitContinuationTests(testUnitNum: number | null = null): PositiveTestUnitContinuationTests
    {
       return {
-         positiveTestUnitNumber: null,
+         positiveTestUnitNumber: testUnitNum,
          rvSourcedTests: this.makeSelectiveAgarTestSuite(),
          ttSourcedTests: this.makeSelectiveAgarTestSuite()
       };
@@ -70,21 +80,13 @@ export class StagePosContComponent implements OnChanges {
 
    private makeSelectiveAgarTestSuite(): SelectiveAgarsTestSuite
    {
-      return ({
-         he: this.makeSelectiveAgarTests(),
-         xld: this.makeSelectiveAgarTests(),
-         bs_24h: this.makeSelectiveAgarTests(),
-         bs_48h: this.makeSelectiveAgarTests(),
-      });
-   }
-
-   private makeSelectiveAgarTests(): SelectiveAgarTests
-   {
       const numIsolates = this.defaultNumIsolatesPerSelectiveAgarPlate;
-      return ({
-         colonyAppearance: null,
-         isolateTests: Array.from(Array(numIsolates), () => makeEmptyIsolateTestSequence())
-      });
+      return {
+         he: Array.from(Array(numIsolates), () => makeEmptyIsolateTestSequence()),
+         xld: Array.from(Array(numIsolates), () => makeEmptyIsolateTestSequence()),
+         bs24h: Array.from(Array(numIsolates), () => makeEmptyIsolateTestSequence()),
+         bs48h: Array.from(Array(numIsolates), () => makeEmptyIsolateTestSequence()),
+      };
    }
 }
 

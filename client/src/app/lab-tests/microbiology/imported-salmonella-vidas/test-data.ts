@@ -11,7 +11,7 @@ export interface TestData {
    mBrothData:   MBrothData;
    vidasData:    VidasData;
    controlsData: ControlsData;
-   posContData: PositiveContinuationData;
+   posContData:  PositivesContinuationData;
    wrapupData:   WrapupData;
 }
 
@@ -75,10 +75,10 @@ export interface ControlsData {
    bacterialControlsUsed?: boolean | null;
 }
 
-export interface PositiveContinuationData
+export interface PositivesContinuationData
 {
    positiveTestUnitContinuationTestss: PositiveTestUnitContinuationTests[];
-   controls: PositiveContinuationControlsData;
+   controls: PositivesContinuationControlsData | null;
 }
 
 export interface PositiveTestUnitContinuationTests
@@ -91,8 +91,8 @@ export interface PositiveTestUnitContinuationTests
 export interface SelectiveAgarsTestSuite {
    he: IsolateTestSequence[];
    xld: IsolateTestSequence[];
-   bs_24h: IsolateTestSequence[];
-   bs_48h: IsolateTestSequence[];
+   bs24h: IsolateTestSequence[];
+   bs48h: IsolateTestSequence[];
 }
 
 export interface IsolateTestSequence {
@@ -106,9 +106,7 @@ export interface IsolateTestSequence {
    polyAIPlusVi?: string | null;
    polyO?: string | null;
 
-   declaredFailureTimestamp: string | null;
-   failureReason: string | null;
-   failureNotes: string | null;
+   failure?: IsolateTestSequenceFailure | null;
 }
 
 export interface SlantTubeTest {
@@ -118,7 +116,13 @@ export interface SlantTubeTest {
    gas: string | null;
 }
 
-export interface PositiveContinuationControlsData
+export interface IsolateTestSequenceFailure {
+   declaredAt: string;
+   reason: string;
+   notes: string | null;
+}
+
+export interface PositivesContinuationControlsData
 {
    salmonellaGaminara: IsolateTestSequence;
    salmonellaDiarizonae: IsolateTestSequence;
@@ -140,9 +144,8 @@ export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY'
 
 export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_AFTER_ANALYSIS' | 'ISOLATES_SENT' | 'OTHER';
 
-// Empty test data should define all fields necessary to reach the leaf data elements which are bound
-
-// to form controls, other than the leaf data elements themselves.
+// Empty test data should define all fields necessary to reach the leaf data elements
+// which are bound to form controls, other than the leaf data elements themselves.
 export function emptyTestData(): TestData {
    return {
       prepData: {},
@@ -153,15 +156,12 @@ export function emptyTestData(): TestData {
       mBrothData: {},
       vidasData: {},
       controlsData: {},
-      posContData: {
-         positiveTestUnitContinuationTestss: [],
-         controls: makeEmptyPositiveContinuationControls()
-      },
+      posContData: { positiveTestUnitContinuationTestss: [], controls: null },
       wrapupData: {},
    };
 }
 
-function makeEmptyPositiveContinuationControls(): PositiveContinuationControlsData
+export function makeEmptyPositivesContinuationControls(): PositivesContinuationControlsData
 {
    return {
       salmonellaGaminara: makeEmptyIsolateTestSequence(),
@@ -262,13 +262,7 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
          collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
       }),
-      posContData: new FormGroup( {
-         positiveTestUnitContinuationTestss: new FormArray(
-            (testData.posContData && testData.posContData.positiveTestUnitContinuationTestss || [])
-               .map(makePositiveTestUnitContinuationTestsFormGroup)
-         ),
-         controls: makePositiveContinuationControlsFormGroup(testData.posContData.controls),
-      }),
+      posContData: makePosContDataFormGroup(testData),
       wrapupData: new FormGroup({
          reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
@@ -277,7 +271,25 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
    });
 }
 
-function makePositiveContinuationControlsFormGroup(posContControlsData: PositiveContinuationControlsData): FormGroup
+// Omit the controls part of the form group if not present in test data. It will be set
+// programmatically as needed.
+function makePosContDataFormGroup(testData: TestData)
+{
+   const positiveTestUnitContinuationTestss = new FormArray(
+      (testData.posContData.positiveTestUnitContinuationTestss || [])
+         .map(makePositiveTestUnitContinuationTestsFormGroup)
+   );
+
+   if ( testData.posContData.controls != null )
+      return new FormGroup({
+         positiveTestUnitContinuationTestss,
+         controls: makePositivesContinuationControlsFormGroup(testData.posContData.controls),
+      });
+   else
+      return new FormGroup({ positiveTestUnitContinuationTestss });
+}
+
+export function makePositivesContinuationControlsFormGroup(posContControlsData: PositivesContinuationControlsData): FormGroup
 {
    return new FormGroup({
       salmonellaGaminara: makeIsolateTestSequenceFormGroup(posContControlsData.salmonellaGaminara),
@@ -306,8 +318,8 @@ function makeSelectiveAgarsTestSuiteFormGroup(selAgarsTestSuite: SelectiveAgarsT
    return new FormGroup({
       he: makeIsolateTestSequencesFormArray(selAgarsTestSuite.he),
       xld: makeIsolateTestSequencesFormArray(selAgarsTestSuite.xld),
-      bs_24h: makeIsolateTestSequencesFormArray(selAgarsTestSuite.bs_24h),
-      bs_48h: makeIsolateTestSequencesFormArray(selAgarsTestSuite.bs_48h),
+      bs24h: makeIsolateTestSequencesFormArray(selAgarsTestSuite.bs24h),
+      bs48h: makeIsolateTestSequencesFormArray(selAgarsTestSuite.bs48h),
    });
 }
 
@@ -328,6 +340,7 @@ export function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTes
       polyHAZ: new FormControl(isolateTestSequence.polyHAZ),
       polyAIPlusVi: new FormControl(isolateTestSequence.polyAIPlusVi),
       polyO: new FormControl(isolateTestSequence.polyO),
+      // The failure structure is omitted, will be inserted programmatically as needed.
    });
 }
 
@@ -534,7 +547,7 @@ function posContTestUnitsStatusCode(contTestss: PositiveTestUnitContinuationTest
    return 'c';
 }
 
-function posContControlsStatusCode(controls: PositiveContinuationControlsData): FieldValuesStatusCode
+function posContControlsStatusCode(controls: PositivesContinuationControlsData): FieldValuesStatusCode
 {
    const salmonellaGaminaraStatus =
       isolateTestSequenceStatus(controls.salmonellaGaminara, false, true);
@@ -582,17 +595,19 @@ function selectiveAgarsTestSuiteComplete(selAgarsTestSuite: SelectiveAgarsTestSu
    return (
       isolateTestsComplete(selAgarsTestSuite.he, minTestSeqsPerSelAgar)     &&
       isolateTestsComplete(selAgarsTestSuite.xld, minTestSeqsPerSelAgar)    &&
-      isolateTestsComplete(selAgarsTestSuite.bs_24h, minTestSeqsPerSelAgar) &&
-      isolateTestsComplete(selAgarsTestSuite.bs_48h, minTestSeqsPerSelAgar)
+      isolateTestsComplete(selAgarsTestSuite.bs24h, minTestSeqsPerSelAgar) &&
+      isolateTestsComplete(selAgarsTestSuite.bs48h, minTestSeqsPerSelAgar)
    );
 }
 
 function isolateTestsComplete(isolateTestSeqs: IsolateTestSequence[], minTestSeqs: number): boolean
 {
-   if ( isolateTestSeqs.length < minTestSeqs )
+   const nonFailedTestSeqs = isolateTestSeqs.filter(testSeq => testSeq.failure == null);
+
+   if ( nonFailedTestSeqs.length < minTestSeqs )
       return false;
 
-   for ( const isolateTestSeq of isolateTestSeqs )
+   for ( const isolateTestSeq of nonFailedTestSeqs )
    {
       if (isolateTestSequenceStatus(isolateTestSeq) !== 'c')
          return false;
@@ -635,7 +650,7 @@ function isolateTestSequenceStatus(isolate: IsolateTestSequence, onlySlantTubesR
       if ( !isControl && !isolate.vitekDetection && !isolate.api20eDetection )
          return 'c';
 
-      // TODO: Need param from lab group config here to determine whether serology is required.
+      // TODO: Need param from lab group config here to determine whether serology is required (not required for now).
       // if ( serologyRequired)
       //    return isolate.polyHAZ != null && isolate.polyAIPlusVi != null && isolate.polyO != null ? 'c' : 'i';
       return 'c';
