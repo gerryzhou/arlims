@@ -1,8 +1,9 @@
+
+
 StagePosContComponent
   When there are no test units and some Vidas results are positive:
     Add button offering user to create tests for positives.
-    Fill or replace the controls form group at the same time if it has no controls.
-  In html, do no rendering if controls form group is empty.
+    Controls section should be conditional on controlsFormGroupInitialized member.
 
 Commit Notes
 ------------
@@ -132,6 +133,7 @@ RV-7361256
 TT-228181
 BG-7718281
 I2KI-7948490
+INC-12211
 XX-112
 XX-113
 MB-12312312

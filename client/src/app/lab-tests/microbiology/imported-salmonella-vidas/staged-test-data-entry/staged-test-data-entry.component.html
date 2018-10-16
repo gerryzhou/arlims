@@ -82,6 +82,7 @@
          <app-stage-pos-cont class="test-stage"
             [form]="testDataForm.get('posContData')"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers">
+            [testConfig]="testConfig"
             [conflicts]="conflictsTestData.posContData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances"

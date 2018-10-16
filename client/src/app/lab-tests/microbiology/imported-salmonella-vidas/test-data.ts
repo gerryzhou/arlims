@@ -3,6 +3,7 @@ import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../test-stages';
 import {SamplingMethod} from '../sampling-methods';
 import {arraysEqual} from '../../../shared/util/data-objects';
+import {TestConfig} from './test-config';
 
 export interface TestData {
    prepData:     PrepData;
@@ -78,7 +79,7 @@ export interface ControlsData {
 export interface PositivesContinuationData
 {
    positiveTestUnitContinuationTestss: PositiveTestUnitContinuationTests[];
-   controls: PositivesContinuationControlsData | null;
+   controls: PositivesContinuationControlsData;
 }
 
 export interface PositiveTestUnitContinuationTests
@@ -86,6 +87,18 @@ export interface PositiveTestUnitContinuationTests
    positiveTestUnitNumber: number | null;
    rvSourcedTests: SelectiveAgarsTestSuite;
    ttSourcedTests: SelectiveAgarsTestSuite;
+}
+
+export interface PositivesContinuationControlsData
+{
+   salmonellaGaminara: SelectiveAgarsTestSuite;
+   salmonellaDiarizonae: SelectiveAgarsTestSuite;
+   salmonellaControlsSatisfactory: boolean | null;
+   pVulgarisApiVitekDetection: boolean | null;
+   pVulgarisControlSatisfactory: boolean | null;
+   pAerugiOxidaseDetection: boolean | null;
+   pAerugiControlSatisfactory: boolean | null;
+   medium: SelectiveAgarsTestSuite;
 }
 
 export interface SelectiveAgarsTestSuite {
@@ -96,7 +109,7 @@ export interface SelectiveAgarsTestSuite {
 }
 
 export interface IsolateTestSequence {
-   colonyAppearance: 'T' | 'AT'| 'NT'| 'NG' | null;
+   colonyAppearance: ColonyAppearance | null;
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
    oxidaseDetection?: boolean | null;
@@ -122,27 +135,18 @@ export interface IsolateTestSequenceFailure {
    notes: string | null;
 }
 
-export interface PositivesContinuationControlsData
-{
-   salmonellaGaminara: IsolateTestSequence;
-   salmonellaDiarizonae: IsolateTestSequence;
-   salmonellaControlsSatisfactory: boolean | null;
-   pVulgarisApiVitekDetection: boolean | null;
-   pVulgarisControlSatisfactory: boolean | null;
-   pAerugiOxidaseDetection: boolean | null;
-   pAerugiControlSatisfactory: boolean | null;
-   mediumControl: IsolateTestSequence;
-}
-
 export interface WrapupData {
    reserveSampleDisposition?: ReserveSampleDisposition | null;
    reserveSampleDestinations?: string | null;
    reserveSampleOtherDescription?: string | null;
 }
 
+export type ColonyAppearance = 'T' | 'AT'| 'NT'| 'NG';
+
 export type LabelAttachmentType = 'NONE' | 'ATTACHED_ORIGINAL' | 'ATTACHED_COPY' | 'SUBMITTED_ALONE';
 
 export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_AFTER_ANALYSIS' | 'ISOLATES_SENT' | 'OTHER';
+
 
 // Empty test data should define all fields necessary to reach the leaf data elements
 // which are bound to form controls, other than the leaf data elements themselves.
@@ -156,7 +160,7 @@ export function emptyTestData(): TestData {
       mBrothData: {},
       vidasData: {},
       controlsData: {},
-      posContData: { positiveTestUnitContinuationTestss: [], controls: null },
+      posContData: null,
       wrapupData: {},
    };
 }
@@ -164,15 +168,30 @@ export function emptyTestData(): TestData {
 export function makeEmptyPositivesContinuationControls(): PositivesContinuationControlsData
 {
    return {
-      salmonellaGaminara: makeEmptyIsolateTestSequence(),
-      salmonellaDiarizonae: makeEmptyIsolateTestSequence(),
+      salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1),
+      salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1),
       salmonellaControlsSatisfactory: null,
       pVulgarisApiVitekDetection: null,
       pVulgarisControlSatisfactory: null,
       pAerugiOxidaseDetection: null,
       pAerugiControlSatisfactory: null,
-      mediumControl: makeEmptyIsolateTestSequence()
+      medium: makeEmptySelectiveAgarsTestSuite(1),
    };
+}
+
+export function makeEmptySelectiveAgarsTestSuite(numIsolates: number): SelectiveAgarsTestSuite
+{
+   return {
+      he:    makeEmptyIsolateTestSequences(numIsolates),
+      xld:   makeEmptyIsolateTestSequences(numIsolates),
+      bs24h: makeEmptyIsolateTestSequences(numIsolates),
+      bs48h: makeEmptyIsolateTestSequences(numIsolates),
+   };
+}
+
+function makeEmptyIsolateTestSequences(numIsolates: number)
+{
+   return Array.from(Array(numIsolates), makeEmptyIsolateTestSequence);
 }
 
 export function makeEmptyIsolateTestSequence(): IsolateTestSequence
@@ -262,7 +281,7 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
          collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
       }),
-      posContData: makePosContDataFormGroup(testData),
+      posContData: makePositivesContinuationDataFormGroup(testData.posContData),
       wrapupData: new FormGroup({
          reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
@@ -271,36 +290,28 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
    });
 }
 
-// Omit the controls part of the form group if not present in test data. It will be set
-// programmatically as needed.
-function makePosContDataFormGroup(testData: TestData)
+export function makePositivesContinuationDataFormGroup(posContData: PositivesContinuationData | null): FormGroup
 {
-   const positiveTestUnitContinuationTestss = new FormArray(
-      (testData.posContData.positiveTestUnitContinuationTestss || [])
-         .map(makePositiveTestUnitContinuationTestsFormGroup)
-   );
+   const formValidatorFunctions = [];  // Put form-level validation here if any.
 
-   if ( testData.posContData.controls != null )
-      return new FormGroup({
-         positiveTestUnitContinuationTestss,
-         controls: makePositivesContinuationControlsFormGroup(testData.posContData.controls),
-      });
-   else
-      return new FormGroup({ positiveTestUnitContinuationTestss });
+   if ( posContData == null )
+      return new FormGroup({}, formValidatorFunctions);
+
+   const positiveTestUnitContinuationTestss =
+      makePositiveTestUnitContinuationTestssFormArray(posContData.positiveTestUnitContinuationTestss);
+
+   const controls = makePositivesContinuationControlsFormGroup(posContData.controls);
+
+   return new FormGroup({ positiveTestUnitContinuationTestss, controls }, formValidatorFunctions);
 }
 
-export function makePositivesContinuationControlsFormGroup(posContControlsData: PositivesContinuationControlsData): FormGroup
+export function makePositiveTestUnitContinuationTestssFormArray(posTestUnitContTestss: PositiveTestUnitContinuationTests[])
 {
-   return new FormGroup({
-      salmonellaGaminara: makeIsolateTestSequenceFormGroup(posContControlsData.salmonellaGaminara),
-      salmonellaDiarizonae: makeIsolateTestSequenceFormGroup(posContControlsData.salmonellaDiarizonae),
-      salmonellaControlsSatisfactory: new FormControl(posContControlsData.salmonellaControlsSatisfactory),
-      pVulgarisApiVitekDetection: new FormControl(posContControlsData.pVulgarisApiVitekDetection),
-      pVulgarisControlSatisfactory: new FormControl(posContControlsData.pVulgarisControlSatisfactory),
-      pAerugiOxidaseDetection: new FormControl(posContControlsData.pAerugiOxidaseDetection),
-      pAerugiControlSatisfactory: new FormControl(posContControlsData.pAerugiControlSatisfactory),
-      mediumControl: makeIsolateTestSequenceFormGroup(posContControlsData.mediumControl),
-   });
+   return new FormArray(
+      posTestUnitContTestss.map(
+         makePositiveTestUnitContinuationTestsFormGroup
+      )
+   );
 }
 
 // Make continuation testing form group for one positive test unit.
@@ -310,6 +321,20 @@ export function makePositiveTestUnitContinuationTestsFormGroup(posContTests: Pos
       positiveTestUnitNumber: new FormControl(posContTests.positiveTestUnitNumber),
       rvSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.rvSourcedTests),
       ttSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.ttSourcedTests),
+   });
+}
+
+export function makePositivesContinuationControlsFormGroup(posContControlsData: PositivesContinuationControlsData): FormGroup
+{
+   return new FormGroup({
+      salmonellaGaminara: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaGaminara),
+      salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaDiarizonae),
+      salmonellaControlsSatisfactory: new FormControl(posContControlsData.salmonellaControlsSatisfactory),
+      pVulgarisApiVitekDetection: new FormControl(posContControlsData.pVulgarisApiVitekDetection),
+      pVulgarisControlSatisfactory: new FormControl(posContControlsData.pVulgarisControlSatisfactory),
+      pAerugiOxidaseDetection: new FormControl(posContControlsData.pAerugiOxidaseDetection),
+      pAerugiControlSatisfactory: new FormControl(posContControlsData.pAerugiControlSatisfactory),
+      medium: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.medium),
    });
 }
 
@@ -356,7 +381,7 @@ function makeSlantTubeTestFormGroup(slantTubeTest: SlantTubeTest): FormGroup
 
 interface Stage {
    name: string;
-   statusCodeFn: (TestData) => FieldValuesStatusCode;
+   statusCodeFn: (TestData, TestConfig) => FieldValuesStatusCode;
 }
 
 // This structure defines the test stage names and their status computations,
@@ -470,6 +495,7 @@ function vidasStatusCode(testData: TestData): FieldValuesStatusCode
 {
    const data = testData.vidasData;
    const spiking = spikingSpecified(testData);
+
    return statusForRequiredFieldValues(
       [
           data.instrumentId,
@@ -511,15 +537,17 @@ function controlsStatusCode(testData: TestData): FieldValuesStatusCode
    }
 }
 
-function posContStatusCode(testData: TestData): FieldValuesStatusCode
+function posContStatusCode(testData: TestData, testConfig: TestConfig | null): FieldValuesStatusCode
 {
    const positivesData = testData.posContData;
    if ( positivesData == null )
       return 'e';
 
-   const testUnitsStatus = posContTestUnitsStatusCode(positivesData.positiveTestUnitContinuationTestss, testData.vidasData);
+   const testUnitsStatus =
+      posContTestUnitsStatusCode(positivesData.positiveTestUnitContinuationTestss, testData.vidasData, testConfig);
 
-   const controlsStatus = posContControlsStatusCode(positivesData.controls);
+   const controlsStatus =
+      posContControlsStatusCode(positivesData.controls, testConfig);
 
    return (
         testUnitsStatus === 'e' && controlsStatus === 'e' ? 'e'
@@ -528,7 +556,13 @@ function posContStatusCode(testData: TestData): FieldValuesStatusCode
    );
 }
 
-function posContTestUnitsStatusCode(contTestss: PositiveTestUnitContinuationTests[], vidasData: VidasData): FieldValuesStatusCode
+function posContTestUnitsStatusCode
+   (
+      contTestss: PositiveTestUnitContinuationTests[],
+      vidasData: VidasData,
+      testConfig: TestConfig | null
+   )
+   : FieldValuesStatusCode
 {
    if ( !contTestss || contTestss.length === 0 )
       return 'e';
@@ -540,119 +574,150 @@ function posContTestUnitsStatusCode(contTestss: PositiveTestUnitContinuationTest
 
    for ( const contTests of contTestss )
    {
-      if ( !positiveTestUnitContinuationTestsComplete(contTests) )
+      if ( !positiveTestUnitContinuationTestsComplete(contTests, testConfig) )
          return 'i';
    }
 
    return 'c';
 }
 
-function posContControlsStatusCode(controls: PositivesContinuationControlsData): FieldValuesStatusCode
+function posContControlsStatusCode
+   (
+      controls: PositivesContinuationControlsData | null,
+      testConfig: TestConfig | null
+   )
+   : FieldValuesStatusCode
 {
-   const salmonellaGaminaraStatus =
-      isolateTestSequenceStatus(controls.salmonellaGaminara, false, true);
-   const salmonellaDiarizonaeStatus =
-      isolateTestSequenceStatus(controls.salmonellaDiarizonae, true, true);
-   const mediumControlStatus =
-      isolateTestSequenceStatus(controls.mediumControl, false, true);
-
-   if ( salmonellaGaminaraStatus === 'e' &&
-        salmonellaDiarizonaeStatus === 'e' &&
-        controls.salmonellaControlsSatisfactory == null &&
-        controls.pVulgarisApiVitekDetection     == null &&
-        controls.pVulgarisControlSatisfactory   == null &&
-        controls.pAerugiOxidaseDetection        == null &&
-        controls.pAerugiControlSatisfactory     == null &&
-        mediumControlStatus === 'e' )
+   if ( controls == null )
       return 'e';
 
-   if ( salmonellaGaminaraStatus === 'c' &&
-        salmonellaDiarizonaeStatus === 'c' &&
-        controls.salmonellaControlsSatisfactory != null &&
-        controls.pVulgarisApiVitekDetection     != null &&
-        controls.pVulgarisControlSatisfactory   != null &&
-        controls.pAerugiOxidaseDetection        != null &&
-        controls.pAerugiControlSatisfactory     != null &&
-        mediumControlStatus === 'c' )
+   if ( controls.salmonellaControlsSatisfactory    != null &&
+        controls.pVulgarisApiVitekDetection        != null &&
+        controls.pVulgarisControlSatisfactory      != null &&
+        controls.pAerugiOxidaseDetection           != null &&
+        controls.pAerugiControlSatisfactory        != null &&
+        selectiveAgarsTestSuiteComplete(controls.salmonellaGaminara, false, true, testConfig)  &&
+        selectiveAgarsTestSuiteComplete(controls.salmonellaDiarizonae, true, true, testConfig) &&
+        selectiveAgarsTestSuiteComplete(controls.medium, false, true, testConfig) )
       return 'c';
 
    return 'i';
 }
 
-function positiveTestUnitContinuationTestsComplete(contTests: PositiveTestUnitContinuationTests): boolean
+function positiveTestUnitContinuationTestsComplete
+   (
+      contTests: PositiveTestUnitContinuationTests,
+      testConfig: TestConfig | null
+   )
+   : boolean
 {
    return (
       contTests.positiveTestUnitNumber != null &&
-      selectiveAgarsTestSuiteComplete(contTests.rvSourcedTests) &&
-      selectiveAgarsTestSuiteComplete(contTests.ttSourcedTests)
+      selectiveAgarsTestSuiteComplete(contTests.rvSourcedTests, false, false, testConfig) &&
+      selectiveAgarsTestSuiteComplete(contTests.ttSourcedTests, false, false, testConfig)
    );
 }
 
-function selectiveAgarsTestSuiteComplete(selAgarsTestSuite: SelectiveAgarsTestSuite): boolean
+function selectiveAgarsTestSuiteComplete
+   (
+      selAgarsTestSuite: SelectiveAgarsTestSuite,
+      onlySlantTubesRequired = false,
+      isControl = false,
+      testConfig: TestConfig | null
+   )
+   : boolean
 {
-   const minTestSeqsPerSelAgar = 2; // TODO: Need param passed from lab group config here.
+   const minSelAgarsRequired = isControl ? testConfig.positiveTestUnitControlsMinimumSelectiveAgars || 1 : 4;
+   const minIsolatesPerSelAgar = isControl ? 1 : testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2;
 
-   return (
-      isolateTestsComplete(selAgarsTestSuite.he, minTestSeqsPerSelAgar)     &&
-      isolateTestsComplete(selAgarsTestSuite.xld, minTestSeqsPerSelAgar)    &&
-      isolateTestsComplete(selAgarsTestSuite.bs24h, minTestSeqsPerSelAgar) &&
-      isolateTestsComplete(selAgarsTestSuite.bs48h, minTestSeqsPerSelAgar)
-   );
+   const heStatuses =
+      selAgarsTestSuite.he
+         .filter(testSeq => testSeq.failure == null)
+         .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+   const xldStatuses =
+       selAgarsTestSuite.xld
+       .filter(testSeq => testSeq.failure == null)
+       .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+   const bs24Statuses =
+      selAgarsTestSuite.bs24h
+      .filter(testSeq => testSeq.failure == null)
+      .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+   const bs48Statuses =
+      selAgarsTestSuite.bs48h
+         .filter(testSeq => testSeq.failure == null)
+         .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+
+   let completeSelAgars = 0;
+
+   const heComplete = heStatuses.length >= minIsolatesPerSelAgar && heStatuses.every(status => status === 'c');
+   const heEmpty = heStatuses.every(status => status === 'e');
+   if ( !heComplete && !heEmpty ) return false;
+   if ( heComplete ) completeSelAgars += 1;
+
+   const xldComplete = xldStatuses.length >= minIsolatesPerSelAgar && xldStatuses.every(status => status === 'c');
+   const xldEmpty = xldStatuses.every(status => status === 'e');
+   if ( !xldComplete && !xldEmpty ) return false;
+   if ( xldComplete ) completeSelAgars += 1;
+
+   const bs24Complete = bs24Statuses.length >= minIsolatesPerSelAgar && bs24Statuses.every(status => status === 'c');
+   const bs24Empty = bs24Statuses.every(status => status === 'e');
+   if ( !bs24Complete && !bs24Empty ) return false;
+   if ( bs24Complete ) completeSelAgars += 1;
+
+   const bs48Complete = bs48Statuses.length >= minIsolatesPerSelAgar && bs48Statuses.every(status => status === 'c');
+   const bs48Empty = bs48Statuses.every(status => status === 'e');
+   if ( !bs48Complete && !bs48Empty ) return false;
+   if ( bs48Complete ) completeSelAgars += 1;
+
+   return completeSelAgars >= minSelAgarsRequired;
 }
 
-function isolateTestsComplete(isolateTestSeqs: IsolateTestSequence[], minTestSeqs: number): boolean
+function isolateTestSequenceStatus
+   (
+      testSeq: IsolateTestSequence,
+      onlySlantTubesRequired = false,
+      testConfig: TestConfig | null
+   )
+   : FieldValuesStatusCode
 {
-   const nonFailedTestSeqs = isolateTestSeqs.filter(testSeq => testSeq.failure == null);
+   if ( testSeq.colonyAppearance === 'NT' || testSeq.colonyAppearance === 'NG' )
+      return testSeq.failure == null ? 'i' : 'c';
 
-   if ( nonFailedTestSeqs.length < minTestSeqs )
-      return false;
-
-   for ( const isolateTestSeq of nonFailedTestSeqs )
-   {
-      if (isolateTestSequenceStatus(isolateTestSeq) !== 'c')
-         return false;
-   }
-
-   return true;
-}
-
-function isolateTestSequenceStatus(isolate: IsolateTestSequence, onlySlantTubesRequired = false, isControl = false): FieldValuesStatusCode
-{
-   if ( !isControl && (isolate.colonyAppearance === 'NT' || isolate.colonyAppearance === 'NG') )
-      return 'c';
-
-   const tsiStatus = slantTubeTestStatus(isolate.tsiTubeTest);
-   const liaStatus = slantTubeTestStatus(isolate.liaTubeTest);
+   const tsiStatus = slantTubeTestStatus(testSeq.tsiTubeTest);
+   const liaStatus = slantTubeTestStatus(testSeq.liaTubeTest);
 
    if ( tsiStatus === 'e' &&
         liaStatus === 'e' &&
-        isolate.oxidaseDetection == null &&
-        isolate.vitekDetection   == null &&
-        isolate.api20eDetection  == null &&
-        isolate.polyHAZ          == null &&
-        isolate.polyAIPlusVi     == null &&
-        isolate.polyO            == null )
+        testSeq.oxidaseDetection == null &&
+        testSeq.vitekDetection   == null &&
+        testSeq.api20eDetection  == null &&
+        testSeq.polyHAZ          == null &&
+        testSeq.polyAIPlusVi     == null &&
+        testSeq.polyO            == null )
       return 'e';
 
    if ( tsiStatus === 'c' && liaStatus === 'c' )
    {
-      if ( onlySlantTubesRequired ||
-           !isControl && isSlantTubesStopConditionSatisfied(isolate.tsiTubeTest, isolate.liaTubeTest) )
+      if ( onlySlantTubesRequired )
          return 'c';
 
-      if ( !isControl && isolate.oxidaseDetection === true )
+      if ( slantTubeResultsMixed(testSeq.tsiTubeTest, testSeq.liaTubeTest) )
+         return testSeq.failure == null ? 'i' : 'c';
+
+      if ( testSeq.oxidaseDetection === true )
          return 'c';
-      if ( isolate.oxidaseDetection == null )
+      if ( testSeq.oxidaseDetection == null )
          return 'i';
 
-      if ( isolate.vitekDetection == null && isolate.api20eDetection == null )
+      if ( testSeq.vitekDetection == null && testSeq.api20eDetection == null )
          return 'i';
-      if ( !isControl && !isolate.vitekDetection && !isolate.api20eDetection )
+
+      if ( !testSeq.vitekDetection && !testSeq.api20eDetection )
          return 'c';
 
-      // TODO: Need param from lab group config here to determine whether serology is required (not required for now).
-      // if ( serologyRequired)
-      //    return isolate.polyHAZ != null && isolate.polyAIPlusVi != null && isolate.polyO != null ? 'c' : 'i';
+      if ( testConfig.positivesContinuationTestingSerologyRequired )
+         return testSeq.polyHAZ != null && testSeq.polyAIPlusVi != null && testSeq.polyO != null ? 'c' : 'i';
+
       return 'c';
    }
    else
@@ -668,7 +733,7 @@ function slantTubeTestStatus(slantTest: SlantTubeTest): FieldValuesStatusCode
    return 'i';
 }
 
-function isSlantTubesStopConditionSatisfied(tsiTest: SlantTubeTest, liaTest): boolean
+function slantTubeResultsMixed(tsiTest: SlantTubeTest, liaTest): boolean
 {
    return (
       ( tsiTest.slant === 'A' && tsiTest.butt === 'A' &&
@@ -695,19 +760,19 @@ function wrapupStatusCode(testData: TestData): FieldValuesStatusCode
    return 'c';
 }
 
-export function getTestStageStatuses(testData: TestData): TestStageStatus[]
+export function getTestStageStatuses(testData: TestData, testConfig: TestConfig | null): TestStageStatus[]
 {
    return TEST_STAGES.map(stage => ({
          stageName: stage.name,
-         fieldValuesStatus: stage.statusCodeFn(testData)
+         fieldValuesStatus: stage.statusCodeFn(testData, testConfig)
    }));
 }
 
-export function firstNonCompleteTestStageName(testData: TestData): string | null
+export function firstNonCompleteTestStageName(testData: TestData, testConfig: TestConfig | null): string | null
 {
    for (const stage of TEST_STAGES)
    {
-      if (stage.statusCodeFn(testData) !== 'c') return stage.name;
+      if (stage.statusCodeFn(testData, testConfig) !== 'c') return stage.name;
    }
    return null;
 }

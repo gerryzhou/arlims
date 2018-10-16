@@ -8,7 +8,7 @@ export interface LabGroupTestData {
 
    sampleInTest: SampleInTest;
 
-   labGroupTestConfig: any;
+   labGroupTestConfig: any | null;
 
    labResourcesByType: Map<string, LabResource[]>;
 

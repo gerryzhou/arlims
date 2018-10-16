@@ -1,12 +1,16 @@
-Colony appearance is really per-colony as indicated in form.
+From meeting 2018/10/15
+  - Send app test link to various all involved.
+    Need to setup users first or they won't be able to login.
+    Set longer sync time so app can stay up without making large logs.
+  - Controls need to allow full sel. agar test suite, not just one as currently represented.
+    Let lab group config determine number required.
+  - Rename test to "Salmonella".
+  - For API/Vitek, record result code and identification conclusion.  Allow attaching output results file.
+  - Add narrative textbox for PFGE/Serology/WGS results.
+  - (app) Add button to immediately refresh from FACTS.
+  - Try barcode scanners with new laptops, decide if new barcode scanners are needed.
 
-For controls, only need to fill the row for one sel. agar type.
-  Keep all agar types available but can be considered complete if at least one are complete and rest are empty).
-  Controls always complete the full isolate test sequence, there are no stop conditions.
-
-
-Need to be able to represent repeated tries per isolate.
-  Add one or more fields indicating why an isolate is incomplete.
+Maybe standardize failure reasons for isolate test sequences:
     slant tubes conclusive
     oxidase negative
     api_vitek_negative
@@ -15,6 +19,13 @@ Need to be able to represent repeated tries per isolate.
     no_id
     unacceptable
     doubtful
+
+
+Commit Notes
+------------
+In positive continuation controls add selective agar types where needed.
+
+------------
 
 
 Positive Samples Workflow

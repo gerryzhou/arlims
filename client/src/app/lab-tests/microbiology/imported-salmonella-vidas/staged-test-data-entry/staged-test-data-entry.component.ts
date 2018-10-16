@@ -60,7 +60,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    readonly sampleInTest: SampleInTest;
 
-   readonly testConfig: TestConfig;
+   readonly testConfig: TestConfig | null;
 
    readonly balances: LabResource[] | undefined;
    readonly incubators: LabResource[] | undefined;
@@ -97,12 +97,14 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
 
       const stageParamValue = activatedRoute.snapshot.paramMap.get('stage');
-      this.stage = stageParamValue ? stageParamValue : (firstNonCompleteTestStageName(this.originalTestData) || 'WRAPUP');
+      this.stage =
+         stageParamValue ? stageParamValue
+         : (firstNonCompleteTestStageName(this.originalTestData, this.testConfig) || 'WRAPUP');
       const stageIx = TEST_STAGES.findIndex(ts => ts.name === this.stage);
       this.stageIndex = stageIx !== -1 ? stageIx : null;
 
       this.sampleInTest = labGroupTestData.sampleInTest;
-      this.testConfig = labGroupTestData.labGroupTestConfig;
+      this.testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
       this.testDataForm = makeTestDataFormGroup(this.originalTestData);
 
       const sm = this.originalTestData.preEnrData.samplingMethod;
@@ -146,7 +148,7 @@ export class StagedTestDataEntryComponent implements OnInit {
          this.testDataForm.value,
          this.originalTestData,
          this.originalTestDataMd5,
-         getTestStageStatuses,
+         testData => getTestStageStatuses(testData, this.testConfig),
          this.jsonFieldFormatter
       )
       .subscribe(

@@ -3,7 +3,7 @@ import {emptyTestData, getTestStageStatuses, TestData} from './test-data';
 describe('microbiology imported salmonella vidas test data functions', () => {
 
    it('should yield empty for empty test data', () => {
-      expect(getTestStageStatuses(emptyTestData()))
+      expect(getTestStageStatuses(emptyTestData(), null))
          .toEqual([
             {stageName: 'PREP', fieldValuesStatus: 'e'},
             {stageName: 'PRE-ENR', fieldValuesStatus: 'e'},
@@ -80,7 +80,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          }
       };
 
-      expect(getTestStageStatuses(completeTestData))
+      expect(getTestStageStatuses(completeTestData, null))
          .toEqual([
             {stageName: 'PREP', fieldValuesStatus: 'c'},
             {stageName: 'PRE-ENR', fieldValuesStatus: 'c'},
@@ -147,7 +147,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
          }
       };
 
-      expect(getTestStageStatuses(partialTestData))
+      expect(getTestStageStatuses(partialTestData, null))
          .toEqual([
             {stageName: 'PREP', fieldValuesStatus: 'c'},
             {stageName: 'PRE-ENR', fieldValuesStatus: 'i'},
