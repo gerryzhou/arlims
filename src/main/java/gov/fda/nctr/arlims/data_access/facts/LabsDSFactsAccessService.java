@@ -69,13 +69,15 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             .build();
         restTemplate.setErrorHandler(getResponseErrorHandler());
 
-        log.info("Setting API call connection timeout to " + apiConfig.getConnectTimeout() + ".");
-        log.info("Setting API call read timeout to " + apiConfig.getReadTimeout() + ".");
+        log.info("Setting API call connection and read timeouts to " +
+            apiConfig.getConnectTimeout() + " and " +
+            apiConfig.getReadTimeout() + " respectively.");
 
-        HttpHeaders hdrs = new HttpHeaders();
-        hdrs.add(HttpHeaders.AUTHORIZATION, authorizationHeaderValue(apiConfig));
-        hdrs.add("sourceApplicationID", apiConfig.getAppId());
-        this.fixedHeaders = hdrs;
+        HttpHeaders defaultRequestHeaders = new HttpHeaders();
+        defaultRequestHeaders.add(HttpHeaders.AUTHORIZATION, authorizationHeaderValue(apiConfig));
+        defaultRequestHeaders.add("sourceApplicationID", apiConfig.getAppId());
+        defaultRequestHeaders.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
+        this.fixedHeaders = defaultRequestHeaders;
 
         this.secureRandom = new SecureRandom();
 
