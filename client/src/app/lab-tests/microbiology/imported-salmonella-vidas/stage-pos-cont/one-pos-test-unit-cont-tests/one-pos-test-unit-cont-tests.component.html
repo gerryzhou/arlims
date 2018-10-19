@@ -1,27 +1,46 @@
-<mat-card>
+<div class="main-row" [formGroup]="form">
 
-   <form [formGroup]="form">
+   <div class="medium-stack">
 
-      <div>
-         <h3>Positive Sub/Composite # </h3>
-         <mat-form-field>
-            <input formControlName="positiveTestUnitNumber" type="number" min="1" matInput
-                   placeholder="sub/composite number">
-         </mat-form-field>
+      <div class="test-unit-medium">
+            <span class="test-unit">
+               <span>{{sampleTestUnitsTypeAbrev | titlecase}} # </span>
+               <input class="test-unit-num" matInput type="number" min="1" formControlName="testUnitNumber"
+                      (change)="onTestUnitNumberChanged()">
+            </span>
+         <span class="medium-label">RV</span>
       </div>
 
-      <div class="rv-tt-grid">
+      <app-sel-agars-test-suite
+         [form]="form.controls['rvSourcedTests']"
+         [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNum"
+         [medium]="'RV'">
+      </app-sel-agars-test-suite>
 
-         <div class="rv-label">RV</div>
+   </div>
 
-         <app-sel-agars-test-suite [form]="form.controls['rvSourcedTests']"></app-sel-agars-test-suite>
+   <div class="medium-stack">
 
-         <div class="tt-label">TT</div>
-
-         <app-sel-agars-test-suite [form]="form.controls['ttSourcedTests']"></app-sel-agars-test-suite>
-
+      <div class="test-unit-medium">
+            <span class="test-unit">
+               <span>{{sampleTestUnitsTypeAbrev | titlecase}} # </span>
+               <span class="test-unit-num">{{testUnitNum}}</span>
+            </span>
+         <span class="medium-label">TT</span>
       </div>
 
-   </form>
+      <app-sel-agars-test-suite
+         [form]="form.controls['ttSourcedTests']"
+         [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNum"
+         [medium]="'TT'">
+      </app-sel-agars-test-suite>
 
-</mat-card>
+   </div>
+
+   <div class="expanding-flex-space"></div>
+
+   <button class="close" mat-icon-button *ngIf="showDisposeButton" (click)="onDisposeRequested()">
+      <mat-icon>close</mat-icon>
+   </button>
+
+</div>

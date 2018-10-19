@@ -11,7 +11,7 @@ export interface SamplingMethod {
 
 export interface SampleTestUnits {
    testUnitsCount: number | null;
-   testUnitsType: string | null;
+   testUnitsType: 'subsample' | 'composite' | null;
 }
 
 

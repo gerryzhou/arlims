@@ -1,0 +1,10 @@
+.isolate-row {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: center;
+}
+
+button.remove mat-icon {
+   color: red;
+}
+

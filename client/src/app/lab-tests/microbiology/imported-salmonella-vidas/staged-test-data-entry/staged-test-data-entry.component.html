@@ -2,9 +2,9 @@
 
    <div class="sample-in-test-information">
 
-      <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
-
       <app-sample [sample]="sampleInTest.sample"></app-sample>
+
+      <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
 
       <button mat-button type="submit">Save</button>
 
@@ -71,7 +71,7 @@
 
       <mat-step label="CONTROLS">
          <app-stage-controls class="test-stage"
-            [form]="testDataForm.get('controls')"
+            [form]="testDataForm.get('controlsData')"
             [conflicts]="conflictsTestData.controlsData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances">
@@ -81,11 +81,12 @@
       <mat-step label="POS-CONT">
          <app-stage-pos-cont class="test-stage"
             [form]="testDataForm.get('posContData')"
-            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers">
+            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
+            [sampleTestUnitsType]="sampleTestUnitsType"
             [testConfig]="testConfig"
             [conflicts]="conflictsTestData.posContData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances"
+            [showUnsetAffordances]="showUnsetAffordances">
          </app-stage-pos-cont>
       </mat-step>
 

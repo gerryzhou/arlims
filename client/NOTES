@@ -1,9 +1,34 @@
+Get failure toggling working, then add dialog for failure information.
 
+Isolates actions menu
+  [thumb down] Mark isolate as failed ... => promptRecordIsolateFailure()
+    Dialog for entering failure code/text.
+  [thumb up] Unmark isolate as failed (if failed). => promptClearIsolateFailure()
 
-StagePosContComponent
-  When there are no test units and some Vidas results are positive:
-    Add button offering user to create tests for positives.
-    Controls section should be conditional on controlsFormGroupInitialized member.
+Provide visual indicator than an isolate test seq is marked as failed.
+
+Try changing forms to divs in stages component templates, test.
+
+Allow easy filters by status code.
+  Dropdown maybe add checkbox for each status code.
+
+From meeting 2018/10/15
+  - Rename test to "Salmonella".
+  - For API/Vitek, record result code and identification conclusion.  Allow attaching output results file.
+  - Add narrative textbox for PFGE/Serology/WGS results.
+  - (app) Add button to immediately refresh from FACTS.
+  - Try barcode scanners with new laptops, decide if new barcode scanners are needed.
+
+Maybe standardize failure reasons for isolate test sequences:
+    slant tubes conclusive
+    oxidase negative
+    api_vitek_negative
+    failure_necessitating_restreak
+  failure reason
+    no_id
+    unacceptable
+    doubtful
+
 
 Commit Notes
 ------------
@@ -15,7 +40,7 @@ Add failure substructure to IsolateTestSeq.
 
 Array comparisons in test-data.ts
    Array comparisons may need to be done in a different way because arrays are used at top and intermediate levels in pos cont data.
-     Contents need to be matched not by index but by data within the elements (e.g. positiveTestUnitNumber).
+     Contents need to be matched not by index but by data within the elements (e.g. testUnitNumber).
      Contents for matched items then need to be compared structurally.
 
 

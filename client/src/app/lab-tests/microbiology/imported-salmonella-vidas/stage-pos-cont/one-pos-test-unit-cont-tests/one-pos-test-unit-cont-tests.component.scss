@@ -1,8 +1,49 @@
-.rv-tt-grid {
-   // TODO
+.main-row {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: flex-start;
+   margin-bottom: 30px;
+   border: 5px solid lightgray;
 }
 
-.rv-label,.tt-label {
-   // TODO: large font, maybe bold.
+.test-unit-medium {
+   display: flex;
+   flex-flow: row nowrap;
+   align-items: center;
+   margin-left: -20px;
+   .medium-label {
+      font-size: 120%;
+      font-weight: bold;
+      flex-grow: 0;
+      margin: 5px;
+      padding: 5px;
+   }
+   .test-unit {
+      padding: 5px;
+      .test-unit-num {
+         width: 40px;
+      }
+      span.test-unit-num {
+         padding-right: 15px;
+      }
+   }
+}
+
+
+.medium-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   margin: 0 15px;
+   align-items: center;
+}
+
+.medium-row {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: center;
+   border-left: 5px solid lightgray;
+}
+
+button.close {
 }
 

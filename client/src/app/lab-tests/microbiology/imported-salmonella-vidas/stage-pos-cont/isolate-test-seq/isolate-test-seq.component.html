@@ -1,0 +1,33 @@
+<div class="isolate-row">
+
+   <span>xxxxxxxxxxxxxxxxxxxxxxxxxxx ({{testUnitDescription}}/{{medium}}/{{selectiveAgarDisplayName}}/{{isolateNumber}})</span>
+
+   <div class="expanding-flex-space"></div>
+
+   <div class="isolate-actions">
+      <mat-menu #actionsMenu="matMenu">
+         <div class="menu-item">
+            <button mat-button class="remove" *ngIf="showDisposeButton" (click)="onDisposeRequested()">
+               delete isolate {{isolateNumber}} <mat-icon>delete_forever</mat-icon>
+            </button>
+         </div>
+         <div class="menu-item">
+            <button mat-button class="fail" *ngIf="!this.form.failure" (click)="promptRecordIsolateFailure()">
+               Mark isolate {{isolateNumber}} as failed <mat-icon>thumb_down</mat-icon>
+            </button>
+         </div>
+         <div class="menu-item">
+            <button mat-button class="unfail" *ngIf="!!this.form.failure" (click)="promptClearIsolateFailure()">
+               Mark isolate {{isolateNumber}} as not failed <mat-icon>thumb_up</mat-icon>
+            </button>
+         </div>
+      </mat-menu>
+
+      <div *ngIf="!!this.form.failure"><mat-icon>thumb_down</mat-icon></div>
+
+      <button mat-button type="button" [matMenuTriggerFor]="actionsMenu">
+         <mat-icon>more_vert</mat-icon>
+      </button>
+   </div>
+
+</div>

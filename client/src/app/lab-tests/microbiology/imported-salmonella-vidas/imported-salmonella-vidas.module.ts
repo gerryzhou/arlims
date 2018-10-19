@@ -33,6 +33,7 @@ import {TestReportsListingComponent} from './reports/reports-listing/test-report
 import {FormDataReviewComponent} from './form-data-review/form-data-review.component';
 import {OnePosTestUnitContTestsComponent} from './stage-pos-cont/one-pos-test-unit-cont-tests/one-pos-test-unit-cont-tests.component';
 import {SelAgarsTestSuiteComponent} from './stage-pos-cont/sel-agars-test-suite/sel-agars-test-suite.component';
+import { IsolateTestSeqComponent } from './stage-pos-cont/isolate-test-seq/isolate-test-seq.component';
 
 @NgModule({
    imports: [
@@ -69,6 +70,7 @@ import {SelAgarsTestSuiteComponent} from './stage-pos-cont/sel-agars-test-suite/
       TestReportsListingComponent,
       OnePosTestUnitContTestsComponent,
       SelAgarsTestSuiteComponent,
+      IsolateTestSeqComponent,
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,

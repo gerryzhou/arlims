@@ -1,0 +1,25 @@
+.diffs-vs-vidas-positives-area {
+   display: flex;
+   flex-flow: row nowrap;
+   justify-content: center;
+   .message {
+      padding: 3px 20px;
+      margin: 2px;
+      &.warn {
+         border-left: 10px solid orange;
+         border-right: 10px solid orange;
+      }
+      &.ok {
+         border-left: 10px solid green;
+         border-right: 10px solid green;
+      }
+   }
+}
+
+.test-units-area {
+   // TODO
+}
+
+.controls-area {
+   // TODO
+}

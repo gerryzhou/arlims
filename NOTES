@@ -1,56 +1,10 @@
-From meeting 2018/10/15
-  - Send app test link to various all involved.
-    Need to setup users first or they won't be able to login.
-    Set longer sync time so app can stay up without making large logs.
-  - Controls need to allow full sel. agar test suite, not just one as currently represented.
-    Let lab group config determine number required.
-  - Rename test to "Salmonella".
-  - For API/Vitek, record result code and identification conclusion.  Allow attaching output results file.
-  - Add narrative textbox for PFGE/Serology/WGS results.
-  - (app) Add button to immediately refresh from FACTS.
-  - Try barcode scanners with new laptops, decide if new barcode scanners are needed.
-
-Maybe standardize failure reasons for isolate test sequences:
-    slant tubes conclusive
-    oxidase negative
-    api_vitek_negative
-    failure_necessitating_restreak
-  failure reason
-    no_id
-    unacceptable
-    doubtful
 
 
 Commit Notes
 ------------
-In positive continuation controls add selective agar types where needed.
+
 
 ------------
-
-
-Positive Samples Workflow
--------------------------
-One plate test expandable section or tab per positive composite.
-  If expandable section, collapsed if not started or all finished.
-  If tab, should show some sort of status about plate stage and/or when last modified.
-  Content is a view showing the latest stage (only) of HE, XLD, BS plate testing in a row display.
-    Expandable to show full history for each plate (individually?)
-
-
-One complete workflow per test unit.
-One set of controls no matter how many test units were positive.
-  Need more detail about which stages have controls.
-For each composite c:
-For each incubation media m:
-For each kind of selective agar plate a:
-  Initially we have a plate for (c,m,a), through the stage of making call on Typical/Atypical vs. Not Typical/No Growth (p.2 middle)
-  E.g.: For Composite #3, RV orig inc. media, agar plate BS: Typical
-If Typical/Atypical call, then for each (c,m,a):
-For each isolate # i:
-  We do a TSI test and LIA slant tube tests on (c,a,m,i).
-  And record results for Slant, Butt, H2S and Gas (see table for valid results).
-
-Another 2 controls have to be specified for page 3, one for oxidase and one for api/vitek.
 
 
 
@@ -59,27 +13,8 @@ New Feature Soon for Demo
 Allow searching for sample information for a given lot # of a reagent (media).
 
 
-Work Done
----------
-Pdf report
-  Support any number of subs/composites results.
-  Add audit log.
-  Customize display of some fields, with red highlight for exceptional values.
-
-Deployed to dev and test servers.
-  Systemd installation, custom unpriv user, properties-file driven, logging etc.
-  Removed Tomcat dependency.
-
-Sample refresh from FACTS
-  Syncing algorithm basically finished, needs final testing.
-  Problem reporting to Oracle table as well as app logs.
-  Samples assigned to unregistered employees are assigned to administrative lab group.
-
-
-
 Implement "lab inbox" management over the api directly.
   Then sample/assignment data is always current during management ops which is necessary anyway.
-
 
 Pushing data into FACTS
   Lower priority for now.
@@ -87,7 +22,6 @@ Pushing data into FACTS
 
 Spring Reverse Proxy Setup using Spring Cloud / Zuul
   https://spring.io/guides/tutorials/spring-security-and-angular-js/
-
 
 
 JWT Invalidation

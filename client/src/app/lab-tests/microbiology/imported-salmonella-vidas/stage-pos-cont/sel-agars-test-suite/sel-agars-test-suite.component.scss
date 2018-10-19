@@ -1,0 +1,29 @@
+.sel-agars-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   border-bottom: 3px solid lightgray;
+}
+
+.sel-agar-row {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: flex-start;
+   border-top: 2px solid lightgray;
+}
+
+.sel-agar-label {
+   font-size: 115%;
+   font-weight: bold;
+   width: 65px;
+   background: lightgray;
+   padding: 5px;
+   margin-right: 5px;
+}
+
+.isolate-test-seqs-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   flex-grow: 1;
+}
+
+

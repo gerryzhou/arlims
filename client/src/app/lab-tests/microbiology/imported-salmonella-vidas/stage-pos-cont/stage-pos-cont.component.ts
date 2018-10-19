@@ -25,6 +25,9 @@ export class StagePosContComponent implements OnChanges {
    vidasPositiveSampleTestUnitNumbers: number[] | null = null;
 
    @Input()
+   sampleTestUnitsType: string | null = null;
+
+   @Input()
    testConfig: TestConfig | null;
 
    @Input()
@@ -39,9 +42,16 @@ export class StagePosContComponent implements OnChanges {
    // Whether the controls for positives continuation tests have been created in the form yet.
    formInitialized = false;
 
-   testsFormArray: FormArray | null = null;
+   testUnitsFormArray: FormArray | null = null;
 
    defaultNumIsolatesPerSelectiveAgarPlate = 2;
+
+   // Differences in test numbers represented here vs Vidas positives.
+   testUnitNumbersDiff: TestUnitNumbersDiff;
+   testUnitNumbersDiffMessage: string | null = null;
+   testUnitNumbersDiffMessageIsWarning = false;
+
+   sampleTestUnitsTypeAbrev = 'sub/comp';
 
 
    constructor() { }
@@ -49,21 +59,39 @@ export class StagePosContComponent implements OnChanges {
    ngOnChanges()
    {
       this.formInitialized = Object.keys(this.form.controls).length > 0;
-      this.testsFormArray = this.formInitialized ? this.form.get('positiveTestUnitContinuationTestss') as FormArray : null;
+      this.testUnitsFormArray = this.formInitialized ? this.form.get('positiveTestUnitContinuationTestss') as FormArray : null;
+
+      this.sampleTestUnitsTypeAbrev = this.sampleTestUnitsType === 'subsample' ? 'sub' : 'comp';
+
       this.defaultNumIsolatesPerSelectiveAgarPlate =
          this.testConfig ? this.testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2 : 2;
+
+      this.refreshTestUnitNumbersDiff();
    }
 
-   beginContinuationTests()
+   addOnePositiveTestUnitContinuationTestsFormGroup()
    {
-      this.initFormGroup();
-      this.addOnePositiveTestUnitContinuationTestsFormGroup();
+      if ( !this.formInitialized )
+         this.initFormGroup();
+
+      const onePosContTests: PositiveTestUnitContinuationTests = this.makeOnePositiveTestUnitContinuationTests();
+
+      this.testUnitsFormArray.push(makePositiveTestUnitContinuationTestsFormGroup(onePosContTests));
    }
 
-   beginContinuationTestsForVidasPositives()
+   addUnrepresentedVidasPositivesContinuationTestsFormGroups()
    {
-      this.initFormGroup();
-      this.addMissingVidasPositivesContinuationTestsFormGroups();
+      if ( !this.formInitialized )
+         this.initFormGroup();
+
+      for ( const newTestUnitNum of this.testUnitNumbersDiff.unrepresentedVidasPositives )
+      {
+         const testUnitContTests = this.makeOnePositiveTestUnitContinuationTests(newTestUnitNum);
+         const testUnitContTestsFormGroup = makePositiveTestUnitContinuationTestsFormGroup(testUnitContTests);
+         this.testUnitsFormArray.push(testUnitContTestsFormGroup);
+      }
+
+      this.refreshTestUnitNumbersDiff();
    }
 
    private initFormGroup()
@@ -77,31 +105,48 @@ export class StagePosContComponent implements OnChanges {
          this.form.addControl('controls', controlsFormGroup);
 
          this.formInitialized = true;
-         this.testsFormArray = this.form.get('positiveTestUnitContinuationTestss') as FormArray;
+         this.testUnitsFormArray = this.form.get('positiveTestUnitContinuationTestss') as FormArray;
       }
       else
          console.log('Ignoring attempt to add positives continuation controls form group when this form group is already present.');
    }
 
-   addOnePositiveTestUnitContinuationTestsFormGroup(testUnitNum: number | null = null)
+   private makeOnePositiveTestUnitContinuationTests(testUnitNumber: number | null = null): PositiveTestUnitContinuationTests
    {
-      const newContTests: PositiveTestUnitContinuationTests = this.makeOnePositiveTestUnitContinuationTests(testUnitNum);
-
-      this.testsFormArray.push(makePositiveTestUnitContinuationTestsFormGroup(newContTests));
+      return {
+         testUnitNumber,
+         rvSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate),
+         ttSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate)
+      };
    }
 
-
-   addMissingVidasPositivesContinuationTestsFormGroups()
+   private makeRepresentedTestUnitNumbersDiffVsVidas(): TestUnitNumbersDiff
    {
-      for ( const newTestUnitNum of this.getMissingVidasPositiveTestUnitNumbers() )
+      return {
+         unrepresentedVidasPositives: this.getUnrepresentedVidasPositiveTestUnitNumbers(),
+         representedNotVidasPositive: this.getRepresentedNonVidasPositiveTestUnitNumbers(),
+      };
+   }
+
+   private getRepresentedTestUnitNumbers(): number[]
+   {
+      if ( this.testUnitsFormArray == null )
+         return [];
+
+      const testUnitNumbers = [];
+
+      for ( const posTestUnitContTestsCtl of this.testUnitsFormArray.controls )
       {
-         const testUnitContTests = this.makeOnePositiveTestUnitContinuationTests(newTestUnitNum);
-         const testUnitContTestsFormGroup = makePositiveTestUnitContinuationTestsFormGroup(testUnitContTests);
-         this.testsFormArray.push(testUnitContTestsFormGroup);
+         const testUnitNumCtl = posTestUnitContTestsCtl.get('testUnitNumber');
+         const testNum = testUnitNumCtl ? parseInt(testUnitNumCtl.value) : NaN;
+         if ( testNum )
+            testUnitNumbers.push(testNum);
       }
+
+      return testUnitNumbers;
    }
 
-   getMissingVidasPositiveTestUnitNumbers(): number[]
+   private getUnrepresentedVidasPositiveTestUnitNumbers(): number[]
    {
       if ( this.vidasPositiveSampleTestUnitNumbers == null )
          return [];
@@ -114,29 +159,61 @@ export class StagePosContComponent implements OnChanges {
       return Array.from(testUnitNums.values()).sort();
    }
 
-   private getRepresentedTestUnitNumbers(): number[]
+   private getRepresentedNonVidasPositiveTestUnitNumbers(): number[]
    {
-      const testUnitNumbers = [];
+      const reprTestUnitNums = this.getRepresentedTestUnitNumbers();
 
-      for ( const posTestUnitContTestsCtl of this.testsFormArray.controls )
+      if ( this.vidasPositiveSampleTestUnitNumbers == null )
+         return reprTestUnitNums;
+
+      const excessTestUnitNums = new Set(reprTestUnitNums);
+
+      for ( const vidasPosTestUnitNum of this.vidasPositiveSampleTestUnitNumbers )
+         excessTestUnitNums.delete(vidasPosTestUnitNum);
+
+      return Array.from(excessTestUnitNums.values()).sort();
+   }
+
+   onRepresentedTestUnitNumberChanged()
+   {
+      this.refreshTestUnitNumbersDiff();
+   }
+
+   removeTestUnitAtIndex(i: number)
+   {
+      this.testUnitsFormArray.removeAt(i);
+      this.refreshTestUnitNumbersDiff();
+   }
+
+   private refreshTestUnitNumbersDiff()
+   {
+      this.testUnitNumbersDiff = this.makeRepresentedTestUnitNumbersDiffVsVidas();
+
+      let isWarning = false;
+      const msgs = [];
+      if ( this.testUnitNumbersDiff.representedNotVidasPositive.length > 0 )
       {
-         const testUnitNumCtl = posTestUnitContTestsCtl.get('positiveTestUnitNumber');
-         const testNum = testUnitNumCtl ? parseInt(testUnitNumCtl.value) : NaN;
-         if ( testNum )
-            testUnitNumbers.push(testNum);
+         isWarning = true;
+         msgs.push(
+            'Sub/comp #\'s [' + this.testUnitNumbersDiff.representedNotVidasPositive + '] are not positive in Vidas results.'
+         );
+      }
+      if ( this.testUnitNumbersDiff.unrepresentedVidasPositives.length > 0 )
+      {
+         isWarning = true;
+         msgs.push(
+            'Vidas positive sub/comp #\'s [' + this.testUnitNumbersDiff.unrepresentedVidasPositives + '] are absent here.'
+         );
       }
 
-      return testUnitNumbers;
+      this.testUnitNumbersDiffMessage = msgs.length > 0 ? msgs.join(' ') : null;
+      this.testUnitNumbersDiffMessageIsWarning = isWarning;
    }
+}
 
-   private makeOnePositiveTestUnitContinuationTests(testUnitNum: number | null = null): PositiveTestUnitContinuationTests
-   {
-      return {
-         positiveTestUnitNumber: testUnitNum,
-         rvSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate),
-         ttSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate)
-      };
-   }
+interface TestUnitNumbersDiff {
+   unrepresentedVidasPositives: number[];
+   representedNotVidasPositive: number[];
 }
 
 

@@ -1,3 +1,21 @@
-<p>
-  sel-agars-test-suite works!
-</p>
+<div class="sel-agars-stack">
+
+   <div class="sel-agar-row" *ngFor="let selAgar of selAgars">
+
+      <div class="sel-agar-label">{{selAgar.displayName}}</div>
+
+      <div class="isolate-test-seqs-stack">
+         <app-isolate-test-seq *ngFor="let isolateFormGroup of form.get(selAgar.formGroupName).controls; let i = index"
+            [form]="isolateFormGroup"
+            [testUnitDescription]="testUnitDescription"
+            [medium]="medium"
+            [selectiveAgarDisplayName]="selAgar.displayName"
+            [isolateNumber]="i+1"
+            [showDisposeButton]="true"
+            (disposeRequested)="removeIsolateTestSeqAtIndex(selAgar.formGroupName, i)">
+         </app-isolate-test-seq>
+      </div>
+
+   </div>
+
+</div>

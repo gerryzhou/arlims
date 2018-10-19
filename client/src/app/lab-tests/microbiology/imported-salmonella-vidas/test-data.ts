@@ -84,7 +84,7 @@ export interface PositivesContinuationData
 
 export interface PositiveTestUnitContinuationTests
 {
-   positiveTestUnitNumber: number | null;
+   testUnitNumber: number | null;
    rvSourcedTests: SelectiveAgarsTestSuite;
    ttSourcedTests: SelectiveAgarsTestSuite;
 }
@@ -298,9 +298,10 @@ export function makePositivesContinuationDataFormGroup(posContData: PositivesCon
       return new FormGroup({}, formValidatorFunctions);
 
    const positiveTestUnitContinuationTestss =
-      makePositiveTestUnitContinuationTestssFormArray(posContData.positiveTestUnitContinuationTestss);
+      makePositiveTestUnitContinuationTestssFormArray(posContData.positiveTestUnitContinuationTestss || []);
 
-   const controls = makePositivesContinuationControlsFormGroup(posContData.controls);
+   const controls =
+      makePositivesContinuationControlsFormGroup(posContData.controls || makeEmptyPositivesContinuationControls());
 
    return new FormGroup({ positiveTestUnitContinuationTestss, controls }, formValidatorFunctions);
 }
@@ -318,7 +319,7 @@ export function makePositiveTestUnitContinuationTestssFormArray(posTestUnitContT
 export function makePositiveTestUnitContinuationTestsFormGroup(posContTests: PositiveTestUnitContinuationTests): FormGroup
 {
    return new FormGroup({
-      positiveTestUnitNumber: new FormControl(posContTests.positiveTestUnitNumber),
+      testUnitNumber: new FormControl(posContTests.testUnitNumber),
       rvSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.rvSourcedTests),
       ttSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.ttSourcedTests),
    });
@@ -568,7 +569,7 @@ function posContTestUnitsStatusCode
       return 'e';
 
    // If the continuation test unit numbers aren't the same as the Vidas positives, then the data is considered incomplete.
-   const contTestUnitNums = contTestss.map(contTests => contTests.positiveTestUnitNumber);
+   const contTestUnitNums = contTestss.map(contTests => contTests.testUnitNumber);
    if ( !arraysEqual(contTestUnitNums, getVidasPositiveTestUnitNumbers(vidasData)) )
       return 'i';
 
@@ -612,7 +613,7 @@ function positiveTestUnitContinuationTestsComplete
    : boolean
 {
    return (
-      contTests.positiveTestUnitNumber != null &&
+      contTests.testUnitNumber != null &&
       selectiveAgarsTestSuiteComplete(contTests.rvSourcedTests, false, false, testConfig) &&
       selectiveAgarsTestSuiteComplete(contTests.ttSourcedTests, false, false, testConfig)
    );

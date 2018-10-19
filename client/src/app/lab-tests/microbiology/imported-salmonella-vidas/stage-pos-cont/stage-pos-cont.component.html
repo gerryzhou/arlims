@@ -1,15 +1,47 @@
-<form [formGroup]="form">
+<div [formGroup]="form">
 
-   <div> <!--TODO: Add button to add tests for any positives which are missing vs. vidas results. -->
-      Vidas positive test unit numbers: {{vidasPositiveSampleTestUnitNumbers}}
-   </div>
-
-   <div>
-      <div class="one-pos-test-unit-tests" *ngFor="let posTestUnitFG of testsFormArray.controls">
-         <app-one-pos-test-unit-cont-tests [form]="posTestUnitFG"></app-one-pos-test-unit-cont-tests>
+   <div class="diffs-vs-vidas-positives-area" *ngIf="testUnitNumbersDiffMessage">
+      <div class="message"
+           [ngClass]="{'warn': testUnitNumbersDiffMessageIsWarning, 'ok': !testUnitNumbersDiffMessageIsWarning}">
+         {{testUnitNumbersDiffMessage}}
+         <span *ngIf="testUnitNumbersDiff && testUnitNumbersDiff.unrepresentedVidasPositives.length > 0">
+            <button class="link" (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()">
+               Add Vidas positives.
+            </button>
+         </span>
       </div>
    </div>
 
-   <button mat-button (click)="addOnePositiveTestUnitContinuationTestsFormGroup()">Add positive sub/composite</button>
+   <div *ngIf="formInitialized">
 
-</form>
+      <div class="test-units-area">
+         <app-one-pos-test-unit-cont-tests *ngFor="let testUnitFormGroup of testUnitsFormArray.controls; let i = index"
+            [form]="testUnitFormGroup"
+            [showDisposeButton]="true"
+            [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
+            (disposeRequested)="removeTestUnitAtIndex(i)"
+            (testUnitNumberChange)="onRepresentedTestUnitNumberChanged()">
+         </app-one-pos-test-unit-cont-tests>
+      </div>
+
+      <!--TODO: Mimic add test button here (yellow or green +).-->
+      <button mat-button (click)="addOnePositiveTestUnitContinuationTestsFormGroup()">
+         Add positive sub/composite
+      </button>
+
+      <div class="controls-area">
+         <!-- TODO
+          salmonellaGaminara: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaGaminara),
+          salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaDiarizonae),
+          salmonellaControlsSatisfactory: new FormControl(posContControlsData.salmonellaControlsSatisfactory),
+          pVulgarisApiVitekDetection: new FormControl(posContControlsData.pVulgarisApiVitekDetection),
+          pVulgarisControlSatisfactory: new FormControl(posContControlsData.pVulgarisControlSatisfactory),
+          pAerugiOxidaseDetection: new FormControl(posContControlsData.pAerugiOxidaseDetection),
+          pAerugiControlSatisfactory: new FormControl(posContControlsData.pAerugiControlSatisfactory),
+          medium: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.medium),
+         -->
+      </div>
+
+   </div>
+
+</div>
