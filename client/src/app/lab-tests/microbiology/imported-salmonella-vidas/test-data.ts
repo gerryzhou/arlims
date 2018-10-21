@@ -380,6 +380,15 @@ function makeSlantTubeTestFormGroup(slantTubeTest: SlantTubeTest): FormGroup
    });
 }
 
+export function makeIsolateTestSequenceFailureFormGroup(failure: IsolateTestSequenceFailure)
+{
+   return new FormGroup({
+      declaredAt: new FormControl(failure.declaredAt),
+      reason: new FormControl(failure.reason),
+      notes: new FormControl(failure.notes),
+   });
+}
+
 interface Stage {
    name: string;
    statusCodeFn: (TestData, TestConfig) => FieldValuesStatusCode;

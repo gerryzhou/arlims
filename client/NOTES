@@ -1,13 +1,20 @@
-Get failure toggling working, then add dialog for failure information.
+Slant tube results viewer component
+  Let value sequence be a link-style button for editing if editing enabled, else just a span.
+  Add fixed spacing between slashes for empty values.
+  Remove edit icon buttons.
+  Display of values as done in v3 workflow document.
+  Add @Input() showFieldLabels ?
+  If not showing field labels, provide labels in hover text.
 
-Isolates actions menu
-  [thumb down] Mark isolate as failed ... => promptRecordIsolateFailure()
-    Dialog for entering failure code/text.
-  [thumb up] Unmark isolate as failed (if failed). => promptClearIsolateFailure()
+Slant tube test data entry dialog
+  Align flex-start in row.
+  Constrain available choices based on tube type.
+
 
 Provide visual indicator than an isolate test seq is marked as failed.
 
-Try changing forms to divs in stages component templates, test.
+All buttons other than "Save" button should have type="button" attribute.
+  Then probably shouldn't need form elements in individual stages.
 
 Allow easy filters by status code.
   Dropdown maybe add checkbox for each status code.
@@ -23,7 +30,6 @@ Maybe standardize failure reasons for isolate test sequences:
     slant tubes conclusive
     oxidase negative
     api_vitek_negative
-    failure_necessitating_restreak
   failure reason
     no_id
     unacceptable

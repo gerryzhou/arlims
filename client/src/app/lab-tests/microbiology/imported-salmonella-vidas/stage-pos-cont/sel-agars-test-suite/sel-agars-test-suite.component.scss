@@ -20,6 +20,15 @@
    margin-right: 5px;
 }
 
+.sel-agar-label-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: flex-start;
+   button {
+      margin-left: 10px;
+   }
+}
+
 .isolate-test-seqs-stack {
    display: flex;
    flex-flow: column nowrap;

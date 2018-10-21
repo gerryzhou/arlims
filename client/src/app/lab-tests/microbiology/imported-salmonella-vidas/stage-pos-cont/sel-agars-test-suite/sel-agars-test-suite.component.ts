@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormArray, FormGroup} from '@angular/forms';
+import {makeEmptyIsolateTestSequence, makeIsolateTestSequenceFormGroup} from '../../test-data';
 
 @Component({
    selector: 'app-sel-agars-test-suite',
@@ -34,6 +35,20 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
    {
       const isolatesFormArray = this.form.get(selAgar) as FormArray;
       isolatesFormArray.removeAt(i);
+   }
+
+   onIsolateFailureDeclared(selAgar: string, isolateNumber: number)
+   {
+      this.addNewIsolate(selAgar, isolateNumber + 1);
+   }
+
+   addNewIsolate(selAgar: string, atIndex: number | null = null)
+   {
+      const isolatesFormArray = this.form.get(selAgar) as FormArray;
+      isolatesFormArray.insert(
+         atIndex || isolatesFormArray.length,
+         makeIsolateTestSequenceFormGroup(makeEmptyIsolateTestSequence())
+      );
    }
 }
 

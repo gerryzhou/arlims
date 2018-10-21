@@ -2,7 +2,12 @@
 
    <div class="sel-agar-row" *ngFor="let selAgar of selAgars">
 
-      <div class="sel-agar-label">{{selAgar.displayName}}</div>
+      <div class="sel-agar-label-stack">
+         <div class="sel-agar-label">{{selAgar.displayName}}</div>
+         <button mat-icon-button type="button" (click)="addNewIsolate(selAgar.formGroupName)">
+            <mat-icon>add_circle_outline</mat-icon>
+         </button>
+      </div>
 
       <div class="isolate-test-seqs-stack">
          <app-isolate-test-seq *ngFor="let isolateFormGroup of form.get(selAgar.formGroupName).controls; let i = index"
@@ -12,7 +17,8 @@
             [selectiveAgarDisplayName]="selAgar.displayName"
             [isolateNumber]="i+1"
             [showDisposeButton]="true"
-            (disposeRequested)="removeIsolateTestSeqAtIndex(selAgar.formGroupName, i)">
+            (disposeRequested)="removeIsolateTestSeqAtIndex(selAgar.formGroupName, i)"
+            (failureDeclared)="onIsolateFailureDeclared(selAgar.formGroupName, i)">
          </app-isolate-test-seq>
       </div>
 

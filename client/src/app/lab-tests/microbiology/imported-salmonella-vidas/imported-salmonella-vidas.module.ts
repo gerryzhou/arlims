@@ -15,6 +15,7 @@ import {
    MatStepperModule,
    MatMenuModule,
    MatCardModule,
+   MatDialogModule,
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
@@ -33,7 +34,10 @@ import {TestReportsListingComponent} from './reports/reports-listing/test-report
 import {FormDataReviewComponent} from './form-data-review/form-data-review.component';
 import {OnePosTestUnitContTestsComponent} from './stage-pos-cont/one-pos-test-unit-cont-tests/one-pos-test-unit-cont-tests.component';
 import {SelAgarsTestSuiteComponent} from './stage-pos-cont/sel-agars-test-suite/sel-agars-test-suite.component';
-import { IsolateTestSeqComponent } from './stage-pos-cont/isolate-test-seq/isolate-test-seq.component';
+import {IsolateTestSeqComponent} from './stage-pos-cont/isolate-test-seq/isolate-test-seq.component';
+import {IsolateTestsFailureDialogComponent} from './stage-pos-cont/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
+import {EditSlantTubeTestDialogComponent} from './stage-pos-cont/isolate-test-seq/slant-tube-test/edit-slant-tube-test-dialog/edit-slant-tube-test-dialog.component';
+import { SlantTubeTestComponent } from './stage-pos-cont/isolate-test-seq/slant-tube-test/slant-tube-test.component';
 
 @NgModule({
    imports: [
@@ -52,6 +56,7 @@ import { IsolateTestSeqComponent } from './stage-pos-cont/isolate-test-seq/isola
       MatStepperModule,
       MatMenuModule,
       MatCardModule,
+      MatDialogModule,
       //
       CommonComponentsModule,
       ImportedSalmonellaVidasRoutingModule,
@@ -71,9 +76,16 @@ import { IsolateTestSeqComponent } from './stage-pos-cont/isolate-test-seq/isola
       OnePosTestUnitContTestsComponent,
       SelAgarsTestSuiteComponent,
       IsolateTestSeqComponent,
+      IsolateTestsFailureDialogComponent,
+      EditSlantTubeTestDialogComponent,
+      SlantTubeTestComponent,
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,
+   ],
+   entryComponents: [
+      IsolateTestsFailureDialogComponent,
+      EditSlantTubeTestDialogComponent,
    ],
    exports: []
 })

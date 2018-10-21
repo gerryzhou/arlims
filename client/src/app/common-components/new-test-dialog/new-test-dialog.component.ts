@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {NewTestInfo} from './new-test-info';
 
@@ -10,7 +10,7 @@ import {NewTestInfo} from './new-test-info';
 export class NewTestDialogComponent {
 
    constructor(
-      public dialogRef: MatDialogRef<NewTestInfo>,
+      public dialogRef: MatDialogRef<NewTestDialogComponent, NewTestInfo>,
       @Inject(MAT_DIALOG_DATA) public data: NewTestInfo
    ) {}
 
