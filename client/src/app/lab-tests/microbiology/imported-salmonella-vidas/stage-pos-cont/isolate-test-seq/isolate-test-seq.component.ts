@@ -1,5 +1,9 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {MatDialog} from '@angular/material';
 import {FormGroup} from '@angular/forms';
+
+import {makeIsolateTestSequenceFailureFormGroup, SlantTubeTest} from '../../test-data';
+import {IsolateTestsFailureDialogComponent} from './isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
 
 @Component({
    selector: 'app-isolate-test-seq',
@@ -29,11 +33,19 @@ export class IsolateTestSeqComponent implements OnChanges {
    @Output()
    disposeRequested = new EventEmitter<void>();
 
-   constructor() { }
+   @Output()
+   failureDeclared = new EventEmitter<void>();
+
+   isolateDescription = '';
+   failed: boolean;
+
+   constructor(private dialogSvc: MatDialog) { }
 
    ngOnChanges()
    {
-      // TODO
+      this.isolateDescription =
+         this.testUnitDescription + '/' + this.medium + '/' + this.selectiveAgarDisplayName + '/#' + this.isolateNumber;
+      this.failed = this.form.controls.failure != null;
    }
 
    onDisposeRequested()
@@ -41,14 +53,48 @@ export class IsolateTestSeqComponent implements OnChanges {
       this.disposeRequested.emit();
    }
 
-   promptRecordIsolateFailure()
+   // Show a dialog allowing the user to add, update, or remove failure information for this test sequence.
+   promptEditFailure()
    {
-      // TODO: Open modal dialog to get failure details.
-      this.form.addControl('failure', new FormGroup({}));
+      const prevFailureCtl = this.form.get('failure') as FormGroup;
+      const reason = prevFailureCtl != null ? prevFailureCtl.controls.reason.value : null;
+      const notes = prevFailureCtl != null ? prevFailureCtl.controls.notes.value : null;
+
+      const dlg = this.dialogSvc.open(IsolateTestsFailureDialogComponent, {
+         width: 'calc(65%)',
+         data: {
+            reason: reason,
+            notes: notes,
+         }
+      });
+
+      dlg.afterClosed().subscribe((failureEdit: FailureEdit) => {
+         if ( failureEdit )
+         {
+            if ( failureEdit.deleteRequested )
+               this.clearFailure();
+            else
+            {
+               if ( prevFailureCtl != null )
+                  this.form.removeControl('failure');
+               const failure = {
+                  declaredAt: new Date().toISOString(),
+                  reason: failureEdit.reason,
+                  notes: failureEdit.notes,
+               };
+               this.form.addControl('failure', makeIsolateTestSequenceFailureFormGroup(failure));
+               this.failed = true;
+
+               if ( prevFailureCtl == null )
+                  this.failureDeclared.emit();
+            }
+         }
+      });
    }
 
-   promptClearIsolateFailure()
+   clearFailure()
    {
       this.form.removeControl('failure');
+      this.failed = false;
    }
 }

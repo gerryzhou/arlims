@@ -2,8 +2,25 @@
    display: flex;
    flex-flow: row wrap;
    align-items: center;
+   &.failed {
+      background: // striped background
+         repeating-linear-gradient(
+               45deg,
+               transparent,
+               transparent 10px,
+               #ccc 10px,
+               #ccc 20px
+         ),
+         linear-gradient(
+               to bottom,
+               #eee,
+               #999
+         );
+   }
 }
-
+.menu-header {
+   margin: 0 10px;
+}
 button.remove mat-icon {
    color: red;
 }

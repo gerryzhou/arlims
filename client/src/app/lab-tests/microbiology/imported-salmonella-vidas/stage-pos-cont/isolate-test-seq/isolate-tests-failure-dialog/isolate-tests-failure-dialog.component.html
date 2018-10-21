@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Declare Isolate Failure</h2>
+
+<mat-dialog-content>
+
+   <mat-form-field class="reason">
+      <mat-select placeholder="Failure reason" [(ngModel)]="data.reason">
+         <mat-option [value]="null"></mat-option>
+         <mat-option [value]="'no id'">no identification</mat-option>
+         <mat-option [value]="'unacceptable'">unacceptable</mat-option>
+         <mat-option [value]="'doubtful'">doubtful</mat-option>
+         <mat-option [value]="'other'">other</mat-option>
+      </mat-select>
+   </mat-form-field>
+
+  <mat-form-field class="notes">
+     <input matInput [(ngModel)]="data.notes" placeholder="Notes">
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+   <button mat-button (click)="dismissWithDeleteRequest()" *ngIf="preexistingFailure">
+      <mat-icon>delete</mat-icon> Clear failure
+   </button>
+   <div class="expanding-flex-space"></div>
+   <button mat-button mat-dialog-close>Cancel</button>
+   <button mat-button [mat-dialog-close]="data" color="primary" [disabled]="!data.reason ">
+      OK
+   </button>
+</mat-dialog-actions>
+

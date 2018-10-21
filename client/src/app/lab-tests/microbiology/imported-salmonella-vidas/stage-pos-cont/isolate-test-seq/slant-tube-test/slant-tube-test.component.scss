@@ -1,0 +1,13 @@
+form {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: center;
+}
+
+.tube-label {
+   color: #666;
+}
+
+button.edit {
+   margin: 0 5px;
+}

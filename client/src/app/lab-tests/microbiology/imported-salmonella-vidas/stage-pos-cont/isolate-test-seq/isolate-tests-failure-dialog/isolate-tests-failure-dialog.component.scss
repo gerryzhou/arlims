@@ -1,0 +1,18 @@
+mat-dialog-content {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
+   justify-content: center;
+
+   .reason,.notes {
+      margin: 20px;
+      padding: 5px;
+      height: auto;
+      min-width: 500px;
+   }
+}
+
+mat-dialog-actions {
+   justify-content: flex-end;
+}
+

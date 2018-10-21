@@ -1,0 +1,17 @@
+<form [formGroup]="form">
+
+   <span class="tube-label">{{tubeType}}</span>
+
+   <span class="field">{{form.get('slant').value}}</span>
+   /
+   <span class="field">{{form.get('butt').value}}</span>
+   /
+   <span class="field">{{form.get('h2s').value}}</span>
+   /
+   <span class="field">{{form.get('gas').value}}</span>
+
+   <button class="edit" mat-icon-button *ngIf="editingEnabled"
+      (click)="promptEditSlantTubeTest(tubeType)">
+      <mat-icon>edit</mat-icon>
+   </button>
+</form>

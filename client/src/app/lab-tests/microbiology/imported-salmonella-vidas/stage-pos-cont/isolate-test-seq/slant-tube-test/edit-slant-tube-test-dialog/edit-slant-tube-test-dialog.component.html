@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Enter {{data.tubeLabel}} Slant Tube Results</h2>
+
+<mat-dialog-content>
+
+   <div class="field">
+      <span class="label">Slant</span>
+      <mat-radio-group [(ngModel)]="data.test.slant">
+         <mat-radio-button value="K">K</mat-radio-button>
+         <mat-radio-button value="A">A</mat-radio-button>
+      </mat-radio-group>
+   </div>
+
+   <div class="field">
+      <span class="label">Butt</span>
+      <mat-radio-group [(ngModel)]="data.test.butt">
+         <mat-radio-button value="K">K</mat-radio-button>
+         <mat-radio-button value="A">A</mat-radio-button>
+         <mat-radio-button value="R">R</mat-radio-button>
+      </mat-radio-group>
+   </div>
+
+   <div class="field">
+      <span class="label">H<sub>2</sub>S</span>
+      <mat-radio-group [(ngModel)]="data.test.h2s">
+         <mat-radio-button value="+">+</mat-radio-button>
+         <mat-radio-button value="-">-</mat-radio-button>
+      </mat-radio-group>
+   </div>
+
+   <div class="field">
+      <span class="label">Gas</span>
+      <mat-radio-group [(ngModel)]="data.test.gas">
+         <mat-radio-button value="+">+</mat-radio-button>
+         <mat-radio-button value="-">-</mat-radio-button>
+      </mat-radio-group>
+   </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+   <button mat-button mat-dialog-close>Cancel</button>
+   <button mat-button [mat-dialog-close]="data.test" color="primary">
+      OK
+   </button>
+</mat-dialog-actions>
+

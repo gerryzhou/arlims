@@ -1,33 +1,54 @@
-<div class="isolate-row">
+<form class="isolate-row" [class.failed]="failed">
 
-   <span>xxxxxxxxxxxxxxxxxxxxxxxxxxx ({{testUnitDescription}}/{{medium}}/{{selectiveAgarDisplayName}}/{{isolateNumber}})</span>
+   <app-slant-tube-test
+      [form]="form.get('tsiTubeTest')"
+      [tubeType]="'TSI'"
+      [isolateDescription]="isolateDescription"
+      [editingEnabled]="true">
+   </app-slant-tube-test>
+
+   <app-slant-tube-test
+      [form]="form.controls['liaTubeTest']"
+      [tubeType]="'LIA'"
+      [isolateDescription]="isolateDescription"
+      [editingEnabled]="true">
+   </app-slant-tube-test>
 
    <div class="expanding-flex-space"></div>
 
    <div class="isolate-actions">
       <mat-menu #actionsMenu="matMenu">
+         <span class="menu-header">Actions for isolate # {{isolateNumber}}</span>
+         <hr>
          <div class="menu-item">
-            <button mat-button class="remove" *ngIf="showDisposeButton" (click)="onDisposeRequested()">
-               delete isolate {{isolateNumber}} <mat-icon>delete_forever</mat-icon>
+            <button mat-button class="remove" *ngIf="showDisposeButton"
+               (click)="onDisposeRequested()">
+               delete isolate <mat-icon>delete_forever</mat-icon>
             </button>
          </div>
          <div class="menu-item">
-            <button mat-button class="fail" *ngIf="!this.form.failure" (click)="promptRecordIsolateFailure()">
-               Mark isolate {{isolateNumber}} as failed <mat-icon>thumb_down</mat-icon>
+            <button mat-button class="fail" *ngIf="!this.form.controls.failure"
+               (click)="promptEditFailure()">
+               Mark isolate as failed <mat-icon>thumb_down</mat-icon>
             </button>
          </div>
          <div class="menu-item">
-            <button mat-button class="unfail" *ngIf="!!this.form.failure" (click)="promptClearIsolateFailure()">
-               Mark isolate {{isolateNumber}} as not failed <mat-icon>thumb_up</mat-icon>
+            <button mat-button class="unfail" *ngIf="!!this.form.controls.failure"
+               (click)="clearFailure()">
+               Mark isolate as not failed <mat-icon>thumb_up</mat-icon>
+            </button>
+         </div>
+         <div class="menu-item">
+            <button mat-button *ngIf="!!this.form.controls.failure"
+                    (click)="promptEditFailure()">
+               Edit failure information
             </button>
          </div>
       </mat-menu>
 
-      <div *ngIf="!!this.form.failure"><mat-icon>thumb_down</mat-icon></div>
-
-      <button mat-button type="button" [matMenuTriggerFor]="actionsMenu">
+      <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
          <mat-icon>more_vert</mat-icon>
       </button>
    </div>
 
-</div>
+</form>
