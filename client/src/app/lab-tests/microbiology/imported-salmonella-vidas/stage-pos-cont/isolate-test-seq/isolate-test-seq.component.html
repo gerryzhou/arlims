@@ -4,14 +4,14 @@
       [form]="form.get('tsiTubeTest')"
       [tubeType]="'TSI'"
       [isolateDescription]="isolateDescription"
-      [editingEnabled]="true">
+      [editingEnabled]="!failed">
    </app-slant-tube-test>
 
    <app-slant-tube-test
       [form]="form.controls['liaTubeTest']"
       [tubeType]="'LIA'"
       [isolateDescription]="isolateDescription"
-      [editingEnabled]="true">
+      [editingEnabled]="!failed">
    </app-slant-tube-test>
 
    <div class="expanding-flex-space"></div>

@@ -1,3 +1,4 @@
+
 Fix test data diffing by matching array elements via identification field.
 
 Provide visual indicator than an isolate test seq is marked as failed.
@@ -19,6 +20,7 @@ From meeting 2018/10/15
 
 Commit Notes
 ------------
+
 
 
 ------------

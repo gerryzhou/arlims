@@ -32,6 +32,9 @@ export class SlantTubeTestComponent implements OnChanges {
 
    promptEditSlantTubeTest(tubeType: string)
    {
+      if ( !this.editingEnabled )
+         return;
+
       const origSlantTubeTest = this.form.value as SlantTubeTest;
 
       const dlg = this.dialogSvc.open(EditSlantTubeTestDialogComponent, {
