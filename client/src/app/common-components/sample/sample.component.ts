@@ -127,6 +127,7 @@ export class SampleComponent implements OnChanges {
                   this.testDeleted.next(test);
                },
                err => {
+                  console.log(err);
                   this.testDeleteFailed.next(err);
                }
             );

@@ -37,14 +37,13 @@ export class SlantTubeTestComponent implements OnChanges {
       const dlg = this.dialogSvc.open(EditSlantTubeTestDialogComponent, {
          width: 'calc(65%)',
          data: {
-            tubeLabel: tubeType,
+            tubeType: tubeType,
             isolateDescription: this.isolateDescription,
             test: origSlantTubeTest,
          }
       });
 
       dlg.afterClosed().subscribe((editedSlantTubeTest: SlantTubeTest) => {
-         console.log('dialog results: ', editedSlantTubeTest);
          if ( editedSlantTubeTest )
          {
             this.form.setValue(editedSlantTubeTest);

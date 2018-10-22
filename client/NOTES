@@ -1,22 +1,11 @@
-Slant tube results viewer component
-  Let value sequence be a link-style button for editing if editing enabled, else just a span.
-  Add fixed spacing between slashes for empty values.
-  Remove edit icon buttons.
-  Display of values as done in v3 workflow document.
-  Add @Input() showFieldLabels ?
-  If not showing field labels, provide labels in hover text.
-
-Slant tube test data entry dialog
-  Align flex-start in row.
-  Constrain available choices based on tube type.
-
+Fix test data diffing by matching array elements via identification field.
 
 Provide visual indicator than an isolate test seq is marked as failed.
 
 All buttons other than "Save" button should have type="button" attribute.
   Then probably shouldn't need form elements in individual stages.
 
-Allow easy filters by status code.
+In main sample listing UI, allow easy filters by status code.
   Dropdown maybe add checkbox for each status code.
 
 From meeting 2018/10/15
@@ -26,19 +15,10 @@ From meeting 2018/10/15
   - (app) Add button to immediately refresh from FACTS.
   - Try barcode scanners with new laptops, decide if new barcode scanners are needed.
 
-Maybe standardize failure reasons for isolate test sequences:
-    slant tubes conclusive
-    oxidase negative
-    api_vitek_negative
-  failure reason
-    no_id
-    unacceptable
-    doubtful
 
 
 Commit Notes
 ------------
-Add failure substructure to IsolateTestSeq.
 
 
 ------------

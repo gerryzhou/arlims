@@ -46,6 +46,19 @@ button.link {
    cursor: pointer;
 }
 
+button.hover-link {
+   background:none!important;
+   color: inherit;
+   border:none;
+   padding:0!important;
+   font: inherit;
+   cursor: pointer;
+   &:hover {
+      color: blue;
+      text-decoration: underline;
+   }
+}
+
 //////////////////////////////////////////////////////////////
 // Angular Material customizations
 

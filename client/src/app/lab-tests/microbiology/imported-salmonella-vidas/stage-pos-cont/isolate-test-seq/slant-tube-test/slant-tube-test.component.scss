@@ -1,11 +1,35 @@
-form {
+.main-row {
    display: flex;
-   flex-flow: row wrap;
+   flex-flow: row nowrap;
    align-items: center;
+   margin: 0 7px 0 0;
+   &.editable {
+      cursor: pointer;
+      &:hover {
+         color: blue;
+         text-decoration: underline;
+         .field {
+            border-color: blue;
+         }
+      }
+   }
 }
 
 .tube-label {
-   color: #666;
+   font-weight: bold;
+   margin-right: 2px;
+}
+
+.field {
+   margin: 0 1px;
+   padding: 1px;
+   min-width: 18px;
+   min-height: 18px;
+   border: 1px solid lightgray;
+   border-radius: 5px;
+   text-align: center;
+   font-weight: bold;
+   color: blue;
 }
 
 button.edit {

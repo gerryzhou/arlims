@@ -1,17 +1,32 @@
+.mat-dialog-title {
+   text-align: center;
+}
+
+.isolate-description {
+   width: 100%;
+   font-size: smaller;
+   text-align: center;
+   color: #888;
+}
+
 mat-dialog-content {
    display: flex;
    flex-flow: row wrap;
-   align-items: center;
+   align-items: flex-start;
    justify-content: center;
 }
 
 .field {
    display: flex;
    flex-flow: column nowrap;
-   align-items: center;
+   align-items: flex-start;
    margin: 10px;
    width: 50px;
+   .label {
+      font-weight: bold;
+   }
 }
+
 mat-radio-group {
    display: flex;
    flex-flow: column nowrap;

@@ -16,6 +16,7 @@ import {
    MatMenuModule,
    MatCardModule,
    MatDialogModule,
+   MatTooltipModule,
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
@@ -37,7 +38,7 @@ import {SelAgarsTestSuiteComponent} from './stage-pos-cont/sel-agars-test-suite/
 import {IsolateTestSeqComponent} from './stage-pos-cont/isolate-test-seq/isolate-test-seq.component';
 import {IsolateTestsFailureDialogComponent} from './stage-pos-cont/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
 import {EditSlantTubeTestDialogComponent} from './stage-pos-cont/isolate-test-seq/slant-tube-test/edit-slant-tube-test-dialog/edit-slant-tube-test-dialog.component';
-import { SlantTubeTestComponent } from './stage-pos-cont/isolate-test-seq/slant-tube-test/slant-tube-test.component';
+import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tube-test/slant-tube-test.component';
 
 @NgModule({
    imports: [
@@ -57,6 +58,7 @@ import { SlantTubeTestComponent } from './stage-pos-cont/isolate-test-seq/slant-
       MatMenuModule,
       MatCardModule,
       MatDialogModule,
+      MatTooltipModule,
       //
       CommonComponentsModule,
       ImportedSalmonellaVidasRoutingModule,

@@ -4,7 +4,8 @@
 
       <div class="sel-agar-label-stack">
          <div class="sel-agar-label">{{selAgar.displayName}}</div>
-         <button mat-icon-button type="button" (click)="addNewIsolate(selAgar.formGroupName)">
+         <button class="add-isolate hover-link" type="button" (click)="addNewIsolate(selAgar.formGroupName)"
+            matTooltip="add isolate">
             <mat-icon>add_circle_outline</mat-icon>
          </button>
       </div>

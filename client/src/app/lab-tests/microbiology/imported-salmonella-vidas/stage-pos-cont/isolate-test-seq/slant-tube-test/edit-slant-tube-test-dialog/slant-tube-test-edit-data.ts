@@ -1,7 +1,7 @@
 import {SlantTubeTest} from '../../../../test-data';
 
 export interface SlantTubeTestEditData {
-   tubeLabel: string;
+   tubeType: string;
    isolateDescription: string;
    test: SlantTubeTest;
 }

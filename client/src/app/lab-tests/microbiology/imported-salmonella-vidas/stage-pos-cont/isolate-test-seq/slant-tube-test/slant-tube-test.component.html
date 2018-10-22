@@ -1,17 +1,14 @@
-<form [formGroup]="form">
+<div class="main-row" [formGroup]="form" (click)="promptEditSlantTubeTest(tubeType)"
+   [ngClass]="{editable: editingEnabled}">
 
-   <span class="tube-label">{{tubeType}}</span>
+   <div class="tube-label" matTooltip="edit slant tube results">{{tubeType}}</div>
 
-   <span class="field">{{form.get('slant').value}}</span>
-   /
-   <span class="field">{{form.get('butt').value}}</span>
-   /
-   <span class="field">{{form.get('h2s').value}}</span>
-   /
-   <span class="field">{{form.get('gas').value}}</span>
+   <div class="field" matTooltip="slant">{{form.get('slant').value}}</div>
 
-   <button class="edit" mat-icon-button *ngIf="editingEnabled"
-      (click)="promptEditSlantTubeTest(tubeType)">
-      <mat-icon>edit</mat-icon>
-   </button>
-</form>
+   <div class="field" matTooltip="butt">{{form.get('butt').value}}</div>
+
+   <div class="field" matTooltip="H2S">{{form.get('h2s').value}}</div>
+
+   <div class="field" matTooltip="gas">{{form.get('gas').value}}</div>
+
+</div>

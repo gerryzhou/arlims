@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, HostListener, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
@@ -25,6 +25,14 @@ export class IsolateTestsFailureDialogComponent {
    dismissWithDeleteRequest()
    {
       this.data.deleteRequested = true;
+      this.dialogRef.close(this.data);
+   }
+
+   @HostListener('window:keydown.ENTER')
+   acceptAndCloseIfComplete()
+   {
+      if ( !this.data.reason || this.data.reason.length === 0 )
+         return;
       this.dialogRef.close(this.data);
    }
 }

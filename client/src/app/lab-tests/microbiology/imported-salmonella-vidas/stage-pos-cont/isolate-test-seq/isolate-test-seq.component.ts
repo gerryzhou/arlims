@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {FormGroup} from '@angular/forms';
 
-import {makeIsolateTestSequenceFailureFormGroup, SlantTubeTest} from '../../test-data';
+import {makeIsolateTestSequenceFailureFormGroup} from '../../test-data';
 import {IsolateTestsFailureDialogComponent} from './isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
 
 @Component({
@@ -43,8 +43,8 @@ export class IsolateTestSeqComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.isolateDescription =
-         this.testUnitDescription + '/' + this.medium + '/' + this.selectiveAgarDisplayName + '/#' + this.isolateNumber;
+      this.isolateDescription = 'isolate # ' + this.isolateNumber + ' in ' +
+         this.testUnitDescription + ' / ' + this.medium + ' / ' + this.selectiveAgarDisplayName;
       this.failed = this.form.controls.failure != null;
    }
 

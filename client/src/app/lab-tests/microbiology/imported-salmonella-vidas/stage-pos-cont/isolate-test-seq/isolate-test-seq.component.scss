@@ -18,9 +18,13 @@
          );
    }
 }
+
 .menu-header {
    margin: 0 10px;
+   font-weight: bold;
+   color: #888;
 }
+
 button.remove mat-icon {
    color: red;
 }
