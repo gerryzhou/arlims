@@ -122,8 +122,6 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         logTestToBeDeleted(testId, user);
 
         jdbc.update("delete from test_file where test_id = ?", testId);
-        jdbc.update("delete from test_managed_resource where test_id = ?", testId);
-        jdbc.update("delete from test_unmanaged_resource where test_id = ?", testId);
         int updateCount = jdbc.update("delete from test where id = ?", testId);
 
         if ( updateCount == 0 )
