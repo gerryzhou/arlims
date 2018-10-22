@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, HostListener, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
@@ -6,7 +6,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss']
 })
-export class ConfirmDialogComponent implements OnInit {
+export class ConfirmDialogComponent {
 
    titleSubject: string;
 
@@ -14,7 +14,7 @@ export class ConfirmDialogComponent implements OnInit {
 
    constructor
       (
-         public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+         public dialogRef: MatDialogRef<ConfirmDialogComponent, boolean>,
          @Inject(MAT_DIALOG_DATA) public data: any
       )
    {
@@ -22,6 +22,11 @@ export class ConfirmDialogComponent implements OnInit {
       this.confirmMessage = data.confirmMessage;
    }
 
-   ngOnInit() {}
+
+   @HostListener('window:keydown.ENTER')
+   acceptAndClose()
+   {
+      this.dialogRef.close(true);
+   }
 
 }

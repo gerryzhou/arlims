@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, HostListener, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {NewTestInfo} from './new-test-info';
 
@@ -18,5 +18,12 @@ export class NewTestDialogComponent {
       this.dialogRef.close();
    }
 
+   @HostListener('window:keydown.ENTER')
+   acceptAndCloseIfValid()
+   {
+      if ( !this.data.beginDate || !this.data.selectedTestType )
+         return;
+      this.dialogRef.close(this.data);
+   }
 }
 

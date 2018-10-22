@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {MatDialogRef} from '@angular/material';
 import {ResourceCodesDialogResult} from './resource-codes-dialog-result';
 
@@ -56,5 +56,11 @@ export class ResourceCodesDialogComponent {
       this.dialogRef.close();
    }
 
-
+   @HostListener('window:keydown.ENTER')
+   acceptAndCloseIfValid()
+   {
+      if ( this.data.resourceCodes.length === 0 )
+         return;
+      this.dialogRef.close(this.data);
+   }
 }
