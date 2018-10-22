@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +19,6 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.hobsoft.spring.resttemplatelogger.LoggingCustomizer;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -76,7 +73,6 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         HttpHeaders defaultRequestHeaders = new HttpHeaders();
         defaultRequestHeaders.add(HttpHeaders.AUTHORIZATION, authorizationHeaderValue(apiConfig));
         defaultRequestHeaders.add("sourceApplicationID", apiConfig.getAppId());
-        defaultRequestHeaders.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
         this.fixedHeaders = defaultRequestHeaders;
 
         this.secureRandom = new SecureRandom();
@@ -107,7 +103,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
                 .queryParam("objectFilters", includeFields)
                 .toUriString();
 
-            HttpEntity reqEntity = new HttpEntity(newRequestHeaders());
+            HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true));
 
             log.info("Retrieving inbox items for " + orgName + ".");
 
@@ -136,7 +132,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             .queryParam("objectFilters", "statusCode")
             .toUriString();
 
-        HttpEntity reqEntity = new HttpEntity(newRequestHeaders());
+        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true));
 
         ResponseEntity<StatusCodeObj[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, StatusCodeObj[].class);
 
@@ -148,11 +144,13 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             return Optional.empty();
     }
 
-    private HttpHeaders newRequestHeaders()
+    private HttpHeaders newRequestHeaders(boolean acceptJson)
     {
         HttpHeaders hdrs = new HttpHeaders();
         hdrs.addAll(fixedHeaders);
         hdrs.add("sourceTransactionID", generateApiTransactionId());
+        if ( acceptJson )
+            hdrs.setAccept(singletonList(new MediaType("application", "json", StandardCharsets.UTF_8)));
         return hdrs;
     }
 
