@@ -13,7 +13,7 @@ import {UserContextService} from '../../../../shared/services';
 import {AnalyzedAuditLogEntry} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
 
 @Component({
-   selector: 'app-micro-imp-slm-vidas-form-data-review',
+   selector: 'app-micro-slm-form-data-review',
    templateUrl: './form-data-review.component.html',
    styleUrls: ['./form-data-review.component.scss'],
 })

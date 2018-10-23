@@ -1,7 +1,8 @@
 
-Fix test data diffing by matching array elements via identification field.
+Fix test data diffing for auditing and concurrent updates reporting.
+   Make array indexes stable: use empty form groups for deleted items, and always insert new items at end.
+   View ignores empty form groups within form arrays.
 
-Provide visual indicator than an isolate test seq is marked as failed.
 
 All buttons other than "Save" button should have type="button" attribute.
   Then probably shouldn't need form elements in individual stages.
@@ -20,8 +21,10 @@ From meeting 2018/10/15
 
 Commit Notes
 ------------
-
-
+form-data-review-component.html
+  Fix wrong name for controls stage data property and display sample first in header.
+stage-pos-cont-component.html
+  Make buttons display conditional on form not being disabled.
 
 ------------
 

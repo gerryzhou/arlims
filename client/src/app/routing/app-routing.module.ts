@@ -39,9 +39,9 @@ const routes: Routes = [
       canActivate: [AuthenticatedUserGuard],
    },
    {
-      path: 'test-types/micro-imp-sal-vidas',
-      loadChildren: '../lab-tests/microbiology/imported-salmonella-vidas/imported-salmonella-vidas.module#ImportedSalmonellaVidasModule',
-      data: {preload: true, title: 'Imported SLM Vidas Test'},
+      path: 'test-types/micro-slm',
+      loadChildren: '../lab-tests/microbiology/salmonella/salmonella.module#SalmonellaModule',
+      data: {preload: true, title: 'Salmonella Test'},
       canActivate: [AuthenticatedUserGuard],
    },
    {

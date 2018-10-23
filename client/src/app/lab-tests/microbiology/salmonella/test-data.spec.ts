@@ -1,6 +1,6 @@
 import {emptyTestData, getTestStageStatuses, TestData} from './test-data';
 
-describe('microbiology imported salmonella vidas test data functions', () => {
+describe('microbiology salmonella test data functions', () => {
 
    it('should yield empty for empty test data', () => {
       expect(getTestStageStatuses(emptyTestData(), null))
@@ -74,6 +74,7 @@ describe('microbiology imported salmonella vidas test data functions', () => {
             collectorControlsGrowth: true,
             bacterialControlsUsed: false,
          },
+         // TODO: Add positive continuations tests stage here.
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
             reserveSampleDestinations: 'x',

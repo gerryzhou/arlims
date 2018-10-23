@@ -9,7 +9,7 @@
          <mat-select placeholder="Test type" [(ngModel)]="data.selectedTestType">
             <mat-option [value]="null"></mat-option>
             <mat-option *ngFor="let testType of data.availableTestTypes" [value]="testType.code">
-               {{testType.name}} ({{testType.shortName}})
+               {{testType.name}}
             </mat-option>
          </mat-select>
       </mat-form-field>

@@ -5,7 +5,8 @@
            [ngClass]="{'warn': testUnitNumbersDiffMessageIsWarning, 'ok': !testUnitNumbersDiffMessageIsWarning}">
          {{testUnitNumbersDiffMessage}}
          <span *ngIf="testUnitNumbersDiff && testUnitNumbersDiff.unrepresentedVidasPositives.length > 0">
-            <button class="link" (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()">
+            <button class="link" (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()"
+                    *ngIf="!form.disabled">
                Add Vidas positives.
             </button>
          </span>
@@ -25,7 +26,7 @@
       </div>
 
       <!--TODO: Mimic add test button here (yellow or green +).-->
-      <button mat-button (click)="addOnePositiveTestUnitContinuationTestsFormGroup()">
+      <button mat-button (click)="addOnePositiveTestUnitContinuationTestsFormGroup()" *ngIf="!form.disabled">
          Add positive sub/composite
       </button>
 

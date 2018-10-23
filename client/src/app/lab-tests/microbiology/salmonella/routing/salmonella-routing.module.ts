@@ -12,14 +12,14 @@ const routes: Routes = [
       path: 'test-data-entry/:testId',
       component: StagedTestDataEntryComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
-      data: {title: 'Imported SLM Vidas Test Data Entry'},
+      data: {title: 'Salmonella Test Data Entry'},
       canDeactivate: [TestDataEntryConfirmDeactivateGuard],
    },
    {
       path: 'test-data-entry/:testId/stage/:stage',
       component: StagedTestDataEntryComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
-      data: {title: 'Imported SLM Vidas Test Data Entry'},
+      data: {title: 'Salmonella Test Data Entry'},
       canDeactivate: [TestDataEntryConfirmDeactivateGuard],
    },
    {
@@ -27,7 +27,7 @@ const routes: Routes = [
       component: TestReportsListingComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {
-         title: 'Test Reports - Imported SLM Vidas',
+         title: 'Test Reports - Salmonella',
          includeAuditLogEntries: true, // tell resolver to also load audit log entries
       },
    },
@@ -36,7 +36,7 @@ const routes: Routes = [
       component: FormDataReviewComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {
-         title: 'Imported SLM Vidas Test Data Review',
+         title: 'Salmonella Test Data Review',
          includeAuditLogEntries: true, // tell resolver to also load audit log entries
       },
    },
@@ -46,4 +46,4 @@ const routes: Routes = [
    imports: [RouterModule.forChild(routes)],
    exports: [RouterModule]
 })
-export class ImportedSalmonellaVidasRoutingModule { }
+export class SalmonellaRoutingModule { }

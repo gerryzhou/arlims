@@ -31,7 +31,7 @@ import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 
 @Component({
-   selector: 'app-micro-imp-slm-vidas-staged-test-data-entry',
+   selector: 'app-micro-slm-staged-test-data-entry',
    templateUrl: './staged-test-data-entry.component.html',
    styleUrls: ['./staged-test-data-entry.component.scss'],
 })

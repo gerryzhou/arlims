@@ -20,7 +20,7 @@ import {
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
-import {ImportedSalmonellaVidasRoutingModule} from './routing/imported-salmonella-vidas-routing.module';
+import {SalmonellaRoutingModule} from './routing/salmonella-routing.module';
 import {StagePrepComponent} from './stage-prep/stage-prep.component';
 import {StagedTestDataEntryComponent} from './staged-test-data-entry/staged-test-data-entry.component';
 import {StagePreEnrComponent} from './stage-pre-enr/stage-pre-enr.component';
@@ -61,7 +61,7 @@ import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tu
       MatTooltipModule,
       //
       CommonComponentsModule,
-      ImportedSalmonellaVidasRoutingModule,
+      SalmonellaRoutingModule,
    ],
    declarations: [
       StagedTestDataEntryComponent,
@@ -91,4 +91,4 @@ import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tu
    ],
    exports: []
 })
-export class ImportedSalmonellaVidasModule { }
+export class SalmonellaModule { }

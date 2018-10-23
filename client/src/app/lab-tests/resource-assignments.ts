@@ -1,5 +1,5 @@
 import {FormGroup} from '@angular/forms';
-import {isEmptyString} from './microbiology/imported-salmonella-vidas/test-data';
+import {isEmptyString} from './microbiology/salmonella/test-data';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ResourceCodesDialogResult} from '../common-components/resource-codes-dialog/resource-codes-dialog-result';
 import {AlertMessageService} from '../shared/services/alerts';
