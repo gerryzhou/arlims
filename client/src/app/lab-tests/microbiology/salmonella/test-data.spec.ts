@@ -11,6 +11,7 @@ describe('microbiology salmonella test data functions', () => {
             {stageName: 'M-BROTH', fieldValuesStatus: 'e'},
             {stageName: 'VIDAS', fieldValuesStatus: 'e'},
             {stageName: 'CONTROLS', fieldValuesStatus: 'e'},
+            {stageName: 'POS-CONT', fieldValuesStatus: 'e'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'e'},
          ]);
    });
@@ -74,7 +75,7 @@ describe('microbiology salmonella test data functions', () => {
             collectorControlsGrowth: true,
             bacterialControlsUsed: false,
          },
-         // TODO: Add positive continuations tests stage here.
+         posContData: null, // TODO
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
             reserveSampleDestinations: 'x',
@@ -89,6 +90,7 @@ describe('microbiology salmonella test data functions', () => {
             {stageName: 'M-BROTH', fieldValuesStatus: 'c'},
             {stageName: 'VIDAS', fieldValuesStatus: 'c'},
             {stageName: 'CONTROLS', fieldValuesStatus: 'c'},
+            {stageName: 'POS-CONT', fieldValuesStatus: 'c'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
          ]);
    });
