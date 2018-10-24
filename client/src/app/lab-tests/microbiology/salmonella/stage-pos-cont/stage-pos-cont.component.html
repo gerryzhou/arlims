@@ -16,19 +16,14 @@
    <div *ngIf="formInitialized">
 
       <div class="test-units-area">
-         <app-one-pos-test-unit-cont-tests *ngFor="let testUnitFormGroup of testUnitsFormArray.controls; let i = index"
-            [form]="testUnitFormGroup"
+         <app-one-pos-test-unit-cont-tests *ngFor="let testUnitNum of sortedTestUnitNums"
+            [form]="testUnitsFormGroup.get(testUnitNum.toString())"
+            [testUnitNumber]="testUnitNum"
             [showDisposeButton]="true"
             [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
-            (disposeRequested)="removeTestUnitAtIndex(i)"
-            (testUnitNumberChange)="onRepresentedTestUnitNumberChanged()">
+            (disposeRequested)="removeTestUnitNumber(testUnitNum)">
          </app-one-pos-test-unit-cont-tests>
       </div>
-
-      <!--TODO: Mimic add test button here (yellow or green +).-->
-      <button mat-button (click)="addOnePositiveTestUnitContinuationTestsFormGroup()" *ngIf="!form.disabled">
-         Add positive sub/composite
-      </button>
 
       <div class="controls-area">
          <!-- TODO

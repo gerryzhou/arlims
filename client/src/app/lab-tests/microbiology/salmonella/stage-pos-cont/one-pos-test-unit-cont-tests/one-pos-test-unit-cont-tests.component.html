@@ -3,17 +3,17 @@
    <div class="medium-stack">
 
       <div class="test-unit-medium">
-            <span class="test-unit">
-               <span>{{sampleTestUnitsTypeAbrev | titlecase}} # </span>
-               <input class="test-unit-num" matInput type="number" min="1" formControlName="testUnitNumber"
-                      (change)="onTestUnitNumberChanged()">
-            </span>
+         <span class="test-unit">
+            {{sampleTestUnitsTypeAbrev | titlecase}} {{testUnitNumber}}
+         </span>
+         <div class="expanding-flex-space"></div>
          <span class="medium-label">RV</span>
+         <div class="expanding-flex-space"></div>
       </div>
 
       <app-sel-agars-test-suite
          [form]="form.controls['rvSourcedTests']"
-         [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNum"
+         [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
          [medium]="'RV'">
       </app-sel-agars-test-suite>
 
@@ -22,16 +22,17 @@
    <div class="medium-stack">
 
       <div class="test-unit-medium">
-            <span class="test-unit">
-               <span>{{sampleTestUnitsTypeAbrev | titlecase}} # </span>
-               <span class="test-unit-num">{{testUnitNum}}</span>
-            </span>
+         <span class="test-unit">
+            {{sampleTestUnitsTypeAbrev | titlecase}} {{testUnitNumber}}
+         </span>
+         <div class="expanding-flex-space"></div>
          <span class="medium-label">TT</span>
+         <div class="expanding-flex-space"></div>
       </div>
 
       <app-sel-agars-test-suite
          [form]="form.controls['ttSourcedTests']"
-         [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNum"
+         [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
          [medium]="'TT'">
       </app-sel-agars-test-suite>
 

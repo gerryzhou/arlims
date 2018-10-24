@@ -4,22 +4,22 @@
 
       <div class="sel-agar-label-stack">
          <div class="sel-agar-label">{{selAgar.displayName}}</div>
-         <button class="add-isolate hover-link" type="button" (click)="addNewIsolate(selAgar.formGroupName)"
+         <button class="add-isolate hover-link" type="button" (click)="addNewIsolateTestSequence(selAgar.formGroupName)"
             matTooltip="add isolate">
             <mat-icon>add_circle_outline</mat-icon>
          </button>
       </div>
 
       <div class="isolate-test-seqs-stack">
-         <app-isolate-test-seq *ngFor="let isolateFormGroup of form.get(selAgar.formGroupName).controls; let i = index"
-            [form]="isolateFormGroup"
+         <app-isolate-test-seq *ngFor="let seqUid of displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName]; let i = index"
+            [form]="this.form.get([selAgar.formGroupName, seqUid])"
             [testUnitDescription]="testUnitDescription"
             [medium]="medium"
             [selectiveAgarDisplayName]="selAgar.displayName"
             [isolateNumber]="i+1"
             [showDisposeButton]="true"
-            (disposeRequested)="removeIsolateTestSeqAtIndex(selAgar.formGroupName, i)"
-            (failureDeclared)="onIsolateFailureDeclared(selAgar.formGroupName, i)">
+            (disposeRequested)="removeIsolateTestSequence(selAgar.formGroupName, seqUid)"
+            (failureDeclared)="onIsolateTestSequenceFailureDeclared(selAgar.formGroupName)">
          </app-isolate-test-seq>
       </div>
 

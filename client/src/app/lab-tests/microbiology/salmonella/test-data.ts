@@ -78,18 +78,21 @@ export interface ControlsData {
 
 export interface PositivesContinuationData
 {
-   positiveTestUnitContinuationTestss: PositiveTestUnitContinuationTests[];
-   controls: PositivesContinuationControlsData;
+   testUnitsContinuationTests: ContinuationTestssByTestUnitNum;
+   continuationControls: ContinuationControls;
 }
 
-export interface PositiveTestUnitContinuationTests
+interface ContinuationTestssByTestUnitNum {
+   [testUnitNum: string]: ContinuationTests;
+}
+
+export interface ContinuationTests
 {
-   testUnitNumber: number | null;
    rvSourcedTests: SelectiveAgarsTestSuite;
    ttSourcedTests: SelectiveAgarsTestSuite;
 }
 
-export interface PositivesContinuationControlsData
+export interface ContinuationControls
 {
    salmonellaGaminara: SelectiveAgarsTestSuite;
    salmonellaDiarizonae: SelectiveAgarsTestSuite;
@@ -102,13 +105,17 @@ export interface PositivesContinuationControlsData
 }
 
 export interface SelectiveAgarsTestSuite {
-   he: IsolateTestSequence[];
-   xld: IsolateTestSequence[];
-   bs24h: IsolateTestSequence[];
-   bs48h: IsolateTestSequence[];
+   he: IsolateTestSequencesByUid;
+   xld: IsolateTestSequencesByUid;
+   bs24h: IsolateTestSequencesByUid;
+   bs48h: IsolateTestSequencesByUid;
 }
 
+interface IsolateTestSequencesByUid { [testSeqUid: string]: IsolateTestSequence; }
+
 export interface IsolateTestSequence {
+   createdAtEpochMillis: number;
+   creationSeqNum: number;
    colonyAppearance: ColonyAppearance | null;
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
@@ -165,7 +172,7 @@ export function emptyTestData(): TestData {
    };
 }
 
-export function makeEmptyPositivesContinuationControls(): PositivesContinuationControlsData
+export function makeEmptyContinuationControls(): ContinuationControls
 {
    return {
       salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1),
@@ -189,14 +196,27 @@ export function makeEmptySelectiveAgarsTestSuite(numIsolates: number): Selective
    };
 }
 
-function makeEmptyIsolateTestSequences(numIsolates: number)
+function makeEmptyIsolateTestSequences(numIsolates: number): IsolateTestSequencesByUid
 {
-   return Array.from(Array(numIsolates), makeEmptyIsolateTestSequence);
+   const seqs: IsolateTestSequencesByUid = {};
+
+   for (let seqNum = 1; seqNum <= numIsolates; ++seqNum)
+   {
+      let uid = makeIsolateTestSequenceUid();
+      while ( seqs[uid] != null )
+         uid = makeIsolateTestSequenceUid();
+
+      seqs[uid] = makeEmptyIsolateTestSequence(seqNum);
+   }
+
+   return seqs;
 }
 
-export function makeEmptyIsolateTestSequence(): IsolateTestSequence
+export function makeEmptyIsolateTestSequence(seqNum: number): IsolateTestSequence
 {
    return {
+      createdAtEpochMillis: new Date().getTime(),
+      creationSeqNum: seqNum,
       colonyAppearance: null,
       tsiTubeTest: makeEmptySlantTubeTest(),
       liaTubeTest: makeEmptySlantTubeTest(),
@@ -297,66 +317,79 @@ export function makePositivesContinuationDataFormGroup(posContData: PositivesCon
    if ( posContData == null )
       return new FormGroup({}, formValidatorFunctions);
 
-   const positiveTestUnitContinuationTestss =
-      makePositiveTestUnitContinuationTestssFormArray(posContData.positiveTestUnitContinuationTestss || []);
+   const testUnitsContinuationTests =
+      makeTestUnitsContinuationTestsFormGroup(posContData.testUnitsContinuationTests || {});
 
-   const controls =
-      makePositivesContinuationControlsFormGroup(posContData.controls || makeEmptyPositivesContinuationControls());
+   const continuationControls =
+      makeContinuationControlsFormGroup(posContData.continuationControls || makeEmptyContinuationControls());
 
-   return new FormGroup({ positiveTestUnitContinuationTestss, controls }, formValidatorFunctions);
-}
-
-export function makePositiveTestUnitContinuationTestssFormArray(posTestUnitContTestss: PositiveTestUnitContinuationTests[])
-{
-   return new FormArray(
-      posTestUnitContTestss.map(
-         makePositiveTestUnitContinuationTestsFormGroup
-      )
+   return new FormGroup(
+      {
+         testUnitsContinuationTests,
+         continuationControls
+      },
+      formValidatorFunctions
    );
 }
 
-// Make continuation testing form group for one positive test unit.
-export function makePositiveTestUnitContinuationTestsFormGroup(posContTests: PositiveTestUnitContinuationTests): FormGroup
+export function makeTestUnitsContinuationTestsFormGroup(testUnitsContinuationTests: ContinuationTestssByTestUnitNum): FormGroup
+{
+   const fgControls: {[testUnitNum: string]: FormGroup} = {};
+
+   for ( const testUnitNumStr of Object.keys(testUnitsContinuationTests) )
+      fgControls[testUnitNumStr] = makeContinuationTestsFormGroup(testUnitsContinuationTests[testUnitNumStr]);
+
+   return new FormGroup(fgControls);
+}
+
+// Make continuation testing form group for one test unit.
+export function makeContinuationTestsFormGroup(contTests: ContinuationTests): FormGroup
 {
    return new FormGroup({
-      testUnitNumber: new FormControl(posContTests.testUnitNumber),
-      rvSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.rvSourcedTests),
-      ttSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(posContTests.ttSourcedTests),
+      rvSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(contTests.rvSourcedTests),
+      ttSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(contTests.ttSourcedTests),
    });
 }
 
-export function makePositivesContinuationControlsFormGroup(posContControlsData: PositivesContinuationControlsData): FormGroup
+export function makeContinuationControlsFormGroup(contControls: ContinuationControls): FormGroup
 {
    return new FormGroup({
-      salmonellaGaminara: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaGaminara),
-      salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaDiarizonae),
-      salmonellaControlsSatisfactory: new FormControl(posContControlsData.salmonellaControlsSatisfactory),
-      pVulgarisApiVitekDetection: new FormControl(posContControlsData.pVulgarisApiVitekDetection),
-      pVulgarisControlSatisfactory: new FormControl(posContControlsData.pVulgarisControlSatisfactory),
-      pAerugiOxidaseDetection: new FormControl(posContControlsData.pAerugiOxidaseDetection),
-      pAerugiControlSatisfactory: new FormControl(posContControlsData.pAerugiControlSatisfactory),
-      medium: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.medium),
+      salmonellaGaminara: makeSelectiveAgarsTestSuiteFormGroup(contControls.salmonellaGaminara),
+      salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(contControls.salmonellaDiarizonae),
+      salmonellaControlsSatisfactory: new FormControl(contControls.salmonellaControlsSatisfactory),
+      pVulgarisApiVitekDetection: new FormControl(contControls.pVulgarisApiVitekDetection),
+      pVulgarisControlSatisfactory: new FormControl(contControls.pVulgarisControlSatisfactory),
+      pAerugiOxidaseDetection: new FormControl(contControls.pAerugiOxidaseDetection),
+      pAerugiControlSatisfactory: new FormControl(contControls.pAerugiControlSatisfactory),
+      medium: makeSelectiveAgarsTestSuiteFormGroup(contControls.medium),
    });
 }
 
 function makeSelectiveAgarsTestSuiteFormGroup(selAgarsTestSuite: SelectiveAgarsTestSuite): FormGroup
 {
    return new FormGroup({
-      he: makeIsolateTestSequencesFormArray(selAgarsTestSuite.he),
-      xld: makeIsolateTestSequencesFormArray(selAgarsTestSuite.xld),
-      bs24h: makeIsolateTestSequencesFormArray(selAgarsTestSuite.bs24h),
-      bs48h: makeIsolateTestSequencesFormArray(selAgarsTestSuite.bs48h),
+      he: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.he),
+      xld: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.xld),
+      bs24h: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.bs24h),
+      bs48h: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.bs48h),
    });
 }
 
-function makeIsolateTestSequencesFormArray(isolateTests: IsolateTestSequence[]): FormArray
+function makeIsolatesTestSequencesFormGroup(isolateTestSeqsByUid: IsolateTestSequencesByUid): FormGroup
 {
-   return new FormArray(isolateTests.map(makeIsolateTestSequenceFormGroup));
+   const fgControls: { [testSeqUid: string]: FormGroup } = {};
+
+   for ( const testSeqUid of Object.keys(isolateTestSeqsByUid) )
+      fgControls[testSeqUid] = makeIsolateTestSequenceFormGroup(isolateTestSeqsByUid[testSeqUid]);
+
+   return new FormGroup(fgControls);
 }
 
 export function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTestSequence): FormGroup
 {
    return new FormGroup({
+      createdAtEpochMillis: new FormControl(isolateTestSequence.createdAtEpochMillis),
+      creationSeqNum: new FormControl(isolateTestSequence.creationSeqNum),
       colonyAppearance: new FormControl(isolateTestSequence.colonyAppearance),
       tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.tsiTubeTest),
       liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.liaTubeTest),
@@ -554,10 +587,10 @@ function posContStatusCode(testData: TestData, testConfig: TestConfig | null): F
       return 'e';
 
    const testUnitsStatus =
-      posContTestUnitsStatusCode(positivesData.positiveTestUnitContinuationTestss, testData.vidasData, testConfig);
+      posContTestUnitsStatusCode(positivesData.testUnitsContinuationTests, testData.vidasData, testConfig);
 
    const controlsStatus =
-      posContControlsStatusCode(positivesData.controls, testConfig);
+      contControlsStatusCode(positivesData.continuationControls, testConfig);
 
    return (
         testUnitsStatus === 'e' && controlsStatus === 'e' ? 'e'
@@ -568,21 +601,25 @@ function posContStatusCode(testData: TestData, testConfig: TestConfig | null): F
 
 function posContTestUnitsStatusCode
    (
-      contTestss: PositiveTestUnitContinuationTests[],
+      contTestss: ContinuationTestssByTestUnitNum,
       vidasData: VidasData,
       testConfig: TestConfig | null
    )
    : FieldValuesStatusCode
 {
-   if ( !contTestss || contTestss.length === 0 )
+   if ( !contTestss )
+      return 'e';
+
+   const testUnitNums = Object.keys(contTestss).map(numStr => parseInt(numStr)).sort();
+
+   if ( testUnitNums.length === 0 )
       return 'e';
 
    // If the continuation test unit numbers aren't the same as the Vidas positives, then the data is considered incomplete.
-   const contTestUnitNums = contTestss.map(contTests => contTests.testUnitNumber);
-   if ( !arraysEqual(contTestUnitNums, getVidasPositiveTestUnitNumbers(vidasData)) )
+   if ( !arraysEqual(testUnitNums, getVidasPositiveTestUnitNumbers(vidasData)) )
       return 'i';
 
-   for ( const contTests of contTestss )
+   for ( const contTests of Object.values(contTestss) )
    {
       if ( !positiveTestUnitContinuationTestsComplete(contTests, testConfig) )
          return 'i';
@@ -591,24 +628,24 @@ function posContTestUnitsStatusCode
    return 'c';
 }
 
-function posContControlsStatusCode
+function contControlsStatusCode
    (
-      controls: PositivesContinuationControlsData | null,
+      contControls: ContinuationControls | null,
       testConfig: TestConfig | null
    )
    : FieldValuesStatusCode
 {
-   if ( controls == null )
+   if ( contControls == null )
       return 'e';
 
-   if ( controls.salmonellaControlsSatisfactory    != null &&
-        controls.pVulgarisApiVitekDetection        != null &&
-        controls.pVulgarisControlSatisfactory      != null &&
-        controls.pAerugiOxidaseDetection           != null &&
-        controls.pAerugiControlSatisfactory        != null &&
-        selectiveAgarsTestSuiteComplete(controls.salmonellaGaminara, false, true, testConfig)  &&
-        selectiveAgarsTestSuiteComplete(controls.salmonellaDiarizonae, true, true, testConfig) &&
-        selectiveAgarsTestSuiteComplete(controls.medium, false, true, testConfig) )
+   if ( contControls.salmonellaControlsSatisfactory    != null &&
+        contControls.pVulgarisApiVitekDetection        != null &&
+        contControls.pVulgarisControlSatisfactory      != null &&
+        contControls.pAerugiOxidaseDetection           != null &&
+        contControls.pAerugiControlSatisfactory        != null &&
+        selectiveAgarsTestSuiteComplete(contControls.salmonellaGaminara, false, true, testConfig)  &&
+        selectiveAgarsTestSuiteComplete(contControls.salmonellaDiarizonae, true, true, testConfig) &&
+        selectiveAgarsTestSuiteComplete(contControls.medium, false, true, testConfig) )
       return 'c';
 
    return 'i';
@@ -616,13 +653,12 @@ function posContControlsStatusCode
 
 function positiveTestUnitContinuationTestsComplete
    (
-      contTests: PositiveTestUnitContinuationTests,
+      contTests: ContinuationTests,
       testConfig: TestConfig | null
    )
    : boolean
 {
    return (
-      contTests.testUnitNumber != null &&
       selectiveAgarsTestSuiteComplete(contTests.rvSourcedTests, false, false, testConfig) &&
       selectiveAgarsTestSuiteComplete(contTests.ttSourcedTests, false, false, testConfig)
    );
@@ -637,23 +673,23 @@ function selectiveAgarsTestSuiteComplete
    )
    : boolean
 {
-   const minSelAgarsRequired = isControl ? testConfig.positiveTestUnitControlsMinimumSelectiveAgars || 1 : 4;
-   const minIsolatesPerSelAgar = isControl ? 1 : testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2;
+   const minSelAgarsRequired = isControl ? testConfig && testConfig.positiveTestUnitControlsMinimumSelectiveAgars || 1 : 4;
+   const minIsolatesPerSelAgar = isControl ? 1 : testConfig && testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2;
 
    const heStatuses =
-      selAgarsTestSuite.he
+      Object.values(selAgarsTestSuite.he)
          .filter(testSeq => testSeq.failure == null)
          .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
    const xldStatuses =
-       selAgarsTestSuite.xld
+       Object.values(selAgarsTestSuite.xld)
        .filter(testSeq => testSeq.failure == null)
        .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
    const bs24Statuses =
-      selAgarsTestSuite.bs24h
+      Object.values(selAgarsTestSuite.bs24h)
       .filter(testSeq => testSeq.failure == null)
       .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
    const bs48Statuses =
-      selAgarsTestSuite.bs48h
+      Object.values(selAgarsTestSuite.bs48h)
          .filter(testSeq => testSeq.failure == null)
          .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
 
@@ -807,5 +843,18 @@ export function getVidasPositiveTestUnitNumbers(vidasData: VidasData): number[]
 export function isEmptyString(s: string)
 {
    return !s || s.trim().length === 0;
+}
+
+export function makeIsolateTestSequenceUid(len: number = 15): string {
+   let s = '';
+   const capitalACode = 'A'.charCodeAt(0);
+   const randomAlphaNumChar = function() {
+      const r = Math.floor(Math.random() * 62);
+      if (r < 10) return r.toString(); // digits
+      if (r < 36) return String.fromCharCode(r + capitalACode - 10); // capital letters
+      return String.fromCharCode(r + 61); // lc letters
+   };
+   while (s.length < len) s += randomAlphaNumChar();
+   return s;
 }
 

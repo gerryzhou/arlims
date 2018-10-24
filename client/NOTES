@@ -1,22 +1,15 @@
-Fix test data diffing for auditing and concurrent update conflict reporting.
-  Alt 3
-    Do not use arrays except for values to be considered atomic, such as Vidas results.
-    Instead use objects with dynamic properties that meaningfully identify data under them.
-      E.g. for pos-cont stage:
-        Use the test unit number as key at top of data in pos-cont stage.
-        Use a new identifying key (maybe with timestamp) for isolates.
-        When adding a new positive test unit, would need to prompt user for the test unit number which would no longer be editable within the component itself.
+Pos Cont UI
+  Add controls for:
+    colony appearance
+    oxidase
+    Vitek
+    API20E
+    Serology etc.
 
-  Alt 1
-    Make array indexes stable: use empty form groups for deleted items, and always insert new items at end.
-    View ignores empty form groups within form arrays.
-  Alt 2
-    Require arrays treated non-atomically to have natural properties available on their elements, recognized by conventional name.
-      Arrays in the test data would be marked for non-atomic comparison via (new) comparison config argument passed to comparison functions.
-    This approach makes referring to differing elements difficult, because the actual physical path of leaf data elements would generally differ from their logical access paths.
 
-Add results for oxidase, Vitek, API20E.
 
+
+Add ";charset=UTF-8" to json accept header on api calls from the client.
 
 All buttons other than "Save" button should have type="button" attribute.
   Then probably shouldn't need form elements in individual stages.
@@ -35,10 +28,7 @@ From meeting 2018/10/15
 
 Commit Notes
 ------------
-form-data-review-component.html
-  Fix wrong name for controls stage data property and display sample first in header.
-stage-pos-cont-component.html
-  Make buttons display conditional on form not being disabled.
+Change positive continuation test data structures to only use arrays/formarrays at leaf positions.
 
 ------------
 

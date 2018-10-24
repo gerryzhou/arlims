@@ -1,12 +1,12 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {FormArray, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 
 import {
-   makeEmptyPositivesContinuationControls,
-   makeEmptySelectiveAgarsTestSuite, makePositivesContinuationControlsFormGroup,
-   makePositiveTestUnitContinuationTestsFormGroup, makePositiveTestUnitContinuationTestssFormArray,
+   makeEmptyContinuationControls,
+   makeEmptySelectiveAgarsTestSuite, makeContinuationControlsFormGroup,
+   makeContinuationTestsFormGroup, makeTestUnitsContinuationTestsFormGroup,
    PositivesContinuationData,
-   PositiveTestUnitContinuationTests,
+   ContinuationTests,
 } from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {TestConfig} from '../test-config';
@@ -39,10 +39,11 @@ export class StagePosContComponent implements OnChanges {
    @Input()
    showUnsetAffordances = false;
 
-   // Whether the controls for positives continuation tests have been created in the form yet.
+   // Whether the child controls have been created in the form group yet.
    formInitialized = false;
 
-   testUnitsFormArray: FormArray | null = null;
+   // The 'testUnitsContinuationTests' child control for the test unit continuation tests, if initialized.
+   testUnitsFormGroup: FormGroup | null = null;
 
    defaultNumIsolatesPerSelectiveAgarPlate = 2;
 
@@ -53,30 +54,21 @@ export class StagePosContComponent implements OnChanges {
 
    sampleTestUnitsTypeAbrev = 'sub/comp';
 
+   sortedTestUnitNums: number[];
 
    constructor() { }
 
    ngOnChanges()
    {
       this.formInitialized = Object.keys(this.form.controls).length > 0;
-      this.testUnitsFormArray = this.formInitialized ? this.form.get('positiveTestUnitContinuationTestss') as FormArray : null;
+      this.testUnitsFormGroup = this.formInitialized ? this.form.get('testUnitsContinuationTests') as FormGroup : null;
 
       this.sampleTestUnitsTypeAbrev = this.sampleTestUnitsType === 'subsample' ? 'sub' : 'comp';
 
       this.defaultNumIsolatesPerSelectiveAgarPlate =
          this.testConfig ? this.testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2 : 2;
 
-      this.refreshTestUnitNumbersDiff();
-   }
-
-   addOnePositiveTestUnitContinuationTestsFormGroup()
-   {
-      if ( !this.formInitialized )
-         this.initFormGroup();
-
-      const onePosContTests: PositiveTestUnitContinuationTests = this.makeOnePositiveTestUnitContinuationTests();
-
-      this.testUnitsFormArray.push(makePositiveTestUnitContinuationTestsFormGroup(onePosContTests));
+      this.refreshTestUnitNumbersDependents();
    }
 
    addUnrepresentedVidasPositivesContinuationTestsFormGroups()
@@ -86,38 +78,42 @@ export class StagePosContComponent implements OnChanges {
 
       for ( const newTestUnitNum of this.testUnitNumbersDiff.unrepresentedVidasPositives )
       {
-         const testUnitContTests = this.makeOnePositiveTestUnitContinuationTests(newTestUnitNum);
-         const testUnitContTestsFormGroup = makePositiveTestUnitContinuationTestsFormGroup(testUnitContTests);
-         this.testUnitsFormArray.push(testUnitContTestsFormGroup);
+         const emptyContTestsFormGroup = makeContinuationTestsFormGroup(this.makeEmptyContinuationTests());
+         this.testUnitsFormGroup.addControl(newTestUnitNum.toString(), emptyContTestsFormGroup);
       }
 
-      this.refreshTestUnitNumbersDiff();
+      this.refreshTestUnitNumbersDependents();
    }
 
    private initFormGroup()
    {
       if ( !this.formInitialized )
       {
-         const testUnitsFormArray = makePositiveTestUnitContinuationTestssFormArray([]);
-         const controlsFormGroup = makePositivesContinuationControlsFormGroup(makeEmptyPositivesContinuationControls());
+         const emptyTestUnitsFormGroup = makeTestUnitsContinuationTestsFormGroup({});
+         const emptyContControlsFormGroup = makeContinuationControlsFormGroup(makeEmptyContinuationControls());
 
-         this.form.addControl('positiveTestUnitContinuationTestss', testUnitsFormArray);
-         this.form.addControl('controls', controlsFormGroup);
+         this.form.addControl('testUnitsContinuationTests', emptyTestUnitsFormGroup);
+         this.form.addControl('continuationControls', emptyContControlsFormGroup);
 
          this.formInitialized = true;
-         this.testUnitsFormArray = this.form.get('positiveTestUnitContinuationTestss') as FormArray;
+         this.testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup;
       }
       else
          console.log('Ignoring attempt to add positives continuation controls form group when this form group is already present.');
    }
 
-   private makeOnePositiveTestUnitContinuationTests(testUnitNumber: number | null = null): PositiveTestUnitContinuationTests
+   private makeEmptyContinuationTests(): ContinuationTests
    {
       return {
-         testUnitNumber,
          rvSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate),
          ttSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate)
       };
+   }
+
+   removeTestUnitNumber(testUnitNum: number)
+   {
+      this.testUnitsFormGroup.removeControl(testUnitNum.toString());
+      this.refreshTestUnitNumbersDependents();
    }
 
    private makeRepresentedTestUnitNumbersDiffVsVidas(): TestUnitNumbersDiff
@@ -128,22 +124,16 @@ export class StagePosContComponent implements OnChanges {
       };
    }
 
-   private getRepresentedTestUnitNumbers(): number[]
+   private getSortedTestUnitNumbers(): number[]
    {
-      if ( this.testUnitsFormArray == null )
+      if ( this.testUnitsFormGroup == null )
          return [];
 
-      const testUnitNumbers = [];
-
-      for ( const posTestUnitContTestsCtl of this.testUnitsFormArray.controls )
-      {
-         const testUnitNumCtl = posTestUnitContTestsCtl.get('testUnitNumber');
-         const testNum = testUnitNumCtl ? parseInt(testUnitNumCtl.value) : NaN;
-         if ( testNum )
-            testUnitNumbers.push(testNum);
-      }
-
-      return testUnitNumbers;
+      return (
+         Object.keys(this.testUnitsFormGroup.controls)
+         .map(testUnitNumStr => parseInt(testUnitNumStr))
+         .sort()
+      );
    }
 
    private getUnrepresentedVidasPositiveTestUnitNumbers(): number[]
@@ -153,7 +143,7 @@ export class StagePosContComponent implements OnChanges {
 
       const testUnitNums = new Set(this.vidasPositiveSampleTestUnitNumbers);
 
-      for ( const repTestUnitNum of this.getRepresentedTestUnitNumbers() )
+      for ( const repTestUnitNum of this.getSortedTestUnitNumbers() )
          testUnitNums.delete(repTestUnitNum);
 
       return Array.from(testUnitNums.values()).sort();
@@ -161,7 +151,7 @@ export class StagePosContComponent implements OnChanges {
 
    private getRepresentedNonVidasPositiveTestUnitNumbers(): number[]
    {
-      const reprTestUnitNums = this.getRepresentedTestUnitNumbers();
+      const reprTestUnitNums = this.getSortedTestUnitNumbers();
 
       if ( this.vidasPositiveSampleTestUnitNumbers == null )
          return reprTestUnitNums;
@@ -174,19 +164,10 @@ export class StagePosContComponent implements OnChanges {
       return Array.from(excessTestUnitNums.values()).sort();
    }
 
-   onRepresentedTestUnitNumberChanged()
+   private refreshTestUnitNumbersDependents()
    {
-      this.refreshTestUnitNumbersDiff();
-   }
+      this.sortedTestUnitNums = this.getSortedTestUnitNumbers();
 
-   removeTestUnitAtIndex(i: number)
-   {
-      this.testUnitsFormArray.removeAt(i);
-      this.refreshTestUnitNumbersDiff();
-   }
-
-   private refreshTestUnitNumbersDiff()
-   {
       this.testUnitNumbersDiff = this.makeRepresentedTestUnitNumbersDiffVsVidas();
 
       let isWarning = false;
@@ -215,5 +196,4 @@ interface TestUnitNumbersDiff {
    unrepresentedVidasPositives: number[];
    representedNotVidasPositive: number[];
 }
-
 

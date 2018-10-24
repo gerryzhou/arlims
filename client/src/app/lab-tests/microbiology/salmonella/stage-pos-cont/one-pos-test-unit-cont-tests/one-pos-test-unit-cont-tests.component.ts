@@ -12,30 +12,21 @@ export class OnePosTestUnitContTestsComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   testUnitNumber: number;
+
+   @Input()
    sampleTestUnitsTypeAbrev: string;
 
    @Input()
    showDisposeButton = false;
 
    @Output()
-   testUnitNumberChange = new EventEmitter<void>();
-
-   @Output()
    disposeRequested = new EventEmitter<void>();
-
-   testUnitNum: number | null = null;
 
    constructor() { }
 
    ngOnChanges()
    {
-      this.testUnitNum = parseInt(this.form.get('testUnitNumber').value) || null;
-   }
-
-   onTestUnitNumberChanged()
-   {
-      this.testUnitNumberChange.emit();
-      this.testUnitNum = parseInt(this.form.get('testUnitNumber').value) || null;
    }
 
    onDisposeRequested()

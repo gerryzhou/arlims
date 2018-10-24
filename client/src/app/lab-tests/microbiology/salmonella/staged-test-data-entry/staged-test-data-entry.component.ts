@@ -99,7 +99,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       const stageParamValue = activatedRoute.snapshot.paramMap.get('stage');
       this.stage =
          stageParamValue ? stageParamValue
-         : (firstNonCompleteTestStageName(this.originalTestData, this.testConfig) || 'WRAPUP');
+         : (firstNonCompleteTestStageName(this.originalTestData, labGroupTestData.labGroupTestConfig) || 'WRAPUP');
       const stageIx = TEST_STAGES.findIndex(ts => ts.name === this.stage);
       this.stageIndex = stageIx !== -1 ? stageIx : null;
 
