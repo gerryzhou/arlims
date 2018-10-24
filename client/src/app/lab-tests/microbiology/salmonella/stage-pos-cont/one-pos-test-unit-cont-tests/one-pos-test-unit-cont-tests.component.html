@@ -7,7 +7,7 @@
             {{sampleTestUnitsTypeAbrev | titlecase}} {{testUnitNumber}}
          </span>
          <div class="expanding-flex-space"></div>
-         <span class="medium-label">RV</span>
+         <span class="medium-label rv">RV</span>
          <div class="expanding-flex-space"></div>
       </div>
 
@@ -21,14 +21,7 @@
 
    <div class="medium-stack">
 
-      <div class="test-unit-medium">
-         <span class="test-unit">
-            {{sampleTestUnitsTypeAbrev | titlecase}} {{testUnitNumber}}
-         </span>
-         <div class="expanding-flex-space"></div>
-         <span class="medium-label">TT</span>
-         <div class="expanding-flex-space"></div>
-      </div>
+      <span class="medium-label">TT</span>
 
       <app-sel-agars-test-suite
          [form]="form.controls['ttSourcedTests']"

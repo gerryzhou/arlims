@@ -6,34 +6,36 @@
    border: 5px solid lightgray;
 }
 
+.medium-label {
+   font-size: 120%;
+   font-weight: bold;
+   padding: 5px;
+   &.rv {
+      margin-left: -30px;
+   }
+}
+
 .test-unit-medium {
    display: flex;
    flex-flow: row nowrap;
    align-items: center;
    width: 100%;
-   .medium-label {
-      font-size: 120%;
-      font-weight: bold;
-      flex-grow: 0;
-      margin-left: -25px;
-      padding: 5px;
-   }
-   .test-unit {
-      color: white;
-      background-color: #666;
-      font-weight: bold;
-      font-size: 110%;
-      padding: 3px 10px;
-      margin: 2px 0;
-   }
 }
 
+.test-unit {
+   color: white;
+   background-color: #666;
+   font-weight: bold;
+   font-size: 110%;
+   padding: 3px 10px;
+   margin: -7px 0 0 -15px;
+}
 
 .medium-stack {
    display: flex;
    flex-flow: column nowrap;
    margin: 0 15px;
-   align-items: flex-start;
+   align-items: center;
 }
 
 .medium-row {
