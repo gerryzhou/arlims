@@ -1,6 +1,11 @@
-Examine audit log changes for positive continuation tests data.
+Audit Log
+  Do not write entries with empty change set.
+    Probably this happens when empty structures are created, e.g. for positive controls (checksum diff but no leaf field actions).
 
 Pos Cont UI
+  Report mode:
+    Hide buttons when form is disabled (report mode).
+
   Add controls for:
     oxidase
     Vitek
@@ -28,7 +33,6 @@ From meeting 2018/10/15
 
 Commit Notes
 ------------
-Change positive continuation test data structures to only use arrays/formarrays at leaf positions.
 
 ------------
 

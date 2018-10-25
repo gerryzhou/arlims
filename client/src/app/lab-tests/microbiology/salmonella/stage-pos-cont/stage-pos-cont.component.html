@@ -1,12 +1,11 @@
 <div [formGroup]="form">
 
-   <div class="diffs-vs-vidas-positives-area" *ngIf="testUnitNumbersDiffMessage">
+   <div class="diffs-vs-vidas-positives-area" *ngIf="!form.disabled && testUnitNumbersDiffMessage">
       <div class="message"
            [ngClass]="{'warn': testUnitNumbersDiffMessageIsWarning, 'ok': !testUnitNumbersDiffMessageIsWarning}">
          {{testUnitNumbersDiffMessage}}
          <span *ngIf="testUnitNumbersDiff && testUnitNumbersDiff.unrepresentedVidasPositives.length > 0">
-            <button class="link" (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()"
-                    *ngIf="!form.disabled">
+            <button class="link" (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()">
                Add Vidas positives.
             </button>
          </span>
@@ -19,7 +18,7 @@
          <app-one-pos-test-unit-cont-tests *ngFor="let testUnitNum of sortedTestUnitNums"
             [form]="testUnitsFormGroup.get(testUnitNum.toString())"
             [testUnitNumber]="testUnitNum"
-            [showDisposeButton]="true"
+            [showDisposeButton]="!form.disabled"
             [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
             [appUser]="appUser"
             (disposeRequested)="removeTestUnitNumber(testUnitNum)">

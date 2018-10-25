@@ -12,19 +12,19 @@
       [form]="form.get('tsiTubeTest')"
       [tubeType]="'TSI'"
       [isolateDescription]="isolateDescription"
-      [editingEnabled]="!failed">
+      [editingEnabled]="!form.disabled && !failed">
    </app-slant-tube-test>
 
    <app-slant-tube-test
       [form]="form.controls['liaTubeTest']"
       [tubeType]="'LIA'"
       [isolateDescription]="isolateDescription"
-      [editingEnabled]="!failed">
+      [editingEnabled]="!form.disabled && !failed">
    </app-slant-tube-test>
 
    <div class="expanding-flex-space"></div>
 
-   <div class="isolate-actions">
+   <div class="isolate-actions" *ngIf="!form.disabled">
       <mat-menu #actionsMenu="matMenu">
          <span class="menu-header">Actions for {{isolateDescription}}</span>
          <hr>
