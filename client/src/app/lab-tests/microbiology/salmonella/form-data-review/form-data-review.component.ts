@@ -68,7 +68,9 @@ export class FormDataReviewComponent implements OnInit {
       this.conflictsEmployeeTimestamp = null;
 
       this.analyzedAuditLogEntries = labGroupTestData.auditLogEntries ?
-         labGroupTestData.auditLogEntries.map(e => new AnalyzedAuditLogEntry(e))
+         labGroupTestData.auditLogEntries
+            .map(e => new AnalyzedAuditLogEntry(e))
+            .filter(ae => !ae.isStructureOnlyTestDataUpdate())
          : [];
    }
 

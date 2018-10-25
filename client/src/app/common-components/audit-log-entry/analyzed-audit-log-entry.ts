@@ -25,12 +25,20 @@ export class AnalyzedAuditLogEntry
       this.objectFromValue = entry.objectFromValueJson ? JSON.parse(entry.objectFromValueJson) : null;
       this.objectToValue = entry.objectToValueJson ? JSON.parse(entry.objectToValueJson) : null;
 
-      this.dataFieldDiffs = this.generateDataFieldDiffs(entry) ?
+      this.dataFieldDiffs = AnalyzedAuditLogEntry.generateDataFieldDiffs(entry) ?
          atomicValuesDiffList(this.objectFromValue, this.objectToValue).sort((d1, d2) => d1.path.localeCompare(d2.path))
          : null;
 
       this.attachedFileDescrs =
          entry.action === 'attach-files' || entry.action === 'detach-files' ? this.objectToValue || this.objectFromValue : null;
+   }
+
+   isStructureOnlyTestDataUpdate(): boolean
+   {
+      return (
+         this.entry.action === 'update' && this.entry.objectType === 'test-data' &&
+         (!this.dataFieldDiffs || this.dataFieldDiffs.length === 0)
+      );
    }
 
    private makeActionObjectText(entry: AuditLogEntry)
@@ -43,7 +51,7 @@ export class AnalyzedAuditLogEntry
          return entry.action.toUpperCase() + ' ' + entry.objectType.toUpperCase();
    }
 
-   private generateDataFieldDiffs(entry: AuditLogEntry): boolean
+   private static generateDataFieldDiffs(entry: AuditLogEntry): boolean
    {
      return (
         entry.action === 'update' && entry.objectType === 'test-data'

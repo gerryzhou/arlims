@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable, of as observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
-import * as FileSaver from 'file-saver';
 
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
 import {ApiUrlsService} from './api-urls.service';

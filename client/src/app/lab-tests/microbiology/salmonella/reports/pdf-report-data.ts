@@ -113,13 +113,17 @@ function makeCompositeDetectionsListText(detections: boolean[]): string
 
 function makeAuditLogText(auditLogEntries: AuditLogEntry[]): string
 {
-   return auditLogEntries.filter(e => e.action !== 'save-unchanged').map(auditLogEntryText).join('\n');
+   return (
+      auditLogEntries
+         .map(e => new AnalyzedAuditLogEntry(e))
+         .filter(ae => ae.entry.action !== 'save-unchanged' && !ae.isStructureOnlyTestDataUpdate())
+         .map(auditLogEntryText)
+         .join('\n')
+   );
 }
 
-function auditLogEntryText(e: AuditLogEntry): string
+function auditLogEntryText(ae: AnalyzedAuditLogEntry): string
 {
-   const ae = new AnalyzedAuditLogEntry(e);
-
    const fieldDiffsByParentPath = ae.dataFieldDiffs ? getDisplayableFieldDiffsByFieldParentPath(ae.dataFieldDiffs) : null;
 
    const detailParts: string[] = [];
@@ -131,8 +135,8 @@ function auditLogEntryText(e: AuditLogEntry): string
       detailParts.push('   ' + ae.attachedFileDescrs.map(describeAttachedFile).join('\n   '));
 
    return padstr(ae.actionObjectText, THIRTY_SPACES) + ' ' +
-          padstr(e.actingUsername, THIRTY_SPACES) +
-          ' at ' + moment(e.timestamp).format('h:mm a, D MMM YYYY') + '\n' +
+          padstr(ae.entry.actingUsername, THIRTY_SPACES) +
+          ' at ' + moment(ae.entry.timestamp).format('h:mm a, D MMM YYYY') + '\n' +
       detailParts.join('\n');
 }
 

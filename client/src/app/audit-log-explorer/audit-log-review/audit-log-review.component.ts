@@ -56,7 +56,10 @@ export class AuditLogReviewComponent
       )
       .subscribe(entries => {
          this.includeDataChangeDetails$.next(dataOptions.includeChangeDetailData);
-         this.analyzedAuditLogEntries$.next(entries.map(e => new AnalyzedAuditLogEntry(e)));
+         this.analyzedAuditLogEntries$.next(
+            entries.map(e => new AnalyzedAuditLogEntry(e))
+               .filter(ae => !ae.isStructureOnlyTestDataUpdate())
+         );
       });
    }
 }

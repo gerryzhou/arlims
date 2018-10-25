@@ -1,11 +1,8 @@
 Audit Log
   Do not write entries with empty change set.
-    Probably this happens when empty structures are created, e.g. for positive controls (checksum diff but no leaf field actions).
+    Wherever analyzed log entries are displayed, filter out entries with isStructureOnlyTestDataUpdate().
 
 Pos Cont UI
-  Report mode:
-    Hide buttons when form is disabled (report mode).
-
   Add controls for:
     oxidase
     Vitek
