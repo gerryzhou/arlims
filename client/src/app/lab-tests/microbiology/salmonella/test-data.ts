@@ -381,7 +381,7 @@ function makeIsolatesTestSequencesFormGroup(isolateTestSeqsByUid: IsolateTestSeq
 
 export function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTestSequence): FormGroup
 {
-   return new FormGroup({
+   const fg = new FormGroup({
       colonyAppearance: new FormControl(isolateTestSequence.colonyAppearance),
       tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.tsiTubeTest),
       liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.liaTubeTest),
@@ -391,8 +391,12 @@ export function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTes
       polyHAZ: new FormControl(isolateTestSequence.polyHAZ),
       polyAIPlusVi: new FormControl(isolateTestSequence.polyAIPlusVi),
       polyO: new FormControl(isolateTestSequence.polyO),
-      // The failure structure is omitted, will be inserted programmatically as needed.
    });
+
+   if ( isolateTestSequence.failure != null )
+      fg.controls['failure'] = makeIsolateTestSequenceFailureFormGroup(isolateTestSequence.failure);
+
+   return fg;
 }
 
 function makeSlantTubeTestFormGroup(slantTubeTest: SlantTubeTest): FormGroup

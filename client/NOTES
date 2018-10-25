@@ -1,4 +1,3 @@
-Pos Cont UI
   Add controls for:
     oxidase
       Use new common component which is a button that cycles between values, here null|+|-.

@@ -1,6 +1,7 @@
 <form [formGroup]="form" class="isolate-row" [class.failed]="failed">
 
-   <mat-select class="colony-appearance" formControlName="colonyAppearance" placeholder="?" matTooltip="colony appearance">
+   <mat-select class="colony-appearance blue" formControlName="colonyAppearance"
+               placeholder="?" matTooltip="colony appearance">
       <mat-option [value]="null"></mat-option>
       <mat-option [value]="'T'">T</mat-option>
       <mat-option [value]="'NT'">N</mat-option>
@@ -24,7 +25,7 @@
 
    <span class="oxidase">
       <span class="oxidase-label">Ox</span>
-      <button class="link" (click)="cycleOxidaseDetection()">
+      <button class="link" (click)="cycleOxidaseDetection()" [disabled]="failed">
          <span *ngIf="form.controls.oxidaseDetection?.value === true">+</span>
          <span *ngIf="form.controls.oxidaseDetection?.value === false">&minus;</span>
          <span class="unset" *ngIf="form.controls.oxidaseDetection?.value == null">?</span>
