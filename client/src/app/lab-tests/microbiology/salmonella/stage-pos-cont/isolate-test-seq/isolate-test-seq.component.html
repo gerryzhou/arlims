@@ -25,10 +25,11 @@
 
    <span class="oxidase">
       <span class="oxidase-label">Ox</span>
-      <button class="link" (click)="cycleOxidaseDetection()" [disabled]="failed">
-         <span *ngIf="form.controls.oxidaseDetection?.value === true">+</span>
-         <span *ngIf="form.controls.oxidaseDetection?.value === false">&minus;</span>
-         <span class="unset" *ngIf="form.controls.oxidaseDetection?.value == null">?</span>
+      <button class="link" (click)="cycleOxidaseDetection()" [disabled]="failed"
+              [ngSwitch]="form.get('oxidaseDetection')?.value">
+         <span *ngSwitchCase="true">+</span>
+         <span *ngSwitchCase="false">&minus;</span>
+         <span *ngSwitchCase="null" class="unset">?</span>
       </button>
    </span>
 
