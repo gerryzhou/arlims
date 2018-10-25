@@ -22,6 +22,15 @@
       [editingEnabled]="!form.disabled && !failed">
    </app-slant-tube-test>
 
+   <span class="oxidase">
+      <span class="oxidase-label">Ox</span>
+      <button class="link" (click)="cycleOxidaseDetection()">
+         <span *ngIf="form.controls.oxidaseDetection?.value === true">+</span>
+         <span *ngIf="form.controls.oxidaseDetection?.value === false">&minus;</span>
+         <span class="unset" *ngIf="form.controls.oxidaseDetection?.value == null">?</span>
+      </button>
+   </span>
+
    <div class="expanding-flex-space"></div>
 
    <div class="isolate-actions" *ngIf="!form.disabled">

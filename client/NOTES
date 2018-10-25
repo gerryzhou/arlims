@@ -1,28 +1,15 @@
-Audit Log
-  Do not write entries with empty change set.
-    Wherever analyzed log entries are displayed, filter out entries with isStructureOnlyTestDataUpdate().
-
 Pos Cont UI
   Add controls for:
     oxidase
-    Vitek
-    API20E
-    Serology etc.
-
-
-
-Add ";charset=UTF-8" to json accept header on api calls from the client.
-
-All buttons other than "Save" button should have type="button" attribute.
-  Then probably shouldn't need form elements in individual stages.
+      Use new common component which is a button that cycles between values, here null|+|-.
+    Vitek, API20E
+      Record result code and identification conclusion.  Allow attaching output results file.
+    Add narrative textbox for PFGE/Serology/WGS results.
 
 In main sample listing UI, allow easy filters by status code.
   See "Select with multiple selection" at https://material.angular.io/components/select/overview
 
 From meeting 2018/10/15
-  - Rename test to "Salmonella".
-  - For API/Vitek, record result code and identification conclusion.  Allow attaching output results file.
-  - Add narrative textbox for PFGE/Serology/WGS results.
   - (app) Add button to immediately refresh from FACTS.
   - Try barcode scanners with new laptops, decide if new barcode scanners are needed.
 

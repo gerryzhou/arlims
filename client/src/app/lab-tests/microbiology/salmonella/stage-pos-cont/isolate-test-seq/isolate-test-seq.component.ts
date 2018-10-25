@@ -97,4 +97,11 @@ export class IsolateTestSeqComponent implements OnChanges {
       this.form.removeControl('failure');
       this.failed = false;
    }
+
+   cycleOxidaseDetection()
+   {
+      const oxCtl = this.form.get('oxidaseDetection');
+      const v = oxCtl.value as boolean;
+      oxCtl.setValue(v == null ? true : v === true ? false : null);
+   }
 }
