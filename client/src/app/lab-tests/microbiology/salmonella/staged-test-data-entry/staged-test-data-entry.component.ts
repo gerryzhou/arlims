@@ -8,7 +8,7 @@ import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {LabResource} from '../../../../../generated/dto';
+import {AppUser, LabResource} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
    emptyTestData,
@@ -62,6 +62,8 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    readonly testConfig: TestConfig | null;
 
+   readonly appUser: AppUser | null;
+
    readonly balances: LabResource[] | undefined;
    readonly incubators: LabResource[] | undefined;
    readonly waterBaths: LabResource[] | undefined;
@@ -105,7 +107,9 @@ export class StagedTestDataEntryComponent implements OnInit {
 
       this.sampleInTest = labGroupTestData.sampleInTest;
       this.testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
-      this.testDataForm = makeTestDataFormGroup(this.originalTestData);
+      this.appUser = labGroupTestData.appUser;
+
+      this.testDataForm = makeTestDataFormGroup(this.originalTestData, labGroupTestData.appUser.username);
 
       const sm = this.originalTestData.preEnrData.samplingMethod;
       const sampleTestUnits = makeSampleTestUnits(sm.numberOfSubs, sm.numberOfComposites);

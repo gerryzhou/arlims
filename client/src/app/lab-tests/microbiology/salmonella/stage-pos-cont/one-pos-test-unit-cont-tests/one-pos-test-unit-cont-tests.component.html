@@ -14,19 +14,21 @@
       <app-sel-agars-test-suite
          [form]="form.controls['rvSourcedTests']"
          [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
-         [medium]="'RV'">
+         [medium]="'RV'"
+         [appUser]="appUser">
       </app-sel-agars-test-suite>
 
    </div>
 
    <div class="medium-stack">
 
-      <span class="medium-label">TT</span>
+      <span class="medium-label tt">TT</span>
 
       <app-sel-agars-test-suite
          [form]="form.controls['ttSourcedTests']"
          [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
-         [medium]="'TT'">
+         [medium]="'TT'"
+         [appUser]="appUser">
       </app-sel-agars-test-suite>
 
    </div>

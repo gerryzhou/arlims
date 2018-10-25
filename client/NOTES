@@ -1,11 +1,11 @@
+Examine audit log changes for positive continuation tests data.
+
 Pos Cont UI
   Add controls for:
-    colony appearance
     oxidase
     Vitek
     API20E
     Serology etc.
-
 
 
 
@@ -15,7 +15,7 @@ All buttons other than "Save" button should have type="button" attribute.
   Then probably shouldn't need form elements in individual stages.
 
 In main sample listing UI, allow easy filters by status code.
-  Dropdown maybe add checkbox for each status code.
+  See "Select with multiple selection" at https://material.angular.io/components/select/overview
 
 From meeting 2018/10/15
   - Rename test to "Salmonella".

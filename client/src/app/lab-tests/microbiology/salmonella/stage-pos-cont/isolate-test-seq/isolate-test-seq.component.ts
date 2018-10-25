@@ -43,7 +43,7 @@ export class IsolateTestSeqComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.isolateDescription = 'isolate # ' + this.isolateNumber + ' in ' +
+      this.isolateDescription = 'isolate ' + this.isolateNumber + ' in ' +
          this.testUnitDescription + ' / ' + this.medium + ' / ' + this.selectiveAgarDisplayName;
       this.failed = this.form.controls.failure != null;
    }

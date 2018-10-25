@@ -1,4 +1,12 @@
-<form class="isolate-row" [class.failed]="failed">
+<form [formGroup]="form" class="isolate-row" [class.failed]="failed">
+
+   <mat-select class="colony-appearance" formControlName="colonyAppearance" placeholder="?" matTooltip="colony appearance">
+      <mat-option [value]="null"></mat-option>
+      <mat-option [value]="'T'">T</mat-option>
+      <mat-option [value]="'NT'">N</mat-option>
+      <mat-option [value]="'AT'">AT</mat-option>
+      <mat-option [value]="'NG'">NG</mat-option>
+   </mat-select>
 
    <app-slant-tube-test
       [form]="form.get('tsiTubeTest')"

@@ -114,8 +114,6 @@ export interface SelectiveAgarsTestSuite {
 interface IsolateTestSequencesByUid { [testSeqUid: string]: IsolateTestSequence; }
 
 export interface IsolateTestSequence {
-   createdAtEpochMillis: number;
-   creationSeqNum: number;
    colonyAppearance: ColonyAppearance | null;
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
@@ -172,51 +170,47 @@ export function emptyTestData(): TestData {
    };
 }
 
-export function makeEmptyContinuationControls(): ContinuationControls
+export function makeEmptyContinuationControls(username: string): ContinuationControls
 {
    return {
-      salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1),
-      salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1),
+      salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1, username),
+      salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1, username),
       salmonellaControlsSatisfactory: null,
       pVulgarisApiVitekDetection: null,
       pVulgarisControlSatisfactory: null,
       pAerugiOxidaseDetection: null,
       pAerugiControlSatisfactory: null,
-      medium: makeEmptySelectiveAgarsTestSuite(1),
+      medium: makeEmptySelectiveAgarsTestSuite(1, username),
    };
 }
 
-export function makeEmptySelectiveAgarsTestSuite(numIsolates: number): SelectiveAgarsTestSuite
+export function makeEmptySelectiveAgarsTestSuite(numIsolates: number, username: string): SelectiveAgarsTestSuite
 {
+   const now = new Date();
    return {
-      he:    makeEmptyIsolateTestSequences(numIsolates),
-      xld:   makeEmptyIsolateTestSequences(numIsolates),
-      bs24h: makeEmptyIsolateTestSequences(numIsolates),
-      bs48h: makeEmptyIsolateTestSequences(numIsolates),
+      he:    makeEmptyIsolateTestSequences(numIsolates, now, username),
+      xld:   makeEmptyIsolateTestSequences(numIsolates, now, username),
+      bs24h: makeEmptyIsolateTestSequences(numIsolates, now, username),
+      bs48h: makeEmptyIsolateTestSequences(numIsolates, now, username),
    };
 }
 
-function makeEmptyIsolateTestSequences(numIsolates: number): IsolateTestSequencesByUid
+function makeEmptyIsolateTestSequences(numIsolates: number, timestamp: Date, username: string): IsolateTestSequencesByUid
 {
    const seqs: IsolateTestSequencesByUid = {};
 
    for (let seqNum = 1; seqNum <= numIsolates; ++seqNum)
    {
-      let uid = makeIsolateTestSequenceUid();
-      while ( seqs[uid] != null )
-         uid = makeIsolateTestSequenceUid();
-
-      seqs[uid] = makeEmptyIsolateTestSequence(seqNum);
+      const uid = makeIsolateTestSequenceUid(timestamp, username, seqNum);
+      seqs[uid] = makeEmptyIsolateTestSequence();
    }
 
    return seqs;
 }
 
-export function makeEmptyIsolateTestSequence(seqNum: number): IsolateTestSequence
+export function makeEmptyIsolateTestSequence(): IsolateTestSequence
 {
    return {
-      createdAtEpochMillis: new Date().getTime(),
-      creationSeqNum: seqNum,
       colonyAppearance: null,
       tsiTubeTest: makeEmptySlantTubeTest(),
       liaTubeTest: makeEmptySlantTubeTest(),
@@ -233,7 +227,7 @@ export function makeEmptySlantTubeTest(): SlantTubeTest
    };
 }
 
-export function makeTestDataFormGroup(testData: TestData): FormGroup
+export function makeTestDataFormGroup(testData: TestData, username: string): FormGroup
 {
    return new FormGroup({
       prepData: new FormGroup({
@@ -301,7 +295,7 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
          collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
          bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
       }),
-      posContData: makePositivesContinuationDataFormGroup(testData.posContData),
+      posContData: makePositivesContinuationDataFormGroup(testData.posContData, username),
       wrapupData: new FormGroup({
          reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
@@ -310,7 +304,7 @@ export function makeTestDataFormGroup(testData: TestData): FormGroup
    });
 }
 
-export function makePositivesContinuationDataFormGroup(posContData: PositivesContinuationData | null): FormGroup
+export function makePositivesContinuationDataFormGroup(posContData: PositivesContinuationData | null, username: string): FormGroup
 {
    const formValidatorFunctions = [];  // Put form-level validation here if any.
 
@@ -321,7 +315,7 @@ export function makePositivesContinuationDataFormGroup(posContData: PositivesCon
       makeTestUnitsContinuationTestsFormGroup(posContData.testUnitsContinuationTests || {});
 
    const continuationControls =
-      makeContinuationControlsFormGroup(posContData.continuationControls || makeEmptyContinuationControls());
+      makeContinuationControlsFormGroup(posContData.continuationControls || makeEmptyContinuationControls(username));
 
    return new FormGroup(
       {
@@ -388,8 +382,6 @@ function makeIsolatesTestSequencesFormGroup(isolateTestSeqsByUid: IsolateTestSeq
 export function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTestSequence): FormGroup
 {
    return new FormGroup({
-      createdAtEpochMillis: new FormControl(isolateTestSequence.createdAtEpochMillis),
-      creationSeqNum: new FormControl(isolateTestSequence.creationSeqNum),
       colonyAppearance: new FormControl(isolateTestSequence.colonyAppearance),
       tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.tsiTubeTest),
       liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.liaTubeTest),
@@ -845,16 +837,24 @@ export function isEmptyString(s: string)
    return !s || s.trim().length === 0;
 }
 
-export function makeIsolateTestSequenceUid(len: number = 15): string {
-   let s = '';
-   const capitalACode = 'A'.charCodeAt(0);
-   const randomAlphaNumChar = function() {
-      const r = Math.floor(Math.random() * 62);
-      if (r < 10) return r.toString(); // digits
-      if (r < 36) return String.fromCharCode(r + capitalACode - 10); // capital letters
-      return String.fromCharCode(r + 61); // lc letters
-   };
-   while (s.length < len) s += randomAlphaNumChar();
-   return s;
-}
+export function makeIsolateTestSequenceUid
+   (
+      timestamp: Date,
+      userName: string,
+      startSeqNum: number,
+      uniquenessTestObj: { [key: string]: any } = null
+   )
+{
+   const uidBase = timestamp.toISOString() + '|' + userName + '|';
 
+   let seqNum = startSeqNum;
+   let uid = uidBase + seqNum;
+
+   if ( uniquenessTestObj )
+   {
+      while (uniquenessTestObj[uid] != null)
+         uid = uidBase + (++seqNum);
+   }
+
+   return uid;
+}

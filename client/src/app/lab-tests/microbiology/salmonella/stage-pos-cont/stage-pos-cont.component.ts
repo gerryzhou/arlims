@@ -10,6 +10,7 @@ import {
 } from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {TestConfig} from '../test-config';
+import {AppUser} from '../../../../../generated/dto';
 
 @Component({
    selector: 'app-stage-pos-cont',
@@ -38,6 +39,9 @@ export class StagePosContComponent implements OnChanges {
 
    @Input()
    showUnsetAffordances = false;
+
+   @Input()
+   appUser: AppUser;
 
    // Whether the child controls have been created in the form group yet.
    formInitialized = false;
@@ -90,7 +94,7 @@ export class StagePosContComponent implements OnChanges {
       if ( !this.formInitialized )
       {
          const emptyTestUnitsFormGroup = makeTestUnitsContinuationTestsFormGroup({});
-         const emptyContControlsFormGroup = makeContinuationControlsFormGroup(makeEmptyContinuationControls());
+         const emptyContControlsFormGroup = makeContinuationControlsFormGroup(makeEmptyContinuationControls(this.appUser.username));
 
          this.form.addControl('testUnitsContinuationTests', emptyTestUnitsFormGroup);
          this.form.addControl('continuationControls', emptyContControlsFormGroup);
@@ -105,8 +109,8 @@ export class StagePosContComponent implements OnChanges {
    private makeEmptyContinuationTests(): ContinuationTests
    {
       return {
-         rvSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate),
-         ttSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate)
+         rvSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username),
+         ttSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username)
       };
    }
 

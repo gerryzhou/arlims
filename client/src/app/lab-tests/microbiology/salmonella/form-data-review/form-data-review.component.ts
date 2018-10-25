@@ -48,7 +48,7 @@ export class FormDataReviewComponent implements OnInit {
 
       const verTestData = labGroupTestData.versionedTestData;
       const testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
-      this.testDataForm = makeTestDataFormGroup(testData);
+      this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username);
       this.testDataForm.disable();
       this.sampleInTest = labGroupTestData.sampleInTest;
       this.testConfig = labGroupTestData.labGroupTestConfig;

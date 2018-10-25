@@ -4,7 +4,7 @@ import {Observable, throwError, zip, of as obsof} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
 import {AuditLogQueryService, TestsService, UserContextService} from '../shared/services';
 import {LabGroupTestData} from '../shared/models/lab-group-test-data';
-import {AuditLogEntry} from '../../generated/dto';
+import {AppUser, AuditLogEntry} from '../../generated/dto';
 
 
 @Injectable({providedIn: 'root'})
@@ -39,8 +39,10 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       );
       const labResourcesByType$ = this.usrCtxSvc.getLabResourcesByType();
 
-      const auditLogEntries$: Observable<AuditLogEntry[] | null> =
+      const auditLogEntries$: Observable<AuditLogEntry[]|null> =
          !!route.data['includeAuditLogEntries'] ? this.auditLogSvc.getEntriesForTest(testId) : obsof(null);
+
+      const appUser$: Observable<AppUser|null> = this.usrCtxSvc.getAuthenticatedUser();
 
       return (
          zip(
@@ -49,10 +51,11 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
             testConfig$,
             labResourcesByType$,
             auditLogEntries$,
+            appUser$,
          )
          .pipe(
-            map(([versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries]) =>
-               ({ versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries })
+            map(([versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries, appUser]) =>
+               ({ versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries, appUser })
             )
          )
       );

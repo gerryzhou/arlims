@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {AppUser} from '../../../../../../generated/dto';
 
 @Component({
    selector: 'app-one-pos-test-unit-cont-tests',
@@ -19,6 +20,9 @@ export class OnePosTestUnitContTestsComponent implements OnChanges {
 
    @Input()
    showDisposeButton = false;
+
+   @Input()
+   appUser: AppUser;
 
    @Output()
    disposeRequested = new EventEmitter<void>();
