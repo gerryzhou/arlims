@@ -3,9 +3,16 @@ package gov.fda.nctr.arlims.data_access.facts;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
@@ -69,6 +76,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         log.info("Setting API call connection and read timeouts to " +
             apiConfig.getConnectTimeout() + " and " +
             apiConfig.getReadTimeout() + " respectively.");
+        log.info("Age cap for lab inbox items is " + apiConfig.getLabInboxAssignedStatusAgeCutoffDays() + " days.");
 
         HttpHeaders defaultRequestHeaders = new HttpHeaders();
         defaultRequestHeaders.add(HttpHeaders.AUTHORIZATION, authorizationHeaderValue(apiConfig));
@@ -95,9 +103,11 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             "assignedToPersonId,assignedToFirstName,assignedToLastName,assignedToStatusCode,assignedToStatusDate," +
             "assignedToWorkAssignmentDate";
 
+        Instant minAssignedToStatusTimestamp = Instant.now().minus(apiConfig.getLabInboxAssignedStatusAgeCutoffDays(), DAYS);
 
         for ( String orgName : orgNames )
         {
+            // TODO: Add assignedToStatus age cutoff param here when available.
             String url =
                 UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
                 .queryParam("orgName", orgName)
@@ -111,15 +121,18 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
             ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, LabInboxItem[].class);
 
-            LabInboxItem[] inboxItems = resp.getBody();
+            List<LabInboxItem> inboxItems =
+                Arrays.stream(resp.getBody())
+                .filter(item -> item.getAssignedToWorkAssignmentDate().compareTo(minAssignedToStatusTimestamp) >= 0)
+                .collect(toList());
 
             if ( apiConfig.getLogLabInboxResults() )
                 log.info(
-                    "Retrieved " + inboxItems.length + " inbox items for " + orgName + ":\n  " +
-                    Arrays.stream(inboxItems).map(Object::toString).collect(joining("\n  "))
+                    "Retrieved " + inboxItems.size() + " inbox items for " + orgName + ":\n  " +
+                    inboxItems.stream().map(Object::toString).collect(joining("\n  "))
                 );
 
-            Arrays.stream(inboxItems).forEach(resInboxItems::add);
+            inboxItems.forEach(resInboxItems::add);
         }
 
         return resInboxItems;
