@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 public class LabInboxItem
 {
+    private Long workId;
+
     private Long sampleTrackingNum;
 
     private Long sampleTrackingSubNum;
@@ -35,8 +37,6 @@ public class LabInboxItem
     private String lidCode;
 
     private String splitInd;
-
-    private Long workId;
 
     private Long workRqstId;
 
@@ -65,13 +65,13 @@ public class LabInboxItem
 
     private String rvMeaning;
 
+    private String assignedToLeadInd;
+
     private Long assignedToPersonId;
 
     private String assignedToFirstName;
 
     private String assignedToLastName;
-
-    private String assignedToLeadInd;
 
     private String assignedToStatusCode;
 

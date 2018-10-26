@@ -1,6 +1,3 @@
-Update test type in WODC dev and test databases:
-  update test_type set code = 'MICRO_SLM', short_name = 'SALMONELLA', name = 'Salmonella' where id = 1;
-
 
 Commit Notes
 ------------

@@ -92,7 +92,9 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             "problemAreaFlag,lidCode,splitInd,workRqstId,operationCode,sampleAnalysisId," +
             "requestedOperationNum,requestDate,scheduledCompletionDate,samplingOrg,accomplishingOrg," +
             "accomplishingOrgId,fdaOrganizationId,responsibleFirmCode,rvMeaning,assignedToLeadInd," +
-            "assignedToPersonId,assignedToStatusCode,assignedToStatusDate,assignedToWorkAssignmentDate";
+            "assignedToPersonId,assignedToFirstName,assignedToLastName,assignedToStatusCode,assignedToStatusDate," +
+            "assignedToWorkAssignmentDate";
+
 
         for ( String orgName : orgNames )
         {

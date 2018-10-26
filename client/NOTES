@@ -1,9 +1,9 @@
-  Add controls for:
-    oxidase
-      Use new common component which is a button that cycles between values, here null|+|-.
-    Vitek, API20E
-      Record result code and identification conclusion.  Allow attaching output results file.
-    Add narrative textbox for PFGE/Serology/WGS results.
+Add controls for:
+   Vitek, API20E
+     Record result code and identification conclusion.  Allow attaching output results file.
+   PFGE/Serology/WGS results
+     Just narrative text box for now.
+   Controls
 
 In main sample listing UI, allow easy filters by status code.
   See "Select with multiple selection" at https://material.angular.io/components/select/overview
