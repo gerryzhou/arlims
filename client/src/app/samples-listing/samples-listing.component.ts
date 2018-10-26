@@ -35,6 +35,7 @@ export class SamplesListingComponent implements OnDestroy {
       includeSamplesAssignedOnlyToOtherUsers: false,
       limitSelectionToVisibleSamples: true,
       showTestDeleteButtons: false,
+      includeStatuses: ['S', 'I', 'O', 'P', 'A'],
    };
 
    constructor
@@ -83,6 +84,7 @@ export class SamplesListingComponent implements OnDestroy {
       for (let i = 0; i < this.selectableSamples.length; ++i)
       {
          const selectableSample = this.selectableSamples[i];
+         // TODO: Add sample op status requirement here.
          const passesFilters =
             this.sampleSatisfiesSearchTextRequirement(selectableSample.sample, listingOptions) &&
             this.sampleSatisfiesUserAssignmentRequirement(selectableSample.sample, listingOptions);

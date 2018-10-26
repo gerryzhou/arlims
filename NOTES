@@ -1,22 +1,35 @@
 
+Meeting Discussion Items
+--------------------------
+Positive continuation tests data.
+  Timestamps and notes fields needed where?
+  Lack of space on main ui, OK to only show some data in dialogs?
+  Need more information about Vitek/API data results to be captured.
+    Do both result in identification code and conclusion?
+    Any additional data in either which differs from the other?
+Test data reports
+  Imp slm report lacks generality to handle positives or large numbers of results.
+  Form data overview report uses components designed for visual data entry, some of which don't always show full data until prompted to via dialog (e.g. failure information in positive continuation data).
+Employees are in most specific lab groups like ARL-MICRO1, which specify parent org code like "ARKL".
+Prioritize:
+  Write test data to FACTS.
+  Add support for file attachments at field level.
+  Reagent search (where in ui?)
+  Status filter on main sample listing page.
+
+
 Commit Notes
 ------------
 
 
 ------------
 
-
-
-New Feature Soon for Demo
--------------------------
-Allow searching for sample information for a given lot # of a reagent (media).
+Leidos API Error (Fri Oct. 26):
+26-10-2018 13:01:21.232 [app-task-scheduler-1] INFO  g.f.n.a.d.f.LabsDSFactsAccessService.handleError - LABS-DS api call resulted in error: {"errorCode":"LABS-ERR-7010","message":"Unexpected runtime error occurred. Please Contact DASLABS Support Team.","errorStackTrace":"Cause : javax.enterprise.inject.InjectionException: Exception trying to inject java EE injection point into class: gov.fda.ora.datasharing.labs.repository.implementations.WorkRepositoryFacts.\nStackTrace : javax.ejb.EJBException: EJB Exception: : javax.enterprise.inject.InjectionException: Exception trying to inject java EE injection point into class: gov.fda.ora.datasharing.labs.repository.implementations.WorkRepositoryFacts.\n\tat com.oracle.injection.integration.ModuleContainerIntegrationService.performJavaEEInjection(ModuleContainerIntegrationService.java:405)\n\tat com.oracle.injection.provider.weld.WeldInjectionServicesAdapter.aroundInject(WeldInjectionServicesAdapter.java:49)\n\tat org.jboss.weld.injection.InjectionContextImpl.run(InjectionContextImpl.java:46)\n\tat org.jboss.weld.injection.producer.DefaultInjector.inject(DefaultInjector.java:73)\n\tat org.jboss.weld.injection.producer.StatelessSessionBeanInjector.inject(StatelessSessionBeanInjector.java:60)\n\tat org.jboss.weld.injection.producer.ejb.SessionBeanInjectionTarget.inject(SessionBeanInjectionTarget.java:140)\n\tat com.oracle.injection.provider.weld.WeldBeanManager.injectEjbInstance(WeldBeanManager.java:338)\n\tat weblogic.ejb.container.injection.InjectionBasedEjbComponentCreator.getBean(InjectionBasedEjbComponentCreator.java:75)\n\tat weblogic.ejb.container.manager.BaseEJBManager.createNewBeanInstance(BaseEJBManager.java:220)\n\tat weblogic.ejb.container.manager.BaseEJBManager.allocateBean(BaseEJBManager.java:246)\n\tat weblogic.ejb.container.manager.StatelessManager.createBean(StatelessManager.java:268)\n\tat weblogic.ejb.container.pool.StatelessSessionPool.createBean(StatelessSessionPool.java:132)\n\tat weblogic.ejb.container.pool.StatelessSessionPool.getBean(StatelessSessionPool.java:99)\n\tat weblogic.ejb.container.manager.StatelessManager.preInvoke(StatelessManager.java:153)\n\tat weblogic.ejb.container.internal.BaseLocalObject.getBeanInstance(BaseLocalObject.java:141)\n\tat weblogic.ejb.container.internal.BaseLocalObject.preInvoke(BaseLocalObject.java:103)\n\tat weblogic.ejb.container.internal.BaseLocalObject.__WL_preInvoke(BaseLocalObject.java:69)\n\tat weblogic.ejb.container.internal.SessionLocalMethodInvoker.invoke(SessionLocalMethodInvoker.java:22)\n\tat gov.fda.ora.datasharing.labs.repository.implementations.workRepositoryFacts_m1hvts_NoIntfViewImpl.findWorkDetailsByWorkId(Unknown Source)\n\tat gov.fda.ora.datasharing.labs.service.WorkDataService.getWorkDetailsByWorkId(WorkDataService.java:71)\n\tat gov.fda.ora.datasharing.labs.controller.WorkController.getFactsWorkDetailsByWorkId(WorkController.java:86)\n\tat sun.reflect.GeneratedMethodAccessor2496.invoke(Unknown Source)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209)\n\tat org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136)\n\tat org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102)\n\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:877)\n\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:783)\n\tat org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)\n\tat org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991)\n\tat org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925)\n\tat org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974)\n\tat org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:866)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java"}
 
 
 Implement "lab inbox" management over the api directly.
   Then sample/assignment data is always current during management ops which is necessary anyway.
-
-Pushing data into FACTS
-  Lower priority for now.
 
 
 Spring Reverse Proxy Setup using Spring Cloud / Zuul

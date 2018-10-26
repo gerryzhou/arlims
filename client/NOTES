@@ -1,35 +1,41 @@
+Finish impl of filtering by sample op status code in main listing.
+  Files:
+    samples-listing.component.ts
+    samples-listing-options.component.ts
+    listing-options.ts
+
+samples-listing.component.ts
+In main sample listing UI, allow easy filters by status code.
+  See "Select with multiple selection" at https://material.angular.io/components/select/overview
+
 Add controls for:
    Vitek, API20E
-     Record result code and identification conclusion.  Allow attaching output results file.
+     Record result code and identification conclusion (for each?).  Allow attaching output results file.
    PFGE/Serology/WGS results
      Just narrative text box for now.
    Controls
-
-In main sample listing UI, allow easy filters by status code.
-  See "Select with multiple selection" at https://material.angular.io/components/select/overview
 
 From meeting 2018/10/15
   - (app) Add button to immediately refresh from FACTS.
   - Try barcode scanners with new laptops, decide if new barcode scanners are needed.
 
 
+Allow searching for sample information for a given lot # of a reagent (media).
+
+Add data refresh button in main view.
+
+Add ability to associate test files with particular fields, add icons next to field when attached file(s) are present.
 
 Commit Notes
 ------------
 
 ------------
 
-
-Array comparisons in test-data.ts
-   Array comparisons may need to be done in a different way because arrays are used at top and intermediate levels in pos cont data.
-     Contents need to be matched not by index but by data within the elements (e.g. testUnitNumber).
-     Contents for matched items then need to be compared structurally.
-
-
 Audit log section of form review report
   Data changes table alignment needs tweaking.
     Use common table for diffs across sections.
     Prevent some to-values from moving to far right.
+  Maybe shorten some field names in deep paths, e.g. in positive continuations data, "rvSourcedTests" => "rv".
 
 
 Try linking to specific section(s) in BAM for each stage.
@@ -43,19 +49,8 @@ BAM Integration
 
 Maybe print out labels for plates and tubes, which are different from media labels.
 
-Implement user/password auth since alternatives would require certificates and/or AD accounts which would take too much time to obtain.
-
-Audit logging of all test data changes, per field.
-  Add a presentation of this log to report pdf (imp slm vidas?) which can be signed.
-
-Add data refresh button in main view.
-
-Make an html report for imp slm vidas test.
-  Maybe customize css for report mode.
 
 Q: What sort of medium type codes will be the prefix for BG, I2KI batches?
-
-Rename WRAPUP to RES-SAMP?
 
 Vidas Stage
    Sample detections
