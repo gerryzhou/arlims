@@ -2,7 +2,7 @@ import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CreatedTestMetadata, LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
 import {AlertMessageService, UserContextService} from '../shared/services';
-import {ListingOptions} from './listing-options/listing-options';
+import {ListingOptions, SampleOpStatusCode} from './listing-options/listing-options';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -84,10 +84,10 @@ export class SamplesListingComponent implements OnDestroy {
       for (let i = 0; i < this.selectableSamples.length; ++i)
       {
          const selectableSample = this.selectableSamples[i];
-         // TODO: Add sample op status requirement here.
          const passesFilters =
             this.sampleSatisfiesSearchTextRequirement(selectableSample.sample, listingOptions) &&
-            this.sampleSatisfiesUserAssignmentRequirement(selectableSample.sample, listingOptions);
+            this.sampleSatisfiesUserAssignmentRequirement(selectableSample.sample, listingOptions) &&
+            this.sampleSatisfiesStatusCodeRequirement(selectableSample.sample, listingOptions);
 
          if ( passesFilters )
          {
@@ -140,6 +140,12 @@ export class SamplesListingComponent implements OnDestroy {
 
       return listingOptions.includeSamplesAssignedOnlyToOtherUsers ||
          sample.assignments.findIndex(a => a.employeeShortName === userShortName) !== -1;
+   }
+
+   private sampleSatisfiesStatusCodeRequirement(sample: Sample, listingOptions: ListingOptions): boolean
+   {
+      const sampleStatus = sample.factsStatus as SampleOpStatusCode;
+      return listingOptions.includeStatuses.includes(sampleStatus);
    }
 
    get selectedVisibleSamples(): Sample[]
@@ -259,7 +265,6 @@ export class SamplesListingComponent implements OnDestroy {
          this.labGroupContentsSubscription.unsubscribe();
       }
    }
-
 }
 
 class SelectableSample {

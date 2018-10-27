@@ -16,7 +16,7 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
 
    @Output() optionsChanged = new EventEmitter<ListingOptions>();
 
-   listingOptionsFormGroup: FormGroup;
+   form: FormGroup;
 
    private optsSubscription: Subscription;
 
@@ -24,29 +24,31 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
 
    constructor() {}
 
-   ngOnChanges() {
-      this.listingOptionsFormGroup =
-         new FormGroup({
-            searchText: new FormControl(this.initialOptions.searchText),
-            includeSamplesAssignedOnlyToOtherUsers: new FormControl(this.initialOptions.includeSamplesAssignedOnlyToOtherUsers),
-            limitSelectionToVisibleSamples: new FormControl(this.initialOptions.limitSelectionToVisibleSamples),
-            showTestDeleteButtons: new FormControl(this.initialOptions.showTestDeleteButtons),
-            includeStatuses: new FormControl(this.initialOptions.includeStatuses),
-         });
+   ngOnChanges()
+   {
+      this.form = new FormGroup({
+         searchText: new FormControl(this.initialOptions.searchText),
+         includeSamplesAssignedOnlyToOtherUsers: new FormControl(this.initialOptions.includeSamplesAssignedOnlyToOtherUsers),
+         limitSelectionToVisibleSamples: new FormControl(this.initialOptions.limitSelectionToVisibleSamples),
+         showTestDeleteButtons: new FormControl(this.initialOptions.showTestDeleteButtons),
+         includeStatuses: new FormControl(this.initialOptions.includeStatuses),
+      });
 
-      this.optsSubscription = this.listingOptionsFormGroup.valueChanges.subscribe(data => this.onFormChange(data));
+      this.optsSubscription = this.form.valueChanges.subscribe(data => this.onFormChange(data));
    }
 
-   ngOnDestroy() {
+   ngOnDestroy()
+   {
       this.optsSubscription.unsubscribe();
    }
 
-   emitChangeEvent(data: ListingOptions) {
+   emitChangeEvent(data: ListingOptions)
+   {
       this.optionsChanged.emit(data);
    }
 
-   onFormChange(data: ListingOptions) {
+   onFormChange(data: ListingOptions)
+   {
       this.emitChangeEvent(data);
    }
-
 }

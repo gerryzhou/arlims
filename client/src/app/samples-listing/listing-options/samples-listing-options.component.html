@@ -1,10 +1,9 @@
 <!-- TODO: Add additional filtering options as requested by John.
-   [Requested by John] FACTS status checkboxes for filtering samples
    [Requested by John] Test type selection for filtering to samples that have a test of the given type.
       (Maybe it should be optional whether to actually hide other test types in resulting samples.)
    [Maybe] Sorting options: last modified, test begin date, facts status.
 -->
-<form [formGroup]="listingOptionsFormGroup">
+<form [formGroup]="form">
    <div class="options-panel">
 
       <div class="option-group search">
@@ -15,7 +14,7 @@
       </div>
 
       <mat-form-field class="option-group">
-         <mat-select placeholder="Status" [formControl]="listingOptionsFormGroup.get('includeStatuses')" multiple>
+         <mat-select placeholder="Status" [formControl]="form.get('includeStatuses')" multiple>
             <mat-option *ngFor="let status of allIncompleteSampleOpStatuses" [value]="status.code">
                {{status.displayName}}
             </mat-option>
