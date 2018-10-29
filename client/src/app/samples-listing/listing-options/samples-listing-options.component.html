@@ -14,9 +14,14 @@
       </div>
 
       <mat-form-field class="option-group">
-         <mat-select placeholder="Status" [formControl]="form.get('includeStatuses')" multiple>
+         <mat-select placeholder="Include Statuses" [formControl]="includeStatusesCtl" multiple>
+            <mat-select-trigger>
+               <span *ngFor="let status of includeStatusesCtl.value" class="selected-statuses-trigger-text">
+                  {{status}}
+               </span>
+            </mat-select-trigger>
             <mat-option *ngFor="let status of allIncompleteSampleOpStatuses" [value]="status.code">
-               {{status.displayName}}
+               {{status.displayName}} ({{status.code}})
             </mat-option>
          </mat-select>
       </mat-form-field>

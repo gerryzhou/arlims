@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, OnChanges, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ListingOptions, SAMPLE_OP_STATUSES, SampleOpStatus} from './listing-options';
 import {Subscription} from 'rxjs';
 
@@ -18,6 +18,8 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
 
    form: FormGroup;
 
+   includeStatusesCtl: AbstractControl;
+
    private optsSubscription: Subscription;
 
    readonly allIncompleteSampleOpStatuses: SampleOpStatus[] = SAMPLE_OP_STATUSES.filter(s => s.code !== 'C');
@@ -35,6 +37,7 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
       });
 
       this.optsSubscription = this.form.valueChanges.subscribe(data => this.onFormChange(data));
+      this.includeStatusesCtl = this.form.get('includeStatuses');
    }
 
    ngOnDestroy()

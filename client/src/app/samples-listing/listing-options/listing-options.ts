@@ -17,15 +17,15 @@ export interface SampleOpStatus {
    displayName: string;
 }
 
-export type SampleOpStatusCode = 'S' | 'I' | 'O' | 'P' | 'A' | 'C';
+export type SampleOpStatusCode = 'P' | 'A' |'S' | 'I' | 'O' |  'C';
 
 
 export const SAMPLE_OP_STATUSES: SampleOpStatus[] = [
+   {code: 'P', displayName: 'Pending'},
+   {code: 'A', displayName: 'Accepted'},
    {code: 'S', displayName: 'Assigned'},
    {code: 'I', displayName: 'In Progress'},
    {code: 'O', displayName: 'Original Completed'},
-   {code: 'P', displayName: 'Pending'},
-   {code: 'A', displayName: 'Accepted'},
    {code: 'C', displayName: 'Complete'},
 ];
 
