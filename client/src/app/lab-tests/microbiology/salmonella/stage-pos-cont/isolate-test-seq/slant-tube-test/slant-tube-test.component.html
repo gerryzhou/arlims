@@ -1,14 +1,35 @@
-<div class="main-row" [formGroup]="form" (click)="promptEditSlantTubeTest(tubeType)"
-   [ngClass]="{editable: editingEnabled}">
+<div class="main-row" [formGroup]="form">
 
    <div class="tube-label" matTooltip="edit slant tube results">{{tubeType}}</div>
 
-   <div class="field" matTooltip="slant">{{form.get('slant').value}}</div>
+   <div class="field-area" [ngClass]="slantValueCssClass">
+      <mat-select class="select-field" formControlName="slant" matTooltip="slant" (valueChange)="onSlantChanged($event)">
+         <mat-option [value]="null"></mat-option>
+         <mat-option *ngFor="let v of slantValues" [value]="v">{{v}}</mat-option>
+      </mat-select>
+   </div>
 
-   <div class="field" matTooltip="butt">{{form.get('butt').value}}</div>
+   <div class="field-area" [ngClass]="buttValueCssClass">
+      <mat-select class="select-field" formControlName="butt" matTooltip="butt" (valueChange)="onButtChanged($event)">
+         <mat-option [value]="null"></mat-option>
+         <mat-option *ngFor="let v of buttValues" [value]="v">{{v}}</mat-option>
+      </mat-select>
+   </div>
 
-   <div class="field" matTooltip="H2S">{{form.get('h2s').value}}</div>
+   <div class="field-area">
+      <mat-select class="select-field" formControlName="h2s" matTooltip="H2S">
+         <mat-option [value]="null"></mat-option>
+         <mat-option [value]="true">+</mat-option>
+         <mat-option [value]="false">&minus;</mat-option>
+      </mat-select>
+   </div>
 
-   <div class="field" matTooltip="gas">{{form.get('gas').value}}</div>
+   <div class="field-area">
+      <mat-select class="select-field" formControlName="gas" matTooltip="gas">
+         <mat-option [value]="null"></mat-option>
+         <mat-option [value]="true">+</mat-option>
+         <mat-option [value]="false">&minus;</mat-option>
+      </mat-select>
+   </div>
 
 </div>

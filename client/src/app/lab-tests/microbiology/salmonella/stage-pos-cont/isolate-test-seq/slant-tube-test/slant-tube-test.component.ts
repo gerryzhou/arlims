@@ -1,9 +1,5 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {MatDialog} from '@angular/material';
-
-import {EditSlantTubeTestDialogComponent} from './edit-slant-tube-test-dialog/edit-slant-tube-test-dialog.component';
-import {SlantTubeTest} from '../../../test-data';
 
 @Component({
    selector: 'app-slant-tube-test',
@@ -21,37 +17,29 @@ export class SlantTubeTestComponent implements OnChanges {
    @Input()
    isolateDescription: string;
 
-   @Input()
-   editingEnabled: boolean;
+   slantValues: string[];
+   buttValues: string[];
 
-   constructor(private dialogSvc: MatDialog) { }
+   slantValueCssClass: string;
+   buttValueCssClass: string;
+
+   constructor() { }
 
    ngOnChanges()
    {
+      this.slantValues = this.tubeType === 'TSI' ? ['K', 'A'] : ['K', 'A', 'R'];
+      this.buttValues = ['K', 'A'];
+      this.onSlantChanged(this.form.get('slant').value);
+      this.onButtChanged(this.form.get('butt').value);
    }
 
-   promptEditSlantTubeTest(tubeType: string)
+   onSlantChanged(newValue: string)
    {
-      if ( !this.editingEnabled )
-         return;
-
-      const origSlantTubeTest = this.form.value as SlantTubeTest;
-
-      const dlg = this.dialogSvc.open(EditSlantTubeTestDialogComponent, {
-         width: 'calc(65%)',
-         data: {
-            tubeType: tubeType,
-            isolateDescription: this.isolateDescription,
-            test: origSlantTubeTest,
-         }
-      });
-
-      dlg.afterClosed().subscribe((editedSlantTubeTest: SlantTubeTest) => {
-         if ( editedSlantTubeTest )
-         {
-            this.form.setValue(editedSlantTubeTest);
-         }
-      });
+      this.slantValueCssClass = (this.tubeType || 'any') + '-' + newValue;
    }
 
+   onButtChanged(newValue: string)
+   {
+      this.buttValueCssClass = (this.tubeType || 'any') + '-' + newValue;
+   }
 }

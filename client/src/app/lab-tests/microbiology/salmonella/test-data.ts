@@ -123,15 +123,14 @@ export interface IsolateTestSequence {
    polyHAZ?: string | null;
    polyAIPlusVi?: string | null;
    polyO?: string | null;
-
    failure?: IsolateTestSequenceFailure | null;
 }
 
 export interface SlantTubeTest {
    slant: string | null;
    butt: string | null;
-   h2s: string | null;
-   gas: string | null;
+   h2s: boolean | null;
+   gas: boolean | null;
 }
 
 export interface IsolateTestSequenceFailure {
@@ -781,8 +780,8 @@ function slantTubeResultsMixed(tsiTest: SlantTubeTest, liaTest): boolean
       ( tsiTest.slant === 'A' && tsiTest.butt === 'A' &&
         liaTest.slant === 'K' && liaTest.butt === 'A' ) ||
       (liaTest.slant === 'R') ||
-      ( tsiTest.slant === 'K' && tsiTest.butt === 'K' && tsiTest.h2s === 'neg' && tsiTest.gas === 'neg' &&
-        liaTest.slant === 'K' && liaTest.butt === 'K' && liaTest.h2s === 'neg' && liaTest.gas === 'neg' )
+      ( tsiTest.slant === 'K' && tsiTest.butt === 'K' && tsiTest.h2s === false && tsiTest.gas === false &&
+        liaTest.slant === 'K' && liaTest.butt === 'K' && liaTest.h2s === false && liaTest.gas === false )
    );
 }
 

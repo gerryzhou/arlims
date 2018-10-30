@@ -29,11 +29,9 @@ mat-select.colony-appearance {
    border: 1px solid gray;
    padding: 0 0 0 3px;
    border-radius: 5px;
-   button {
-      width: 20px;
-      span.unset {
-         color: gray;
-      }
+   mat-select {
+      margin-left: 5px;
+      min-width: 25px;
    }
 }
 

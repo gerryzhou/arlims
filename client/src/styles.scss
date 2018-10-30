@@ -93,8 +93,8 @@ mat-toolbar-row {
    min-height: unset !important;
 }
 
-mat-select.blue .mat-select-value {
-   color: blue !important;
+// Specify more transparency for drop down arrows on select so actual field values stand out more.
+.mat-select-arrow {
+  color: rgba(0, 0, 0, .15) !important;
 }
-
 

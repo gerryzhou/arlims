@@ -1,24 +1,61 @@
-Finish impl of filtering by sample op status code in main listing.
-  Files:
-    samples-listing.component.ts
-    samples-listing-options.component.ts
-    listing-options.ts
 
-samples-listing.component.ts
-In main sample listing UI, allow easy filters by status code.
-  See "Select with multiple selection" at https://material.angular.io/components/select/overview
+Color code the selective agar plates as well as in flip book.
 
-Add controls for:
+Meeting 2018/10/29
+------------------
+Pre-Enr
+   Move the two control fields at bottom to the next stage (SEL-ENR).
+   Or to controls stage?
+     positiveControlGrowth
+     mediumControlGrowth
+
+Prep-stage
+  Receive from should be a drop down with lab group users (sample custodians) plus other choice.
+      John suggests adding Sample custodian as a group.
+      Maybe rename ADMIN to LIMS_ADMIN.
+      Also supervisor role.
+
+
+Rename positive continuations to slant tubes.
+Add API/Vitek as separate separate stage.
+  API: octet code (9 digit or so) and free text for identification. (Much more common at ARL than Vitek).
+  Vitek: bigger code and identification (code should eventually be grabbed electronically).
+
+Add separate positive control stage (?)
+
+
+Need carry-over inbox.
+  Analyst indicates that rest of work on a sample should be done by someone else (on weekend for example).
+  Plus filter at top to see these items.
+
+Clean up database to remove old records.
+
+Move BAM link to top within test name box.
+
+Sync-now button.
+
+FACTS Writing
+  Start with updating sample status flag when test is created.
+    Creating a test should update sample op status in FACTS.
+
+My FACTS person id: 437799
+
+
+
+
+Add ui controls for:
    Vitek, API20E
      Record result code and identification conclusion (for each?).  Allow attaching output results file.
+   Control samples
    PFGE/Serology/WGS results
      Just narrative text box for now.
-   Controls
 
 From meeting 2018/10/15
   - (app) Add button to immediately refresh from FACTS.
   - Try barcode scanners with new laptops, decide if new barcode scanners are needed.
 
+Supervisor/custodian lab inbox
+  Use drag and drop to assign sample ops to employees.
 
 Allow searching for sample information for a given lot # of a reagent (media).
 

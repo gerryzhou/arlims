@@ -1,9 +1,10 @@
 
+
+
 Meeting Discussion Items
 --------------------------
 Positive continuation tests data.
   Timestamps and notes fields needed where?
-  Lack of space on main ui, OK to only show some data in dialogs?
   Need more information about Vitek/API data results to be captured.
     Do both result in identification code and conclusion?
     Any additional data in either which differs from the other?

@@ -3,16 +3,6 @@
    flex-flow: row nowrap;
    align-items: center;
    margin: 0 7px 0 0;
-   &.editable {
-      cursor: pointer;
-      &:hover {
-         color: blue;
-         text-decoration: underline;
-         .field {
-            border-color: blue;
-         }
-      }
-   }
 }
 
 .tube-label {
@@ -21,18 +11,29 @@
    margin-right: 2px;
 }
 
-.field {
+.field-area {
+   min-width: 30px;
    margin: 0 1px;
-   padding: 1px;
-   min-width: 18px;
-   min-height: 18px;
-   border: 1px solid lightgray;
+   padding: 1px 0 1px 5px;
+   border: 3px solid lightgray;
    border-radius: 5px;
-   text-align: center;
-   font-weight: bold;
-   color: blue;
 }
 
-button.edit {
-   margin: 0 5px;
+// TODO: Adjust colors here as specified in BAM or flip-book.
+.TSI-K {
+   border-color: #c44;
 }
+.LIA-K {
+   border-color: #cc89cc;
+}
+.TSI-A {
+   border-color: #d8d800;
+}
+.LIA-A {
+   //border-color: #cc89cc;
+}
+.LIA-R {
+   //border-color: #cc89cc;
+}
+
+

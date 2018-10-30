@@ -37,7 +37,6 @@ import {OnePosTestUnitContTestsComponent} from './stage-pos-cont/one-pos-test-un
 import {SelAgarsTestSuiteComponent} from './stage-pos-cont/sel-agars-test-suite/sel-agars-test-suite.component';
 import {IsolateTestSeqComponent} from './stage-pos-cont/isolate-test-seq/isolate-test-seq.component';
 import {IsolateTestsFailureDialogComponent} from './stage-pos-cont/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
-import {EditSlantTubeTestDialogComponent} from './stage-pos-cont/isolate-test-seq/slant-tube-test/edit-slant-tube-test-dialog/edit-slant-tube-test-dialog.component';
 import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tube-test/slant-tube-test.component';
 
 @NgModule({
@@ -79,7 +78,6 @@ import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tu
       SelAgarsTestSuiteComponent,
       IsolateTestSeqComponent,
       IsolateTestsFailureDialogComponent,
-      EditSlantTubeTestDialogComponent,
       SlantTubeTestComponent,
    ],
    providers: [
@@ -87,7 +85,6 @@ import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tu
    ],
    entryComponents: [
       IsolateTestsFailureDialogComponent,
-      EditSlantTubeTestDialogComponent,
    ],
    exports: []
 })
