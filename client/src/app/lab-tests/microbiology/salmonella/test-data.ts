@@ -38,8 +38,6 @@ export interface PreEnrData {
    mediumBatchId?: string | null;
    mediumType?: string | null;
    incubatorId?: string | null;
-   positiveControlGrowth?: boolean | null;
-   mediumControlGrowth?: boolean | null;
 }
 
 export interface SelEnrData {
@@ -49,6 +47,8 @@ export interface SelEnrData {
    i2kiBatchId?: string | null;
    spikePlateCount?: number | null;
    rvttWaterBathId?: string | null;
+   positiveControlGrowth?: boolean | null;
+   mediumControlGrowth?: boolean | null;
 }
 
 export interface MBrothData {
@@ -258,8 +258,6 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          incubatorId: new FormControl(testData.preEnrData.incubatorId),
 
          sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
-         positiveControlGrowth: new FormControl(testData.preEnrData.positiveControlGrowth),
-         mediumControlGrowth: new FormControl(testData.preEnrData.mediumControlGrowth),
       }),
       selEnrData: new FormGroup({
          rvBatchId: new FormControl(testData.selEnrData.rvBatchId),
@@ -268,6 +266,8 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          i2kiBatchId: new FormControl(testData.selEnrData.i2kiBatchId),
          spikePlateCount: new FormControl(testData.selEnrData.spikePlateCount),
          rvttWaterBathId: new FormControl(testData.selEnrData.rvttWaterBathId),
+         positiveControlGrowth: new FormControl(testData.selEnrData.positiveControlGrowth),
+         mediumControlGrowth: new FormControl(testData.selEnrData.mediumControlGrowth),
       }),
       mBrothData: new FormGroup({
          mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
@@ -470,8 +470,6 @@ function preEnrStatusCode(testData: TestData): FieldValuesStatusCode
       data.mediumBatchId,
       data.mediumType,
       data.incubatorId,
-      data.positiveControlGrowth,
-      data.mediumControlGrowth,
    ]);
 
    // Check nested sampling method fields.
@@ -507,6 +505,8 @@ function selEnrStatusCode(testData: TestData): FieldValuesStatusCode
       data.bgBatchId,
       data.i2kiBatchId,
       data.rvttWaterBathId,
+      data.positiveControlGrowth,
+      data.mediumControlGrowth,
    ]);
    const spiking = spikingSpecified(testData);
    const spikeCountPresent = !!data.spikePlateCount;

@@ -25,16 +25,16 @@ export function makePdfReportData(testData: TestData, auditLogEntries: AuditLogE
       testData.prepData.labelAttachmentType.toLowerCase().replace('_', ' ')
       : null;
 
-   if ( testData.preEnrData.positiveControlGrowth != null  )
+   if ( testData.selEnrData.positiveControlGrowth != null  )
    {
-      repData.preEnrData.positiveControlGrowth = testData.preEnrData.positiveControlGrowth ? 'Growth' : 'No growth';
-      if ( !testData.preEnrData.positiveControlGrowth ) repData.preEnrData.positiveControlGrowthWarn = '*';
+      repData.selEnrData.positiveControlGrowth = testData.selEnrData.positiveControlGrowth ? 'Growth' : 'No growth';
+      if ( !testData.selEnrData.positiveControlGrowth ) repData.selEnrData.positiveControlGrowthWarn = '*';
    }
 
-   if ( testData.preEnrData.mediumControlGrowth != null  )
+   if ( testData.selEnrData.mediumControlGrowth != null  )
    {
-      repData.preEnrData.mediumControlGrowth = testData.preEnrData.mediumControlGrowth ? 'Growth' : 'No growth';
-      if ( testData.preEnrData.mediumControlGrowth ) repData.preEnrData.mediumControlGrowthWarn = '*';
+      repData.selEnrData.mediumControlGrowth = testData.selEnrData.mediumControlGrowth ? 'Growth' : 'No growth';
+      if ( testData.selEnrData.mediumControlGrowth ) repData.selEnrData.mediumControlGrowthWarn = '*';
    }
 
    if ( testData.vidasData.positiveControlDetection != null )

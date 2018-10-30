@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {merge, Subscription} from 'rxjs';
 
 import {LabResource} from '../../../../../generated/dto';
@@ -7,9 +7,7 @@ import {PreEnrData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {makeSampleTestUnits, SampleTestUnits, SamplingMethod} from '../../sampling-methods';
 import {ResourceControlAssignments} from '../../../resource-assignments';
-import {ResourceCodesDialogComponent} from '../../../../common-components/resource-codes-dialog/resource-codes-dialog.component';
 import {MatDialog} from '@angular/material';
-import {ResourceCodesDialogResult} from '../../../../common-components/resource-codes-dialog/resource-codes-dialog-result';
 import {AlertMessageService} from '../../../../shared/services/alerts';
 
 
@@ -45,9 +43,6 @@ export class StagePreEnrComponent implements OnChanges {
    @Output()
    sampleTestUnitsChange = new EventEmitter<SampleTestUnits>();
 
-   positiveControlGrowthControl: AbstractControl;
-   mediumControlGrowthControl: AbstractControl;
-
    // These allow the user to control how lab resources are entered, either via select field (when true) or else by free-form text input.
    selectBalance = true;
    selectIncubator = true;
@@ -61,9 +56,6 @@ export class StagePreEnrComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.positiveControlGrowthControl = this.form.get('positiveControlGrowth');
-      this.mediumControlGrowthControl = this.form.get('mediumControlGrowth');
-
       this.resourceAssignments = new ResourceControlAssignments(
          this.form,
          new Map()

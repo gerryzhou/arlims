@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {SelEnrData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {LabResource} from '../../../../../generated/dto';
@@ -35,6 +35,10 @@ export class StageSelEnrComponent implements OnChanges {
 
    resourceAssignments: ResourceControlAssignments;
 
+   positiveControlGrowthControl: AbstractControl;
+   mediumControlGrowthControl: AbstractControl;
+
+
    constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
 
    ngOnChanges()
@@ -51,6 +55,9 @@ export class StageSelEnrComponent implements OnChanges {
              .set('bgBatchId', ['BG'])
              .set('i2kiBatchId', ['I2KI'])
       );
+
+      this.positiveControlGrowthControl = this.form.get('positiveControlGrowth');
+      this.mediumControlGrowthControl = this.form.get('mediumControlGrowth');
    }
 
    promptApplyResources()

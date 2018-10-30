@@ -1,5 +1,50 @@
 <form [formGroup]="form">
 
+   <div class="row controls">
+
+      <div class="field-area positive-control-growth"
+           [class.conflicted]="conflicts.positiveControlGrowth !== undefined"
+           [class.growth]="positiveControlGrowthControl.value === true"
+           [class.no-growth]="positiveControlGrowthControl.value === false">
+         <mat-radio-group formControlName="positiveControlGrowth">
+            <div>Positive control growth</div>
+            <div>
+               <mat-radio-button [value]="true">growth</mat-radio-button>
+               <mat-radio-button [value]="false">no growth</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.positiveControlGrowth"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.positiveControlGrowth = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="expanding-flex-space"></div>
+
+      <div class="field-area medium-control-growth"
+           [class.conflicted]="conflicts.mediumControlGrowth !== undefined"
+           [class.growth]="mediumControlGrowthControl.value === true"
+           [class.no-growth]="mediumControlGrowthControl.value === false">
+         <mat-radio-group formControlName="mediumControlGrowth">
+            <div>Medium control growth</div>
+            <div>
+               <mat-radio-button [value]="true">growth</mat-radio-button>
+               <mat-radio-button [value]="false">no growth</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.mediumControlGrowth"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.mediumControlGrowth = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+   </div>
+
+
    <div class="row">
 
       <div class="field-area"

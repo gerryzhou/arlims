@@ -42,8 +42,6 @@ describe('microbiology salmonella test data functions', () => {
             mediumBatchId: 'x',
             mediumType: 'x',
             incubatorId: 'x',
-            positiveControlGrowth: true,
-            mediumControlGrowth: true,
          },
          selEnrData: {
             rvBatchId: 'x',
@@ -52,6 +50,8 @@ describe('microbiology salmonella test data functions', () => {
             i2kiBatchId: 'x',
             spikePlateCount: 1,
             rvttWaterBathId: 'x',
+            positiveControlGrowth: true,
+            mediumControlGrowth: true,
          },
          mBrothData: {
             mBrothBatchId: 'x',
@@ -120,14 +120,14 @@ describe('microbiology salmonella test data functions', () => {
             mediumBatchId: 'x',
             mediumType: 'x',
             incubatorId: 'x',
-            positiveControlGrowth: true,
-            mediumControlGrowth: true,
          },
          selEnrData: {
             rvBatchId: 'x',
             ttBatchId: 'x',
             spikePlateCount: 1,
             // rvttWaterBathId [required field omitted]
+            positiveControlGrowth: true,
+            mediumControlGrowth: true,
          },
          mBrothData: {
             mBrothBatchId: 'x',
@@ -145,6 +145,7 @@ describe('microbiology salmonella test data functions', () => {
             // collectorControlsGrowth: true, [required field omitted]
             bacterialControlsUsed: false,
          },
+         posContData: null,
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
          }

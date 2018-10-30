@@ -1,13 +1,12 @@
-
 Color code the selective agar plates as well as in flip book.
 
-Meeting 2018/10/29
-------------------
 Pre-Enr
    Move the two control fields at bottom to the next stage (SEL-ENR).
    Or to controls stage?
      positiveControlGrowth
      mediumControlGrowth
+   Make sure these are present wherever rvttWaterBathId field is present.
+   Change field categories in pdf report preEnr.xControlGrowth => selEnr.xControlGrowth.
 
 Prep-stage
   Receive from should be a drop down with lab group users (sample custodians) plus other choice.
