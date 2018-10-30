@@ -76,14 +76,14 @@ export function makePdfReportData(testData: TestData, auditLogEntries: AuditLogE
 
    if ( testData.controlsData.systemControlsGrowth != null )
    {
-      repData.controls.systemControlsGrowth = testData.controlsData.systemControlsGrowth ? 'Growth' : 'No growth';
-      if ( testData.controlsData.systemControlsGrowth ) repData.controls.systemControlsGrowthWarn = '*';
+      repData.controlsData.systemControlsGrowth = testData.controlsData.systemControlsGrowth ? 'Growth' : 'No growth';
+      if ( testData.controlsData.systemControlsGrowth ) repData.controlsData.systemControlsGrowthWarn = '*';
    }
 
    if ( testData.controlsData.collectorControlsGrowth != null )
    {
-      repData.controls.collectorControlsGrowth = testData.controlsData.collectorControlsGrowth ? 'Growth' : 'No growth';
-      if ( testData.controlsData.collectorControlsGrowth ) repData.controls.collectorControlsGrowthWarn = '*';
+      repData.controlsData.collectorControlsGrowth = testData.controlsData.collectorControlsGrowth ? 'Growth' : 'No growth';
+      if ( testData.controlsData.collectorControlsGrowth ) repData.controlsData.collectorControlsGrowthWarn = '*';
    }
 
    repData.wrapupData.reserveSampleDisposition = testData.wrapupData.reserveSampleDisposition != null ?
