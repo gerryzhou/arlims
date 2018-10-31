@@ -1,3 +1,17 @@
+Sample Ops Manual Refreshing
+----------------------------
+Show somewhere in the samples listing how long it's been since data was refreshed from the db (from user context service data (maybe new) as extracted in sample listing).
+Show for each sample when it was last updated from FACTS.
+
+Refreshing from database (only):
+  Make a method to return an observable which fetches lab group contents and updates sample listing state based on the result.
+  Don't try to rely on navigation and resolvers.
+
+Refresh from FACTS and (then) from database
+  Make a new top level view to display FACTS refresh results, with top-level route (no resolver necessary).
+  In ngOnInit(), launch the request for refresh.
+    In observable's result handler, set the results member and request lab contents reload in user context service.
+  When user navigates back to sample listing, samples will be loaded from database.
 
 
 

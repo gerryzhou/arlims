@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -24,13 +25,13 @@ public class FakeFactsAccessService implements FactsAccessService
     }
 
     @Override
-    public List<LabInboxItem> getLabInboxItems(List<String> statusCodes)
+    public List<LabInboxItem> getLabInboxItems(List<String> statusCodes, Optional<String> accomplishingOrg)
     {
         try
         {
-            return Arrays.asList(jsonObjectMapper.readValue(
+            List<LabInboxItem> items = Arrays.asList(jsonObjectMapper.readValue(
                 "[{" +
-                "\"accomplishingOrg\": \"NFFL\",\n" +
+                "\"accomplishingOrg\": \"ARKL\",\n" +
                 "\"accomplishingOrgId\": 123,\n" +
                 "\"cfsanProductDesc\": \"SMOKED TROUT\",\n" +
                 "\"operationCode\": \"43\",\n" +
@@ -61,7 +62,7 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"assignedToStatusDate\": \"2018-04-17 00:00:00.000-0400\",\n" +
                 "\"assignedToWorkAssignmentDate\": \"2018-04-17 11:04:16.000-0400\"" +
                 "},{" +
-                "\"accomplishingOrg\": \"NFFL\",\n" +
+                "\"accomplishingOrg\": \"ARKL\",\n" +
                 "\"accomplishingOrgId\": 123,\n" +
                 "\"cfsanProductDesc\": \"SMOKED SALMON\",\n" +
                 "\"operationCode\": \"43\",\n" +
@@ -92,7 +93,7 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"assignedToStatusDate\": \"2018-04-16 00:00:00.000-0400\",\n" +
                 "\"assignedToWorkAssignmentDate\": \"2018-04-16 11:04:16.000-0400\"" +
                 "},{" +
-                "\"accomplishingOrg\": \"NFFL\",\n" +
+                "\"accomplishingOrg\": \"ARKL\",\n" +
                 "\"accomplishingOrgId\": 123,\n" +
                 "\"cfsanProductDesc\": \"SMOKED SALMON\",\n" +
                 "\"operationCode\": \"43\",\n" +
@@ -156,13 +157,19 @@ public class FakeFactsAccessService implements FactsAccessService
                 "}]",
                 LabInboxItem[].class
             ));
+
+            return
+                accomplishingOrg.isPresent() ?
+                    items.stream()
+                    .filter(item -> item.getAccomplishingOrg().equals(accomplishingOrg.get()))
+                    .collect(toList())
+                    : items;
         }
         catch(Exception e)
         {
             throw new RuntimeException(e);
         }
     }
-
 
     public Optional<String> getWorkStatus(long workId)
     {

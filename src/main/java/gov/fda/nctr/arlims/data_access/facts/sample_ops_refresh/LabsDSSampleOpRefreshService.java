@@ -16,6 +16,10 @@ import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
+import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpFailure;
+import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpIdent;
+import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpsRefreshResults;
+import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpsResults;
 import static gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.ReportingUtils.*;
 
 
@@ -28,7 +32,7 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
     private SampleOpRefreshNoticeRepository sampleOpRefreshNoticeRepository;
     private ObjectMapper jsonSerializer;
 
-    private static final List<String> REFRESHABLE_SAMPLE_OP_STATUS_CODES = Arrays.asList("S", "I", "O");
+    private static final List<String> REFRESHABLE_SAMPLE_OP_STATUSES = Arrays.asList("S", "I", "O");
 
 
     public LabsDSSampleOpRefreshService
@@ -48,12 +52,13 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
         this.jsonSerializer.registerModule(new JavaTimeModule());
     }
 
-    public void refreshSampleOpsFromFacts()
+    @Override
+    public synchronized void refreshSampleOpsFromFacts()
     {
         List<LabInboxItem> labInboxItems;
         try
         {
-            labInboxItems = factsAccessService.getLabInboxItems(REFRESHABLE_SAMPLE_OP_STATUS_CODES);
+            labInboxItems = factsAccessService.getLabInboxItems(REFRESHABLE_SAMPLE_OP_STATUSES, Optional.empty());
         }
         catch(Throwable t)
         {
@@ -77,7 +82,7 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
                 .collect(toMap(SampleOp::getWorkId, Function.identity()));
 
             unmatchedActiveSampleOps =
-                sampleOpRepository.findByFactsStatusIn(REFRESHABLE_SAMPLE_OP_STATUS_CODES).stream()
+                sampleOpRepository.findByFactsStatusIn(REFRESHABLE_SAMPLE_OP_STATUSES).stream()
                 .filter(sample -> !matchedSampleOpsByOpId.containsKey(sample.getWorkId()))
                 .collect(toList());
         }
@@ -94,148 +99,239 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
             .filter(items -> !matchedSampleOpsByOpId.containsKey(items.get(0).getWorkId()))
             .collect(toList());
 
-        SuccessFailCounts createCounts = createSampleOpsForInboxItems(unmatchedInboxItemsPartitionedByOpId);
-
+        SampleOpsResults createResults =
+            createSampleOpsForInboxItems(unmatchedInboxItemsPartitionedByOpId, true);
 
         // Update sample ops which are matched to inbox items by op id.
 
-        SuccessFailCounts updateCounts = updateSampleOpsForInboxItems(matchedSampleOpsByOpId.values(), labInboxItemsByOpId);
-
+        SampleOpsResults updateResults =
+            updateSampleOpsForInboxItems(matchedSampleOpsByOpId.values(), labInboxItemsByOpId, true);
 
         // Update statuses for active sample ops that don't have a matching inbox item by op id.
 
-        SuccessFailCounts unmatchedSampleOpStatusUpdateCounts = updateUnmatchedSampleOpStatuses(unmatchedActiveSampleOps);
-
+        SampleOpsResults unmatchedSampleOpStatusUpdateCounts =
+            updateUnmatchedSampleOpStatuses(unmatchedActiveSampleOps, true);
 
         log.info("Completed refresh of sample operations from FACTS lab inbox: " +
-            createCounts.succeeded + " samples created, " +
-            (createCounts.failed> 0 ? createCounts.failed + " samples failed to be created," : "" ) +
-            updateCounts.succeeded + " samples updated, " +
-            (updateCounts.failed > 0 ? updateCounts.failed + " failed to be updated," : "" ) +
-            unmatchedSampleOpStatusUpdateCounts.succeeded + " unmatched sample statuses updated" +
-            (unmatchedSampleOpStatusUpdateCounts.failed > 0 ?
-                ", " + unmatchedSampleOpStatusUpdateCounts.failed   + " unmatched sample statuses failed to be updated."
+            createResults.getSucceededSampleOps().size() + " samples created, " +
+            (createResults.getFailedSampleOps().size() > 0 ?
+                createResults.getFailedSampleOps().size() + " samples failed to be created," : "" ) +
+            updateResults.getSucceededSampleOps().size() + " samples updated, " +
+            (updateResults.getFailedSampleOps().size() > 0 ?
+                updateResults.getFailedSampleOps().size() + " failed to be updated," : "" ) +
+            unmatchedSampleOpStatusUpdateCounts.getSucceededSampleOps().size() +
+                " unmatched sample statuses updated" +
+            (unmatchedSampleOpStatusUpdateCounts.getFailedSampleOps().size() > 0 ?
+                ", " + unmatchedSampleOpStatusUpdateCounts.getFailedSampleOps().size() +
+                " unmatched sample statuses failed to be updated."
                 : "." )
         );
     }
 
+    @Override
+    public synchronized SampleOpsRefreshResults refreshOrganizationSampleOpsFromFacts(String accomplishingOrg)
+    {
+        List<LabInboxItem> labInboxItems =
+            factsAccessService.getLabInboxItems(REFRESHABLE_SAMPLE_OP_STATUSES, Optional.of(accomplishingOrg));
+
+        Map<Long,List<LabInboxItem>> labInboxItemsByOpId =
+            labInboxItems.stream()
+            .filter(item -> item.getSampleTrackingNum() != null)
+            .collect(groupingBy(LabInboxItem::getWorkId)); // collect work assignments to multiple employees by op id
+
+        Map<Long,SampleOp> matchedSampleOpsByOpId =
+            sampleOpRepository.findByWorkIdIn(labInboxItemsByOpId.keySet()).stream()
+            .collect(toMap(SampleOp::getWorkId, Function.identity()));
+
+        List<SampleOp> unmatchedActiveSampleOps =
+            sampleOpRepository.findByParentOrgAndFactsStatusIn(accomplishingOrg, REFRESHABLE_SAMPLE_OP_STATUSES).stream()
+            .filter(sample -> !matchedSampleOpsByOpId.containsKey(sample.getWorkId()))
+            .collect(toList());
+
+        // Create new samples for inbox items that have no matching sample by op id.
+
+        List<List<LabInboxItem>> unmatchedInboxItemsPartitionedByOpId =
+            labInboxItemsByOpId.values().stream()
+            .filter(items -> !matchedSampleOpsByOpId.containsKey(items.get(0).getWorkId()))
+            .collect(toList());
+
+        SampleOpsResults createResults =
+            createSampleOpsForInboxItems(unmatchedInboxItemsPartitionedByOpId, false);
+
+        // Update sample ops which are matched to inbox items by op id.
+
+        SampleOpsResults updateResults =
+            updateSampleOpsForInboxItems(matchedSampleOpsByOpId.values(), labInboxItemsByOpId, false);
+
+        // Update statuses for active sample ops that don't have a matching inbox item by op id.
+
+        SampleOpsResults unmatchedSampleOpStatusUpdateResults =
+            updateUnmatchedSampleOpStatuses(unmatchedActiveSampleOps, false);
+
+        return new SampleOpsRefreshResults(createResults, updateResults, unmatchedSampleOpStatusUpdateResults);
+    }
+
     /// Create samples for groups of lab inbox items, where each group's members have the same operation id and each
     /// member represents an assignment of the sample work to a particular employee.
-    private SuccessFailCounts createSampleOpsForInboxItems(List<List<LabInboxItem>> inboxItemsPartionedByOpId)
+    private SampleOpsResults createSampleOpsForInboxItems
+        (
+            List<List<LabInboxItem>> inboxItemsPartionedByOpId,
+            boolean writeFailureNotices
+        )
     {
-        int succeeded = 0, failed = 0;
+        List<SampleOpIdent> succeeded = new ArrayList<>();
+        List<SampleOpFailure> failed = new ArrayList<>();
 
         for ( List<LabInboxItem> inboxItemsOneOpId : inboxItemsPartionedByOpId )
         {
+            SampleOpIdent sampleOpIdent = getSampleOpIdent(inboxItemsOneOpId);
+
             try
             {
                 transactionalOps.createSampleOp(inboxItemsOneOpId);
 
-                ++succeeded;
+                succeeded.add(sampleOpIdent);
             }
             catch(Exception e)
             {
+                String errorMsg = describeError(e);
+
+                failed.add(new SampleOpFailure(sampleOpIdent, errorMsg));
+
                 log.warn(
                     "Failed to create sample op for lab inbox items " + describeLabInboxItemGroup(inboxItemsOneOpId) +
-                    ": " + describeError(e)
+                    ": " + errorMsg
                 );
 
-                sampleOpRefreshNoticeRepository.save(
-                    new SampleOpRefreshNotice(
-                        Instant.now(),
-                        "create-sample-op",
-                        describeError(e),
-                        null,
-                        inboxItemsOneOpId.get(0).getAccomplishingOrg(),
-                        null,
-                        toJsonString(jsonSerializer, inboxItemsOneOpId)
-                    )
-                );
-
-                ++failed;
+                if ( writeFailureNotices )
+                {
+                    sampleOpRefreshNoticeRepository.save(
+                        new SampleOpRefreshNotice(
+                            Instant.now(),
+                            "create-sample-op",
+                            describeError(e),
+                            null,
+                            inboxItemsOneOpId.get(0).getAccomplishingOrg(),
+                            null,
+                            toJsonString(jsonSerializer, inboxItemsOneOpId)
+                        )
+                    );
+                }
             }
         }
 
-        return new SuccessFailCounts(succeeded, failed);
+        return new SampleOpsResults(succeeded, failed);
     }
 
-    private SuccessFailCounts updateSampleOpsForInboxItems
+    private SampleOpsResults updateSampleOpsForInboxItems
         (
             Collection<SampleOp> sampleOps,
-            Map<Long, List<LabInboxItem>> labInboxItemsByOpId
+            Map<Long, List<LabInboxItem>> labInboxItemsByOpId,
+            boolean writeFailureNotices
         )
     {
-        int succeeded = 0, failed = 0;
+        List<SampleOpIdent> succeeded = new ArrayList<>();
+        List<SampleOpFailure> failed = new ArrayList<>();
 
         for ( SampleOp sampleOp : sampleOps)
         {
-            List<LabInboxItem> inboxItems = labInboxItemsByOpId.get(sampleOp.getWorkId());
+            List<LabInboxItem> inboxItemsOneOpId = labInboxItemsByOpId.get(sampleOp.getWorkId());
+
+            SampleOpIdent sampleOpIdent = getSampleOpIdent(inboxItemsOneOpId);
 
             try
             {
-                transactionalOps.updateSampleOp(sampleOp, inboxItems);
+                transactionalOps.updateSampleOp(sampleOp, inboxItemsOneOpId);
 
-                ++succeeded;
+                succeeded.add(sampleOpIdent);
             }
             catch(Exception e)
             {
+                String errorMsg = describeError(e);
+
+                failed.add(new SampleOpFailure(sampleOpIdent, errorMsg));
+
                 log.warn(
                     "Failed to update sample op " + describeSampleOp(sampleOp) + " for lab inbox items group "
-                    + describeLabInboxItemGroup(inboxItems) + ": " + describeError(e)
+                    + describeLabInboxItemGroup(inboxItemsOneOpId) + ": " + errorMsg
                 );
 
-                sampleOpRefreshNoticeRepository.save(
-                    new SampleOpRefreshNotice(
-                        Instant.now(),
-                        "update-sample-op",
-                        describeError(e),
-                        sampleOp.getLabGroup().getFactsParentOrgName(),
-                        inboxItems.get(0).getAccomplishingOrg(),
-                        toJsonString(jsonSerializer, new ReportingSampleOp(sampleOp)),
-                        toJsonString(jsonSerializer, inboxItems)
-                    )
-                );
-
-                ++failed;
+                if ( writeFailureNotices )
+                {
+                    sampleOpRefreshNoticeRepository.save(
+                        new SampleOpRefreshNotice(
+                            Instant.now(),
+                            "update-sample-op",
+                            describeError(e),
+                            sampleOp.getLabGroup().getFactsParentOrgName(),
+                            inboxItemsOneOpId.get(0).getAccomplishingOrg(),
+                            toJsonString(jsonSerializer, new ReportingSampleOp(sampleOp)),
+                            toJsonString(jsonSerializer, inboxItemsOneOpId)
+                        )
+                    );
+                }
             }
         }
 
-        return new SuccessFailCounts(succeeded, failed);
+        return new SampleOpsResults(succeeded, failed);
     }
 
-    private SuccessFailCounts updateUnmatchedSampleOpStatuses(List<SampleOp> sampleOps)
+    private SampleOpsResults updateUnmatchedSampleOpStatuses
+        (
+            List<SampleOp> sampleOps,
+            boolean writeFailureNotices
+        )
     {
-        int succeeded = 0, failed = 0;
+        List<SampleOpIdent> succeeded = new ArrayList<>();
+        List<SampleOpFailure> failed = new ArrayList<>();
 
-        for ( SampleOp sampleOp : sampleOps)
+        for ( SampleOp so : sampleOps )
         {
+            SampleOpIdent sampleOpIdent = new SampleOpIdent(so.getSampleTrackingNumber(), so.getSampleTrackingSubNumber(), so.getWorkId());
+
             try
             {
-                transactionalOps.updateUnmatchedSampleOpStatus(sampleOp);
+                transactionalOps.updateUnmatchedSampleOpStatus(so);
 
-                ++succeeded;
+                succeeded.add(sampleOpIdent);
             }
             catch(Exception e)
             {
-                log.warn("Failed to update status for sample op " + sampleOp + ": " + describeError(e));
+                String errorMsg = describeError(e);
 
-                sampleOpRefreshNoticeRepository.save(
-                    new SampleOpRefreshNotice(
-                        Instant.now(),
-                        "update-unmatched-sample-op-status",
-                        describeError(e),
-                        sampleOp.getLabGroup().getFactsParentOrgName(),
-                        null,
-                        toJsonString(jsonSerializer, new ReportingSampleOp(sampleOp)),
-                        null
-                    )
-                );
+                failed.add(new SampleOpFailure(sampleOpIdent, errorMsg));
 
-                ++failed;
+                log.warn("Failed to update status for sample op " + so + ": " + errorMsg);
+
+                if ( writeFailureNotices )
+                {
+                    sampleOpRefreshNoticeRepository.save(
+                        new SampleOpRefreshNotice(
+                            Instant.now(),
+                            "update-unmatched-sample-op-status",
+                            describeError(e),
+                            so.getLabGroup().getFactsParentOrgName(),
+                            null,
+                            toJsonString(jsonSerializer, new ReportingSampleOp(so)),
+                            null
+                        )
+                    );
+                }
             }
         }
 
-        return new SuccessFailCounts(succeeded, failed);
+        return new SampleOpsResults(succeeded, failed);
+    }
+
+    private SampleOpIdent getSampleOpIdent(List<LabInboxItem> inboxItemsOneOpId)
+    {
+        LabInboxItem leadItem = inboxItemsOneOpId.get(0);
+
+        return new SampleOpIdent(
+            leadItem.getSampleTrackingNum(),
+            leadItem.getSampleTrackingSubNum(),
+            leadItem.getWorkId()
+        );
     }
 
     private void warnFetchOfRefreshableSamplesFailed(Throwable t)
@@ -263,18 +359,6 @@ public class LabsDSSampleOpRefreshService extends ServiceBase implements SampleO
     }
 }
 
-
-class SuccessFailCounts
-{
-    int succeeded;
-    int failed;
-
-    SuccessFailCounts(int succeeded, int failed)
-    {
-        this.succeeded = succeeded;
-        this.failed = failed;
-    }
-}
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,

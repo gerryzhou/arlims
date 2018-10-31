@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Collections.singletonList;
@@ -89,11 +86,13 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         this.jsonReader = jsonSerializer.reader();
     }
 
-    public List<LabInboxItem> getLabInboxItems(List<String> statusCodes)
+    public List<LabInboxItem> getLabInboxItems(List<String> statusCodes, Optional<String> accomplishingOrg)
     {
         List<LabInboxItem> resInboxItems = new ArrayList<>();
 
-        List<String> orgNames = jdbc.queryForList("select distinct facts_parent_org_name from lab_group", String.class);
+        List<String> orgNames =
+            accomplishingOrg.isPresent() ? singletonList(accomplishingOrg.get())
+            : jdbc.queryForList("select distinct facts_parent_org_name from lab_group", String.class);
 
         String includeFields =
             "workId,sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject,pacCode," +
@@ -107,7 +106,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         for ( String orgName : orgNames )
         {
-            // TODO: Add assignedToStatus age cutoff param here when available.
+            // TODO: Add assignedToStatus age cutoff param here when supported by Leidos api.
             String url =
                 UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
                 .queryParam("orgName", orgName)

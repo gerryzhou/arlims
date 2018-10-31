@@ -74,6 +74,13 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${reportName}`);
    }
 
+   refreshUserOrganziationSampleOpsUrl(): string
+   {
+      return this.location.prepareExternalUrl(`/api/lab-group/refresh-user-org-sample-ops`);
+   }
+
+
+
    auditLogEntriesQueryUrl
       (
          fromMoment: Moment | null,

@@ -18,6 +18,9 @@ public interface SampleOpRepository extends JpaRepository<SampleOp, Long>
     @Query(value = "SELECT so FROM SampleOp so JOIN FETCH so.labGroup where so.factsStatus in :includeStatuses")
     List<SampleOp> findByFactsStatusIn(List<String> includeStatuses);
 
+    @Query(value = "SELECT so FROM SampleOp so JOIN FETCH so.labGroup lg where lg.factsParentOrgName = :parentOrg and so.factsStatus in :includeStatuses")
+    List<SampleOp> findByParentOrgAndFactsStatusIn(String parentOrg, List<String> includeStatuses);
+
     @Query(value = "SELECT so FROM SampleOp so JOIN FETCH so.labGroup where so.workId in :workIds")
     List<SampleOp> findByWorkIdIn(Collection<Long> workIds);
 }

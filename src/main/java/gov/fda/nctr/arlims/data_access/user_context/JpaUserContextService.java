@@ -453,6 +453,8 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     {
         List<RoleName> roleNames = emp.getRoles().stream().map(Role::getName).collect(toList());
 
+        LabGroup lg = emp.getLabGroup();
+
         return
             new AppUser(
                 emp.getId(),
@@ -460,6 +462,9 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                 opt(emp.getFactsPersonId()),
                 emp.getShortName(),
                 emp.getLabGroupId(),
+                lg.getName(),
+                lg.getFactsOrgName(),
+                lg.getFactsParentOrgName(),
                 emp.getLastName(),
                 emp.getFirstName(),
                 roleNames,

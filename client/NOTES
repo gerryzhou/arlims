@@ -1,12 +1,4 @@
-Color code the selective agar plates as well as in flip book.
-
-Pre-Enr
-   Move the two control fields at bottom to the next stage (SEL-ENR).
-   Or to controls stage?
-     positiveControlGrowth
-     mediumControlGrowth
-   Make sure these are present wherever rvttWaterBathId field is present.
-   Change field categories in pdf report preEnr.xControlGrowth => selEnr.xControlGrowth.
+Add button to sync current lab group sample ops immediately.
 
 Prep-stage
   Receive from should be a drop down with lab group users (sample custodians) plus other choice.
@@ -14,24 +6,27 @@ Prep-stage
       Maybe rename ADMIN to LIMS_ADMIN.
       Also supervisor role.
 
-
-Rename positive continuations to slant tubes.
-Add API/Vitek as separate separate stage.
-  API: octet code (9 digit or so) and free text for identification. (Much more common at ARL than Vitek).
-  Vitek: bigger code and identification (code should eventually be grabbed electronically).
+Division of POS-CONT stage into multiple stages.
+   Consider adding the additional "stages" as separate "pages" within the positives continuations stage.
+   John requests:
+      Rename positive continuations to slant tubes.
+      Add API/Vitek as separate separate stage.
+   data: both API and Vitek need a code field and identification text field.
+      API should be the default for ARL. Vitek code is longer.
 
 Add separate positive control stage (?)
-
 
 Need carry-over inbox.
   Analyst indicates that rest of work on a sample should be done by someone else (on weekend for example).
   Plus filter at top to see these items.
 
+
 Clean up database to remove old records.
 
 Move BAM link to top within test name box.
 
-Sync-now button.
+Color code the selective agar plates as well as in flip book.
+
 
 FACTS Writing
   Start with updating sample status flag when test is created.
