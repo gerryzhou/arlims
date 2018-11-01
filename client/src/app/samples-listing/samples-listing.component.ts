@@ -1,16 +1,28 @@
 import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CreatedTestMetadata, LabGroupContents, LabTestMetadata, LabTestType, Sample} from '../../generated/dto';
+import {
+   CreatedTestMetadata,
+   LabGroupContents,
+   LabTestMetadata,
+   LabTestType,
+   Sample,
+   SampleOpFailure, SampleOpIdent,
+   SampleOpsRefreshResults
+} from '../../generated/dto';
 import {AlertMessageService, UserContextService} from '../shared/services';
 import {ListingOptions, SampleOpStatusCode} from './listing-options/listing-options';
-import {Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
+import * as moment from 'moment';
+import {Moment} from 'moment';
+import {LabGroupService} from '../shared/services/lab-group-service';
+import {flatMap, map, take} from 'rxjs/operators';
 
 @Component({
    selector: 'app-samples-listing',
    templateUrl: './samples-listing.component.html',
    styleUrls: ['./samples-listing.component.scss'],
 })
-export class SamplesListingComponent implements OnDestroy {
+export class SamplesListingComponent {
 
    selectableSamples: SelectableSample[]; // all samples in context, before any filtering or sorting
 
@@ -27,7 +39,7 @@ export class SamplesListingComponent implements OnDestroy {
 
    labGroupTestTypes: LabTestType[];
 
-   labGroupContentsSubscription: Subscription;
+   contentsLastLoaded: Moment;
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
@@ -35,17 +47,19 @@ export class SamplesListingComponent implements OnDestroy {
       includeSamplesAssignedOnlyToOtherUsers: false,
       limitSelectionToVisibleSamples: true,
       showTestDeleteButtons: false,
-      includeStatuses: ['S', 'I', 'O', 'P', 'A'],
+      includeStatuses: ['P', 'A', 'S', 'I', 'O'],
    };
 
    constructor
        (
           private usrCtxSvc: UserContextService,
+          private labGroupSvc: LabGroupService,
+          private alertMsgSvc: AlertMessageService,
           private activatedRoute: ActivatedRoute,
           private router: Router,
-          private alertMessageSvc: AlertMessageService,
        )
    {
+      // TODO: This expanded samples state would be better transferred via service.
       const expandedSampleIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
       if (expandedSampleIdsStr)
       {
@@ -68,6 +82,7 @@ export class SamplesListingComponent implements OnDestroy {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
       this.selectableSamples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
       this.applyFilters(this.defaultListingOptions);
+      this.contentsLastLoaded = moment();
    }
 
    listingOptionsChanged(listingOptions: ListingOptions)
@@ -233,7 +248,7 @@ export class SamplesListingComponent implements OnDestroy {
 
    onTestCreationFailed(error: string)
    {
-      this.alertMessageSvc.alertDanger('Failed to create new test: ' + error);
+      this.alertMsgSvc.alertDanger('Failed to create new test: ' + error);
    }
 
    onTestDeleted(deletedTestMetadata: LabTestMetadata)
@@ -243,28 +258,67 @@ export class SamplesListingComponent implements OnDestroy {
 
    onTestDeleteFailed(error: string)
    {
-      this.alertMessageSvc.alertDanger('Failed to delete test: ' + error);
+      this.alertMsgSvc.alertDanger('Failed to delete test: ' + error);
    }
 
-   private reload()
+   reload(): Observable<void>
    {
-      if (this.labGroupContentsSubscription)
-         this.labGroupContentsSubscription.unsubscribe();
+      const reload$: Observable<void> =
+         this.usrCtxSvc.refreshLabGroupContents().pipe(
+            map(labGroupContents => this.refeshFromLabGroupContents(labGroupContents)),
+            take(1)
+         );
 
-      this.labGroupContentsSubscription =
-         this.usrCtxSvc.refreshLabGroupContents()
-            .subscribe(labGroupContents => {
-               this.refeshFromLabGroupContents(labGroupContents);
-            });
+      reload$.subscribe(
+         null,
+         err => this.alertMsgSvc.alertDanger('Failed to load samples ' + (err.message ? ': ' + err.message + '.' : '.'))
+      );
+
+      return reload$;
    }
 
-   ngOnDestroy(): void
+   refreshFromFacts()
    {
-      if (this.labGroupContentsSubscription)
+      this.labGroupSvc.refreshSampleOpsInUserParentOrg()
+      .pipe(
+         flatMap(refreshRes => this.reload().pipe(
+            map(() => this.presentFactsRefreshResults(refreshRes))
+         )),
+         take(1),
+      )
+      .subscribe(
+         null,
+         err => this.alertMsgSvc.alertDanger('Failed to refresh from FACTS: ' + (err.message ? ': ' + err.message + '.' : '.'))
+      );
+   }
+
+   private presentFactsRefreshResults(res: SampleOpsRefreshResults)
+   {
+      const failed: SampleOpFailure[] =
+         [].concat(
+            res.creationResults.failedSampleOps,
+            res.updateResults.failedSampleOps,
+            res.unmatchedStatusUpdateResults.failedSampleOps
+         );
+
+      const successCount =
+         res.creationResults.succeededSampleOps.length +
+         res.updateResults.succeededSampleOps.length +
+         res.unmatchedStatusUpdateResults.succeededSampleOps.length;
+
+      if ( failed.length === 0 )
+         this.alertMsgSvc.alertSuccess('Refresh from FACTS succeeded with ' + successCount + ' samples affected.');
+      else
       {
-         this.labGroupContentsSubscription.unsubscribe();
+         const detailLines = failed.map(failure => describeSampleOpIdent(failure.sampleOpIdent) + ': ' + failure.error);
+         this.alertMsgSvc.alertWarning('Refresh from FACTS completed with some errors:', detailLines);
       }
    }
+}
+
+function describeSampleOpIdent(sampleOpIdent: SampleOpIdent): string
+{
+   return sampleOpIdent.sampleNum + '-' + sampleOpIdent.sampleSubNum + ' (op=' + sampleOpIdent.opId + ')';
 }
 
 class SelectableSample {

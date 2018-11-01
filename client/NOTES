@@ -1,4 +1,8 @@
-Add button to sync current lab group sample ops immediately.
+samples listing refresh
+-----------------------
+Show for each sample when it was last updated from FACTS.
+Show somewhere in the samples listing how long it's been since data was refreshed from the db (from user context service data (maybe new) as extracted in sample listing).
+
 
 Prep-stage
   Receive from should be a drop down with lab group users (sample custodians) plus other choice.

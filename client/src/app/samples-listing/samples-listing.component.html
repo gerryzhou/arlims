@@ -1,18 +1,44 @@
 <div class="control-area">
+
    <mat-checkbox #selectAllNoneCheckbox
       (change)="selectOrUnselectVisible($event.checked)"
       matTooltip="select/unselect all visible samples">
    </mat-checkbox>
+
    <div class="selected-count-message">
       {{countSelected()}} selected
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
-   <button mat-button (click)="expandOrContractAllSamples()">{{expandedSampleIds.size > 0 ? 'collapse samples' : 'expand samples'}}</button>
+
+   <button mat-button (click)="expandOrContractAllSamples()">
+      {{expandedSampleIds.size > 0 ? 'collapse samples' : 'expand samples'}}
+   </button>
+
    <app-samples-listing-options
       [initialOptions]="defaultListingOptions"
       (optionsChanged)="listingOptionsChanged($event)">
    </app-samples-listing-options>
-</div>
+
+   <div class="refresh-panel">
+      <mat-menu #refreshDataMenu="matMenu">
+         <div class="menu-item" >
+            <button mat-button (click)="reload()">
+               refresh from database
+            </button>
+         </div>
+         <div class="menu-item" >
+            <button class="menu-item" mat-button (click)="refreshFromFacts()">
+               update database from FACTS and refresh from database
+            </button>
+         </div>
+      </mat-menu>
+      <button mat-button type="button" [matMenuTriggerFor]="refreshDataMenu">
+         <mat-icon>refresh</mat-icon>
+         <span class="last-loaded">last loaded at {{contentsLastLoaded.format('h:mm:ss a')}}</span>
+      </button>
+   </div>
+
+</div> <!-- control area -->
 
 <div class="listing">
    <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">

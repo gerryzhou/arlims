@@ -2,28 +2,34 @@
    display: flex;
    flex-flow: row wrap;
    align-items: center;
+}
 
-   .selected-count-message {
-      margin-left: 20px;
-      font-size: small;
-   }
+.selected-count-message {
+   margin-left: 20px;
+   font-size: small;
+}
 
-   #assoc-resources-btn {
-      color: blue;
-      margin: 0px 5px;
-   }
+.refresh-panel {
+
+}
+
+.last-loaded {
+   margin-left: 5px;
+   font-size: small;
+   color: #555;
 }
 
 .listing {
-   .sample-container {
-      display: flex;
-      flex-flow: row nowrap;
-      align-items: flex-start;
-      app-sample {
-         flex-grow: 1;
-      }
-      mat-checkbox {
-         margin-top: 23px; // puts checkbox approx even with product name
-      }
+}
+
+.sample-container {
+   display: flex;
+   flex-flow: row nowrap;
+   align-items: flex-start;
+   app-sample {
+      flex-grow: 1;
+   }
+   mat-checkbox {
+      margin-top: 23px; // puts checkbox approx even with product name
    }
 }

@@ -60,6 +60,8 @@ export class SampleComponent implements OnChanges {
    factsStatusText: string;
    factsStatusCssClass: string;
 
+   displayRefreshedFromFactsTimestamp: string;
+
    constructor(private testsSvc: TestsService,
                private dialogSvc: MatDialog) {}
 
@@ -68,10 +70,14 @@ export class SampleComponent implements OnChanges {
       this.hasExtendedSampleMetadata = !!this.sample.subject;
       this.hasAssociatedItems = this.sample.tests.length > 0;
       this.displayFactsStatusTimestamp =
-         this.sample.factsStatusTimestamp ? moment(this.sample.factsStatusTimestamp).format(' MMM D h:mm a')
+         this.sample.factsStatusTimestamp ? moment(this.sample.factsStatusTimestamp).format('MMM D h:mm a')
          : '';
       this.factsStatusText = this.factsStatusTextFromCode(this.sample.factsStatus);
       this.factsStatusCssClass = this.factsStatusText.replace(/ /g, '-').toLowerCase();
+
+      this.displayRefreshedFromFactsTimestamp =
+         this.sample.lastRefreshedFromFactsInstant ? moment(this.sample.lastRefreshedFromFactsInstant).format('h:mm a MMM D')
+            : '';
    }
 
    onHeaderClick()

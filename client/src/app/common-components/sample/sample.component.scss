@@ -7,118 +7,138 @@
    display: flex;
    flex-flow: column nowrap;
 
-   .sample-metadata-row {
-      display: flex;
-      flex-flow: row wrap;
-      align-items: center;
-      padding: 4px;
+}
 
-      background: darkblue;
-      color: lightgray;
+.facts-status-stack {
+   padding: 3px;
+   margin: 0 5px;
+   text-align: center;
+   border: 2px solid gray;
 
-      > * {
-         margin: 2px 10px;
-      }
-
-      .field-label {
-         font-weight: normal;
-      }
-      .field-value {
-         font-weight: bold;
-         font-size: 105%;
-      }
-
-      .product-name {
-         font-weight: bolder;
-         font-size: 120%;
-         width: 20%;
-      }
-
-      .sample-pac-stack {
-         display: flex;
-         flex-flow: column nowrap;
-         justify-content: center;
-         align-items: center;
-         margin-top: 0;
-         margin-bottom: 0;
-      }
-
-      .facts-status-stack {
-         padding: 3px;
-         margin: 0 5px;
-         text-align: center;
-         border: 2px solid gray;
-
-         // Color the FACTS status.
-         &.accepted {
-            background: darkgray;
-            color: white;
-         }
-         &.assigned {
-            background: black;
-            color: white;
-         }
-         &.in-progress {
-            background: darkgreen;
-            color: wheat;
-         }
-         &.original-complete {
-            background: #444444;
-            color: #aaaaaa;
-         }
-
-         .facts-status-timestamp {
-            font-size: small;
-         }
-      }
-
-      .employee-assignments {
-         display: flex;
-         .assigned-employee {
-            display: inline-flex;
-            vertical-align: middle;
-            margin-right: 5px;
-            .assigned-employee-name {
-               margin-left: 3px;
-            }
-            .lead-employee-name {
-               font-weight: bold;
-               font-size: 120%;
-            }
-         }
-      }
-
-      .sampling-org-stack {
-         display: flex;
-         flex-flow: column nowrap;
-         justify-content: center;
-         align-items: flex-start;
-         margin-top: 0;
-         margin-bottom: 0;
-      }
-
-      .nums-associated-items-stack {
-         display: flex;
-         flex-flow: column nowrap;
-      }
+   // Color the FACTS status.
+   &.accepted {
+      background: darkgray;
+      color: white;
+   }
+   &.assigned {
+      background: black;
+      color: white;
+   }
+   &.in-progress {
+      background: darkgreen;
+      color: wheat;
+   }
+   &.original-complete {
+      background: #444444;
+      color: #aaaaaa;
    }
 }
 
+.sample-metadata-row {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: center;
+   padding: 4px;
+
+   background: darkblue;
+   color: lightgray;
+
+   > * {
+      margin: 2px 10px;
+   }
+}
+
+.field-label {
+   font-weight: normal;
+}
+.field-value {
+   font-weight: bold;
+   font-size: 105%;
+}
+
+.product-name {
+   font-weight: bolder;
+   font-size: 120%;
+   width: 20%;
+}
+
+.sample-pac-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   justify-content: center;
+   align-items: center;
+   margin-top: 0;
+   margin-bottom: 0;
+}
+
+
+.employee-assignments {
+   display: flex;
+}
+
+.assigned-employee {
+   display: inline-flex;
+   vertical-align: middle;
+   margin-right: 5px;
+}
+
+.lead-employee-name {
+   font-weight: bold;
+   font-size: 120%;
+}
+
+.assigned-employee-name {
+   margin-left: 3px;
+}
+
+.sampling-org-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   justify-content: center;
+   align-items: flex-start;
+   margin-top: 0;
+   margin-bottom: 0;
+}
+
+
+.nums-associated-items-stack {
+   display: flex;
+   flex-flow: column nowrap;
+}
+
+.facts-status-timestamp {
+   font-size: small;
+}
+
+.refreshed-from-facts-timestamp-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
+   font-size: small;
+   padding: 5px;
+   border: 1px solid gray;
+}
+
+.last-refreshed-from-facts-timestamp {
+   margin-left: 5px;
+   font-size: small;
+}
 
 .tests {
    padding: 5px 5px 5px 10px;
+}
 
-   .test-area {
-      display: flex;
-      flex-flow: row nowrap;
-      button {
-         flex-grow: 0;
-         color: red;
-      }
-      app-test-metadata {
-         flex-grow: 1;
-      }
+.test-area {
+   display: flex;
+   flex-flow: row nowrap;
+   button {
+      flex-grow: 0;
+      color: red;
    }
+}
+
+app-test-metadata {
+   flex-grow: 1;
 }
 
 .sample-actions {
@@ -127,33 +147,6 @@
    padding-bottom: 5px;
    button {
       margin: 7px 5px 7px 25px;
-   }
-}
-
-.associated-lab-resource-lists {
-   padding: 5px;
-   display: flex;
-   justify-content: flex-start;
-   align-items: center;
-   margin-left: 10px;
-
-   .label {
-      margin-right: 20px;
-   }
-
-   .items-count {
-      margin: 0 5px;
-   }
-   .list-name {
-      margin: 0 5px;
-      background: beige;
-      padding: 5px;
-   }
-
-   .resource-list {
-      border: 1px solid gray;
-      margin: 5px 5px;
-      padding: 0 5px;
    }
 }
 

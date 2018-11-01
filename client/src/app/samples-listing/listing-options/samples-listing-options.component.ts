@@ -36,7 +36,10 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
          includeStatuses: new FormControl(this.initialOptions.includeStatuses),
       });
 
+      if ( this.optsSubscription )
+         this.optsSubscription.unsubscribe();
       this.optsSubscription = this.form.valueChanges.subscribe(data => this.onFormChange(data));
+
       this.includeStatusesCtl = this.form.get('includeStatuses');
    }
 

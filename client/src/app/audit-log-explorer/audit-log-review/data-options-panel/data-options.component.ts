@@ -37,6 +37,7 @@ export class DataOptionsComponent implements OnChanges, OnDestroy {
             includeChangeDetailData: new FormControl(this.initialDataOptions.includeChangeDetailData),
             includeUnchangedSaves: new FormControl(this.initialDataOptions.includeUnchangedSaves),
          });
+
       if (this.optionsSubscription)
          this.optionsSubscription.unsubscribe();
       this.optionsSubscription = this.optionsFormGroup.valueChanges.subscribe(data =>

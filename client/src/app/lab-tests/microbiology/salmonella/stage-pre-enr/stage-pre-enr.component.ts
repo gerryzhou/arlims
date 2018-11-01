@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {merge, Subscription} from 'rxjs';
 
@@ -17,7 +17,7 @@ import {AlertMessageService} from '../../../../shared/services/alerts';
    styleUrls: ['./stage-pre-enr.component.scss'],
    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StagePreEnrComponent implements OnChanges {
+export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
    @Input()
    form: FormGroup;
@@ -69,12 +69,12 @@ export class StagePreEnrComponent implements OnChanges {
 
    private subscribeToSampleTestUnitChanges()
    {
-      if (this.sampleTestUnitsChangeSubcription)
-         this.sampleTestUnitsChangeSubcription.unsubscribe();
-
       const samplingMethodformGroup = this.form.get('samplingMethod');
       const numSubsCtrl = samplingMethodformGroup.get('numberOfSubs');
       const numCompsCtrl = samplingMethodformGroup.get('numberOfComposites');
+
+      if (this.sampleTestUnitsChangeSubcription)
+         this.sampleTestUnitsChangeSubcription.unsubscribe();
 
       this.sampleTestUnitsChangeSubcription =
          merge(numSubsCtrl.valueChanges, numCompsCtrl.valueChanges)
@@ -128,5 +128,10 @@ export class StagePreEnrComponent implements OnChanges {
       this.resourceAssignments.promptAssignResources(this.dialogSvc, this.alertMsgSvc);
    }
 
+   ngOnDestroy()
+   {
+      if (this.sampleTestUnitsChangeSubcription)
+         this.sampleTestUnitsChangeSubcription.unsubscribe();
+   }
 }
 

@@ -16,7 +16,7 @@ export class LabGroupService
       private apiUrlsSvc: ApiUrlsService,
    ) {}
 
-   refreshUserOrganizationSampleOps(): Observable<SampleOpsRefreshResults>
+   refreshSampleOpsInUserParentOrg(): Observable<SampleOpsRefreshResults>
    {
       const url = this.apiUrlsSvc.refreshUserOrganziationSampleOpsUrl();
       return this.httpClient.post<SampleOpsRefreshResults>(url, null);

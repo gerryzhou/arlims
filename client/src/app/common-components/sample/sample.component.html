@@ -19,7 +19,7 @@
 
          <div class="facts-status-stack" [ngClass]="factsStatusCssClass">
             <div>{{factsStatusText}}</div>
-            <div class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</div>
+            <span class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</span>
          </div>
 
          <div class="employee-assignments">
@@ -53,6 +53,14 @@
          <div *ngIf="showAssociatedItemsSummaryInSampleMetadata" class="nums-associated-items-stack">
             <span>{{sample.tests.length}} test{{sample.tests.length != 1 ? 's' : ''}}</span>
          </div>
+
+         <div class="refreshed-from-facts-timestamp-stack">
+            <span>from FACTS at</span>
+            <span class="last-refreshed-from-facts-timestamp">
+               {{displayRefreshedFromFactsTimestamp}}
+            </span>
+         </div>
+
       </div> <!-- Ends first row of sample metadata. -->
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
