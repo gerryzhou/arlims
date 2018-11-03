@@ -25,9 +25,6 @@ export class IsolateTestSeqComponent implements OnChanges {
    selectiveAgarDisplayName: string;
 
    @Input()
-   isolateNumber: number;
-
-   @Input()
    showDisposeButton = false;
 
    @Output()
@@ -36,6 +33,7 @@ export class IsolateTestSeqComponent implements OnChanges {
    @Output()
    failureDeclared = new EventEmitter<void>();
 
+   isolateNumber: number;
    isolateDescription = '';
    failed: boolean;
 
@@ -43,6 +41,7 @@ export class IsolateTestSeqComponent implements OnChanges {
 
    ngOnChanges()
    {
+      this.isolateNumber = this.form.get('isolateNumber').value;
       this.isolateDescription = 'isolate ' + this.isolateNumber + ' in ' +
          this.testUnitDescription + ' / ' + this.medium + ' / ' + this.selectiveAgarDisplayName;
       this.failed = this.form.controls.failure != null;
@@ -54,7 +53,7 @@ export class IsolateTestSeqComponent implements OnChanges {
    }
 
    // Show a dialog allowing the user to add, update, or remove failure information for this test sequence.
-   promptEditFailure()
+   promptEditFailureInfo()
    {
       const prevFailureCtl = this.form.get('failure') as FormGroup;
       const reason = prevFailureCtl != null ? prevFailureCtl.controls.reason.value : null;
@@ -96,12 +95,5 @@ export class IsolateTestSeqComponent implements OnChanges {
    {
       this.form.removeControl('failure');
       this.failed = false;
-   }
-
-   cycleOxidaseDetection()
-   {
-      const oxCtl = this.form.get('oxidaseDetection');
-      const v = oxCtl.value as boolean;
-      oxCtl.setValue(v == null ? true : v === true ? false : null);
    }
 }

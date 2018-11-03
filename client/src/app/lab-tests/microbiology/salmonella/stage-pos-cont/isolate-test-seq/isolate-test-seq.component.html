@@ -1,5 +1,7 @@
 <form [formGroup]="form" class="isolate-row" [class.failed]="failed">
 
+   <div class="isolate-num" matTooltip="isolate number">{{isolateNumber}}</div>
+
    <mat-select class="colony-appearance" formControlName="colonyAppearance" matTooltip="colony appearance">
       <mat-option [value]="null"></mat-option>
       <mat-option [value]="'T'">T</mat-option>
@@ -41,7 +43,7 @@
             </button>
          </div>
          <div class="menu-item">
-            <button mat-button class="fail" *ngIf="!this.form.controls.failure" (click)="promptEditFailure()">
+            <button mat-button class="fail" *ngIf="!this.form.controls.failure" (click)="promptEditFailureInfo()">
                <mat-icon>thumb_down</mat-icon> mark isolate as failed
             </button>
          </div>
@@ -51,7 +53,7 @@
             </button>
          </div>
          <div class="menu-item">
-            <button mat-button *ngIf="!!this.form.controls.failure" (click)="promptEditFailure()">
+            <button mat-button *ngIf="!!this.form.controls.failure" (click)="promptEditFailureInfo()">
                <mat-icon>edit</mat-icon><mat-icon>thumb_down</mat-icon> edit failure information
             </button>
          </div>

@@ -114,6 +114,7 @@ export interface SelectiveAgarsTestSuite {
 interface IsolateTestSequencesByUid { [testSeqUid: string]: IsolateTestSequence; }
 
 export interface IsolateTestSequence {
+   isolateNumber: number; // isolate number unique within the data for one test unit
    colonyAppearance: ColonyAppearance | null;
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
@@ -172,44 +173,68 @@ export function emptyTestData(): TestData {
 export function makeEmptyContinuationControls(username: string): ContinuationControls
 {
    return {
-      salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1, username),
-      salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1, username),
+      salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1, 1, username),
+      salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1, 1, username),
       salmonellaControlsSatisfactory: null,
       pVulgarisApiVitekDetection: null,
       pVulgarisControlSatisfactory: null,
       pAerugiOxidaseDetection: null,
       pAerugiControlSatisfactory: null,
-      medium: makeEmptySelectiveAgarsTestSuite(1, username),
+      medium: makeEmptySelectiveAgarsTestSuite(1, 1, username),
    };
 }
 
-export function makeEmptySelectiveAgarsTestSuite(numIsolates: number, username: string): SelectiveAgarsTestSuite
+export function makeEmptySelectiveAgarsTestSuite
+   (
+      firstIsolateNum: number,
+      numIsolatesPerSelAgarPlate: number,
+      username: string
+   )
+   : SelectiveAgarsTestSuite
 {
    const now = new Date();
    return {
-      he:    makeEmptyIsolateTestSequences(numIsolates, now, username),
-      xld:   makeEmptyIsolateTestSequences(numIsolates, now, username),
-      bs24h: makeEmptyIsolateTestSequences(numIsolates, now, username),
-      bs48h: makeEmptyIsolateTestSequences(numIsolates, now, username),
+      he:    makeEmptyIsolateTestSequences(firstIsolateNum, numIsolatesPerSelAgarPlate, now, username),
+      xld:   makeEmptyIsolateTestSequences(firstIsolateNum + numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate, now, username),
+      bs24h: makeEmptyIsolateTestSequences(firstIsolateNum + 2 * numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate, now, username),
+      bs48h: makeEmptyIsolateTestSequences(firstIsolateNum + 3 * numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate, now, username),
    };
 }
 
-function makeEmptyIsolateTestSequences(numIsolates: number, timestamp: Date, username: string): IsolateTestSequencesByUid
+export function countIsolates(selAgarsTestSuite: SelectiveAgarsTestSuite)
+{
+   let count = 0;
+
+   for ( const selAgar of Object.keys(selAgarsTestSuite) )
+      count += Object.keys(selAgarsTestSuite[selAgar]).length;
+
+   return count;
+}
+
+function makeEmptyIsolateTestSequences
+   (
+      firstIsolateNum: number,
+      numIsolates: number,
+      timestamp: Date,
+      username: string,
+   )
+   : IsolateTestSequencesByUid
 {
    const seqs: IsolateTestSequencesByUid = {};
 
-   for (let seqNum = 1; seqNum <= numIsolates; ++seqNum)
+   for (let i = 0; i < numIsolates; ++i)
    {
-      const uid = makeIsolateTestSequenceUid(timestamp, username, seqNum);
-      seqs[uid] = makeEmptyIsolateTestSequence();
+      const uid = makeIsolateTestSequenceUid(timestamp, username, i + 1);
+      seqs[uid] = makeEmptyIsolateTestSequence(firstIsolateNum + i);
    }
 
    return seqs;
 }
 
-export function makeEmptyIsolateTestSequence(): IsolateTestSequence
+export function makeEmptyIsolateTestSequence(isolateNum: number): IsolateTestSequence
 {
    return {
+      isolateNumber: isolateNum,
       colonyAppearance: null,
       tsiTubeTest: makeEmptySlantTubeTest(),
       liaTubeTest: makeEmptySlantTubeTest(),
@@ -381,6 +406,7 @@ function makeIsolatesTestSequencesFormGroup(isolateTestSeqsByUid: IsolateTestSeq
 export function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTestSequence): FormGroup
 {
    const fg = new FormGroup({
+      isolateNumber: new FormControl(isolateTestSequence.isolateNumber),
       colonyAppearance: new FormControl(isolateTestSequence.colonyAppearance),
       tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.tsiTubeTest),
       liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.liaTubeTest),

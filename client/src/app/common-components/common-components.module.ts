@@ -23,6 +23,7 @@ import {FieldAssignedResourcesComponent} from './field-assigned-resources/field-
 import {ResourceCodesDialogComponent} from './resource-codes-dialog/resource-codes-dialog.component';
 import {FilesSelectorComponent} from './files-selector/files-selector.component';
 import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component';
+import {SimpleInputDialogComponent} from './simple-input-dialog/simple-input-dialog.component';
 import {AuditLogEntryComponent} from './audit-log-entry/audit-log-entry.component';
 import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.component';
 
@@ -53,6 +54,7 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       ResourceCodesDialogComponent,
       FilesSelectorComponent,
       ConfirmDialogComponent,
+      SimpleInputDialogComponent,
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
    ],
@@ -60,6 +62,7 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       NewTestDialogComponent,
       ResourceCodesDialogComponent,
       ConfirmDialogComponent,
+      SimpleInputDialogComponent,
       // (dialog components here as well as in declarations)
    ],
    exports: [
@@ -73,6 +76,7 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       ResourceCodesDialogComponent,
       FilesSelectorComponent,
       ConfirmDialogComponent,
+      SimpleInputDialogComponent,
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
    ],

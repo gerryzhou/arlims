@@ -6,7 +6,7 @@ import {
    makeEmptySelectiveAgarsTestSuite, makeContinuationControlsFormGroup,
    makeContinuationTestsFormGroup, makeTestUnitsContinuationTestsFormGroup,
    PositivesContinuationData,
-   ContinuationTests,
+   ContinuationTests, countIsolates,
 } from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {TestConfig} from '../test-config';
@@ -108,10 +108,15 @@ export class StagePosContComponent implements OnChanges {
 
    private makeEmptyContinuationTests(): ContinuationTests
    {
-      return {
-         rvSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username),
-         ttSourcedTests: makeEmptySelectiveAgarsTestSuite(this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username)
-      };
+      const rvSourcedTests =
+         makeEmptySelectiveAgarsTestSuite(1, this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username);
+
+      const numRVIsolates = countIsolates(rvSourcedTests);
+
+      const ttSourcedTests =
+         makeEmptySelectiveAgarsTestSuite(numRVIsolates + 1, this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username);
+
+      return { rvSourcedTests, ttSourcedTests };
    }
 
    removeTestUnitNumber(testUnitNum: number)

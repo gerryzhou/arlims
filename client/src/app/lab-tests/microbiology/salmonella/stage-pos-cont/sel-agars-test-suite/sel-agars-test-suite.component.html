@@ -5,7 +5,7 @@
       <div class="sel-agar-label-stack">
          <div class="sel-agar-label">{{selAgar.displayName}}</div>
          <button class="add-isolate hover-link" type="button" matTooltip="add isolate"
-                 (click)="addNewIsolateTestSequence(selAgar.formGroupName)"
+                 (click)="promptAddNewIsolateTestSequence(selAgar.formGroupName)"
                   *ngIf="!form.disabled">
             <mat-icon>add_circle_outline</mat-icon>
          </button>
@@ -17,10 +17,9 @@
             [testUnitDescription]="testUnitDescription"
             [medium]="medium"
             [selectiveAgarDisplayName]="selAgar.displayName"
-            [isolateNumber]="i+1"
             [showDisposeButton]="true"
             (disposeRequested)="removeIsolateTestSequence(selAgar.formGroupName, seqUid)"
-            (failureDeclared)="onIsolateTestSequenceFailureDeclared(selAgar.formGroupName)">
+            (failureDeclared)="onIsolateTestSequenceFailureDeclared(selAgar.formGroupName, seqUid)">
          </app-isolate-test-seq>
       </div>
 

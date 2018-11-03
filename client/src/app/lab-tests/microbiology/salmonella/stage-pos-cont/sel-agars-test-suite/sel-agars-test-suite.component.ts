@@ -2,6 +2,8 @@ import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {makeEmptyIsolateTestSequence, makeIsolateTestSequenceFormGroup, makeIsolateTestSequenceUid} from '../../test-data';
 import {AppUser} from '../../../../../../generated/dto';
+import {MatDialog} from '@angular/material';
+import {SimpleInputDialogComponent} from '../../../../../common-components/simple-input-dialog/simple-input-dialog.component';
 
 @Component({
    selector: 'app-sel-agars-test-suite',
@@ -31,7 +33,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
 
    displayOrderedIsolateTestSeqUidsBySelAgar: IsolateTestSeqUidsBySelAgar;
 
-   constructor()
+   constructor(private dialogSvc: MatDialog)
    {
       this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
       for ( const selAgarName of Object.keys(this.selAgars) )
@@ -51,17 +53,39 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
       this.refreshDisplayOrderedIsolateTestSeqUids(selAgar);
    }
 
-   onIsolateTestSequenceFailureDeclared(selAgar: string)
+   onIsolateTestSequenceFailureDeclared(selAgar: string, isolateTestSeqUid: string)
    {
-      this.addNewIsolateTestSequence(selAgar);
+      const isolateNum = +this.form.get([selAgar, isolateTestSeqUid, 'isolateNumber']).value;
+      this.addNewIsolateTestSequence(selAgar, isolateNum);
    }
 
-   addNewIsolateTestSequence(selAgar: string)
+   promptAddNewIsolateTestSequence(selAgar: string)
+   {
+      const isolateNumDlg = this.dialogSvc.open(SimpleInputDialogComponent,
+         {
+            data: {
+               title: 'Create New Isolate',
+               message: 'Enter an isolate number for the new isolate',
+            },
+            disableClose: false
+         }
+      );
+
+      isolateNumDlg.afterClosed().subscribe(isolateNumStr => {
+         const isolateNum = parseInt(isolateNumStr);
+         if ( isolateNum )
+         {
+            this.addNewIsolateTestSequence(selAgar, isolateNum);
+         }
+      });
+   }
+
+   addNewIsolateTestSequence(selAgar: string, isolateNum: number)
    {
       const fg = this.form.get(selAgar) as FormGroup;
 
       const uid = makeIsolateTestSequenceUid(new Date(), this.appUser.username, 1, fg.controls);
-      const emptyTestSeq = makeEmptyIsolateTestSequence();
+      const emptyTestSeq = makeEmptyIsolateTestSequence(isolateNum);
 
       fg.addControl(uid, makeIsolateTestSequenceFormGroup(emptyTestSeq));
 
