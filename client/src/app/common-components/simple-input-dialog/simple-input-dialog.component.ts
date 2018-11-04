@@ -11,6 +11,7 @@ export class SimpleInputDialogComponent {
    title: string;
    message: string;
    input: string = null;
+   acceptRegex: RegExp | null;
 
    constructor
       (
@@ -20,13 +21,19 @@ export class SimpleInputDialogComponent {
    {
       this.title = data.title;
       this.message = data.message;
+      this.acceptRegex = data.acceptRegex ? new RegExp(data.acceptRegex) : null;
    }
 
 
    @HostListener('window:keydown.ENTER')
    acceptAndClose()
    {
-      this.dialogRef.close(this.input);
+      if ( this.input == null || this.input.trim().length === 0 ||
+           this.acceptRegex && !this.acceptRegex.test(this.input) )
+         return;
+
+      const res = !this.acceptRegex || this.acceptRegex.test(this.input) ? this.input.trim() : null;
+      this.dialogRef.close(res);
    }
 
 }

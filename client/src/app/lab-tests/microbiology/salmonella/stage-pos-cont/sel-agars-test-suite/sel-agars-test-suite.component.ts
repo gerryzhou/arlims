@@ -66,6 +66,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
             data: {
                title: 'Create New Isolate',
                message: 'Enter an isolate number for the new isolate',
+               acceptRegex: '^ *[1-9][0-9]* *$'
             },
             disableClose: false
          }

@@ -4,6 +4,10 @@
    <input [(ngModel)]="input" matInput placeholder="Enter value">
 </mat-form-field>
 <div mat-dialog-actions>
-   <button mat-button color="primary" (click)="dialogRef.close(input)">Confirm</button>
+   <button mat-button color="primary"
+      [disabled]="acceptRegex && !acceptRegex.test(input)"
+      (click)="dialogRef.close(input)">
+      OK
+   </button>
    <button mat-button color="accent" (click)="dialogRef.close(null)">Cancel</button>
 </div>
