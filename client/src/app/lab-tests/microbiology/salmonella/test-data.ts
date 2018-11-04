@@ -119,11 +119,8 @@ export interface IsolateTestSequence {
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
    oxidaseDetection?: boolean | null;
-   vitekDetection?: boolean | null;
-   api20eDetection?: boolean | null;
-   polyHAZ?: string | null;
-   polyAIPlusVi?: string | null;
-   polyO?: string | null;
+   identificationMethod: 'API20E' | 'Vitek' | null;
+   identification?: IsolateIdentification | null;
    failure?: IsolateTestSequenceFailure | null;
 }
 
@@ -132,6 +129,13 @@ export interface SlantTubeTest {
    butt: string | null;
    h2s: boolean | null;
    gas: boolean | null;
+}
+
+export interface IsolateIdentification
+{
+   positive: boolean | null;
+   identCode: string | null;
+   identText: string | null;
 }
 
 export interface IsolateTestSequenceFailure {
@@ -238,6 +242,10 @@ export function makeEmptyIsolateTestSequence(isolateNum: number): IsolateTestSeq
       colonyAppearance: null,
       tsiTubeTest: makeEmptySlantTubeTest(),
       liaTubeTest: makeEmptySlantTubeTest(),
+      oxidaseDetection: null,
+      identificationMethod: null,
+      identification: null,
+      failure: null,
    };
 }
 
@@ -403,23 +411,22 @@ function makeIsolatesTestSequencesFormGroup(isolateTestSeqsByUid: IsolateTestSeq
    return new FormGroup(fgControls);
 }
 
-export function makeIsolateTestSequenceFormGroup(isolateTestSequence: IsolateTestSequence): FormGroup
+export function makeIsolateTestSequenceFormGroup(isolateTestSeq: IsolateTestSequence): FormGroup
 {
    const fg = new FormGroup({
-      isolateNumber: new FormControl(isolateTestSequence.isolateNumber),
-      colonyAppearance: new FormControl(isolateTestSequence.colonyAppearance),
-      tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.tsiTubeTest),
-      liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSequence.liaTubeTest),
-      oxidaseDetection: new FormControl(isolateTestSequence.oxidaseDetection),
-      vitekDetection: new FormControl(isolateTestSequence.vitekDetection),
-      api20eDetection: new FormControl(isolateTestSequence.api20eDetection),
-      polyHAZ: new FormControl(isolateTestSequence.polyHAZ),
-      polyAIPlusVi: new FormControl(isolateTestSequence.polyAIPlusVi),
-      polyO: new FormControl(isolateTestSequence.polyO),
+      isolateNumber: new FormControl(isolateTestSeq.isolateNumber),
+      colonyAppearance: new FormControl(isolateTestSeq.colonyAppearance),
+      tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.tsiTubeTest),
+      liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.liaTubeTest),
+      oxidaseDetection: new FormControl(isolateTestSeq.oxidaseDetection),
+      identificationMethod: new FormControl(isolateTestSeq.identificationMethod),
+      // 'identification' and 'failure' FormGroups are added dynamically as needed
    });
 
-   if ( isolateTestSequence.failure != null )
-      fg.controls['failure'] = makeIsolateTestSequenceFailureFormGroup(isolateTestSequence.failure);
+   if ( isolateTestSeq.identification != null )
+      fg.controls['identification'] = makeIsolateIdentificationFormGroup(isolateTestSeq.identification);
+   if ( isolateTestSeq.failure != null )
+      fg.controls['failure'] = makeIsolateTestSequenceFailureFormGroup(isolateTestSeq.failure);
 
    return fg;
 }
@@ -433,6 +440,16 @@ function makeSlantTubeTestFormGroup(slantTubeTest: SlantTubeTest): FormGroup
       gas: new FormControl(slantTubeTest.gas),
    });
 }
+
+function makeIsolateIdentificationFormGroup(isolateIdent: IsolateIdentification): FormGroup
+{
+   return new FormGroup({
+      positive: new FormControl(isolateIdent.positive),
+      identCode: new FormControl(isolateIdent.identCode),
+      identText: new FormControl(isolateIdent.identText),
+   });
+}
+
 
 export function makeIsolateTestSequenceFailureFormGroup(failure: IsolateTestSequenceFailure)
 {
@@ -756,11 +773,8 @@ function isolateTestSequenceStatus
    if ( tsiStatus === 'e' &&
         liaStatus === 'e' &&
         testSeq.oxidaseDetection == null &&
-        testSeq.vitekDetection   == null &&
-        testSeq.api20eDetection  == null &&
-        testSeq.polyHAZ          == null &&
-        testSeq.polyAIPlusVi     == null &&
-        testSeq.polyO            == null )
+        testSeq.identificationMethod == null &&
+        isolateIdentificationStatus(testSeq.identification) === 'e' )
       return 'e';
 
    if ( tsiStatus === 'c' && liaStatus === 'c' )
@@ -776,14 +790,13 @@ function isolateTestSequenceStatus
       if ( testSeq.oxidaseDetection == null )
          return 'i';
 
-      if ( testSeq.vitekDetection == null && testSeq.api20eDetection == null )
+      const identStatus = isolateIdentificationStatus(testSeq.identification);
+
+      if ( testSeq.identificationMethod == null || identStatus !== 'c' )
          return 'i';
 
-      if ( !testSeq.vitekDetection && !testSeq.api20eDetection )
+      if ( !testSeq.identification.positive )
          return 'c';
-
-      if ( testConfig.positivesContinuationTestingSerologyRequired )
-         return testSeq.polyHAZ != null && testSeq.polyAIPlusVi != null && testSeq.polyO != null ? 'c' : 'i';
 
       return 'c';
    }
@@ -795,9 +808,19 @@ function slantTubeTestStatus(slantTest: SlantTubeTest): FieldValuesStatusCode
 {
    if ( slantTest.slant == null && slantTest.butt == null && slantTest.h2s == null && slantTest.gas == null )
       return 'e';
-   if ( slantTest.slant != null && slantTest.butt != null && slantTest.h2s != null && slantTest.gas != null )
+   else if ( slantTest.slant != null && slantTest.butt != null && slantTest.h2s != null && slantTest.gas != null )
       return 'c';
-   return 'i';
+   else return 'i';
+}
+
+function isolateIdentificationStatus(ident: IsolateIdentification)
+{
+   if ( ident == null ||
+      ident.positive == null && ident.identCode == null && ident.identText == null )
+      return 'e';
+   else if ( ident.positive != null && ident.identCode != null && ident.identText != null )
+      return 'c';
+   else return 'i';
 }
 
 function slantTubeResultsMixed(tsiTest: SlantTubeTest, liaTest): boolean
