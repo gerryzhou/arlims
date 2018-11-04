@@ -1,3 +1,9 @@
+Division of pos-cont stage into separate slant tubes and api/vitek stages.
+  Data structures will not change, both stages are based on data under posContData key.
+  Form group will not change, must be single form group to yield proper test data structure.
+  Rename existing form group to reflect that it's specific to the slant tubes stage.
+
+
 Allow the data under posContData to be edited by both slants and api/vitek stages.
   Can even edit using same component, parameterized by mode.
   In API/Vitek mode, slant tube results are hidden or aren't editable and if shown are presented very briefly, e.g. [3,1]:KA+-|KK-+|+
