@@ -10,30 +10,15 @@ Allow the data under posContData to be edited by both slants and api/vitek stage
   If multiple Angular controls need to be active (present) at once and kept in sync when mapped to same form control item:
     https://gist.github.com/Dyljyn/59e95fbe09a24b1835667a1a5e401e5a
 
-
-Fix the number of isolates in the Salmonella test’s config for the lab group.
-  Then the set of isolate identifiers don’t ever change and don’t need to be kept in sync between stages.
-
-Add isolate number field to IsolateTestSeq.
-
-Number the isolates as per the form as the isolate test seqs are created, relative to containing test units.
-
-Don’t allow deleting an isolate unless it is failed.
-
-Don’t allow adding new isolates, except by marking one as failed in which case the new isolate should have the same isolate number.
-
-
-
-
-samples listing refresh
------------------------
-Show for each sample when it was last updated from FACTS.
-Show somewhere in the samples listing how long it's been since data was refreshed from the db (from user context service data (maybe new) as extracted in sample listing).
-
+For API20E may need to capture colors as well as codes.
+PFGE/Serology/WGS results
+  Just narrative text box for now.
 
 Prep-stage
-  Receive from should be a drop down with lab group users (sample custodians) plus other choice.
-      John suggests adding Sample custodian as a group.
+  Sample received from/date should come from FACTS via Leidos api, as general metadata about the sample (maybe embed in sample op).
+    Should be a drop down with lab group users (sample custodians) plus other choice.
+    Should be displayed read-only in form at same place as current controls.
+    John suggests adding Sample custodian as a group.
       Maybe rename ADMIN to LIMS_ADMIN.
       Also supervisor role.
 

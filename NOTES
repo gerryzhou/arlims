@@ -1,20 +1,10 @@
+Write test data to FACTS.
 
-Meeting Discussion Items
---------------------------
-Positive continuation tests data.
-  Timestamps and notes fields needed where?
-  Need more information about Vitek/API data results to be captured.
-    Do both result in identification code and conclusion?
-    Any additional data in either which differs from the other?
-Test data reports
-  Imp slm report lacks generality to handle positives or large numbers of results.
-  Form data overview report uses components designed for visual data entry, some of which don't always show full data until prompted to via dialog (e.g. failure information in positive continuation data).
-Employees are in most specific lab groups like ARL-MICRO1, which specify parent org code like "ARKL".
-Prioritize:
-  Write test data to FACTS.
-  Add support for file attachments at field level.
-  Reagent search (where in ui?)
-  Status filter on main sample listing page.
+Add support for file attachments at field level.
+
+Reagent search (where in ui?)
+
+Should access new api to list sample transfers from custodian, to let user pick a line, to set received-from person and timestamp.
 
 
 Commit Notes
