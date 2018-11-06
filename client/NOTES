@@ -1,6 +1,3 @@
-Changes which add or remove form controls (new or removed isolates) or form data (failures) should be reflected in the other stage's form.
-  Additional rows are not being reflected in other stage view.
-
 For API20E may need to capture colors as well as codes.
 PFGE/Serology/WGS results
   Just narrative text box for now.
@@ -18,8 +15,6 @@ Need carry-over inbox.
   Plus filter at top to see these items.
 
 
-Clean up database to remove old records.
-
 Move BAM link to top within test name box.
 
 Color code the selective agar plates as well as in flip book.
@@ -31,6 +26,13 @@ FACTS Writing
 
 My FACTS person id: 437799
 
+
+Done
+----
+Clean up database to remove old records.
+Split positives continuation data into separate SLANT and IDENT stages.
+  Kept in sync for all isolate manipulations.
+  Viewing of other stage data for context can be toggled.
 
 
 

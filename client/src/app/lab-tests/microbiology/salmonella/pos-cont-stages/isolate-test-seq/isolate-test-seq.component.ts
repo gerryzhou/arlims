@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 import {makeIsolateTestSequenceFailureFormGroup} from '../../test-data';
 import {IsolateTestsFailureDialogComponent} from './isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
@@ -8,7 +9,8 @@ import {IsolateTestsFailureDialogComponent} from './isolate-tests-failure-dialog
 @Component({
    selector: 'app-isolate-test-seq',
    templateUrl: './isolate-test-seq.component.html',
-   styleUrls: ['./isolate-test-seq.component.scss']
+   styleUrls: ['./isolate-test-seq.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IsolateTestSeqComponent implements OnChanges {
 
@@ -48,7 +50,9 @@ export class IsolateTestSeqComponent implements OnChanges {
    isolateNumber: number;
    isolateDescription = '';
 
-   constructor(private dialogSvc: MatDialog) { }
+   formChangesSubscription: Subscription;
+
+   constructor(private changeDetectorRef: ChangeDetectorRef, private dialogSvc: MatDialog) { }
 
    ngOnChanges()
    {
@@ -62,6 +66,13 @@ export class IsolateTestSeqComponent implements OnChanges {
 
       this.tsiFormGroup = this.form.get('tsiTubeTest') as FormGroup;
       this.liaFormGroup = this.form.get('liaTubeTest') as FormGroup;
+
+      if ( this.formChangesSubscription )
+         this.formChangesSubscription.unsubscribe();
+      this.formChangesSubscription = this.form.valueChanges.subscribe(value => {
+         this.changeDetectorRef.markForCheck();
+      });
+
    }
 
    onDisposeRequested()

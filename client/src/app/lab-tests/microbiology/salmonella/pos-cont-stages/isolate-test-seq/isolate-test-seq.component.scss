@@ -67,8 +67,9 @@ button.remove mat-icon {
       padding: 2px;
       border: 1px solid lightgray;
       border-radius: 5px;
-      min-width: 20px;
-      min-height: 15px;
+      min-width: 22px;
+      min-height: 10px;
+      margin-right: 2px;
    }
 
    .slant-tube {
@@ -77,13 +78,11 @@ button.remove mat-icon {
       justify-content: flex-start;
       padding: 2px;
       margin: 0 1px;
+      border: 1px solid gray;
+      border-radius: 5px;
    }
 
    .slant-tube-field {
-      padding: 2px;
-      margin: 0;
-      border: 1px solid gray;
-      border-radius: 5px;
       min-width: 10px;
       min-height: 10px;
    }
@@ -91,6 +90,8 @@ button.remove mat-icon {
    .oxidase {
       min-width: 10px;
       min-height: 10px;
+      margin: 2px;
+      padding: 2px;
    }
 }
 

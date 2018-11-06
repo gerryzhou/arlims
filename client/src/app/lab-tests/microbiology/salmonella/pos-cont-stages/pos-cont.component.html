@@ -21,7 +21,7 @@
             [viewOnly]="viewOnly"
             [form]="testUnitsFormGroup.get(testUnitNum.toString())"
             [testUnitNumber]="testUnitNum"
-            [showDisposeButton]="!viewOnly"
+            [showDisposeButton]="!viewOnly && stage==='SLANT'"
             [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
             [appUser]="appUser"
             (disposeRequested)="removeTestUnitNumber(testUnitNum)">

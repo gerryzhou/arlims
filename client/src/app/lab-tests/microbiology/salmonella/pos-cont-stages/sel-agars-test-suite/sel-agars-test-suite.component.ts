@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material';
@@ -10,7 +10,8 @@ import {SimpleInputDialogComponent} from '../../../../../common-components/simpl
 @Component({
    selector: 'app-sel-agars-test-suite',
    templateUrl: './sel-agars-test-suite.component.html',
-   styleUrls: ['./sel-agars-test-suite.component.scss']
+   styleUrls: ['./sel-agars-test-suite.component.scss'],
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
 
@@ -46,7 +47,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
 
    formChangesSubscription: Subscription;
 
-   constructor(private dialogSvc: MatDialog)
+   constructor(private changeDetectorRef: ChangeDetectorRef, private dialogSvc: MatDialog)
    {
       this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
       for ( const selAgarName of Object.keys(this.selAgars) )
@@ -61,6 +62,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
          this.formChangesSubscription.unsubscribe();
       this.formChangesSubscription = this.form.valueChanges.subscribe(value => {
          this.refreshDisplayOrderedIsolateTestSeqUids();
+         this.changeDetectorRef.markForCheck();
       });
    }
 
