@@ -1,8 +1,10 @@
-import {Component, Input, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material';
+
 import {makeEmptyIsolateTestSequence, makeIsolateTestSequenceFormGroup, makeIsolateTestSequenceUid} from '../../test-data';
 import {AppUser} from '../../../../../../generated/dto';
-import {MatDialog} from '@angular/material';
 import {SimpleInputDialogComponent} from '../../../../../common-components/simple-input-dialog/simple-input-dialog.component';
 
 @Component({
@@ -10,7 +12,16 @@ import {SimpleInputDialogComponent} from '../../../../../common-components/simpl
    templateUrl: './sel-agars-test-suite.component.html',
    styleUrls: ['./sel-agars-test-suite.component.scss']
 })
-export class SelAgarsTestSuiteComponent implements OnChanges {
+export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
+
+   @Input()
+   stage: 'SLANT' | 'IDENT';
+
+   @Input()
+   showOtherStageDataAsContext;
+
+   @Input()
+   viewOnly = false;
 
    @Input()
    form: FormGroup;
@@ -33,6 +44,8 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
 
    displayOrderedIsolateTestSeqUidsBySelAgar: IsolateTestSeqUidsBySelAgar;
 
+   formChangesSubscription: Subscription;
+
    constructor(private dialogSvc: MatDialog)
    {
       this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
@@ -43,14 +56,18 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
    ngOnChanges()
    {
       this.refreshDisplayOrderedIsolateTestSeqUids();
+
+      if ( this.formChangesSubscription )
+         this.formChangesSubscription.unsubscribe();
+      this.formChangesSubscription = this.form.valueChanges.subscribe(value => {
+         this.refreshDisplayOrderedIsolateTestSeqUids();
+      });
    }
 
    removeIsolateTestSequence(selAgar: string, testSeqUid: string)
    {
       const fg = this.form.get(selAgar) as FormGroup;
       fg.removeControl(testSeqUid);
-
-      this.refreshDisplayOrderedIsolateTestSeqUids(selAgar);
    }
 
    onIsolateTestSequenceFailureDeclared(selAgar: string, isolateTestSeqUid: string)
@@ -75,9 +92,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
       isolateNumDlg.afterClosed().subscribe(isolateNumStr => {
          const isolateNum = parseInt(isolateNumStr);
          if ( isolateNum )
-         {
             this.addNewIsolateTestSequence(selAgar, isolateNum);
-         }
       });
    }
 
@@ -89,21 +104,22 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
       const emptyTestSeq = makeEmptyIsolateTestSequence(isolateNum);
 
       fg.addControl(uid, makeIsolateTestSequenceFormGroup(emptyTestSeq));
-
-      this.refreshDisplayOrderedIsolateTestSeqUids(selAgar);
    }
 
    private refreshDisplayOrderedIsolateTestSeqUids(selAgarName: string | null = null)
    {
       if ( selAgarName != null )
-         this.displayOrderedIsolateTestSeqUidsBySelAgar[selAgarName] =
-            this.getDisplayOrderedIsolateTestSeqUids(selAgarName);
+      {
+         this.displayOrderedIsolateTestSeqUidsBySelAgar = Object.assign({}, this.displayOrderedIsolateTestSeqUidsBySelAgar);
+         this.displayOrderedIsolateTestSeqUidsBySelAgar[selAgarName] = this.getDisplayOrderedIsolateTestSeqUids(selAgarName);
+      }
       else
       {
+         this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
          for ( const selAgar of this.selAgars )
          {
-            this.displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName] =
-               this.getDisplayOrderedIsolateTestSeqUids(selAgar.formGroupName);
+            const fgName = selAgar.formGroupName;
+            this.displayOrderedIsolateTestSeqUidsBySelAgar[fgName] = this.getDisplayOrderedIsolateTestSeqUids(fgName);
          }
       }
    }
@@ -112,6 +128,12 @@ export class SelAgarsTestSuiteComponent implements OnChanges {
    {
       const fg = this.form.get(selAgar) as FormGroup;
       return Object.keys(fg.controls).sort();
+   }
+
+   ngOnDestroy()
+   {
+      if ( this.formChangesSubscription )
+         this.formChangesSubscription.unsubscribe();
    }
 }
 

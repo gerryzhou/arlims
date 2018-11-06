@@ -78,8 +78,9 @@
          </app-stage-controls>
       </mat-step>
 
-      <mat-step label="POS-CONT">
-         <app-stage-pos-cont class="test-stage"
+      <mat-step label="SLANT">
+         <app-pos-cont class="test-stage"
+            [stage]="'SLANT'"
             [form]="testDataForm.get('posContData')"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
             [sampleTestUnitsType]="sampleTestUnitsType"
@@ -88,7 +89,21 @@
             [conflicts]="conflictsTestData.posContData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances">
-         </app-stage-pos-cont>
+         </app-pos-cont>
+      </mat-step>
+
+      <mat-step label="IDENT">
+         <app-pos-cont class="test-stage"
+            [stage]="'IDENT'"
+            [form]="testDataForm.get('posContData')"
+            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
+            [sampleTestUnitsType]="sampleTestUnitsType"
+            [testConfig]="testConfig"
+            [appUser]="appUser"
+            [conflicts]="conflictsTestData.posContData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances">
+         </app-pos-cont>
       </mat-step>
 
       <mat-step label="WRAPUP">

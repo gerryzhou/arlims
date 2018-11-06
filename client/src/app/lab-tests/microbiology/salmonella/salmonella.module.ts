@@ -28,16 +28,16 @@ import {StageSelEnrComponent} from './stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from './stage-controls/stage-controls.component';
-import {StagePosContComponent} from './stage-pos-cont/stage-pos-cont.component';
+import {PosContComponent} from './pos-cont-stages/pos-cont.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
 import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-confirm-deactivate-guard';
 import {TestReportsListingComponent} from './reports/reports-listing/test-reports-listing.component';
 import {FormDataReviewComponent} from './form-data-review/form-data-review.component';
-import {OnePosTestUnitContTestsComponent} from './stage-pos-cont/one-pos-test-unit-cont-tests/one-pos-test-unit-cont-tests.component';
-import {SelAgarsTestSuiteComponent} from './stage-pos-cont/sel-agars-test-suite/sel-agars-test-suite.component';
-import {IsolateTestSeqComponent} from './stage-pos-cont/isolate-test-seq/isolate-test-seq.component';
-import {IsolateTestsFailureDialogComponent} from './stage-pos-cont/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
-import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tube-test/slant-tube-test.component';
+import {OnePosTestUnitContTestsComponent} from './pos-cont-stages/one-pos-test-unit-cont-tests/one-pos-test-unit-cont-tests.component';
+import {SelAgarsTestSuiteComponent} from './pos-cont-stages/sel-agars-test-suite/sel-agars-test-suite.component';
+import {IsolateTestSeqComponent} from './pos-cont-stages/isolate-test-seq/isolate-test-seq.component';
+import {IsolateTestsFailureDialogComponent} from './pos-cont-stages/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
+import {SlantTubeTestComponent} from './pos-cont-stages/isolate-test-seq/slant-tube-test/slant-tube-test.component';
 
 @NgModule({
    imports: [
@@ -71,7 +71,7 @@ import {SlantTubeTestComponent} from './stage-pos-cont/isolate-test-seq/slant-tu
       StageMBrothComponent,
       StageVidasComponent,
       StageControlsComponent,
-      StagePosContComponent,
+      PosContComponent,
       StageWrapupComponent,
       TestReportsListingComponent,
       OnePosTestUnitContTestsComponent,

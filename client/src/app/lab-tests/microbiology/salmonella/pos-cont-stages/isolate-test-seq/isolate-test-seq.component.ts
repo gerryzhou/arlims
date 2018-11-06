@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {FormGroup} from '@angular/forms';
 
@@ -11,6 +11,15 @@ import {IsolateTestsFailureDialogComponent} from './isolate-tests-failure-dialog
    styleUrls: ['./isolate-test-seq.component.scss']
 })
 export class IsolateTestSeqComponent implements OnChanges {
+
+   @Input()
+   stage: 'SLANT' | 'IDENT';
+
+   @Input()
+   showOtherStageDataAsContext;
+
+   @Input()
+   viewOnly = false;
 
    @Input()
    form: FormGroup;
@@ -33,18 +42,26 @@ export class IsolateTestSeqComponent implements OnChanges {
    @Output()
    failureDeclared = new EventEmitter<void>();
 
+   tsiFormGroup: FormGroup;
+   liaFormGroup: FormGroup;
+
    isolateNumber: number;
    isolateDescription = '';
-   failed: boolean;
 
    constructor(private dialogSvc: MatDialog) { }
 
    ngOnChanges()
    {
+      // When this component's form group control is removed via another component's action,
+      // this view will temporarily receive a null form group, in which case it can just render nothing.
+      if ( this.form == null ) return;
+
       this.isolateNumber = this.form.get('isolateNumber').value;
-      this.isolateDescription = 'isolate ' + this.isolateNumber + ' in ' +
-         this.testUnitDescription + ' / ' + this.medium + ' / ' + this.selectiveAgarDisplayName;
-      this.failed = this.form.controls.failure != null;
+      this.isolateDescription =
+         'isolate ' + this.isolateNumber + ' in ' + this.testUnitDescription + ' / ' + this.medium + ' / ' + this.selectiveAgarDisplayName;
+
+      this.tsiFormGroup = this.form.get('tsiTubeTest') as FormGroup;
+      this.liaFormGroup = this.form.get('liaTubeTest') as FormGroup;
    }
 
    onDisposeRequested()
@@ -82,7 +99,6 @@ export class IsolateTestSeqComponent implements OnChanges {
                   notes: failureEdit.notes,
                };
                this.form.addControl('failure', makeIsolateTestSequenceFailureFormGroup(failure));
-               this.failed = true;
 
                if ( prevFailureCtl == null )
                   this.failureDeclared.emit();
@@ -94,6 +110,5 @@ export class IsolateTestSeqComponent implements OnChanges {
    clearFailure()
    {
       this.form.removeControl('failure');
-      this.failed = false;
    }
 }

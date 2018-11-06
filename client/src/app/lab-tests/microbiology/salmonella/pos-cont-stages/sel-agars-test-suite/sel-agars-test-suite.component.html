@@ -4,15 +4,17 @@
 
       <div class="sel-agar-label-stack">
          <div class="sel-agar-label">{{selAgar.displayName}}</div>
-         <button class="add-isolate hover-link" type="button" matTooltip="add isolate"
-                 (click)="promptAddNewIsolateTestSequence(selAgar.formGroupName)"
-                  *ngIf="!form.disabled">
+         <button class="add-isolate hover-link" type="button" matTooltip="add isolate" *ngIf="!viewOnly"
+                 (click)="promptAddNewIsolateTestSequence(selAgar.formGroupName)">
             <mat-icon>add_circle_outline</mat-icon>
          </button>
       </div>
 
       <div class="isolate-test-seqs-stack">
-         <app-isolate-test-seq *ngFor="let seqUid of displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName]; let i = index"
+         <app-isolate-test-seq *ngFor="let seqUid of displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName]"
+            [stage]="stage"
+            [showOtherStageDataAsContext]="showOtherStageDataAsContext"
+            [viewOnly]="viewOnly"
             [form]="this.form.get([selAgar.formGroupName, seqUid])"
             [testUnitDescription]="testUnitDescription"
             [medium]="medium"

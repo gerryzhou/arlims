@@ -59,3 +59,41 @@ button.remove mat-icon {
    color: red;
 }
 
+.slant-data-readonly {
+   display: flex;
+   align-items: center;
+
+   .colony-appearance {
+      padding: 2px;
+      border: 1px solid lightgray;
+      border-radius: 5px;
+      min-width: 20px;
+      min-height: 15px;
+   }
+
+   .slant-tube {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2px;
+      margin: 0 1px;
+   }
+
+   .slant-tube-field {
+      padding: 2px;
+      margin: 0;
+      border: 1px solid gray;
+      border-radius: 5px;
+      min-width: 10px;
+      min-height: 10px;
+   }
+
+   .oxidase {
+      min-width: 10px;
+      min-height: 10px;
+   }
+}
+
+.ident-data-readonly {
+   // TODO
+}

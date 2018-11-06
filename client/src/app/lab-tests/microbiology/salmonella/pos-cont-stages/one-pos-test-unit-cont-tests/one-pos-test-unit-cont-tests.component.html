@@ -12,6 +12,9 @@
       </div>
 
       <app-sel-agars-test-suite
+         [stage]="stage"
+         [showOtherStageDataAsContext]="showOtherStageDataAsContext"
+         [viewOnly]="viewOnly"
          [form]="form.controls['rvSourcedTests']"
          [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
          [medium]="'RV'"
@@ -25,6 +28,9 @@
       <span class="medium-label tt">TT</span>
 
       <app-sel-agars-test-suite
+         [stage]="stage"
+         [showOtherStageDataAsContext]="showOtherStageDataAsContext"
+         [viewOnly]="viewOnly"
          [form]="form.controls['ttSourcedTests']"
          [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
          [medium]="'TT'"

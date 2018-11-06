@@ -25,7 +25,7 @@ import {StageSelEnrComponent} from '../stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from '../stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from '../stage-vidas/stage-vidas.component';
 import {StageControlsComponent} from '../stage-controls/stage-controls.component';
-import {StagePosContComponent} from '../stage-pos-cont/stage-pos-cont.component';
+import {PosContComponent} from '../pos-cont-stages/pos-cont.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
@@ -79,7 +79,7 @@ export class StagedTestDataEntryComponent implements OnInit {
    @ViewChild(StageMBrothComponent)   mBrothComp: StageMBrothComponent;
    @ViewChild(StageVidasComponent)    vidasComp: StageVidasComponent;
    @ViewChild(StageControlsComponent) controlsComp: StageControlsComponent;
-   @ViewChild(StagePosContComponent)  posContComp: StagePosContComponent;
+   @ViewChild(PosContComponent)       posContComp: PosContComponent; // TODO: This is now ambiguous, need to assign an id to each usage.
    @ViewChild(StageWrapupComponent)   wrapupComp: StageWrapupComponent;
    stageComps: any[];
 

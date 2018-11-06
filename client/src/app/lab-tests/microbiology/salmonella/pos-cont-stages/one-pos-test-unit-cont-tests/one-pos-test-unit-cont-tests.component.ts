@@ -10,6 +10,15 @@ import {AppUser} from '../../../../../../generated/dto';
 export class OnePosTestUnitContTestsComponent implements OnChanges {
 
    @Input()
+   stage: 'SLANT' | 'IDENT';
+
+   @Input()
+   showOtherStageDataAsContext;
+
+   @Input()
+   viewOnly = false;
+
+   @Input()
    form: FormGroup;
 
    @Input()

@@ -68,12 +68,25 @@
    </div>
 
    <div>
-      <h3>POSITIVES CONTINUATIONS</h3>
-      <app-stage-pos-cont class="test-stage"
+      <h3>SLANT</h3>
+      <app-pos-cont class="test-stage"
+         stage="SLANT"
          [form]="testDataForm.get('posContData')"
+         [viewOnly]="true"
          [conflicts]="conflictsTestData.posContData"
          [conflictsWhoWhen]="conflictsEmployeeTimestamp">
-      </app-stage-pos-cont>
+      </app-pos-cont>
+   </div>
+
+   <div>
+      <h3>IDENT</h3>
+      <app-pos-cont class="test-stage"
+         stage="IDENT"
+         [form]="testDataForm.get('posContData')"
+         [viewOnly]="true"
+         [conflicts]="conflictsTestData.posContData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+      </app-pos-cont>
    </div>
 
    <div>

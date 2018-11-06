@@ -1,6 +1,6 @@
 <div [formGroup]="form">
 
-   <div class="diffs-vs-vidas-positives-area" *ngIf="!form.disabled && testUnitNumbersDiffMessage">
+   <div class="diffs-vs-vidas-positives-area" *ngIf="stage==='SLANT' && !viewOnly && testUnitNumbersDiffMessage">
       <div class="message"
            [ngClass]="{'warn': testUnitNumbersDiffMessageIsWarning, 'ok': !testUnitNumbersDiffMessageIsWarning}">
          {{testUnitNumbersDiffMessage}}
@@ -16,9 +16,12 @@
 
       <div class="test-units-area">
          <app-one-pos-test-unit-cont-tests *ngFor="let testUnitNum of sortedTestUnitNums"
+            [stage]="stage"
+            [showOtherStageDataAsContext]="showOtherStageDataAsContext"
+            [viewOnly]="viewOnly"
             [form]="testUnitsFormGroup.get(testUnitNum.toString())"
             [testUnitNumber]="testUnitNum"
-            [showDisposeButton]="!form.disabled"
+            [showDisposeButton]="!viewOnly"
             [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
             [appUser]="appUser"
             (disposeRequested)="removeTestUnitNumber(testUnitNum)">
@@ -38,6 +41,12 @@
          -->
       </div>
 
+   </div>
+
+   <div class="stage-options-bottom-bar">
+      <button class="link" type="button" (click)="toggleShowOtherStageDataAsContext()">
+         {{showOtherStageDataAsContext ? 'Hide' : 'Show'}} {{stage === 'IDENT' ? 'SLANT' : 'IDENT'}} isolate test data
+      </button>
    </div>
 
 </div>

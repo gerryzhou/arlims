@@ -476,7 +476,8 @@ export const TEST_STAGES: Stage[] = [
    {name: 'M-BROTH',  statusCodeFn: mBrothStatusCode},
    {name: 'VIDAS',    statusCodeFn: vidasStatusCode},
    {name: 'CONTROLS', statusCodeFn: controlsStatusCode},
-   {name: 'POS-CONT', statusCodeFn: posContStatusCode},
+   {name: 'SLANT',    statusCodeFn: posContStatusCode}, // TODO: Make separate status functions for the two pos cont stages.
+   {name: 'IDENT',    statusCodeFn: posContStatusCode}, // "
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 

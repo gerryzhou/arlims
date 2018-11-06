@@ -13,11 +13,20 @@ import {TestConfig} from '../test-config';
 import {AppUser} from '../../../../../generated/dto';
 
 @Component({
-   selector: 'app-stage-pos-cont',
-   templateUrl: './stage-pos-cont.component.html',
-   styleUrls: ['./stage-pos-cont.component.scss']
+   selector: 'app-pos-cont',
+   templateUrl: './pos-cont.component.html',
+   styleUrls: ['./pos-cont.component.scss']
 })
-export class StagePosContComponent implements OnChanges {
+export class PosContComponent implements OnChanges {
+
+   @Input()
+   stage: 'SLANT' | 'IDENT';
+
+   @Input()
+   showOtherStageDataAsContext = false;
+
+   @Input()
+   viewOnly = false;
 
    @Input()
    form: FormGroup; // May be empty of controls until user chooses to initiate positives continuation tests (if !formInitialized).
@@ -198,6 +207,11 @@ export class StagePosContComponent implements OnChanges {
 
       this.testUnitNumbersDiffMessage = msgs.length > 0 ? msgs.join(' ') : null;
       this.testUnitNumbersDiffMessageIsWarning = isWarning;
+   }
+
+   toggleShowOtherStageDataAsContext()
+   {
+      this.showOtherStageDataAsContext = !this.showOtherStageDataAsContext;
    }
 }
 
