@@ -4,7 +4,8 @@
 
       <div class="sel-agar-label-stack">
          <div class="sel-agar-label">{{selAgar.displayName}}</div>
-         <button class="add-isolate hover-link" type="button" matTooltip="add isolate" *ngIf="!viewOnly"
+         <button class="add-isolate hover-link" type="button" matTooltip="add isolate"
+                 *ngIf="!viewOnly && showAddIsolatesButton"
                  (click)="promptAddNewIsolateTestSequence(selAgar.formGroupName)">
             <mat-icon>add_circle_outline</mat-icon>
          </button>
@@ -16,10 +17,12 @@
             [showOtherStageDataAsContext]="showOtherStageDataAsContext"
             [viewOnly]="viewOnly"
             [form]="this.form.get([selAgar.formGroupName, seqUid])"
+            [includeOxidase]="includeOxidase"
             [testUnitDescription]="testUnitDescription"
             [medium]="medium"
             [selectiveAgarDisplayName]="selAgar.displayName"
             [showDisposeButton]="true"
+            [showIsolateNumber]="showIsolateNumber"
             (disposeRequested)="removeIsolateTestSequence(selAgar.formGroupName, seqUid)"
             (failureDeclared)="onIsolateTestSequenceFailureDeclared(selAgar.formGroupName, seqUid)">
          </app-isolate-test-seq>

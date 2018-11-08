@@ -1,6 +1,6 @@
 <form [formGroup]="form" class="isolate-row" [class.failed]="form.get('failure') != null" *ngIf="form">
 
-   <div class="isolate-num" matTooltip="isolate number">{{isolateNumber}}</div>
+   <div class="isolate-num" matTooltip="isolate number" *ngIf="showIsolateNumber">{{isolateNumber}}</div>
 
    <!-- SLANT stage editing -->
    <ng-container *ngIf="stage === 'SLANT'">
@@ -25,7 +25,7 @@
          [isolateDescription]="isolateDescription">
       </app-slant-tube-test>
 
-      <span class="oxidase" matTooltip="oxidase">
+      <span class="oxidase" matTooltip="oxidase" *ngIf="includeOxidase">
          <span class="oxidase-label">Ox</span>
          <mat-select formControlName="oxidaseDetection">
             <mat-option [value]="null"></mat-option>
@@ -52,17 +52,24 @@
          <span class="slant-tube-field">{{liaFormGroup.get('h2s').value === true ? '+' : liaFormGroup.get('h2s').value === false ? '&minus;' : ''}}</span>
          <span class="slant-tube-field">{{liaFormGroup.get('gas').value === true ? '+' : liaFormGroup.get('gas').value === false ? '&minus;' : ''}}</span>
       </span>
-      <span class="oxidase">{{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}</span>
+      <span class="oxidase" *ngIf="includeOxidase">
+         {{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
+      </span>
    </div>
 
 
    <!-- IDENT stage editing -->
    <ng-container *ngIf="stage === 'IDENT'">
-      <!-- TODO: Add IDENT fields here. -->
+      <!-- TODO: Add IDENT fields here.
+           method select list
+             (change) callback should be new method to create the identification form group if not present
+           isolate detection component (new)
+             conditional on presence of identification form group
+       -->
       TODO: Ident fields here.
    </ng-container>
 
-   <!-- SLANT data readonly view as context -->
+   <!-- IDENT data readonly view as context -->
    <div *ngIf="stage === 'SLANT' && showOtherStageDataAsContext" class="ident-data-readonly">
       <!-- TODO: IDENT read only data here. -->
       [TODO]

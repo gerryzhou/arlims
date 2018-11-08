@@ -1,3 +1,19 @@
+Positives Continuations
+-----------------------
+Make test-data subdirectory and split test-data.ts into 3 files (or so): data-defs, form-groups, stage-statuses.
+
+Create a component representing IsolateIdentification.
+  Use in IsolateTestSeq and for P.Vulgaris.
+  In IsolateTestSeq, change in method field (select list) should trigger creation of the form group if it's not already present.
+    Display of identification component is conditional on presence of form group.
+
+Add controls data to both stages.
+
+
+
+In test-data.ts modify split pos cont status code functions for the slant and ident stages.
+
+
 For API20E may need to capture colors as well as codes.
 PFGE/Serology/WGS results
   Just narrative text box for now.

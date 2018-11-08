@@ -27,6 +27,9 @@ export class IsolateTestSeqComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   includeOxidase = true;
+
+   @Input()
    testUnitDescription: string;
 
    @Input()
@@ -37,6 +40,9 @@ export class IsolateTestSeqComponent implements OnChanges {
 
    @Input()
    showDisposeButton = false;
+
+   @Input()
+   showIsolateNumber = true;
 
    @Output()
    disposeRequested = new EventEmitter<void>();
@@ -69,7 +75,7 @@ export class IsolateTestSeqComponent implements OnChanges {
 
       if ( this.formChangesSubscription )
          this.formChangesSubscription.unsubscribe();
-      this.formChangesSubscription = this.form.valueChanges.subscribe(value => {
+      this.formChangesSubscription = this.form.valueChanges.subscribe(() => {
          this.changeDetectorRef.markForCheck();
       });
 

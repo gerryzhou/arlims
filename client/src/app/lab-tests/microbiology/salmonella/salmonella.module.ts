@@ -17,6 +17,7 @@ import {
    MatCardModule,
    MatDialogModule,
    MatTooltipModule,
+   MatTabsModule,
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
@@ -58,6 +59,7 @@ import {SlantTubeTestComponent} from './pos-cont-stages/isolate-test-seq/slant-t
       MatCardModule,
       MatDialogModule,
       MatTooltipModule,
+      MatTabsModule,
       //
       CommonComponentsModule,
       SalmonellaRoutingModule,

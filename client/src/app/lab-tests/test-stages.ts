@@ -1,4 +1,3 @@
-import {isBoolean} from 'util';
 
 export interface TestStageStatus {
    stageName: string;

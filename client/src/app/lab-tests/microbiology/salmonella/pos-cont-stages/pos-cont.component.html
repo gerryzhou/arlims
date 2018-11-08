@@ -14,32 +14,117 @@
 
    <div *ngIf="formInitialized">
 
-      <div class="test-units-area">
-         <app-one-pos-test-unit-cont-tests *ngFor="let testUnitNum of sortedTestUnitNums"
-            [stage]="stage"
-            [showOtherStageDataAsContext]="showOtherStageDataAsContext"
-            [viewOnly]="viewOnly"
-            [form]="testUnitsFormGroup.get(testUnitNum.toString())"
-            [testUnitNumber]="testUnitNum"
-            [showDisposeButton]="!viewOnly && stage==='SLANT'"
-            [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
-            [appUser]="appUser"
-            (disposeRequested)="removeTestUnitNumber(testUnitNum)">
-         </app-one-pos-test-unit-cont-tests>
-      </div>
+      <mat-tab-group>
 
-      <div class="controls-area">
-         <!-- TODO
-          salmonellaGaminara: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaGaminara),
-          salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.salmonellaDiarizonae),
-          salmonellaControlsSatisfactory: new FormControl(posContControlsData.salmonellaControlsSatisfactory),
-          pVulgarisApiVitekDetection: new FormControl(posContControlsData.pVulgarisApiVitekDetection),
-          pVulgarisControlSatisfactory: new FormControl(posContControlsData.pVulgarisControlSatisfactory),
-          pAerugiOxidaseDetection: new FormControl(posContControlsData.pAerugiOxidaseDetection),
-          pAerugiControlSatisfactory: new FormControl(posContControlsData.pAerugiControlSatisfactory),
-          medium: makeSelectiveAgarsTestSuiteFormGroup(posContControlsData.medium),
-         -->
-      </div>
+         <mat-tab label="Subs/Composites">
+            <div class="test-units-area">
+               <app-one-pos-test-unit-cont-tests *ngFor="let testUnitNum of sortedTestUnitNums"
+                  [stage]="stage"
+                  [showOtherStageDataAsContext]="showOtherStageDataAsContext"
+                  [viewOnly]="viewOnly"
+                  [form]="testUnitsFormGroup.get(testUnitNum.toString())"
+                  [testUnitNumber]="testUnitNum"
+                  [showDisposeButton]="!viewOnly && stage==='SLANT'"
+                  [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
+                  [appUser]="appUser"
+                  (disposeRequested)="removeTestUnitNumber(testUnitNum)">
+               </app-one-pos-test-unit-cont-tests>
+            </div>
+         </mat-tab>
+
+         <mat-tab label="Controls">
+
+            <div class="controls-area" formGroupName="continuationControls"> <!-- TODO: Try removing this in favor of just using the mat-tab itself as controls area. -->
+
+               <div class="control">
+                  <div class="control-name">Media Control</div>
+                  <app-sel-agars-test-suite
+                     [stage]="stage"
+                     [showOtherStageDataAsContext]="showOtherStageDataAsContext"
+                     [viewOnly]="viewOnly"
+                     [form]="form.get(['continuationControls', 'medium'])"
+                     [testUnitDescription]="'media control'"
+                     [medium]="'RV&TT'"
+                     [appUser]="appUser"
+                     [showAddIsolatesButton]="false"
+                     [showIsolateNumber]="false">
+                  </app-sel-agars-test-suite>
+                  <mat-radio-group formControlName="mediumSatisfactory" *ngIf="stage === 'IDENT'">
+                     <span>control satisfactory</span>
+                     <mat-radio-button [value]="true">Y</mat-radio-button>
+                     <mat-radio-button [value]="false">N</mat-radio-button>
+                     <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+                  </mat-radio-group>
+               </div>
+
+               <div class="control">
+                  <div class="control-name">Salmonella Gaminara</div>
+                  <app-sel-agars-test-suite
+                     [stage]="stage"
+                     [showOtherStageDataAsContext]="showOtherStageDataAsContext"
+                     [viewOnly]="viewOnly"
+                     [form]="form.get(['continuationControls', 'salmonellaGaminara'])"
+                     [testUnitDescription]="'Salmonella Gaminara control'"
+                     [medium]="'RV&TT'"
+                     [appUser]="appUser"
+                     [showAddIsolatesButton]="false"
+                     [showIsolateNumber]="false">
+                  </app-sel-agars-test-suite>
+                  <mat-radio-group formControlName="salmonellaGaminaraSatisfactory" *ngIf="stage === 'IDENT'">
+                     <span>control satisfactory</span>
+                     <mat-radio-button [value]="true">Y</mat-radio-button>
+                     <mat-radio-button [value]="false">N</mat-radio-button>
+                     <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+                  </mat-radio-group>
+               </div>
+
+               <div class="control">
+                  <div class="control-name">Salmonella Diarizonae</div>
+                  <ng-container *ngIf="stage === 'SLANT'">
+                     <app-sel-agars-test-suite
+                        [stage]="stage"
+                        [showOtherStageDataAsContext]="false"
+                        [viewOnly]="viewOnly"
+                        [form]="form.get(['continuationControls', 'salmonellaDiarizonae'])"
+                        [includeOxidase]="false"
+                        [testUnitDescription]="'Salmonella Diarizonae control'"
+                        [medium]="'RV&TT'"
+                        [appUser]="appUser"
+                        [showAddIsolatesButton]="false"
+                        [showIsolateNumber]="false">
+                     </app-sel-agars-test-suite>
+                  </ng-container>
+                  <div class="salmonella-diarizonae-satisfactory" *ngIf="stage === 'IDENT'">
+                     <mat-radio-group formControlName="salmonellaDiarizonaeSatisfactory">
+                        <span>control satisfactory</span>
+                        <mat-radio-button [value]="true">Y</mat-radio-button>
+                        <mat-radio-button [value]="false">N</mat-radio-button>
+                        <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+                     </mat-radio-group>
+                  </div>
+               </div>
+
+               <div class="control" *ngIf="stage === 'IDENT'">
+                  <div class="control-name">P. Vulgaris</div>
+
+                  <!-- TODO: Show (new) isolate identification component here. -->
+                  <div>TODO: P. Vulgaris Identification here</div>
+
+                  <mat-radio-group formControlName="pVulgarisSatisfactory">
+                     <span>control satisfactory</span>
+                     <mat-radio-button [value]="true">Y</mat-radio-button>
+                     <mat-radio-button [value]="false">N</mat-radio-button>
+                     <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+                  </mat-radio-group>
+               </div>
+
+               <!-- TODO pAerugi: SLANT stage: pAerugiOxidaseDetection, IDENT stage: pAerugiSatisfactory. -->
+
+            </div>
+
+         </mat-tab>
+
+      </mat-tab-group>
 
    </div>
 
