@@ -189,11 +189,11 @@ function posContStatusCode(testData: TestData, testConfig: TestConfig | null): F
 }
 
 function posContTestUnitsStatusCode
-(
-   contTestss: ContinuationTestssByTestUnitNum,
-   vidasData: VidasData,
-   testConfig: TestConfig | null
-)
+   (
+      contTestss: ContinuationTestssByTestUnitNum,
+      vidasData: VidasData,
+      testConfig: TestConfig | null
+   )
    : FieldValuesStatusCode
 {
    if ( !contTestss )
@@ -218,35 +218,35 @@ function posContTestUnitsStatusCode
 }
 
 function contControlsStatusCode
-(
-   contControls: ContinuationControls | null,
-   testConfig: TestConfig | null
-)
+   (
+      contControls: ContinuationControls | null,
+      testConfig: TestConfig | null
+   )
    : FieldValuesStatusCode
 {
    if ( contControls == null )
       return 'e';
 
-   if ( contControls.salmonellaGaminaraSatisfactory    != null &&
-      contControls.salmonellaDiarizonaeSatisfactory  != null &&
-      contControls.pVulgarisSatisfactory             != null &&
-      contControls.pAerugiOxidaseDetection           != null &&
-      contControls.pAerugiSatisfactory               != null &&
-      contControls.mediumSatisfactory                != null &&
-      isolateIdentificationStatus(contControls.pVulgarisIdentification) === 'c' &&
-      selectiveAgarsTestSuiteComplete(contControls.salmonellaGaminara, false, true, testConfig)  &&
-      selectiveAgarsTestSuiteComplete(contControls.salmonellaDiarizonae, true, true, testConfig) &&
-      selectiveAgarsTestSuiteComplete(contControls.medium, false, true, testConfig) )
+   if ( contControls.salmonellaGaminaraSatisfactory   != null &&
+        contControls.salmonellaDiarizonaeSatisfactory != null &&
+        contControls.pVulgarisSatisfactory            != null &&
+        contControls.pAerugiOxidaseDetection          != null &&
+        contControls.pAerugiSatisfactory              != null &&
+        contControls.mediumSatisfactory               != null &&
+        isolateIdentificationStatus(contControls.pVulgarisIdentification) === 'c' &&
+        selectiveAgarsTestSuiteComplete(contControls.salmonellaGaminara, false, true, testConfig)  &&
+        selectiveAgarsTestSuiteComplete(contControls.salmonellaDiarizonae, true, true, testConfig) &&
+        selectiveAgarsTestSuiteComplete(contControls.medium, false, true, testConfig) )
       return 'c';
 
    return 'i';
 }
 
 function positiveTestUnitContinuationTestsComplete
-(
-   contTests: ContinuationTests,
-   testConfig: TestConfig | null
-)
+   (
+      contTests: ContinuationTests,
+      testConfig: TestConfig | null
+   )
    : boolean
 {
    return (
@@ -256,12 +256,12 @@ function positiveTestUnitContinuationTestsComplete
 }
 
 function selectiveAgarsTestSuiteComplete
-(
-   selAgarsTestSuite: SelectiveAgarsTestSuite,
-   onlySlantTubesRequired = false,
-   isControl = false,
-   testConfig: TestConfig | null
-)
+   (
+      selAgarsTestSuite: SelectiveAgarsTestSuite,
+      onlySlantTubesRequired = false,
+      isControl = false,
+      testConfig: TestConfig | null
+   )
    : boolean
 {
    const minSelAgarsRequired = isControl ? testConfig && testConfig.positiveTestUnitControlsMinimumSelectiveAgars || 1 : 4;
@@ -310,11 +310,11 @@ function selectiveAgarsTestSuiteComplete
 }
 
 function isolateTestSequenceStatus
-(
-   testSeq: IsolateTestSequence,
-   onlySlantTubesRequired = false,
-   testConfig: TestConfig | null
-)
+   (
+      testSeq: IsolateTestSequence,
+      onlySlantTubesRequired = false,
+      testConfig: TestConfig | null
+   )
    : FieldValuesStatusCode
 {
    if ( testSeq.colonyAppearance === 'NT' || testSeq.colonyAppearance === 'NG' )
@@ -322,12 +322,9 @@ function isolateTestSequenceStatus
 
    const tsiStatus = slantTubeTestStatus(testSeq.tsiTubeTest);
    const liaStatus = slantTubeTestStatus(testSeq.liaTubeTest);
+   const identStatus = isolateIdentificationStatus(testSeq.identification);
 
-   if ( tsiStatus === 'e' &&
-      liaStatus === 'e' &&
-      testSeq.oxidaseDetection == null &&
-      testSeq.identificationMethod == null &&
-      isolateIdentificationStatus(testSeq.identification) === 'e' )
+   if ( tsiStatus === 'e' && liaStatus === 'e' && testSeq.oxidaseDetection == null && identStatus === 'e' )
       return 'e';
 
    if ( tsiStatus === 'c' && liaStatus === 'c' )
@@ -343,9 +340,7 @@ function isolateTestSequenceStatus
       if ( testSeq.oxidaseDetection == null )
          return 'i';
 
-      const identStatus = isolateIdentificationStatus(testSeq.identification);
-
-      if ( testSeq.identificationMethod == null || identStatus !== 'c' )
+      if ( identStatus !== 'c' )
          return 'i';
 
       if ( !testSeq.identification.positive )
@@ -402,7 +397,12 @@ function wrapupStatusCode(testData: TestData): FieldValuesStatusCode
    return 'c';
 }
 
-export function getTestStageStatuses(testData: TestData, testConfig: TestConfig | null): TestStageStatus[]
+export function getTestStageStatuses
+   (
+      testData: TestData,
+      testConfig: TestConfig | null
+   )
+   : TestStageStatus[]
 {
    return TEST_STAGES.map(stage => ({
       stageName: stage.name,
@@ -410,7 +410,12 @@ export function getTestStageStatuses(testData: TestData, testConfig: TestConfig 
    }));
 }
 
-export function firstNonCompleteTestStageName(testData: TestData, testConfig: TestConfig | null): string | null
+export function firstNonCompleteTestStageName
+   (
+      testData: TestData,
+      testConfig: TestConfig | null
+   )
+   : string | null
 {
    for (const stage of TEST_STAGES)
    {
@@ -440,4 +445,3 @@ export function isEmptyString(s: string)
 {
    return !s || s.trim().length === 0;
 }
-

@@ -39,6 +39,7 @@ import {SelAgarsTestSuiteComponent} from './pos-cont-stages/sel-agars-test-suite
 import {IsolateTestSeqComponent} from './pos-cont-stages/isolate-test-seq/isolate-test-seq.component';
 import {IsolateTestsFailureDialogComponent} from './pos-cont-stages/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
 import {SlantTubeTestComponent} from './pos-cont-stages/isolate-test-seq/slant-tube-test/slant-tube-test.component';
+import { IsolateIdentificationComponent } from './pos-cont-stages/isolate-identification/isolate-identification.component';
 
 @NgModule({
    imports: [
@@ -81,6 +82,7 @@ import {SlantTubeTestComponent} from './pos-cont-stages/isolate-test-seq/slant-t
       IsolateTestSeqComponent,
       IsolateTestsFailureDialogComponent,
       SlantTubeTestComponent,
+      IsolateIdentificationComponent,
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,

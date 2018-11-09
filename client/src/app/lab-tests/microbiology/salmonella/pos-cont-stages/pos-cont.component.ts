@@ -2,11 +2,8 @@ import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 import {
-   makeEmptyContinuationControls,
-   makeEmptySelectiveAgarsTestSuite, makeContinuationControlsFormGroup,
-   makeContinuationTestsFormGroup, makeTestUnitsContinuationTestsFormGroup,
-   PositivesContinuationData,
-   ContinuationTests, countIsolates,
+   makeEmptyContinuationControls, makeEmptySelectiveAgarsTestSuite, makeContinuationControlsFormGroup, makeContinuationTestsFormGroup,
+   makeTestUnitsContinuationTestsFormGroup, PositivesContinuationData, ContinuationTests, countIsolates,
 } from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {TestConfig} from '../test-config';

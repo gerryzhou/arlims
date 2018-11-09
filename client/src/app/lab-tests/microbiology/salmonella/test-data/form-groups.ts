@@ -1,3 +1,5 @@
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
+
 import {
    ContinuationControls,
    ContinuationTests,
@@ -6,8 +8,6 @@ import {
    PositivesContinuationData, SelectiveAgarsTestSuite, SlantTubeTest,
    TestData
 } from './types';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
-
 
 export function makeTestDataFormGroup(testData: TestData, username: string): FormGroup
 {
@@ -171,14 +171,13 @@ export function makeIsolateTestSequenceFormGroup(isolateTestSeq: IsolateTestSequ
       tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.tsiTubeTest),
       liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.liaTubeTest),
       oxidaseDetection: new FormControl(isolateTestSeq.oxidaseDetection),
-      identificationMethod: new FormControl(isolateTestSeq.identificationMethod),
-      // 'identification' and 'failure' FormGroups are added dynamically as needed
+      // 'identification' and 'failure' FormGroups are added below or interactively as needed
    });
 
    if ( isolateTestSeq.identification != null )
-      fg.controls['identification'] = makeIsolateIdentificationFormGroup(isolateTestSeq.identification);
+      fg.addControl('identification', makeIsolateIdentificationFormGroup(isolateTestSeq.identification));
    if ( isolateTestSeq.failure != null )
-      fg.controls['failure'] = makeIsolateTestSequenceFailureFormGroup(isolateTestSeq.failure);
+      fg.addControl('failure', makeIsolateTestSequenceFailureFormGroup(isolateTestSeq.failure));
 
    return fg;
 }
@@ -193,15 +192,20 @@ function makeSlantTubeTestFormGroup(slantTubeTest: SlantTubeTest): FormGroup
    });
 }
 
-function makeIsolateIdentificationFormGroup(isolateIdent: IsolateIdentification): FormGroup
+export function makeEmptyIsolateIdentificationFormGroup(): FormGroup
 {
-   return new FormGroup({
-      positive: new FormControl(isolateIdent && isolateIdent.positive || null),
-      identCode: new FormControl(isolateIdent && isolateIdent.identCode || null),
-      identText: new FormControl(isolateIdent && isolateIdent.identText || null),
-   });
+   return makeIsolateIdentificationFormGroup(null);
 }
 
+export function makeIsolateIdentificationFormGroup(isolateIdent: IsolateIdentification): FormGroup
+{
+   return new FormGroup({
+      method:    new FormControl(isolateIdent && isolateIdent.method || null),
+      identCode: new FormControl(isolateIdent && isolateIdent.identCode || null),
+      identText: new FormControl(isolateIdent && isolateIdent.identText || null),
+      positive:  new FormControl(isolateIdent && isolateIdent.positive || null),
+   });
+}
 
 export function makeIsolateTestSequenceFailureFormGroup(failure: IsolateTestSequenceFailure)
 {
@@ -211,5 +215,3 @@ export function makeIsolateTestSequenceFailureFormGroup(failure: IsolateTestSequ
       notes: new FormControl(failure.notes),
    });
 }
-
-

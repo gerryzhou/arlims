@@ -1,6 +1,6 @@
 <div class="main-row" [formGroup]="form">
 
-   <div class="tube-label" matTooltip="edit slant tube results">{{tubeType}}</div>
+   <div class="tube-label">{{tubeType}}</div>
 
    <div class="field-area" [ngClass]="slantValueCssClass">
       <mat-select class="select-field" formControlName="slant" matTooltip="slant" (valueChange)="onSlantChanged($event)">

@@ -116,10 +116,11 @@ export interface IsolateTestSequence {
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
    oxidaseDetection?: boolean | null;
-   identificationMethod: 'API20E' | 'Vitek' | null;
    identification?: IsolateIdentification | null;
    failure?: IsolateTestSequenceFailure | null;
 }
+
+export type IdentificationMethod = 'API20E' | 'Vitek';
 
 export interface SlantTubeTest {
    slant: string | null;
@@ -130,9 +131,10 @@ export interface SlantTubeTest {
 
 export interface IsolateIdentification
 {
-   positive: boolean | null;
+   method: IdentificationMethod | null;
    identCode: string | null;
    identText: string | null;
+   positive: boolean | null;
 }
 
 export interface IsolateTestSequenceFailure {
@@ -188,11 +190,11 @@ export function makeEmptyContinuationControls(username: string): ContinuationCon
 }
 
 export function makeEmptySelectiveAgarsTestSuite
-(
-   firstIsolateNum: number,
-   numIsolatesPerSelAgarPlate: number,
-   username: string
-)
+   (
+      firstIsolateNum: number,
+      numIsolatesPerSelAgarPlate: number,
+      username: string
+   )
    : SelectiveAgarsTestSuite
 {
    const now = new Date();
@@ -207,9 +209,10 @@ export function makeEmptySelectiveAgarsTestSuite
 export function makeEmptyIsolateIdentification(): IsolateIdentification
 {
    return {
-      positive: null,
+      method: null,
       identCode: null,
       identText: null,
+      positive: null,
    };
 }
 
@@ -224,12 +227,12 @@ export function countIsolates(selAgarsTestSuite: SelectiveAgarsTestSuite)
 }
 
 function makeEmptyIsolateTestSequences
-(
-   firstIsolateNum: number,
-   numIsolates: number,
-   timestamp: Date,
-   username: string,
-)
+   (
+      firstIsolateNum: number,
+      numIsolates: number,
+      timestamp: Date,
+      username: string,
+   )
    : IsolateTestSequencesByUid
 {
    const seqs: IsolateTestSequencesByUid = {};
@@ -244,12 +247,13 @@ function makeEmptyIsolateTestSequences
 }
 
 export function makeIsolateTestSequenceUid
-(
-   timestamp: Date,
-   userName: string,
-   startSeqNum: number,
-   uniquenessTestObj: { [key: string]: any } = null
-)
+   (
+      timestamp: Date,
+      userName: string,
+      startSeqNum: number,
+      uniquenessTestObj: { [key: string]: any } = null
+   )
+   : string
 {
    const uidBase = timestamp.toISOString() + '|' + userName + '|';
 
@@ -273,7 +277,6 @@ export function makeEmptyIsolateTestSequence(isolateNum: number): IsolateTestSeq
       tsiTubeTest: makeEmptySlantTubeTest(),
       liaTubeTest: makeEmptySlantTubeTest(),
       oxidaseDetection: null,
-      identificationMethod: null,
       identification: null,
       failure: null,
    };

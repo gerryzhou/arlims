@@ -3,7 +3,7 @@ import {MatDialog} from '@angular/material';
 import {FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
-import {makeIsolateTestSequenceFailureFormGroup} from '../../test-data';
+import {makeEmptyIsolateIdentificationFormGroup, makeIsolateTestSequenceFailureFormGroup} from '../../test-data';
 import {IsolateTestsFailureDialogComponent} from './isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
 
 @Component({
@@ -78,7 +78,6 @@ export class IsolateTestSeqComponent implements OnChanges {
       this.formChangesSubscription = this.form.valueChanges.subscribe(() => {
          this.changeDetectorRef.markForCheck();
       });
-
    }
 
    onDisposeRequested()
@@ -127,5 +126,17 @@ export class IsolateTestSeqComponent implements OnChanges {
    clearFailure()
    {
       this.form.removeControl('failure');
+   }
+
+   createIdentificationFormGroup()
+   {
+      if ( this.form.get('identification') == null )
+         this.form.addControl('identification', makeEmptyIsolateIdentificationFormGroup());
+   }
+
+   removeIdentificationFormGroup()
+   {
+      if ( this.form.get('identification') != null )
+         this.form.removeControl('identification');
    }
 }

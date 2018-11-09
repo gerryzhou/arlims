@@ -38,41 +38,48 @@
 
 
    <!-- SLANT data readonly view as context -->
-   <div *ngIf="stage === 'IDENT' && showOtherStageDataAsContext" class="slant-data-readonly">
-      <div class="colony-appearance">{{(form.get('colonyAppearance').value)}}</div>
-      <div class="slant-tube">
-         <span class="slant-tube-field">{{tsiFormGroup.get('slant').value}}</span>
-         <span class="slant-tube-field">{{tsiFormGroup.get('butt').value}}</span>
-         <span class="slant-tube-field">{{tsiFormGroup.get('h2s').value === true ? '+' : tsiFormGroup.get('h2s').value === false ? '&minus;' : ''}}</span>
-         <span class="slant-tube-field">{{tsiFormGroup.get('gas').value === true ? '+' : tsiFormGroup.get('gas').value === false ? '&minus;' : ''}}</span>
+   <div class="slant-data-ro" *ngIf="stage === 'IDENT' && showOtherStageDataAsContext">
+      <div class="colony-appearance-ro">{{(form.get('colonyAppearance').value)}}</div>
+      <div class="slant-tube-ro">
+         <span class="slant-tube-field-ro">{{tsiFormGroup.get('slant').value}}</span>
+         <span class="slant-tube-field-ro">{{tsiFormGroup.get('butt').value}}</span>
+         <span class="slant-tube-field-ro">{{tsiFormGroup.get('h2s').value === true ? '+' : tsiFormGroup.get('h2s').value === false ? '&minus;' : ''}}</span>
+         <span class="slant-tube-field-ro">{{tsiFormGroup.get('gas').value === true ? '+' : tsiFormGroup.get('gas').value === false ? '&minus;' : ''}}</span>
       </div>
-      <span class="slant-tube">
-         <span class="slant-tube-field">{{liaFormGroup.get('slant').value}}</span>
-         <span class="slant-tube-field">{{liaFormGroup.get('butt').value}}</span>
-         <span class="slant-tube-field">{{liaFormGroup.get('h2s').value === true ? '+' : liaFormGroup.get('h2s').value === false ? '&minus;' : ''}}</span>
-         <span class="slant-tube-field">{{liaFormGroup.get('gas').value === true ? '+' : liaFormGroup.get('gas').value === false ? '&minus;' : ''}}</span>
+      <span class="slant-tube-ro">
+         <span class="slant-tube-field-ro">{{liaFormGroup.get('slant').value}}</span>
+         <span class="slant-tube-field-ro">{{liaFormGroup.get('butt').value}}</span>
+         <span class="slant-tube-field-ro">{{liaFormGroup.get('h2s').value === true ? '+' : liaFormGroup.get('h2s').value === false ? '&minus;' : ''}}</span>
+         <span class="slant-tube-field-ro">{{liaFormGroup.get('gas').value === true ? '+' : liaFormGroup.get('gas').value === false ? '&minus;' : ''}}</span>
       </span>
-      <span class="oxidase" *ngIf="includeOxidase">
+      <span class="oxidase-ro" *ngIf="includeOxidase">
          {{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
       </span>
    </div>
 
-
    <!-- IDENT stage editing -->
-   <ng-container *ngIf="stage === 'IDENT'">
-      <!-- TODO: Add IDENT fields here.
-           method select list
-             (change) callback should be new method to create the identification form group if not present
-           isolate detection component (new)
-             conditional on presence of identification form group
-       -->
-      TODO: Ident fields here.
-   </ng-container>
+   <div class="identification" *ngIf="stage === 'IDENT'">
+      <button class="link" *ngIf="!viewOnly && form.get('identification') == null"
+              (click)="createIdentificationFormGroup()">
+         enter API20E/Vitek data
+      </button>
+      <app-isolate-identification *ngIf="form.get('identification') != null"
+         [form]="form.get('identification')"
+         [viewOnly]="viewOnly">
+      </app-isolate-identification>
+   </div>
 
-   <!-- IDENT data readonly view as context -->
-   <div *ngIf="stage === 'SLANT' && showOtherStageDataAsContext" class="ident-data-readonly">
-      <!-- TODO: IDENT read only data here. -->
-      [TODO]
+   <!-- IDENT data read-only view as context -->
+   <div class="ident-data-ro"
+        *ngIf="stage === 'SLANT' && showOtherStageDataAsContext && form.get('identification') != null">
+      <!--TODO: Tweak rendering of these fields similarly to what was done in isolate test seq. -->
+      <div class="ident-method-ro">{{form.get(['identification', 'method'])?.value}}</div>
+      |
+      <div class="ident-code-ro">{{form.get(['identification', 'identCode'])?.value}}</div>
+      |
+      <div class="ident-text-ro">{{form.get(['identification', 'identText'])?.value}}</div>
+      :
+      <div class="ident-pos-ro">{{form.get(['identification', 'positive'])?.value}}</div>
    </div>
 
    <div class="expanding-flex-space"></div>
@@ -99,6 +106,11 @@
          <div class="menu-item">
             <button mat-button *ngIf="!!this.form.controls.failure" (click)="promptEditFailureInfo()">
                <mat-icon>edit</mat-icon><mat-icon>thumb_down</mat-icon> edit failure information
+            </button>
+         </div>
+         <div class="menu-item" *ngIf="stage === 'IDENT' && form.get('identification') != null">
+            <button mat-button *ngIf="!viewOnly" (click)="removeIdentificationFormGroup()">
+               remove API20E/Vitek data
             </button>
          </div>
       </mat-menu>

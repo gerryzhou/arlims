@@ -59,42 +59,51 @@ button.remove mat-icon {
    color: red;
 }
 
-.slant-data-readonly {
+.slant-data-ro {
    display: flex;
    align-items: center;
-
-   .colony-appearance {
-      padding: 2px;
-      border: 1px solid lightgray;
-      border-radius: 5px;
-      min-width: 22px;
-      min-height: 10px;
-      margin-right: 2px;
-   }
-
-   .slant-tube {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 2px;
-      margin: 0 1px;
-      border: 1px solid gray;
-      border-radius: 5px;
-   }
-
-   .slant-tube-field {
-      min-width: 10px;
-      min-height: 10px;
-   }
-
-   .oxidase {
-      min-width: 10px;
-      min-height: 10px;
-      margin: 2px;
-      padding: 2px;
-   }
 }
 
-.ident-data-readonly {
+.colony-appearance-ro {
+   padding: 2px;
+   border: 1px solid lightgray;
+   border-radius: 5px;
+   min-width: 22px;
+   min-height: 10px;
+   margin-right: 2px;
+}
+
+.slant-tube-ro {
+   display: flex;
+   align-items: center;
+   justify-content: flex-start;
+   padding: 2px;
+   margin: 0 1px;
+   border: 1px solid gray;
+   border-radius: 5px;
+}
+
+.slant-tube-field-ro {
+   min-width: 10px;
+   min-height: 10px;
+}
+
+.oxidase-ro {
+   min-width: 10px;
+   min-height: 10px;
+   margin: 2px;
+   padding: 2px;
+}
+
+.identification {
+   display: flex;
+   flex-flow: row nowrap;
+   align-items: center;
+   margin: 0 10px;
+}
+
+.ident-data-ro {
+   display: flex;
+   flex-flow: row wrap;
    // TODO
 }

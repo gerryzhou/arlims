@@ -34,7 +34,7 @@
 
          <mat-tab label="Controls">
 
-            <div class="controls-area" formGroupName="continuationControls"> <!-- TODO: Try removing this in favor of just using the mat-tab itself as controls area. -->
+            <div class="controls-area" formGroupName="continuationControls">
 
                <div class="control">
                   <div class="control-name">Media Control</div>
@@ -106,10 +106,8 @@
 
                <div class="control" *ngIf="stage === 'IDENT'">
                   <div class="control-name">P. Vulgaris</div>
-
-                  <!-- TODO: Show (new) isolate identification component here. -->
-                  <div>TODO: P. Vulgaris Identification here</div>
-
+                  <app-isolate-identification [form]="form.get(['continuationControls', 'pVulgarisIdentification'])">
+                  </app-isolate-identification>
                   <mat-radio-group formControlName="pVulgarisSatisfactory">
                      <span>control satisfactory</span>
                      <mat-radio-button [value]="true">Y</mat-radio-button>
@@ -118,7 +116,27 @@
                   </mat-radio-group>
                </div>
 
-               <!-- TODO pAerugi: SLANT stage: pAerugiOxidaseDetection, IDENT stage: pAerugiSatisfactory. -->
+               <div class="control">
+                  <div class="control-name">P. Aerugi</div>
+                  <div class="p-aerugi-oxidase" *ngIf="stage === 'SLANT'">
+                     <span class="p-aerugi-oxidase-label">Oxidase</span>
+                     <span class="p-aerugi-oxidase-value">
+                        <mat-select formControlName="pAerugiOxidaseDetection">
+                           <mat-option [value]="null"></mat-option>
+                           <mat-option [value]="true">+</mat-option>
+                           <mat-option [value]="false">&minus;</mat-option>
+                        </mat-select>
+                     </span>
+                  </div>
+                  <div class="p-aerugi-satisfactory" *ngIf="stage === 'IDENT'">
+                     <mat-radio-group formControlName="pAerugiSatisfactory">
+                        <span>control satisfactory</span>
+                        <mat-radio-button [value]="true">Y</mat-radio-button>
+                        <mat-radio-button [value]="false">N</mat-radio-button>
+                        <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+                     </mat-radio-group>
+                  </div>
+               </div>
 
             </div>
 

@@ -1,0 +1,28 @@
+<div class="main-row" [formGroup]="form">
+
+   <div class="field-area">
+      <span>method</span>
+      <mat-select formControlName="method" matTooltip="identification method" (valueChange)="onIdentificationMethodChanged($event)">
+         <mat-option [value]="null"></mat-option>
+         <mat-option [value]="'API20E'">API20E</mat-option>
+         <mat-option [value]="'Vitek'">Vitek</mat-option>
+      </mat-select>
+   </div>
+
+   <div class="field-area" class="ident-code">
+      hello1
+      <!--TODO identCode -->
+   </div>
+
+   <div class="field-area" class="ident-text">
+      hello2
+      <!--TODO identText: new FormControl(isolateIdent && isolateIdent.identText || null),-->
+   </div>
+
+   <div class="field-area" class="ident-text">
+      +/-
+      <!-- TODO positive -->
+   </div>
+
+</div>
+
