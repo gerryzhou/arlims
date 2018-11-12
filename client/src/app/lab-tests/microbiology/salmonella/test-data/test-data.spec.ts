@@ -1,4 +1,4 @@
-import {emptyTestData, getTestStageStatuses, TestData} from './test-data';
+import {emptyTestData, getTestStageStatuses, TestData} from './index';
 
 describe('microbiology salmonella test data functions', () => {
 

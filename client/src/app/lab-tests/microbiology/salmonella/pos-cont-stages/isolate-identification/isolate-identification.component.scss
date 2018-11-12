@@ -1,14 +1,33 @@
 .main-row {
    display: flex;
    flex-flow: row nowrap;
-   align-items: center;
+   align-items: flex-start;
    margin: 0 7px 0 0;
 }
 
 .field-area {
-   min-width: 30px;
-   margin: 0 1px;
-   padding: 1px 0 1px 5px;
+   margin: 0 5px;
+   padding: 2px;
    border: 3px solid lightgray;
    border-radius: 5px;
+}
+
+.label {
+   font-weight: bold;
+}
+
+.method {
+   width: 100px;
+}
+
+.ident-code {
+   min-width: 100px;
+}
+
+.ident-text {
+   min-width: 250px;
+}
+
+.positive {
+   min-width: 30px;
 }

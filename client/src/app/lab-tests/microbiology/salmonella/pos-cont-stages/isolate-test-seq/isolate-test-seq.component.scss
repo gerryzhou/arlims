@@ -95,15 +95,34 @@ button.remove mat-icon {
    padding: 2px;
 }
 
-.identification {
+.ident {
    display: flex;
    flex-flow: row nowrap;
    align-items: center;
    margin: 0 10px;
 }
 
-.ident-data-ro {
+.ident-ro {
    display: flex;
    flex-flow: row wrap;
-   // TODO
+   border: 1px solid gray;
+   padding: 2px 3px;
 }
+
+.ident-method-ro {
+   min-width: 70px;
+   min-height: 10px;
+}
+.ident-code-ro {
+   min-width: 90px;
+   min-height: 10px;
+}
+.ident-text-ro {
+   min-width: 240px;
+   min-height: 10px;
+}
+.ident-positive-ro {
+   min-width: 20px;
+   min-height: 10px;
+}
+

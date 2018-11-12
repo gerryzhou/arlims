@@ -21,9 +21,9 @@ export class IsolateIdentificationComponent implements OnChanges {
    {
    }
 
-   onIdentificationMethodChanged(changeEvent: any)
+   onMethodChanged(changeEvent: any)
    {
       // TODO: Maybe store ident method as basis for method-dependent rendering in the view (helper button for API for example).
-      console.log('onIdentificationMethodChanged', changeEvent);
+      console.log('onMethodChanged', changeEvent);
    }
 }

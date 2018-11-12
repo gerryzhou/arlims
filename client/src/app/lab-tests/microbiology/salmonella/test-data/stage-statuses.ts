@@ -26,10 +26,12 @@ export const TEST_STAGES: Stage[] = [
    {name: 'M-BROTH',  statusCodeFn: mBrothStatusCode},
    {name: 'VIDAS',    statusCodeFn: vidasStatusCode},
    {name: 'CONTROLS', statusCodeFn: controlsStatusCode},
-   {name: 'SLANT',    statusCodeFn: posContStatusCode}, // TODO: Make separate status functions for the two pos cont stages.
-   {name: 'IDENT',    statusCodeFn: posContStatusCode}, // "
+   {name: 'SLANT',    statusCodeFn: slantStatusCode},
+   {name: 'IDENT',    statusCodeFn: identStatusCode},
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
+
+type PosContStageName = 'SLANT' | 'IDENT';
 
 function prepStatusCode(testData: TestData): FieldValuesStatusCode
 {
@@ -169,17 +171,43 @@ function controlsStatusCode(testData: TestData): FieldValuesStatusCode
    }
 }
 
-function posContStatusCode(testData: TestData, testConfig: TestConfig | null): FieldValuesStatusCode
+function slantStatusCode
+   (
+      testData: TestData,
+      testConfig: TestConfig | null
+   )
+   : FieldValuesStatusCode
+{
+   return posContStatusCode('SLANT', testData, testConfig);
+}
+
+function identStatusCode
+(
+   testData: TestData,
+   testConfig: TestConfig | null
+)
+   : FieldValuesStatusCode
+{
+   return posContStatusCode('IDENT', testData, testConfig);
+}
+
+function posContStatusCode
+   (
+      stage: PosContStageName,
+      testData: TestData,
+      testConfig: TestConfig | null
+   )
+   : FieldValuesStatusCode
 {
    const positivesData = testData.posContData;
    if ( positivesData == null )
       return 'e';
 
    const testUnitsStatus =
-      posContTestUnitsStatusCode(positivesData.testUnitsContinuationTests, testData.vidasData, testConfig);
+      posContTestUnitsStatusCode(stage, positivesData.testUnitsContinuationTests, testData.vidasData, testConfig);
 
    const controlsStatus =
-      contControlsStatusCode(positivesData.continuationControls, testConfig);
+      contControlsStatusCode(stage, positivesData.continuationControls, testConfig);
 
    return (
       testUnitsStatus === 'e' && controlsStatus === 'e' ? 'e'
@@ -190,6 +218,7 @@ function posContStatusCode(testData: TestData, testConfig: TestConfig | null): F
 
 function posContTestUnitsStatusCode
    (
+      stage: PosContStageName,
       contTestss: ContinuationTestssByTestUnitNum,
       vidasData: VidasData,
       testConfig: TestConfig | null
@@ -210,7 +239,7 @@ function posContTestUnitsStatusCode
 
    for ( const contTests of Object.values(contTestss) )
    {
-      if ( !positiveTestUnitContinuationTestsComplete(contTests, testConfig) )
+      if ( !positiveTestUnitContinuationTestsComplete(stage, contTests, testConfig) )
          return 'i';
    }
 
@@ -219,6 +248,7 @@ function posContTestUnitsStatusCode
 
 function contControlsStatusCode
    (
+      stage: PosContStageName,
       contControls: ContinuationControls | null,
       testConfig: TestConfig | null
    )
@@ -227,36 +257,47 @@ function contControlsStatusCode
    if ( contControls == null )
       return 'e';
 
-   if ( contControls.salmonellaGaminaraSatisfactory   != null &&
-        contControls.salmonellaDiarizonaeSatisfactory != null &&
-        contControls.pVulgarisSatisfactory            != null &&
-        contControls.pAerugiOxidaseDetection          != null &&
-        contControls.pAerugiSatisfactory              != null &&
-        contControls.mediumSatisfactory               != null &&
-        isolateIdentificationStatus(contControls.pVulgarisIdentification) === 'c' &&
-        selectiveAgarsTestSuiteComplete(contControls.salmonellaGaminara, false, true, testConfig)  &&
-        selectiveAgarsTestSuiteComplete(contControls.salmonellaDiarizonae, true, true, testConfig) &&
-        selectiveAgarsTestSuiteComplete(contControls.medium, false, true, testConfig) )
-      return 'c';
-
-   return 'i';
+   switch (stage)
+   {
+      case 'SLANT':
+         return (
+            contControls.pAerugiOxidaseDetection != null &&
+            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaGaminara, false, true, testConfig)  &&
+            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaDiarizonae, true, true, testConfig) &&
+            selectiveAgarsTestSuiteComplete(stage, contControls.medium, false, true, testConfig)
+         ) ? 'c' : 'i';
+      case 'IDENT':
+         return (
+            contControls.salmonellaGaminaraSatisfactory   != null &&
+            contControls.salmonellaDiarizonaeSatisfactory != null &&
+            contControls.pVulgarisSatisfactory            != null &&
+            contControls.pAerugiSatisfactory              != null &&
+            contControls.mediumSatisfactory               != null &&
+            isolateIdentificationStatus(contControls.pVulgarisIdentification) === 'c' &&
+            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaGaminara, false, true, testConfig)  &&
+            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaDiarizonae, true, true, testConfig) &&
+            selectiveAgarsTestSuiteComplete(stage, contControls.medium, false, true, testConfig)
+         ) ? 'c' : 'i';
+   }
 }
 
 function positiveTestUnitContinuationTestsComplete
    (
+      stage: PosContStageName,
       contTests: ContinuationTests,
       testConfig: TestConfig | null
    )
    : boolean
 {
    return (
-      selectiveAgarsTestSuiteComplete(contTests.rvSourcedTests, false, false, testConfig) &&
-      selectiveAgarsTestSuiteComplete(contTests.ttSourcedTests, false, false, testConfig)
+      selectiveAgarsTestSuiteComplete(stage, contTests.rvSourcedTests, false, false, testConfig) &&
+      selectiveAgarsTestSuiteComplete(stage, contTests.ttSourcedTests, false, false, testConfig)
    );
 }
 
 function selectiveAgarsTestSuiteComplete
    (
+      stage: PosContStageName,
       selAgarsTestSuite: SelectiveAgarsTestSuite,
       onlySlantTubesRequired = false,
       isControl = false,
@@ -270,19 +311,19 @@ function selectiveAgarsTestSuiteComplete
    const heStatuses =
       Object.values(selAgarsTestSuite.he)
          .filter(testSeq => testSeq.failure == null)
-         .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+         .map(testSeq => isolateTestSequenceStatus(stage, testSeq, onlySlantTubesRequired, testConfig));
    const xldStatuses =
       Object.values(selAgarsTestSuite.xld)
          .filter(testSeq => testSeq.failure == null)
-         .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+         .map(testSeq => isolateTestSequenceStatus(stage, testSeq, onlySlantTubesRequired, testConfig));
    const bs24Statuses =
       Object.values(selAgarsTestSuite.bs24h)
          .filter(testSeq => testSeq.failure == null)
-         .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+         .map(testSeq => isolateTestSequenceStatus(stage, testSeq, onlySlantTubesRequired, testConfig));
    const bs48Statuses =
       Object.values(selAgarsTestSuite.bs48h)
          .filter(testSeq => testSeq.failure == null)
-         .map(testSeq => isolateTestSequenceStatus(testSeq, onlySlantTubesRequired, testConfig));
+         .map(testSeq => isolateTestSequenceStatus(stage, testSeq, onlySlantTubesRequired, testConfig));
 
    let completeSelAgars = 0;
 
@@ -311,45 +352,65 @@ function selectiveAgarsTestSuiteComplete
 
 function isolateTestSequenceStatus
    (
+      stage: PosContStageName,
       testSeq: IsolateTestSequence,
       onlySlantTubesRequired = false,
       testConfig: TestConfig | null
    )
    : FieldValuesStatusCode
 {
+   const { slantStageStatus, identRequired } =
+      isolateTestSequenceSlantStageState(testSeq, onlySlantTubesRequired, testConfig);
+
+   if ( stage === 'SLANT' )
+      return slantStageStatus;
+
+   const identStatus = isolateIdentificationStatus(testSeq.identification);
+
+   if ( !identRequired ) return identStatus;
+   else return identStatus === 'c' ? 'c' : 'i';
+}
+
+interface IsolateTestSeqSlantStageState {
+   slantStageStatus: FieldValuesStatusCode;
+   identRequired: boolean;
+}
+
+function isolateTestSequenceSlantStageState
+   (
+      testSeq: IsolateTestSequence,
+      onlySlantTubesRequired = false,
+      testConfig: TestConfig | null
+   )
+   : IsolateTestSeqSlantStageState
+{
    if ( testSeq.colonyAppearance === 'NT' || testSeq.colonyAppearance === 'NG' )
-      return testSeq.failure == null ? 'i' : 'c';
+      return { slantStageStatus: testSeq.failure == null ? 'i' : 'c', identRequired: false};
 
    const tsiStatus = slantTubeTestStatus(testSeq.tsiTubeTest);
    const liaStatus = slantTubeTestStatus(testSeq.liaTubeTest);
-   const identStatus = isolateIdentificationStatus(testSeq.identification);
 
-   if ( tsiStatus === 'e' && liaStatus === 'e' && testSeq.oxidaseDetection == null && identStatus === 'e' )
-      return 'e';
+   // Check for empty.
+   if ( tsiStatus === 'e' && liaStatus === 'e' && testSeq.oxidaseDetection == null )
+      return { slantStageStatus: 'e', identRequired: false};
 
    if ( tsiStatus === 'c' && liaStatus === 'c' )
    {
-      if ( onlySlantTubesRequired )
-         return 'c';
-
       if ( slantTubeResultsMixed(testSeq.tsiTubeTest, testSeq.liaTubeTest) )
-         return testSeq.failure == null ? 'i' : 'c';
+         return { slantStageStatus: testSeq.failure == null ? 'i' : 'c', identRequired: false};
+
+      if ( onlySlantTubesRequired )
+         return { slantStageStatus: 'c', identRequired: false};
 
       if ( testSeq.oxidaseDetection === true )
-         return 'c';
+         return { slantStageStatus: 'c', identRequired: false};
       if ( testSeq.oxidaseDetection == null )
-         return 'i';
+         return { slantStageStatus: 'i', identRequired: false};
 
-      if ( identStatus !== 'c' )
-         return 'i';
-
-      if ( !testSeq.identification.positive )
-         return 'c';
-
-      return 'c';
+      return { slantStageStatus: 'c', identRequired: true};
    }
    else
-      return 'i';
+      return { slantStageStatus: 'i', identRequired: false};
 }
 
 function slantTubeTestStatus(slantTest: SlantTubeTest): FieldValuesStatusCode

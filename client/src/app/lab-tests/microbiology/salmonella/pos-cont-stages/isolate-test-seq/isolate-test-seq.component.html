@@ -58,7 +58,7 @@
    </div>
 
    <!-- IDENT stage editing -->
-   <div class="identification" *ngIf="stage === 'IDENT'">
+   <div class="ident" *ngIf="stage === 'IDENT'">
       <button class="link" *ngIf="!viewOnly && form.get('identification') == null"
               (click)="createIdentificationFormGroup()">
          enter API20E/Vitek data
@@ -70,16 +70,12 @@
    </div>
 
    <!-- IDENT data read-only view as context -->
-   <div class="ident-data-ro"
+   <div class="ident-ro"
         *ngIf="stage === 'SLANT' && showOtherStageDataAsContext && form.get('identification') != null">
-      <!--TODO: Tweak rendering of these fields similarly to what was done in isolate test seq. -->
       <div class="ident-method-ro">{{form.get(['identification', 'method'])?.value}}</div>
-      |
       <div class="ident-code-ro">{{form.get(['identification', 'identCode'])?.value}}</div>
-      |
       <div class="ident-text-ro">{{form.get(['identification', 'identText'])?.value}}</div>
-      :
-      <div class="ident-pos-ro">{{form.get(['identification', 'positive'])?.value}}</div>
+      <div class="ident-positive-ro">{{form.get(['identification', 'positive'])?.value}}</div>
    </div>
 
    <div class="expanding-flex-space"></div>
