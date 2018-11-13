@@ -2,21 +2,10 @@ Positives Continuations
 -----------------------
 Create validation functions to which status code functions delegate, giving details about missing/invalid data.
 
-
 Implement isolate identification component.
   In ro view can maybe truncate the long text to a fixed link and abbreviate API20E/Vitek to api/vit. Maybe link to popup for full data dialog or page.
 
-Create a component representing IsolateIdentification.
-  Use in IsolateTestSeq and for P.Vulgaris.
-  In IsolateTestSeq, change in method field (select list) should trigger creation of the form group if it's not already present.
-    Display of identification component is conditional on presence of form group.
-
-Add controls data to both stages.
-
 Subcomponents under pos-cont-stages need conflict data to be passed in and rendered.
-
-In test-data.ts modify split pos cont status code functions for the slant and ident stages.
-
 
 For API20E may need to capture colors as well as codes.
 PFGE/Serology/WGS results
