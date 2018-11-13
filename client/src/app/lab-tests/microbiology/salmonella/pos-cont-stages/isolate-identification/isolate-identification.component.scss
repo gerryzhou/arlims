@@ -1,19 +1,20 @@
 .main-row {
    display: flex;
    flex-flow: row nowrap;
-   align-items: flex-start;
+   align-items: center;
    margin: 0 7px 0 0;
 }
 
 .field-area {
-   margin: 0 5px;
-   padding: 2px;
-   border: 3px solid lightgray;
+   margin: 1px 5px 1px 0;
+   padding: 1px 2px;
+   border: 2px solid lightgray;
    border-radius: 5px;
 }
 
 .label {
    font-weight: bold;
+   font-size: smaller;
 }
 
 .method {
@@ -21,7 +22,7 @@
 }
 
 .ident-code {
-   min-width: 100px;
+   min-width: 60px;
 }
 
 .ident-text {
@@ -29,5 +30,5 @@
 }
 
 .positive {
-   min-width: 30px;
+   min-width: 50px;
 }

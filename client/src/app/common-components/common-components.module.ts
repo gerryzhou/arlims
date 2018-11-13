@@ -17,6 +17,7 @@ import {
 } from '@angular/material';
 import {MatIconModule} from '@angular/material/icon';
 import {DayNumberPipe} from './day-number.pipe';
+import {PlusMinusPipe} from './plus-minus.pipe';
 import {NewTestDialogComponent} from './new-test-dialog/new-test-dialog.component';
 import {ConflictingFieldValueComponent} from './conflicting-field-value/conflicting-field-value.component';
 import {FieldAssignedResourcesComponent} from './field-assigned-resources/field-assigned-resources.component';
@@ -48,6 +49,7 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       TestMetadataComponent,
       TestStageStatusComponent,
       DayNumberPipe,
+      PlusMinusPipe,
       NewTestDialogComponent,
       ConflictingFieldValueComponent,
       FieldAssignedResourcesComponent,
@@ -70,6 +72,7 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       TestMetadataComponent,
       TestStageStatusComponent,
       DayNumberPipe,
+      PlusMinusPipe,
       NewTestDialogComponent,
       ConflictingFieldValueComponent,
       FieldAssignedResourcesComponent,

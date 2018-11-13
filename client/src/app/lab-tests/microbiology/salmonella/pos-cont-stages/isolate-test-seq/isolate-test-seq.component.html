@@ -75,7 +75,7 @@
       <div class="ident-method-ro">{{form.get(['identification', 'method'])?.value}}</div>
       <div class="ident-code-ro">{{form.get(['identification', 'identCode'])?.value}}</div>
       <div class="ident-text-ro">{{form.get(['identification', 'identText'])?.value}}</div>
-      <div class="ident-positive-ro">{{form.get(['identification', 'positive'])?.value}}</div>
+      <div class="ident-positive-ro">{{form.get(['identification', 'positive'])?.value | plusMinus }}</div>
    </div>
 
    <div class="expanding-flex-space"></div>

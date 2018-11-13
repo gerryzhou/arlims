@@ -1,11 +1,6 @@
 Positives Continuations
 -----------------------
-Update the status functions for positive continuations.
-  Post cont stage statuses
-    For slant stage, just use existing logic without identification checks.
-    For ident stage, return status of entire test seq, ie. existing logic with ident checks.
-
-Check styling of identification values (editable and read-only).
+Create validation functions to which status code functions delegate, giving details about missing/invalid data.
 
 
 Implement isolate identification component.
