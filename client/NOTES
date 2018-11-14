@@ -1,6 +1,7 @@
 Field-level attachments
 -----------------------
-Add attached files metadata to LabGroupTestData.
+Add attached files metadata to LabGroupTestData and its resolver.
+  Store as { [field-identifier]: TestAttachedFileMetadata[] }
 In test data views, certain fields should have "N-attached files" link-button, to open test-attached-files component with field path input specified
 
 Test listing/search page
