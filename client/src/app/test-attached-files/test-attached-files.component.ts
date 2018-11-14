@@ -22,6 +22,9 @@ export class TestAttachedFilesComponent implements AfterViewInit {
    @Input()
    modificationsEnabled = true;
 
+   @Input()
+   testDataFieldName = null;
+
    readonly sampleInTest: SampleInTest;
 
    // table of currently attached files
@@ -77,7 +80,8 @@ export class TestAttachedFilesComponent implements AfterViewInit {
       this.testsSvc.attachFilesToTest(
          this.sampleInTest.testMetadata.testId,
          pendingFiles,
-         this.newAttachmentsForm.get('role').value
+         this.newAttachmentsForm.get('role').value,
+         this.testDataFieldName
       ).subscribe(
          (res: CreatedTestAttachedFiles) => {
             this.filesSelector.clearFiles();

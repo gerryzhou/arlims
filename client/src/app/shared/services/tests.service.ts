@@ -57,22 +57,24 @@ export class TestsService {
       );
    }
 
-   attachFilesToTest(testId: number, files: File[], role: string|null): Observable<CreatedTestAttachedFiles>
+   attachFilesToTest(testId: number, files: File[], role: string|null, testDataField: string|null): Observable<CreatedTestAttachedFiles>
    {
       const formData: FormData = new FormData();
 
       formData.append('role', role);
+      formData.append('testDataField', testDataField);
 
       files.forEach(file => formData.append('files', file, file.name));
 
       return this.httpClient.post<CreatedTestAttachedFiles>(this.apiUrlsSvc.newTestAttachedFilesUrl(testId), formData);
    }
 
-   updateTestAttachedFileMetadata(attachedFileId: number, testId: number, role: string|null, name: string)
+   updateTestAttachedFileMetadata(attachedFileId: number, testId: number, role: string|null, testDataField: string|null, name: string)
    {
       const formData: FormData = new FormData();
 
       formData.append('role', role);
+      formData.append('testDataField', testDataField);
       formData.append('name', name);
 
       return this.httpClient.post(this.apiUrlsSvc.testAttachedFileMetadataUrl(attachedFileId, testId), formData);

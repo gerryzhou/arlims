@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
     name = "TEST_FILE",
     indexes = {
         @Index(name = "IX_TSTFILE_TSTID", columnList = "TEST_ID"),
+        @Index(name = "IX_TSTFILE_TESTDATAFIELD", columnList = "TEST_DATA_FIELD"),
     }
 )
 public class TestFile
@@ -28,6 +29,9 @@ public class TestFile
     @Size(max = 50)
     private String role;
 
+    @Column(name="TEST_DATA_FIELD") @Size(max = 4000)
+    private String testDataField;
+
     @Column(name = "NAME", nullable = false) @Size(max = 200)
     private String name;
 
@@ -43,6 +47,7 @@ public class TestFile
         (
             @NotNull Test test,
             @Size(max = 50) String role,
+            @Size(max = 4000) String testDataField,
             @Size(max = 200) String name,
             @NotNull byte[] data
         )
@@ -50,6 +55,7 @@ public class TestFile
         this.test = test;
         this.testId = test.getId();
         this.role = role;
+        this.testDataField = testDataField;
         this.name = name;
         this.data = data;
     }
@@ -65,6 +71,12 @@ public class TestFile
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getTestDataField() { return testDataField; }
+    public void setTestDataField(String testDataField) { this.testDataField = testDataField; }
+
+    public Instant getUploaded() { return uploaded; }
+    public void setUploaded(Instant uploaded) { this.uploaded = uploaded; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

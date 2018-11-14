@@ -1,9 +1,19 @@
-Positives Continuations
+Field-level attachments
 -----------------------
-Create validation functions to which status code functions delegate, giving details about missing/invalid data.
+Add attached files metadata to LabGroupTestData.
+In test data views, certain fields should have "N-attached files" link-button, to open test-attached-files component with field path input specified
 
-Implement isolate identification component.
-  In ro view can maybe truncate the long text to a fixed link and abbreviate API20E/Vitek to api/vit. Maybe link to popup for full data dialog or page.
+Test listing/search page
+  Reagent search
+    Add text index on json column.
+  Filter via date ranges, test types, FACTS statuses, and full text search of test data.
+
+FACTS Writing
+  Start with updating sample status flag when test is created.
+    Creating a test should update sample op status in FACTS.
+
+Create validation functions for test stages.
+   Maybe can return enough information to implement status code functions by delegating to the validatino functions.
 
 Subcomponents under pos-cont-stages need conflict data to be passed in and rendered.
 
@@ -11,13 +21,7 @@ For API20E may need to capture colors as well as codes.
 PFGE/Serology/WGS results
   Just narrative text box for now.
 
-Prep-stage
-  Sample received from/date should come from FACTS via Leidos api, as general metadata about the sample (maybe embed in sample op).
-    Should be a drop down with lab group users (sample custodians) plus other choice.
-    Should be displayed read-only in form at same place as current controls.
-    John suggests adding Sample custodian as a group.
-      Maybe rename ADMIN to LIMS_ADMIN.
-      Also supervisor role.
+
 
 Need carry-over inbox.
   Analyst indicates that rest of work on a sample should be done by someone else (on weekend for example).
@@ -25,13 +29,6 @@ Need carry-over inbox.
 
 
 Move BAM link to top within test name box.
-
-Color code the selective agar plates as well as in flip book.
-
-
-FACTS Writing
-  Start with updating sample status flag when test is created.
-    Creating a test should update sample op status in FACTS.
 
 My FACTS person id: 437799
 

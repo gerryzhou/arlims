@@ -123,15 +123,15 @@ public class TestController extends ControllerBase
             @PathVariable long attachedFileId,
             @PathVariable long testId,
             @RequestPart("role") Optional<String> role,
+            @RequestPart("testDataField") Optional<String> testDataField,
             @RequestPart("name") String name,
             Authentication authentication
         )
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        testDataService.updateTestAttachedFileMetadata(testId, attachedFileId, role, name, currentUser);
+        testDataService.updateTestAttachedFileMetadata(testId, attachedFileId, role, testDataField, name, currentUser);
     }
-
 
     @PostMapping("{testId:\\d+}/attached-files/new")
     public CreatedTestAttachedFiles createTestAttachedFiles
@@ -139,12 +139,14 @@ public class TestController extends ControllerBase
             @PathVariable long testId,
             @RequestPart("files") MultipartFile[] files,
             @RequestPart("role") Optional<String> role,
+            @RequestPart("testDataField") Optional<String> testDataField,
             Authentication authentication
         )
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        List<Long> attachedFileIds = testDataService.attachFilesToTest(testId, Arrays.asList(files), role, currentUser);
+        List<Long> attachedFileIds =
+            testDataService.attachFilesToTest(testId, Arrays.asList(files), role, testDataField, currentUser);
 
         return new CreatedTestAttachedFiles(testId, attachedFileIds);
     }

@@ -318,7 +318,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId)
     {
         String sql =
-            "select tf.id, tf.role, tf.name, length(tf.data), tf.uploaded " +
+            "select tf.id, tf.role, tf.test_data_field, tf.name, length(tf.data), tf.uploaded " +
             "from test_file tf " +
             "where tf.test_id = ?";
 
@@ -327,9 +327,10 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
                 testId,
                 row.getLong(1),
                 Optional.ofNullable(row.getString(2)),
-                row.getString(3),
-                row.getLong(4),
-                row.getTimestamp(5).toInstant()
+                Optional.ofNullable(row.getString(3)),
+                row.getString(4),
+                row.getLong(5),
+                row.getTimestamp(6).toInstant()
             );
 
         return jdbc.query(sql, rowMapper, testId);
@@ -338,7 +339,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     private TestAttachedFileMetadata getTestAttachedFileMetadata(long testId, long attachedFileId)
     {
         String sql =
-            "select tf.id, tf.role, tf.name, length(tf.data), tf.uploaded " +
+            "select tf.id, tf.role, tf.test_data_field, tf.name, length(tf.data), tf.uploaded " +
             "from test_file tf " +
             "where tf.id = ?";
 
@@ -347,9 +348,10 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
                 testId,
                 row.getLong(1),
                 Optional.ofNullable(row.getString(2)),
-                row.getString(3),
-                row.getLong(4),
-                row.getTimestamp(5).toInstant()
+                Optional.ofNullable(row.getString(3)),
+                row.getString(4),
+                row.getLong(5),
+                row.getTimestamp(6).toInstant()
             );
 
         return jdbc.queryForObject(sql, rowMapper, attachedFileId);
@@ -362,6 +364,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             long testId,
             List<MultipartFile> files,
             Optional<String> role,
+            Optional<String> testDataField,
             AppUser user
         )
     {
@@ -369,7 +372,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         try
         {
-            String sql = "insert into test_file(test_id, role, name, uploaded, data) values(?, ?, ?, ?, ?)";
+            String sql = "insert into test_file(test_id, role, test_data_field, name, uploaded, data) values(?, ?, ?, ?, ?)";
 
             List<Long> createdIds = new ArrayList<>(files.size());
 
@@ -381,10 +384,11 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
                     final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
                     ps.setLong(1, testId);
                     ps.setString(2, role.orElse(null));
-                    ps.setString(3, file.getOriginalFilename());
-                    ps.setTimestamp(4, now);
+                    ps.setString(3, testDataField.orElse(null));
+                    ps.setString(4, file.getOriginalFilename());
+                    ps.setTimestamp(5, now);
                     DefaultLobHandler lobHandler = new DefaultLobHandler();
-                    lobHandler.getLobCreator().setBlobAsBinaryStream(ps, 5, is, -1);
+                    lobHandler.getLobCreator().setBlobAsBinaryStream(ps, 6, is, -1);
                     return ps;
                 };
 
@@ -395,7 +399,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
                 createdIds.add(holder.getKey().longValue());
             }
 
-            logFilesAttached(testId, files, createdIds, role, user);
+            logFilesAttached(testId, files, createdIds, role, testDataField, user);
 
             return createdIds;
         }
@@ -411,12 +415,13 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             List<MultipartFile> files,
             List<Long> attachedFileIds,
             Optional<String> role,
+            Optional<String> testDataField,
             AppUser user
         )
     {
         TestAuditInfo testAuditInfo = getTestAuditInfo(testId, false);
 
-        List<AttachedFileDescription> fileDescrs = makeAttachedFileDescriptions(files, attachedFileIds, role);
+        List<AttachedFileDescription> fileDescrs = makeAttachedFileDescriptions(files, attachedFileIds, role, testDataField);
 
         try
         {
@@ -445,7 +450,8 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         (
             List<MultipartFile> AttachedFiles,
             List<Long> attachedFileIds,
-            Optional<String> role
+            Optional<String> role,
+            Optional<String> testDataField
         )
     {
         List<AttachedFileDescription> attachedFileDescrs = new ArrayList<>();
@@ -454,7 +460,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         {
             MultipartFile f = AttachedFiles.get(i);
             long id = attachedFileIds.get(i);
-            attachedFileDescrs.add(new AttachedFileDescription(id, f.getOriginalFilename(), f.getSize(), role));
+            attachedFileDescrs.add(new AttachedFileDescription(id, f.getOriginalFilename(), f.getSize(), role, testDataField));
         }
 
         return attachedFileDescrs;
@@ -467,16 +473,17 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             long testId,
             long attachedFileId,
             Optional<String> role,
+            Optional<String> testDataField,
             String name,
             AppUser user
 
         )
     {
-        logAttachedFileMetadataChange(testId, attachedFileId, role, name, user);
+        logAttachedFileMetadataChange(testId, attachedFileId, role, testDataField, name, user);
 
-        String sql = "update test_file set name = ?, role = ? where id = ? and test_id = ?";
+        String sql = "update test_file set name = ?, role = ?, test_data_field = ? where id = ? and test_id = ?";
 
-        int affectedCount = jdbc.update(sql, name, role, attachedFileId, testId);
+        int affectedCount = jdbc.update(sql, name, role, testDataField, attachedFileId, testId);
 
         switch (affectedCount)
         {
@@ -491,6 +498,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             long testId,
             long attachedFileId,
             Optional<String> role,
+            Optional<String> testDataField,
             String name,
             AppUser user
         )
@@ -498,7 +506,16 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         TestAuditInfo testAuditInfo = getTestAuditInfo(testId, false);
 
         TestAttachedFileMetadata origMd = getTestAttachedFileMetadata(testId, attachedFileId);
-        TestAttachedFileMetadata newMd = new TestAttachedFileMetadata(testId, attachedFileId, role, name, origMd.getSize(), origMd.getUploadedInstant());
+        TestAttachedFileMetadata newMd =
+            new TestAttachedFileMetadata(
+                testId,
+                attachedFileId,
+                role,
+                testDataField,
+                name,
+                origMd.getSize(),
+                origMd.getUploadedInstant()
+            );
 
         try
         {
