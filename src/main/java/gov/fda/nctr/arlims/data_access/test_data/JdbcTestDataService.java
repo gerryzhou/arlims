@@ -372,7 +372,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         try
         {
-            String sql = "insert into test_file(test_id, role, test_data_part, name, uploaded, data) values(?, ?, ?, ?, ?)";
+            String sql = "insert into test_file(test_id, role, test_data_part, name, uploaded, data) values(?, ?, ?, ?, ?, ?)";
 
             List<Long> createdIds = new ArrayList<>(files.size());
 
