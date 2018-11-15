@@ -2,9 +2,10 @@
    display: flex;
    align-items: center;
    margin: 0;
-   app-sample {
-      flex: 1 0 auto;
-   }
+}
+
+app-sample {
+   flex: 1 0 auto;
 }
 
 h2 {
@@ -13,39 +14,45 @@ h2 {
 
 .content-stack {
    display: flex;
-   flex-flow: row wrap;
-   align-items: flex-start;
+   flex-flow: column nowrap;
+   align-items: center;
+   margin: 30px;
+}
 
-   .table-container {
-      th, td {
-         padding: 0 20px;
+.table-container {
+   th, td {
+      padding: 0 20px;
+   }
+   width: 75%;
+}
+
+.no-files-message {
+   display: flex;
+   min-width: 200px;
+   justify-content: center;
+   margin: 15px;
+
+   span {
+      color: white;
+      background-color: darkgray;
+      padding: 10px;
+   }
+}
+
+.new-attachments-area {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
+   width: 100%;
+   margin: 30px;
+
+   form {
+      * {
+         margin: 0 10px;
       }
    }
+}
 
-   .no-files-message {
-      display: flex;
-      min-width: 200px;
-      justify-content: center;
-      margin: 15px;
-
-      span {
-         color: white;
-         background-color: darkgray;
-         padding: 10px;
-      }
-   }
-
-   .new-attachments-area {
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
-      margin-left: 20px;
-
-      form {
-         * {
-            margin: 0 10px;
-         }
-      }
-   }
-
+.files-selector {
+   width: 75%;
 }
