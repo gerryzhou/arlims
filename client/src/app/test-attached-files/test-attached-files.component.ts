@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
@@ -17,13 +17,16 @@ import {CreatedTestAttachedFiles, TestAttachedFileMetadata} from '../../generate
   templateUrl: './test-attached-files.component.html',
   styleUrls: ['./test-attached-files.component.scss']
 })
-export class TestAttachedFilesComponent implements AfterViewInit {
+export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
 
    @Input()
    modificationsEnabled = true;
 
    @Input()
    testDataPart = null;
+
+   @Input()
+   attachedFiles: TestAttachedFileMetadata[] = null;
 
    readonly sampleInTest: SampleInTest;
 
@@ -48,8 +51,17 @@ export class TestAttachedFilesComponent implements AfterViewInit {
       )
    {
       const testAttachedFiles = <TestAttachedFiles>this.activatedRoute.snapshot.data['testAttachedFiles'];
-      this.sampleInTest = testAttachedFiles.sampleInTest;
-      this.attachedFilesTableDataSource = new MatTableDataSource<TestAttachedFileMetadata>(testAttachedFiles.attachedFiles);
+      this.attachedFiles = testAttachedFiles ? testAttachedFiles.attachedFiles : [];
+      this.sampleInTest = testAttachedFiles ? testAttachedFiles.sampleInTest : null;
+      this.attachedFilesTableDataSource = new MatTableDataSource<TestAttachedFileMetadata>(this.attachedFiles);
+   }
+
+   ngOnChanges()
+   {
+      if ( this.attachedFiles !== this.attachedFilesTableDataSource.data )
+      {
+         this.attachedFilesTableDataSource.data = this.attachedFiles;
+      }
    }
 
    ngAfterViewInit()
@@ -61,8 +73,12 @@ export class TestAttachedFilesComponent implements AfterViewInit {
    {
       this.testsSvc.getTestAttachedFilesMetadatas(this.sampleInTest.testMetadata.testId)
          .subscribe(
-            attachedFiles => {
-               this.attachedFilesTableDataSource.data = attachedFiles;
+            allAttachedFiles => {
+               const testPartAttachedFiles =
+                  allAttachedFiles.filter(af => this.testDataPart == null || af.testDataPart === this.testDataPart);
+               this.attachedFiles.length = 0;
+               this.attachedFiles.push(...testPartAttachedFiles);
+               this.attachedFilesTableDataSource.data = this.attachedFiles;
             },
             err => {
                 // TODO: Add alert message for error.

@@ -1,4 +1,4 @@
-<div class="sample-in-test-information">
+<div class="sample-in-test-information" *ngIf="sampleInTest">
    <app-sample [sample]="sampleInTest.sample"></app-sample>
    <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
 </div>
