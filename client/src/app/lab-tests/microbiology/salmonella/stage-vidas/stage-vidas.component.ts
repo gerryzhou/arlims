@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+
 import {VidasData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import {LabResource} from '../../../../../generated/dto';
+import {LabResource, TestAttachedFileMetadata} from '../../../../../generated/dto';
 import {arraysEqual} from '../../../../shared/util/data-objects';
 
 @Component({
@@ -15,6 +16,9 @@ export class StageVidasComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
+
+   @Input()
+   attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
    @Input()
    conflicts: VidasData;
@@ -41,12 +45,16 @@ export class StageVidasComponent implements OnChanges {
    positiveSampleTestUnitNumbersChange = new EventEmitter<number[]>();
    lastEmittedPositiveSampleTestUnitNumbers: number[] = null;
 
+   resultsFiles: TestAttachedFileMetadata[];
+
    excessSampleTestUnitControlsCount: number | null = 0;
 
    mediumControlDetectionControl: AbstractControl;
    positiveControlDetectionControl: AbstractControl;
    spikeDetectionControl: AbstractControl;
    testUnitDetectionsControl: FormArray;
+
+   readonly RESULTS_ATTACHED_FILES_KEY = 'vidas/results';
 
    constructor() {}
 
@@ -56,6 +64,8 @@ export class StageVidasComponent implements OnChanges {
       this.positiveControlDetectionControl = this.form.get('positiveControlDetection');
       this.spikeDetectionControl = this.form.get('spikeDetection');
       this.testUnitDetectionsControl = this.form.get('testUnitDetections') as FormArray;
+
+      this.resultsFiles = this.attachedFilesByTestPart.get(this.RESULTS_ATTACHED_FILES_KEY) || [];
 
       if ( this.sampleTestUnitsCount )
       {

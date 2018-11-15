@@ -8,7 +8,7 @@ public class AttachedFileDescription
     private final String fileName;
     private final long size;
     private final Optional<String> role;
-    private final Optional<String> testDataField;
+    private final Optional<String> testDataPart;
 
     public AttachedFileDescription
         (
@@ -16,14 +16,14 @@ public class AttachedFileDescription
             String fileName,
             long size,
             Optional<String> role,
-            Optional<String> testDataField
+            Optional<String> testDataPart
         )
     {
         this.testAttachedFileId = testAttachedFileId;
         this.fileName = fileName;
         this.size = size;
         this.role = role;
-        this.testDataField = testDataField;
+        this.testDataPart = testDataPart;
     }
 
     public long getTestAttachedFileId() { return testAttachedFileId; }
@@ -34,5 +34,5 @@ public class AttachedFileDescription
 
     public Optional<String> getRole() { return role; }
 
-    public Optional<String> getTestDataField() { return testDataField; }
+    public Optional<String> getTestDataPart() { return testDataPart; }
 }

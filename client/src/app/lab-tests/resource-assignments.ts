@@ -147,7 +147,8 @@ export class ResourceControlAssignments {
                      resourceCodesByTargetControlName.set(controlName, controlResourceCodes);
                   }
 
-                  for (const resourceCode of resourceCodesOfType) {
+                  for (const resourceCode of resourceCodesOfType)
+                  {
                      controlResourceCodes.add(resourceCode);
                      unassignedResourceCodes.delete(resourceCode);
                      // Bump matched controls count for this code.

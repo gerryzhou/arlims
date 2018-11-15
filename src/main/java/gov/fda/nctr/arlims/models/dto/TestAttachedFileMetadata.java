@@ -9,7 +9,7 @@ public class TestAttachedFileMetadata
     private final long attachedFileId;
     private final long testId;
     private final Optional<String> role;
-    private final Optional<String> testDataField;
+    private final Optional<String> testDataPart;
     private final String fileName;
     private final long size;
     private final Instant uploadedInstant;
@@ -19,7 +19,7 @@ public class TestAttachedFileMetadata
             long testId,
             long attachedFileId,
             Optional<String> role,
-            Optional<String> testDataField,
+            Optional<String> testDataPart,
             String fileName,
             long size,
             Instant uploadedInstant
@@ -28,7 +28,7 @@ public class TestAttachedFileMetadata
         this.attachedFileId = attachedFileId;
         this.testId = testId;
         this.role = role;
-        this.testDataField = testDataField;
+        this.testDataPart = testDataPart;
         this.fileName = fileName;
         this.size = size;
         this.uploadedInstant = uploadedInstant;
@@ -40,7 +40,7 @@ public class TestAttachedFileMetadata
 
     public Optional<String> getRole() { return role; }
 
-    public Optional<String> getTestDataField() { return testDataField; }
+    public Optional<String> getTestDataPart() { return testDataPart; }
 
     public String getFileName() { return fileName; }
 

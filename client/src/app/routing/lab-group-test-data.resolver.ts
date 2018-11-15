@@ -4,8 +4,6 @@ import {Observable, throwError, zip, of as obsof} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
 import {AuditLogQueryService, TestsService, UserContextService} from '../shared/services';
 import {LabGroupTestData} from '../shared/models/lab-group-test-data';
-import {AppUser, AuditLogEntry} from '../../generated/dto';
-
 
 @Injectable({providedIn: 'root'})
 export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
@@ -28,7 +26,6 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       const testId = +route.paramMap.get('testId');
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
-      const verTestData$ = this.testsService.getVersionedTestData(testId);
       const sampleInTest$ = this.usrCtxSvc.getSampleInTest(testId);
       const testConfig$ = sampleInTest$.pipe(
          flatMap(sampleInTest =>
@@ -37,25 +34,20 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
             )
          )
       );
-      const labResourcesByType$ = this.usrCtxSvc.getLabResourcesByType();
-
-      const auditLogEntries$: Observable<AuditLogEntry[]|null> =
-         !!route.data['includeAuditLogEntries'] ? this.auditLogSvc.getEntriesForTest(testId) : obsof(null);
-
-      const appUser$: Observable<AppUser|null> = this.usrCtxSvc.getAuthenticatedUser();
 
       return (
          zip(
-            verTestData$,
-            sampleInTest$,
             testConfig$,
-            labResourcesByType$,
-            auditLogEntries$,
-            appUser$,
+            this.testsService.getVersionedTestData(testId),
+            this.testsService.getTestAttachedFilesMetadatas(testId),
+            sampleInTest$,
+            this.usrCtxSvc.getLabResourcesByType(),
+            !!route.data['includeAuditLogEntries'] ? this.auditLogSvc.getEntriesForTest(testId) : obsof(null),
+            this.usrCtxSvc.getAuthenticatedUser(),
          )
          .pipe(
-            map(([versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries, appUser]) =>
-               ({ versionedTestData, sampleInTest, labGroupTestConfig, labResourcesByType, auditLogEntries, appUser })
+            map(([labGroupTestConfig, versionedTestData, attachedFiles, sampleInTest, labResourcesByType, auditLogEntries, appUser]) =>
+                ({labGroupTestConfig, versionedTestData, attachedFiles, sampleInTest, labResourcesByType, auditLogEntries, appUser})
             )
          )
       );

@@ -1,13 +1,15 @@
 Field-level attachments
 -----------------------
-Add attached files metadata to LabGroupTestData and its resolver.
-  Store as { [field-identifier]: TestAttachedFileMetadata[] }
-In test data views, certain fields should have "N-attached files" link-button, to open test-attached-files component with field path input specified
+Pass attachedFilesByField to Vidas stage component as initial example.
+  Add "N-attached files" (including 0 case) link-button under vidas detections form array.
+    Show test-attached-files component with field path input specified in modal dialog.
 
 Test listing/search page
   Reagent search
     Add text index on json column.
   Filter via date ranges, test types, FACTS statuses, and full text search of test data.
+
+Turn off preloading for salmonella test module.
 
 FACTS Writing
   Start with updating sample status flag when test is created.

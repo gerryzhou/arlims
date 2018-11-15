@@ -8,7 +8,7 @@ import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {AppUser, LabResource} from '../../../../../generated/dto';
+import {AppUser, LabResource, TestAttachedFileMetadata} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
    emptyTestData,
@@ -37,9 +37,18 @@ import {AppInternalUrlsService} from '../../../../shared/services/app-internal-u
 })
 export class StagedTestDataEntryComponent implements OnInit {
 
+   readonly testConfig: TestConfig | null;
+
    // The original test data and its md5 are needed for detecting and merging concurrent updates to the same data.
    originalTestData: TestData;
    originalTestDataMd5: string;
+
+   readonly attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
+
+   readonly sampleInTest: SampleInTest;
+
+   readonly appUser: AppUser | null;
+
 
    // The form group holds the edited state of the test data.
    readonly testDataForm: FormGroup;
@@ -57,12 +66,6 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    readonly stage: string | null;
    readonly stageIndex: number | null;
-
-   readonly sampleInTest: SampleInTest;
-
-   readonly testConfig: TestConfig | null;
-
-   readonly appUser: AppUser | null;
 
    readonly balances: LabResource[] | undefined;
    readonly incubators: LabResource[] | undefined;
@@ -94,9 +97,16 @@ export class StagedTestDataEntryComponent implements OnInit {
        )
    {
       const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
+      this.testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
+
       const verTestData = labGroupTestData.versionedTestData;
       this.originalTestData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
+
+      this.attachedFilesByTestPart = makeAttachedFilesByTestPartMap(labGroupTestData);
+
+      this.sampleInTest = labGroupTestData.sampleInTest;
+      this.appUser = labGroupTestData.appUser;
 
       const stageParamValue = activatedRoute.snapshot.paramMap.get('stage');
       this.stage =
@@ -104,10 +114,6 @@ export class StagedTestDataEntryComponent implements OnInit {
          : (firstNonCompleteTestStageName(this.originalTestData, labGroupTestData.labGroupTestConfig) || 'WRAPUP');
       const stageIx = TEST_STAGES.findIndex(ts => ts.name === this.stage);
       this.stageIndex = stageIx !== -1 ? stageIx : null;
-
-      this.sampleInTest = labGroupTestData.sampleInTest;
-      this.testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
-      this.appUser = labGroupTestData.appUser;
 
       this.testDataForm = makeTestDataFormGroup(this.originalTestData, labGroupTestData.appUser.username);
 
@@ -226,5 +232,21 @@ export class StagedTestDataEntryComponent implements OnInit {
    {
       this.showUnsetAffordances = !this.showUnsetAffordances;
    }
+}
+
+function makeAttachedFilesByTestPartMap(labGroupTestData: LabGroupTestData) : Map<string|null, TestAttachedFileMetadata[]>
+{
+   const m = new Map<string | null, TestAttachedFileMetadata[]>();
+
+   for (const af of labGroupTestData.attachedFiles)
+   {
+      const partFiles = m.get(af.testDataPart);
+      if (partFiles === undefined)
+         m.set(af.testDataPart, [af]);
+      else
+         partFiles.push(af);
+   }
+
+   return m;
 }
 
