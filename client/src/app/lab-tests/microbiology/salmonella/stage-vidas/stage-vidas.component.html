@@ -60,7 +60,9 @@
 
       <!-- main (test unit) detection results -->
       <div class="field-area sample-test-unit-detections" [class.conflicted]="conflicts.testUnitDetections !== undefined">
+
          <h3>{{(sampleTestUnitsType || 'sample') | titlecase}} detections</h3>
+
          <div class="detection-controls-warning" *ngIf="excessSampleTestUnitControlsCount">
             Too many detection choices exist here vs. the <b></b> sample test units specified in
             the pre-enrichment stage. Please
@@ -71,10 +73,12 @@
             the {{excessSampleTestUnitControlsCount}} excess detection choices, or adjust the numbers in the
             pre-enrichment stage.
          </div>
+
          <div class="detection-controls-warning" *ngIf="sampleTestUnitsCount == null">
             The number of sample test units (subs or composites being tested) is currently not defined. Please define the
             number of subsamples and composites in the pre-enrichment stage prior to entering results here.
          </div>
+
          <div class="sample-test-unit-detections-array" formArrayName="testUnitDetections">
             <div class="sample-test-unit-detection"
                  *ngFor="let ctrl of testUnitDetectionsControl.controls; let i = index;"
@@ -93,12 +97,27 @@
                </button>
             </div>
          </div>
+
          <app-conflicting-field-value
             [conflictValue]="conflicts.testUnitDetections"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.testUnitDetections = undefined">
          </app-conflicting-field-value>
-      </div>
+
+      </div> <!-- test unit detections -->
+
+      <!-- attached files -->
+      <mat-expansion-panel class="attached-files">
+         <mat-expansion-panel-header>
+            {{resultsFiles.length}} attached files
+         </mat-expansion-panel-header>
+         <app-test-attached-files *ngIf="!form.disabled"
+            [modificationsEnabled]="true"
+            [testDataPart]="RESULTS_ATTACHED_FILES_KEY"
+            [attachedFiles]="resultsFiles"
+            [testId]="testId">
+         </app-test-attached-files>
+      </mat-expansion-panel>
 
       <div class="row">
 
@@ -142,10 +161,6 @@
             </app-conflicting-field-value>
          </div>
 
-      </div>
-
-      <div class="row attached-files">
-         <!--TODO-->
       </div>
 
    </div>

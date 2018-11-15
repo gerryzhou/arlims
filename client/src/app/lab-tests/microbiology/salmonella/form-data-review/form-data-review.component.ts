@@ -4,13 +4,14 @@ import {FormGroup} from '@angular/forms';
 
 import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {LabResource} from '../../../../../generated/dto';
+import {LabResource, TestAttachedFileMetadata} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, makeTestDataFormGroup} from '../test-data';
 import {TestConfig} from '../test-config';
 import {makeSampleTestUnits} from '../../sampling-methods';
 import {UserContextService} from '../../../../shared/services';
 import {AnalyzedAuditLogEntry} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
+import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
 
 @Component({
    selector: 'app-micro-slm-form-data-review',
@@ -27,6 +28,8 @@ export class FormDataReviewComponent implements OnInit {
 
    sampleTestUnitsCount: number | null;
    sampleTestUnitsType: string | null;
+
+   readonly attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
    readonly sampleInTest: SampleInTest;
 
@@ -52,6 +55,8 @@ export class FormDataReviewComponent implements OnInit {
       this.testDataForm.disable();
       this.sampleInTest = labGroupTestData.sampleInTest;
       this.testConfig = labGroupTestData.labGroupTestConfig;
+
+      this.attachedFilesByTestPart = makeAttachedFilesByTestPartMap(labGroupTestData);
 
       const sm = testData.preEnrData.samplingMethod;
       const sampleTestUnits = makeSampleTestUnits(sm.numberOfSubs, sm.numberOfComposites);

@@ -50,6 +50,8 @@
       <h3>VIDAS</h3>
       <app-stage-vidas class="test-stage"
          [form]="testDataForm.get('vidasData')"
+         [testId]="sampleInTest.testMetadata.testId"
+         [attachedFilesByTestPart]="attachedFilesByTestPart"
          [conflicts]="conflictsTestData.vidasData"
          [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [vidasInstruments]="vidasInstruments"

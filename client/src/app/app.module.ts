@@ -35,7 +35,6 @@ import {SamplesListingComponent} from './samples-listing/samples-listing.compone
 import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {CommonComponentsModule} from './common-components/common-components.module';
-import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
 import {LoginComponent} from './login/login.component';
 import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interceptor';
 import {RegistrationComponent} from './registration/registration.component';
@@ -46,7 +45,6 @@ import {RegistrationComponent} from './registration/registration.component';
       AlertMessageComponent,
       SamplesListingComponent,
       SamplesListingOptionsComponent,
-      TestAttachedFilesComponent,
       LoginComponent,
       RegistrationComponent,
    ],

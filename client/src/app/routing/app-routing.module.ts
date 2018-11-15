@@ -6,7 +6,7 @@ import {environment} from '../../environments/environment';
 import {LoginComponent} from '../login/login.component';
 import {SamplesListingComponent} from '../samples-listing/samples-listing.component';
 import {LabGroupContentsResolver} from './lab-group-contents.resolver';
-import {TestAttachedFilesComponent} from '../test-attached-files/test-attached-files.component';
+import {TestAttachedFilesComponent} from '../common-components/test-attached-files/test-attached-files.component';
 import {TestAttachedFilesResolver} from './test-attached-files.resolver';
 import {ModulePreloadingStrategy} from './module-preloading-strategy';
 import {AuthenticatedUserGuard} from './authenticated-user-guard';

@@ -29,6 +29,7 @@ import {PosContComponent} from '../pos-cont-stages/pos-cont.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
+import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data-entry',
@@ -233,20 +234,3 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.showUnsetAffordances = !this.showUnsetAffordances;
    }
 }
-
-function makeAttachedFilesByTestPartMap(labGroupTestData: LabGroupTestData) : Map<string|null, TestAttachedFileMetadata[]>
-{
-   const m = new Map<string | null, TestAttachedFileMetadata[]>();
-
-   for (const af of labGroupTestData.attachedFiles)
-   {
-      const partFiles = m.get(af.testDataPart);
-      if (partFiles === undefined)
-         m.set(af.testDataPart, [af]);
-      else
-         partFiles.push(af);
-   }
-
-   return m;
-}
-

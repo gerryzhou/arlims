@@ -1,6 +1,3 @@
-Test data field level attachments
----------------------------------
-Add new field and index to test_file table supporting field-level attachments test data.
 
 
 Write test data to FACTS.

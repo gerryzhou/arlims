@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
 import {SampleComponent} from './sample/sample.component';
@@ -13,7 +13,7 @@ import {
    MatButtonModule,
    MatSelectModule,
    MatDialogModule,
-   MatInputModule, MatDatepickerModule, MatMenuModule
+   MatInputModule, MatDatepickerModule, MatMenuModule, MatTableModule, MatPaginatorModule
 } from '@angular/material';
 import {MatIconModule} from '@angular/material/icon';
 import {DayNumberPipe} from './day-number.pipe';
@@ -27,10 +27,12 @@ import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component'
 import {SimpleInputDialogComponent} from './simple-input-dialog/simple-input-dialog.component';
 import {AuditLogEntryComponent} from './audit-log-entry/audit-log-entry.component';
 import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.component';
+import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
 
 @NgModule({
    imports: [
       CommonModule,
+      ReactiveFormsModule,
       FormsModule,
       RouterModule,
       MatCardModule,
@@ -43,6 +45,8 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       MatDialogModule,
       MatDatepickerModule,
       MatMenuModule,
+      MatTableModule,
+      MatPaginatorModule,
    ],
    declarations: [
       SampleComponent,
@@ -59,6 +63,7 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       SimpleInputDialogComponent,
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
+      TestAttachedFilesComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
@@ -82,6 +87,7 @@ import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.compo
       SimpleInputDialogComponent,
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
+      TestAttachedFilesComponent,
    ],
 })
 export class CommonComponentsModule { }

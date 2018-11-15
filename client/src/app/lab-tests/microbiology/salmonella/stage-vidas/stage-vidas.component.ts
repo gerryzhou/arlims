@@ -18,6 +18,9 @@ export class StageVidasComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   testId: number;
+
+   @Input()
    attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
    @Input()

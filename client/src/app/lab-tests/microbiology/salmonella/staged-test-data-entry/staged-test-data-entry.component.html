@@ -58,6 +58,7 @@
       <mat-step label="VIDAS">
          <app-stage-vidas class="test-stage"
             [form]="testDataForm.get('vidasData')"
+            [testId]="sampleInTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasInstruments]="vidasInstruments"
             [sampleTestUnitsCount]="sampleTestUnitsCount"

@@ -6,11 +6,11 @@ import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {map} from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
-import {FilesSelectorComponent} from '../common-components/files-selector/files-selector.component';
-import {TestAttachedFiles} from '../routing/test-attached-files.resolver';
-import {SampleInTest} from '../shared/models/sample-in-test';
-import {ApiUrlsService, TestsService, UserContextService} from '../shared/services';
-import {CreatedTestAttachedFiles, TestAttachedFileMetadata} from '../../generated/dto';
+import {FilesSelectorComponent} from '../files-selector/files-selector.component';
+import {TestAttachedFiles} from '../../routing/test-attached-files.resolver';
+import {SampleInTest} from '../../shared/models/sample-in-test';
+import {ApiUrlsService, TestsService, UserContextService} from '../../shared/services';
+import {CreatedTestAttachedFiles, TestAttachedFileMetadata} from '../../../generated/dto';
 
 @Component({
   selector: 'app-test-attached-files',
@@ -23,12 +23,15 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
    modificationsEnabled = true;
 
    @Input()
+   testId: number = null;
+
+   @Input()
    testDataPart = null;
 
    @Input()
    attachedFiles: TestAttachedFileMetadata[] = null;
 
-   readonly sampleInTest: SampleInTest;
+   readonly sampleInTest: SampleInTest | null;
 
    // table of currently attached files
    readonly attachedFilesTableDataSource: MatTableDataSource<TestAttachedFileMetadata>;
@@ -53,6 +56,7 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
       const testAttachedFiles = <TestAttachedFiles>this.activatedRoute.snapshot.data['testAttachedFiles'];
       this.attachedFiles = testAttachedFiles ? testAttachedFiles.attachedFiles : [];
       this.sampleInTest = testAttachedFiles ? testAttachedFiles.sampleInTest : null;
+      this.testId = testAttachedFiles ? testAttachedFiles.sampleInTest.testMetadata.testId : null;
       this.attachedFilesTableDataSource = new MatTableDataSource<TestAttachedFileMetadata>(this.attachedFiles);
    }
 
@@ -62,6 +66,8 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
       {
          this.attachedFilesTableDataSource.data = this.attachedFiles;
       }
+      if ( this.testId == null )
+         console.log("warning: testId is null in test attached files component's ngOnChanges()");
    }
 
    ngAfterViewInit()
@@ -71,7 +77,7 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
 
    refreshAttachedFiles()
    {
-      this.testsSvc.getTestAttachedFilesMetadatas(this.sampleInTest.testMetadata.testId)
+      this.testsSvc.getTestAttachedFilesMetadatas(this.testId)
          .subscribe(
             allAttachedFiles => {
                const testPartAttachedFiles =
@@ -94,7 +100,7 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
       if (pendingFiles.length === 0) return;
 
       this.testsSvc.attachFilesToTest(
-         this.sampleInTest.testMetadata.testId,
+         this.testId,
          pendingFiles,
          this.newAttachmentsForm.get('role').value,
          this.testDataPart
