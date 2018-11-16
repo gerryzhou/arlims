@@ -3,7 +3,8 @@ package gov.fda.nctr.arlims.data_access.facts;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -94,6 +95,11 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             accomplishingOrg.isPresent() ? singletonList(accomplishingOrg.get())
             : jdbc.queryForList("select distinct facts_parent_org_name from lab_group", String.class);
 
+        Optional<String> minAssignedToStatusDateStr = apiConfig.getLabInboxAssignedStatusAgeCutoffDays() > 0 ?
+            Optional.of(LocalDate.now().minus(apiConfig.getLabInboxAssignedStatusAgeCutoffDays(), DAYS)
+                .format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
+            : Optional.empty();
+
         String includeFields =
             "workId,sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject,pacCode," +
             "problemAreaFlag,lidCode,splitInd,workRqstId,operationCode,sampleAnalysisId," +
@@ -102,27 +108,28 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             "assignedToPersonId,assignedToFirstName,assignedToLastName,assignedToStatusCode,assignedToStatusDate," +
             "assignedToWorkAssignmentDate";
 
-        Instant minAssignedToStatusTimestamp = Instant.now().minus(apiConfig.getLabInboxAssignedStatusAgeCutoffDays(), DAYS);
-
         for ( String orgName : orgNames )
         {
-            // TODO: Add assignedToStatus age cutoff param here when supported by Leidos api.
-            String url =
+            UriComponentsBuilder uriBldr =
                 UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
-                .queryParam("orgName", orgName)
+                .queryParam("accomplishingOrgName", orgName)
                 .queryParam("statusCodes", String.join(",", statusCodes))
-                .queryParam("objectFilters", includeFields)
-                .toUriString();
+                .queryParam("objectFilters", includeFields);
+
+            minAssignedToStatusDateStr.ifPresent(cutoffDateStr ->
+                uriBldr.queryParam("statusDateFrom", cutoffDateStr)
+            );
+
+            String uri = uriBldr.build(false).encode().toUriString();
 
             HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true));
 
             log.info("Retrieving inbox items for " + orgName + ".");
 
-            ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, LabInboxItem[].class);
+            ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(uri, HttpMethod.GET, reqEntity, LabInboxItem[].class);
 
             List<LabInboxItem> inboxItems =
                 Arrays.stream(resp.getBody())
-                .filter(item -> item.getAssignedToWorkAssignmentDate().compareTo(minAssignedToStatusTimestamp) >= 0)
                 .collect(toList());
 
             if ( apiConfig.getLogLabInboxResults() )
