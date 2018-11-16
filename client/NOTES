@@ -1,3 +1,22 @@
+Prep
+
+
+
+Idents data not showing until slant data is saved.
+  Are form change events fired when positive test units are added to match Vidas positives?
+
+Nov 15 Meeting Notes/TODOs
+--------------------------
+Cycle button for slant tube field values
+Oxidase not showing
+Subs/composites area of pre-enr stage needs revisting
+  Add flag to sampling method for whether can be modified or not (“fixed”)
+  Disable fields for the ones that are not marked modifiable.
+  Add “free entry” as option as well which is modifiable.
+Add flag in slant stage for each tube type that identification should be done.
+  Hide ident entries unless either flag is set.
+
+
 Field-level attachments
 -----------------------
 Listen for change events, update attachedFilesByTestPart and resultsFiles members so display is kept up to date.
@@ -21,7 +40,6 @@ Subcomponents under pos-cont-stages need conflict data to be passed in and rende
 For API20E may need to capture colors as well as codes.
 PFGE/Serology/WGS results
   Just narrative text box for now.
-
 
 
 Need carry-over inbox.
