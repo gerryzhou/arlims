@@ -302,6 +302,9 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     {
         Map<Long, Integer> res = new HashMap<>();
 
+        if ( testSampleOpIds.isEmpty() )
+            return res;
+
         String sql =
             "select tf.test_id, count(*) files\n" +
             "from test_file tf\n" +
