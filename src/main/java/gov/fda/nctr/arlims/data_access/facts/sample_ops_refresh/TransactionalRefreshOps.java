@@ -259,7 +259,7 @@ public class TransactionalRefreshOps extends ServiceBase
             .map(LabInboxItem::getAssignedToPersonId)
             .collect(toSet());
 
-        List<LabGroup> empLabGroups = assignedPersonIds.size() > 0 ?
+        List<LabGroup> empLabGroups = !assignedPersonIds.isEmpty() ?
             labGroupRepository.findByEmployeeFactsPersonIdIn(assignedPersonIds)
             : Collections.emptyList();
 

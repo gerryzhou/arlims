@@ -120,7 +120,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
         String encodedPassword = bcryptEncoder.encode(reg.getPassword());
 
         List<RoleName> roleNames = reg.getRoleNames().stream().map(RoleName::valueOf).collect(toList());
-        Set<Role> roles = new HashSet<>(roleRepo.findByNameIn(roleNames));
+        Set<Role> roles = !roleNames.isEmpty() ? new HashSet<>(roleRepo.findByNameIn(roleNames)): new HashSet<>();
 
         Employee emp =
             new Employee(
@@ -320,10 +320,9 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 
     private Map<Long, List<Test>> getTestsBySampleOpId(List<Long> sampleOpIds)
     {
-        return
-            testRepo.findBySampleOpIdIn(sampleOpIds).stream()
-            .collect(groupingBy(Test::getSampleOpId));
-
+        return !sampleOpIds.isEmpty() ?
+            testRepo.findBySampleOpIdIn(sampleOpIds).stream().collect(groupingBy(Test::getSampleOpId))
+            : new HashMap<>();
     }
 
     private Map<Long, List<SampleAssignment>> getSampleAssignmentsBySampleOpId
@@ -332,7 +331,9 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
             Map<Long, UserReference> usersById
         )
     {
-        return
+        if ( sampleOpIds.isEmpty() )
+            return new HashMap<>();
+        else return
             sampleOpAssignmentRepo.findBySampleOpIdIn(sampleOpIds).stream()
             .map(a -> {
                 String empShortName =
