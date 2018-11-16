@@ -2,8 +2,8 @@
 set -e -x
 
 DIST="/home/ad_app_s.harris/alis-dist.tgz"
-PROPS="/home/ad_app_s.harris/application.properties"
 LIMS_HOME="/u01/LIMS_APi"
+PROPS="$LIMS_HOME/backups/application.properties"
 ALIS_HOME="$LIMS_HOME/alis"
 
 systemctl stop alis
