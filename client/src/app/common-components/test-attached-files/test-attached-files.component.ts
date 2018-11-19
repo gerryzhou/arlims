@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
@@ -30,6 +30,9 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
 
    @Input()
    attachedFiles: TestAttachedFileMetadata[] = null;
+
+   @Output()
+   attachedFilesChange = new EventEmitter<TestAttachedFileMetadata[]>();
 
    readonly sampleInTest: SampleInTest | null;
 
@@ -66,8 +69,6 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
       {
          this.attachedFilesTableDataSource.data = this.attachedFiles;
       }
-      if ( this.testId == null )
-         console.log("warning: testId is null in test attached files component's ngOnChanges()");
    }
 
    ngAfterViewInit()
@@ -80,11 +81,9 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
       this.testsSvc.getTestAttachedFilesMetadatas(this.testId)
          .subscribe(
             allAttachedFiles => {
-               const testPartAttachedFiles =
-                  allAttachedFiles.filter(af => this.testDataPart == null || af.testDataPart === this.testDataPart);
-               this.attachedFiles.length = 0;
-               this.attachedFiles.push(...testPartAttachedFiles);
+               this.attachedFiles = allAttachedFiles.filter(af => this.testDataPart == null || af.testDataPart === this.testDataPart);
                this.attachedFilesTableDataSource.data = this.attachedFiles;
+               this.attachedFilesChange.emit(this.attachedFiles);
             },
             err => {
                 // TODO: Add alert message for error.

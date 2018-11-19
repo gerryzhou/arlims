@@ -161,5 +161,10 @@ export class StageVidasComponent implements OnChanges {
          this.lastEmittedPositiveSampleTestUnitNumbers = positives.slice();
       }
    }
+
+   onAttachedFilesChanged(attachedFiles: TestAttachedFileMetadata[])
+   {
+      this.resultsFiles = attachedFiles;
+   }
 }
 

@@ -109,13 +109,14 @@
       <!-- attached files -->
       <mat-expansion-panel class="attached-files">
          <mat-expansion-panel-header>
-            {{resultsFiles.length}} attached files
+            {{resultsFiles.length}} attached Vidas file{{resultsFiles.length == 1 ? '': 's'}}
          </mat-expansion-panel-header>
          <app-test-attached-files *ngIf="!form.disabled"
-            [modificationsEnabled]="true"
+            [testId]="testId"
             [testDataPart]="RESULTS_ATTACHED_FILES_KEY"
             [attachedFiles]="resultsFiles"
-            [testId]="testId">
+            [modificationsEnabled]="true"
+            (attachedFilesChange)="onAttachedFilesChanged($event)">
          </app-test-attached-files>
       </mat-expansion-panel>
 
