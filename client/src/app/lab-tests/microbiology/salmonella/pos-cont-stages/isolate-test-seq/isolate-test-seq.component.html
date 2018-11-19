@@ -3,80 +3,38 @@
    <div class="isolate-num" matTooltip="isolate number" *ngIf="showIsolateNumber">{{isolateNumber}}</div>
 
    <!-- SLANT stage editing -->
-   <ng-container *ngIf="stage === 'SLANT'">
+   <app-isolate-slant-stage-editor *ngIf="stage === 'SLANT' && !viewOnly"
+      [form]="form"
+      [testUnitDescription]="testUnitDescription"
+      [medium]="medium"
+      [selectiveAgarDisplayName]="selectiveAgarDisplayName"
+      [includeOxidase]="includeOxidase">
+   </app-isolate-slant-stage-editor>
 
-      <mat-select class="colony-appearance" formControlName="colonyAppearance" matTooltip="colony appearance">
-         <mat-option [value]="null"></mat-option>
-         <mat-option [value]="'T'">T</mat-option>
-         <mat-option [value]="'NT'">N</mat-option>
-         <mat-option [value]="'AT'">AT</mat-option>
-         <mat-option [value]="'NG'">NG</mat-option>
-      </mat-select>
-
-      <app-slant-tube-test
-         [form]="form.get('tsiTubeTest')"
-         [tubeType]="'TSI'"
-         [isolateDescription]="isolateDescription">
-      </app-slant-tube-test>
-
-      <app-slant-tube-test
-         [form]="form.controls['liaTubeTest']"
-         [tubeType]="'LIA'"
-         [isolateDescription]="isolateDescription">
-      </app-slant-tube-test>
-
-      <span class="oxidase" matTooltip="oxidase" *ngIf="includeOxidase">
-         <span class="oxidase-label">Ox</span>
-         <mat-select formControlName="oxidaseDetection">
-            <mat-option [value]="null"></mat-option>
-            <mat-option [value]="true">+</mat-option>
-            <mat-option [value]="false">&minus;</mat-option>
-         </mat-select>
-      </span>
-
-   </ng-container>
-
-
-   <!-- SLANT data readonly view as context -->
-   <div class="slant-data-ro" *ngIf="stage === 'IDENT' && showOtherStageDataAsContext">
-      <div class="colony-appearance-ro">{{(form.get('colonyAppearance').value)}}</div>
-      <div class="slant-tube-ro">
-         <span class="slant-tube-field-ro">{{tsiFormGroup.get('slant').value}}</span>
-         <span class="slant-tube-field-ro">{{tsiFormGroup.get('butt').value}}</span>
-         <span class="slant-tube-field-ro">{{tsiFormGroup.get('h2s').value === true ? '+' : tsiFormGroup.get('h2s').value === false ? '&minus;' : ''}}</span>
-         <span class="slant-tube-field-ro">{{tsiFormGroup.get('gas').value === true ? '+' : tsiFormGroup.get('gas').value === false ? '&minus;' : ''}}</span>
-      </div>
-      <span class="slant-tube-ro">
-         <span class="slant-tube-field-ro">{{liaFormGroup.get('slant').value}}</span>
-         <span class="slant-tube-field-ro">{{liaFormGroup.get('butt').value}}</span>
-         <span class="slant-tube-field-ro">{{liaFormGroup.get('h2s').value === true ? '+' : liaFormGroup.get('h2s').value === false ? '&minus;' : ''}}</span>
-         <span class="slant-tube-field-ro">{{liaFormGroup.get('gas').value === true ? '+' : liaFormGroup.get('gas').value === false ? '&minus;' : ''}}</span>
-      </span>
-      <span class="oxidase-ro" *ngIf="includeOxidase">
-         {{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
-      </span>
-   </div>
+   <!-- read-only SLANT data view as context in IDENT stage -->
+   <app-isolate-slant-stage-view *ngIf="stage === 'IDENT' && viewContextData || stage === 'SLANT' && viewOnly"
+     [form]="form"
+     [includeOxidase]="includeOxidase">
+   </app-isolate-slant-stage-view>
 
    <!-- IDENT stage editing -->
-   <div class="ident" *ngIf="stage === 'IDENT'">
+   <div class="ident-editing-area" *ngIf="stage === 'IDENT' && !viewOnly">
       <button class="link" *ngIf="!viewOnly && form.get('identification') == null"
               (click)="createIdentificationFormGroup()">
          enter API20E/Vitek data
       </button>
-      <app-isolate-identification *ngIf="form.get('identification') != null"
+      <app-isolate-identification-editor *ngIf="form.get('identification') != null"
          [form]="form.get('identification')"
          [viewOnly]="viewOnly">
-      </app-isolate-identification>
+      </app-isolate-identification-editor>
    </div>
 
    <!-- IDENT data read-only view as context -->
-   <div class="ident-ro"
-        *ngIf="stage === 'SLANT' && showOtherStageDataAsContext && form.get('identification') != null">
-      <div class="ident-method-ro">{{form.get(['identification', 'method'])?.value}}</div>
-      <div class="ident-code-ro">{{form.get(['identification', 'identCode'])?.value}}</div>
-      <div class="ident-text-ro">{{form.get(['identification', 'identText'])?.value}}</div>
-      <div class="ident-positive-ro">{{form.get(['identification', 'positive'])?.value | plusMinus }}</div>
-   </div>
+   <app-isolate-identification-view
+      *ngIf="form.get('identification') != null &&
+         ( stage === 'SLANT' && viewContextData || stage == 'IDENT' && viewOnly )"
+      [form]="form">
+   </app-isolate-identification-view>
 
    <div class="expanding-flex-space"></div>
 

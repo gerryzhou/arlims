@@ -1,0 +1,34 @@
+<div class="main-row" [formGroup]="form">
+
+   <mat-select class="colony-appearance" formControlName="colonyAppearance" matTooltip="colony appearance">
+      <mat-option [value]="null"></mat-option>
+      <mat-option [value]="'T'">T</mat-option>
+      <mat-option [value]="'NT'">N</mat-option>
+      <mat-option [value]="'AT'">AT</mat-option>
+      <mat-option [value]="'NG'">NG</mat-option>
+   </mat-select>
+
+   <app-slant-tube-test
+      [form]="form.get('tsiTubeTest')"
+      [tubeType]="'TSI'"
+      [isolateDescription]="isolateDescription">
+   </app-slant-tube-test>
+
+   <app-slant-tube-test
+      [form]="form.controls['liaTubeTest']"
+      [tubeType]="'LIA'"
+      [isolateDescription]="isolateDescription">
+   </app-slant-tube-test>
+
+   <span class="oxidase" matTooltip="oxidase" *ngIf="includeOxidase">
+      <span class="oxidase-label">Ox</span>
+      <mat-select formControlName="oxidaseDetection">
+         <mat-option [value]="null"></mat-option>
+         <mat-option [value]="true">+</mat-option>
+         <mat-option [value]="false">&minus;</mat-option>
+      </mat-select>
+   </span>
+
+</div>
+
+

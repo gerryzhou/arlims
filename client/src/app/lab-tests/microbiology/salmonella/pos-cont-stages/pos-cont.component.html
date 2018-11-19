@@ -106,8 +106,9 @@
 
                <div class="control" *ngIf="stage === 'IDENT'">
                   <div class="control-name">P. Vulgaris</div>
-                  <app-isolate-identification [form]="form.get(['continuationControls', 'pVulgarisIdentification'])">
-                  </app-isolate-identification>
+                  <app-isolate-identification-editor
+                     [form]="form.get(['continuationControls', 'pVulgarisIdentification'])">
+                  </app-isolate-identification-editor>
                   <mat-radio-group formControlName="pVulgarisSatisfactory">
                      <span>control satisfactory</span>
                      <mat-radio-button [value]="true">Y</mat-radio-button>

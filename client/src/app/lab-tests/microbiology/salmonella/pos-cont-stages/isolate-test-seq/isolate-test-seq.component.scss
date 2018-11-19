@@ -19,10 +19,6 @@
    }
 }
 
-mat-select.colony-appearance {
-   width: 40px;
-}
-
 .isolate-num {
    font-weight: bold;
    margin: 0 5px 0 2px;
@@ -30,23 +26,6 @@ mat-select.colony-appearance {
    border: 1px solid gray;
    min-width: 22px;
    text-align: center;
-}
-
-.oxidase {
-   display: flex;
-   align-items: center;
-   border: 1px solid gray;
-   padding: 0 0 0 3px;
-   border-radius: 5px;
-   mat-select {
-      margin-left: 5px;
-      min-width: 25px;
-   }
-}
-
-.oxidase-label {
-   font-size: smaller;
-   font-weight: bold;
 }
 
 .menu-header {
@@ -59,80 +38,11 @@ button.remove mat-icon {
    color: red;
 }
 
-.slant-data-ro {
-   display: flex;
-   align-items: center;
-}
 
-.colony-appearance-ro {
-   padding: 2px;
-   border: 1px solid lightgray;
-   border-radius: 5px;
-   min-width: 22px;
-   min-height: 10px;
-   margin-right: 2px;
-}
-
-.slant-tube-ro {
-   display: flex;
-   align-items: center;
-   justify-content: flex-start;
-   padding: 2px;
-   margin: 0 1px;
-   border: 1px solid gray;
-   border-radius: 5px;
-}
-
-.slant-tube-field-ro {
-   min-width: 10px;
-   min-height: 10px;
-}
-
-.oxidase-ro {
-   min-width: 10px;
-   min-height: 10px;
-   margin: 2px;
-   padding: 2px;
-}
-
-.ident {
+.ident-editing-area {
    display: flex;
    flex-flow: row nowrap;
    align-items: center;
    margin: 0 10px;
-}
-
-.ident-ro {
-   display: flex;
-   flex-flow: row wrap;
-   border: 1px solid gray;
-   padding: 1px 3px;
-   margin: 1px;
-   align-items: center;
-}
-
-.ident-method-ro {
-   min-width: 55px;
-   min-height: 10px;
-   margin: 0 2px;
-}
-.ident-code-ro {
-   min-width: 70px;
-   min-height: 10px;
-   margin: 0 2px;
-}
-.ident-text-ro {
-   min-width: 240px;
-   min-height: 10px;
-   margin: 0 2px;
-}
-.ident-positive-ro {
-   min-width: 20px;
-   min-height: 10px;
-   padding: 2px;
-   border-left: 5px solid gray;
-   border-right: 5px solid gray;
-   margin: 0 3px;
-   text-align: center;
 }
 

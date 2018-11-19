@@ -17,8 +17,9 @@ export class IsolateTestSeqComponent implements OnChanges {
    @Input()
    stage: 'SLANT' | 'IDENT';
 
+   // whether to show other stage's (SLANT or IDENT) data as context
    @Input()
-   showOtherStageDataAsContext;
+   viewContextData: boolean;
 
    @Input()
    viewOnly = false;
@@ -50,9 +51,6 @@ export class IsolateTestSeqComponent implements OnChanges {
    @Output()
    failureDeclared = new EventEmitter<void>();
 
-   tsiFormGroup: FormGroup;
-   liaFormGroup: FormGroup;
-
    isolateNumber: number;
    isolateDescription = '';
 
@@ -69,9 +67,6 @@ export class IsolateTestSeqComponent implements OnChanges {
       this.isolateNumber = this.form.get('isolateNumber').value;
       this.isolateDescription =
          'isolate ' + this.isolateNumber + ' in ' + this.testUnitDescription + ' / ' + this.medium + ' / ' + this.selectiveAgarDisplayName;
-
-      this.tsiFormGroup = this.form.get('tsiTubeTest') as FormGroup;
-      this.liaFormGroup = this.form.get('liaTubeTest') as FormGroup;
 
       if ( this.formChangesSubscription )
          this.formChangesSubscription.unsubscribe();

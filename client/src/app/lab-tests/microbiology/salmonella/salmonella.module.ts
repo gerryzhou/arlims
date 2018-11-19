@@ -39,7 +39,11 @@ import {SelAgarsTestSuiteComponent} from './pos-cont-stages/sel-agars-test-suite
 import {IsolateTestSeqComponent} from './pos-cont-stages/isolate-test-seq/isolate-test-seq.component';
 import {IsolateTestsFailureDialogComponent} from './pos-cont-stages/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
 import {SlantTubeTestComponent} from './pos-cont-stages/isolate-test-seq/slant-tube-test/slant-tube-test.component';
-import { IsolateIdentificationComponent } from './pos-cont-stages/isolate-identification/isolate-identification.component';
+import {IsolateIdentificationEditorComponent} from './pos-cont-stages/isolate-identification-editor/isolate-identification-editor.component';
+import {IsolateSlantStageViewComponent} from './pos-cont-stages/isolate-slant-stage-view/isolate-slant-stage-view.component';
+import { IsolateSlantTubeViewComponent } from './pos-cont-stages/isolate-slant-tube-view/isolate-slant-tube-view.component';
+import { IsolateSlantStageEditorComponent } from './pos-cont-stages/isolate-slant-stage-editor/isolate-slant-stage-editor.component';
+import { IsolateIdentificationViewComponent } from './pos-cont-stages/isolate-identification-view/isolate-identification-view.component';
 
 @NgModule({
    imports: [
@@ -82,7 +86,11 @@ import { IsolateIdentificationComponent } from './pos-cont-stages/isolate-identi
       IsolateTestSeqComponent,
       IsolateTestsFailureDialogComponent,
       SlantTubeTestComponent,
-      IsolateIdentificationComponent,
+      IsolateIdentificationEditorComponent,
+      IsolateSlantStageViewComponent,
+      IsolateSlantTubeViewComponent,
+      IsolateSlantStageEditorComponent,
+      IsolateIdentificationViewComponent,
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,

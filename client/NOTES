@@ -1,6 +1,14 @@
-SLANT
-  Show values in header of expansion panel, to be expanded for editing.
-    Expansion panel should have vertically oriented radio groups for each field to allow quick selection.
+isolate test seq
+----------------
+Create a isolate slant stage data view component.
+  Use as context in ident stage and in expansion header for slant editing.
+Create isolate slant data editor component.
+  Use (modified) slant-tube-test components, renamed to slant-tube-editor.
+
+Create isolate identification view, rename isolate-identification to isolate-identification-editor.
+
+Replace slant editing with expansion panel.
+   Expansion panel should have vertically oriented radio groups for each field to allow quick selection.
        ----------------
        KA+-       RA-+  (expansion header)
        ----------------

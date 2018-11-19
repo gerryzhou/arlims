@@ -1,0 +1,15 @@
+<div class="slant-data-ro">
+
+   <div class="colony-appearance-ro">{{(form.get('colonyAppearance').value)}}</div>
+
+   <app-isolate-slant-tube-view *ngIf="form.get('tsiTubeTest')" [form]="form.get('tsiTubeTest')">
+   </app-isolate-slant-tube-view>
+
+   <app-isolate-slant-tube-view *ngIf="form.get('liaTubeTest')" [form]="form.get('liaTubeTest')">
+   </app-isolate-slant-tube-view>
+
+   <span class="oxidase-ro" *ngIf="includeOxidase">
+      {{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
+   </span>
+
+</div>

@@ -1,0 +1,28 @@
+.main-row {
+   display: flex;
+   flex-flow: row wrap;
+   align-items: center;
+}
+
+mat-select.colony-appearance {
+   width: 40px;
+}
+
+.oxidase {
+   display: flex;
+   align-items: center;
+   border: 1px solid gray;
+   padding: 0 0 0 3px;
+   border-radius: 5px;
+   mat-select {
+      margin-left: 5px;
+      min-width: 25px;
+   }
+}
+
+.oxidase-label {
+   font-size: smaller;
+   font-weight: bold;
+}
+
+

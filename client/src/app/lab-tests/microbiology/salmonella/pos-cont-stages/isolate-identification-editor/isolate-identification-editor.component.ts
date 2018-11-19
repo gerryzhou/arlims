@@ -2,12 +2,12 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/cor
 import {FormGroup} from '@angular/forms';
 
 @Component({
-   selector: 'app-isolate-identification',
-   templateUrl: './isolate-identification.component.html',
-   styleUrls: ['./isolate-identification.component.scss'],
+   selector: 'app-isolate-identification-editor',
+   templateUrl: './isolate-identification-editor.component.html',
+   styleUrls: ['./isolate-identification-editor.component.scss'],
    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IsolateIdentificationComponent implements OnChanges {
+export class IsolateIdentificationEditorComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
