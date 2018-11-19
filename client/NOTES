@@ -1,20 +1,37 @@
-Prep
+File attachments
+  Expansion header not updating.
+    Try basing header on member field which is set from input in onInit() initially,
+    and also set after file attachment operations.
 
 
+SLANT
+  Show values in header of expansion panel, to be expanded for editing.
+    Expansion panel should have vertically oriented radio groups for each field to allow quick selection.
+       ----------------
+       KA+-       RA-+  (expansion header)
+       ----------------
+       TSI        LIA       Urea Oxidase   Identfication Required
+       K K + +    K K + -   +    +         Y
+       A A - -    A A + -   -    -         N
+                  R
+  Media control needs only "No Growth" (NG) and "Growth" (G) option only.
+  Stage status: Just use completion of controls as status (John) for slant/ident stages.
 
-Idents data not showing until slant data is saved.
-  Are form change events fired when positive test units are added to match Vidas positives?
+IDENT
+  Need to add page/dialog for building octet code.
+  New test units in SLANT stage are not showing in IDENT stage until slant data is saved.
+    Are form change events fired when positive test units are added to match Vidas positives?
+
+PRE-ENR stage
+  Need method/protocol code/name dropdown which is populated from FACTS api.
 
 Nov 15 Meeting Notes/TODOs
 --------------------------
-Cycle button for slant tube field values
-Oxidase not showing
-Subs/composites area of pre-enr stage needs revisting
-  Add flag to sampling method for whether can be modified or not (“fixed”)
+Oxidase not showing (?)
+Subs/composites area of pre-enr stage needs revisiting
+  Add flag to sampling method for whether can be modified or not ("fixed")
   Disable fields for the ones that are not marked modifiable.
-  Add “free entry” as option as well which is modifiable.
-Add flag in slant stage for each tube type that identification should be done.
-  Hide ident entries unless either flag is set.
+  Add "free entry" as option as well which is modifiable.
 
 
 Field-level attachments

@@ -1,29 +1,9 @@
-SLANT
-  Show values briefly as header of expansion panel.
-    Expansion panel should have vertically oriented radio groups for each field to allow quick selection.
-  Only need one checkbox indicating that ident stage is needed, not two (Ash).
-  Media control needs only "No Growth" (NG) and "Growth" (G) option only.
-  Need to add urea result.
-  Reenable/add Oxidase.
-  Stage status: Just use completion of controls as status (John) for slant/ident stages.
-
-IDENT
-  Need to add page/dialog for building octet code.
-  Only a few codes from biomereaux output translate to Salmonella.
-
-PRE-ENR stage
-  Need method/protocol code/name dropdown which is populated from FACTS api.
-
-
 Send email of prioties with estimated completion times to John next week sometime.
   reagent search
   multi-sample data entry
   FACTS writing
   overflow inbox
-
-
-Some labs use sx2 broth or EZ in place of rv/tt/mbroth.
-
+    Maybe just add a "handoff" (or similar) flag to sample op and add search filter support.
 
 Prep stage
   Should access new api to list sample transfers from custodian, to let user pick a line, to set received-from person and timestamp.
@@ -33,7 +13,6 @@ Prep stage
     John suggests adding Sample custodian as a group.
       Maybe rename ADMIN to LIMS_ADMIN.
       Also supervisor role.
-
 
 Implement "lab inbox" management over the api directly.
   Then sample/assignment data is always current during management ops which is necessary anyway.
