@@ -44,17 +44,17 @@
    padding: 3px 10px;
 }
 
-.p-aerugi-oxidase {
+.p-aerugi-oxidase,.p-vulgaris-urea {
    display: flex;
    flex-flow: row wrap;
    align-items: center;
    margin-top: 10px;
 }
-.p-aerugi-oxidase-label {
+.p-aerugi-oxidase-label,.p-vulgaris-urea-label {
    font-weight: bold;
    margin: 0 10px;
 }
-.p-aerugi-oxidase-value {
+.p-aerugi-oxidase-value,.p-vulgaris-urea-value {
    width: 35px;
 }
 .p-aerugi-satisfactory {

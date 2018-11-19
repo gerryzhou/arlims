@@ -8,17 +8,26 @@
       <mat-option [value]="'NG'">NG</mat-option>
    </mat-select>
 
-   <app-slant-tube-test
+   <app-isolate-slant-tube-editor
       [form]="form.get('tsiTubeTest')"
       [tubeType]="'TSI'"
       [isolateDescription]="isolateDescription">
-   </app-slant-tube-test>
+   </app-isolate-slant-tube-editor>
 
-   <app-slant-tube-test
+   <app-isolate-slant-tube-editor
       [form]="form.controls['liaTubeTest']"
       [tubeType]="'LIA'"
       [isolateDescription]="isolateDescription">
-   </app-slant-tube-test>
+   </app-isolate-slant-tube-editor>
+
+   <span class="urea" matTooltip="Urea">
+      <span class="urea-label">Ur</span>
+      <mat-select formControlName="ureaDetection">
+         <mat-option [value]="null"></mat-option>
+         <mat-option [value]="true">+</mat-option>
+         <mat-option [value]="false">&minus;</mat-option>
+      </mat-select>
+   </span>
 
    <span class="oxidase" matTooltip="oxidase" *ngIf="includeOxidase">
       <span class="oxidase-label">Ox</span>

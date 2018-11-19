@@ -14,7 +14,7 @@
       <div class="isolate-test-seqs-stack">
          <app-isolate-test-seq *ngFor="let seqUid of displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName]"
             [stage]="stage"
-                               [viewContextData]="showOtherStageDataAsContext"
+            [viewContextData]="showOtherStageDataAsContext"
             [viewOnly]="viewOnly"
             [form]="this.form.get([selAgar.formGroupName, seqUid])"
             [includeOxidase]="includeOxidase"

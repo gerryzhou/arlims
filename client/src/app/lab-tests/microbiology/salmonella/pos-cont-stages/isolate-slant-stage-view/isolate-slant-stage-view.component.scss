@@ -12,9 +12,12 @@
    margin-right: 2px;
 }
 
-.oxidase-ro {
+.oxidase-ro,.urea-ro {
    min-width: 10px;
    min-height: 10px;
    margin: 2px;
    padding: 2px;
+   padding: 2px;
+   border: 1px solid lightgray;
+   border-radius: 5px;
 }

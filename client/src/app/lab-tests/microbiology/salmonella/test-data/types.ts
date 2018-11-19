@@ -93,6 +93,7 @@ export interface ContinuationControls
    salmonellaGaminaraSatisfactory: boolean | null;
    salmonellaDiarizonae: SelectiveAgarsTestSuite;
    salmonellaDiarizonaeSatisfactory: boolean | null;
+   pVulgarisUreaDetection: boolean | null;
    pVulgarisIdentification: IsolateIdentification;
    pVulgarisSatisfactory: boolean | null;
    pAerugiOxidaseDetection?: boolean| null;
@@ -115,6 +116,7 @@ export interface IsolateTestSequence {
    colonyAppearance: ColonyAppearance | null;
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
+   ureaDetection?: boolean | null;
    oxidaseDetection?: boolean | null;
    identification?: IsolateIdentification | null;
    failure?: IsolateTestSequenceFailure | null;
@@ -180,6 +182,7 @@ export function makeEmptyContinuationControls(username: string): ContinuationCon
       salmonellaGaminaraSatisfactory: null,
       salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1, 1, username),
       salmonellaDiarizonaeSatisfactory: null,
+      pVulgarisUreaDetection: null,
       pVulgarisIdentification: makeEmptyIsolateIdentification(),
       pVulgarisSatisfactory: null,
       pAerugiOxidaseDetection: null,
@@ -276,6 +279,7 @@ export function makeEmptyIsolateTestSequence(isolateNum: number): IsolateTestSeq
       colonyAppearance: null,
       tsiTubeTest: makeEmptySlantTubeTest(),
       liaTubeTest: makeEmptySlantTubeTest(),
+      ureaDetection: null,
       oxidaseDetection: null,
       identification: null,
       failure: null,

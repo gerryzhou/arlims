@@ -8,8 +8,12 @@
    <app-isolate-slant-tube-view *ngIf="form.get('liaTubeTest')" [form]="form.get('liaTubeTest')">
    </app-isolate-slant-tube-view>
 
+   <span class="urea-ro">
+      Ur{{form.get(['ureaDetection']).value === true ? '+' : form.get(['ureaDetection']).value === false ? '&minus;' : ''}}
+   </span>
+
    <span class="oxidase-ro" *ngIf="includeOxidase">
-      {{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
+      Ox{{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
    </span>
 
 </div>

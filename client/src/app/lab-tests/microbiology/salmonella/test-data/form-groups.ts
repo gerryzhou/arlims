@@ -134,6 +134,7 @@ export function makeContinuationControlsFormGroup(contControls: ContinuationCont
       salmonellaGaminaraSatisfactory: new FormControl(contControls.salmonellaGaminaraSatisfactory),
       salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(contControls.salmonellaDiarizonae),
       salmonellaDiarizonaeSatisfactory: new FormControl(contControls.salmonellaDiarizonaeSatisfactory),
+      pVulgarisUreaDetection: new FormControl(contControls.pVulgarisUreaDetection),
       pVulgarisIdentification: makeIsolateIdentificationFormGroup(contControls.pVulgarisIdentification),
       pVulgarisSatisfactory: new FormControl(contControls.pVulgarisSatisfactory),
       pAerugiOxidaseDetection: new FormControl(contControls.pAerugiOxidaseDetection),
@@ -170,6 +171,7 @@ export function makeIsolateTestSequenceFormGroup(isolateTestSeq: IsolateTestSequ
       colonyAppearance: new FormControl(isolateTestSeq.colonyAppearance),
       tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.tsiTubeTest),
       liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.liaTubeTest),
+      ureaDetection: new FormControl(isolateTestSeq.ureaDetection),
       oxidaseDetection: new FormControl(isolateTestSeq.oxidaseDetection),
       // 'identification' and 'failure' FormGroups are added below or interactively as needed
    });

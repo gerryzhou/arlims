@@ -37,7 +37,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    appUser: AppUser;
 
    @Input()
-   includeOxidase: true;
+   includeOxidase = true;
 
    @Input()
    showAddIsolatesButton = true;

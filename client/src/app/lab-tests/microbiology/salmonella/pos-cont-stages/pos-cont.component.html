@@ -104,12 +104,22 @@
                   </div>
                </div>
 
-               <div class="control" *ngIf="stage === 'IDENT'">
+               <div class="control">
                   <div class="control-name">P. Vulgaris</div>
-                  <app-isolate-identification-editor
+                  <div class="p-vulgaris-urea" *ngIf="stage === 'SLANT'">
+                     <span class="p-vulgaris-urea-label">Urea</span>
+                     <span class="p-vulgaris-urea-value">
+                        <mat-select formControlName="pVulgarisUreaDetection">
+                           <mat-option [value]="null"></mat-option>
+                           <mat-option [value]="true">+</mat-option>
+                           <mat-option [value]="false">&minus;</mat-option>
+                        </mat-select>
+                     </span>
+                  </div>
+                  <app-isolate-identification-editor *ngIf="stage === 'IDENT'"
                      [form]="form.get(['continuationControls', 'pVulgarisIdentification'])">
                   </app-isolate-identification-editor>
-                  <mat-radio-group formControlName="pVulgarisSatisfactory">
+                  <mat-radio-group formControlName="pVulgarisSatisfactory" *ngIf="stage === 'IDENT'">
                      <span>control satisfactory</span>
                      <mat-radio-button [value]="true">Y</mat-radio-button>
                      <mat-radio-button [value]="false">N</mat-radio-button>

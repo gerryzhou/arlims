@@ -38,12 +38,12 @@ import {OnePosTestUnitContTestsComponent} from './pos-cont-stages/one-pos-test-u
 import {SelAgarsTestSuiteComponent} from './pos-cont-stages/sel-agars-test-suite/sel-agars-test-suite.component';
 import {IsolateTestSeqComponent} from './pos-cont-stages/isolate-test-seq/isolate-test-seq.component';
 import {IsolateTestsFailureDialogComponent} from './pos-cont-stages/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
-import {SlantTubeTestComponent} from './pos-cont-stages/isolate-test-seq/slant-tube-test/slant-tube-test.component';
-import {IsolateIdentificationEditorComponent} from './pos-cont-stages/isolate-identification-editor/isolate-identification-editor.component';
 import {IsolateSlantStageViewComponent} from './pos-cont-stages/isolate-slant-stage-view/isolate-slant-stage-view.component';
-import { IsolateSlantTubeViewComponent } from './pos-cont-stages/isolate-slant-tube-view/isolate-slant-tube-view.component';
-import { IsolateSlantStageEditorComponent } from './pos-cont-stages/isolate-slant-stage-editor/isolate-slant-stage-editor.component';
-import { IsolateIdentificationViewComponent } from './pos-cont-stages/isolate-identification-view/isolate-identification-view.component';
+import {IsolateSlantStageEditorComponent} from './pos-cont-stages/isolate-slant-stage-editor/isolate-slant-stage-editor.component';
+import {IsolateSlantTubeViewComponent} from './pos-cont-stages/isolate-slant-tube-view/isolate-slant-tube-view.component';
+import {IsolateSlantTubeEditorComponent} from './pos-cont-stages/isolate-slant-tube-editor/isolate-slant-tube-editor.component';
+import {IsolateIdentificationViewComponent} from './pos-cont-stages/isolate-identification-view/isolate-identification-view.component';
+import {IsolateIdentificationEditorComponent} from './pos-cont-stages/isolate-identification-editor/isolate-identification-editor.component';
 
 @NgModule({
    imports: [
@@ -85,12 +85,12 @@ import { IsolateIdentificationViewComponent } from './pos-cont-stages/isolate-id
       SelAgarsTestSuiteComponent,
       IsolateTestSeqComponent,
       IsolateTestsFailureDialogComponent,
-      SlantTubeTestComponent,
-      IsolateIdentificationEditorComponent,
       IsolateSlantStageViewComponent,
-      IsolateSlantTubeViewComponent,
       IsolateSlantStageEditorComponent,
+      IsolateSlantTubeViewComponent,
+      IsolateSlantTubeEditorComponent,
       IsolateIdentificationViewComponent,
+      IsolateIdentificationEditorComponent,
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,

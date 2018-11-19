@@ -262,6 +262,7 @@ function contControlsStatusCode
       case 'SLANT':
          return (
             contControls.pAerugiOxidaseDetection != null &&
+            contControls.pVulgarisUreaDetection != null &&
             selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaGaminara, false, true, testConfig)  &&
             selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaDiarizonae, true, true, testConfig) &&
             selectiveAgarsTestSuiteComplete(stage, contControls.medium, false, true, testConfig)
@@ -391,7 +392,7 @@ function isolateTestSequenceSlantStageState
    const liaStatus = slantTubeTestStatus(testSeq.liaTubeTest);
 
    // Check for empty.
-   if ( tsiStatus === 'e' && liaStatus === 'e' && testSeq.oxidaseDetection == null )
+   if ( tsiStatus === 'e' && liaStatus === 'e' && testSeq.ureaDetection == null && testSeq.oxidaseDetection == null )
       return { slantStageStatus: 'e', identRequired: false};
 
    if ( tsiStatus === 'c' && liaStatus === 'c' )
@@ -401,6 +402,8 @@ function isolateTestSequenceSlantStageState
 
       if ( onlySlantTubesRequired )
          return { slantStageStatus: 'c', identRequired: false};
+
+      // TODO: Urea detection implies completion here?
 
       if ( testSeq.oxidaseDetection === true )
          return { slantStageStatus: 'c', identRequired: false};

@@ -2,11 +2,11 @@ import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 @Component({
-   selector: 'app-slant-tube-test',
-   templateUrl: './slant-tube-test.component.html',
-   styleUrls: ['./slant-tube-test.component.scss']
+   selector: 'app-isolate-slant-tube-editor',
+   templateUrl: './isolate-slant-tube-editor.component.html',
+   styleUrls: ['./isolate-slant-tube-editor.component.scss']
 })
-export class SlantTubeTestComponent implements OnChanges {
+export class IsolateSlantTubeEditorComponent implements OnChanges {
 
    @Input()
    form: FormGroup;
