@@ -1,20 +1,14 @@
+SLANT stage
+  Add field to isolate test seq declaring that identification is needed.
+  When present, show rightward arrow.
+  "Mark isolate as requiring API/Vitek identification."
+  "Remove API/Vitek identification requirement."
+IDENT
+  Add filtering based on identification-required declaration.
 
-isolate test seq
-----------------
-Create a isolate slant stage data view component.
-  Use as context in ident stage and in expansion header for slant editing.
 
-Replace slant editing with expansion panel.
-   Expansion panel should have vertically oriented radio groups for each field to allow quick selection.
-       ----------------
-       KA+-       RA-+  (expansion header)
-       ----------------
-       TSI        LIA       Urea Oxidase   Identfication Required
-       K K + +    K K + -   +    +         Y
-       A A - -    A A + -   -    -         N
-                  R
-  Media control needs only "No Growth" (NG) and "Growth" (G) option only.
-  Stage status: Just use completion of controls as status (John) for slant/ident stages.
+Media control needs only "No Growth" (NG) and "Growth" (G) option only.
+Stage status: Just use completion of controls as status (John) for slant/ident stages.
 
 IDENT
   Need to add page/dialog for building octet code.
@@ -26,7 +20,6 @@ PRE-ENR stage
 
 Nov 15 Meeting Notes/TODOs
 --------------------------
-Oxidase not showing (?)
 Subs/composites area of pre-enr stage needs revisiting
   Add flag to sampling method for whether can be modified or not ("fixed")
   Disable fields for the ones that are not marked modifiable.

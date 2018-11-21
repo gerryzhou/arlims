@@ -34,6 +34,9 @@ export class OnePosTestUnitContTestsComponent implements OnChanges {
    @Input()
    appUser: AppUser;
 
+   @Input()
+   showUnsetAffordances = false;
+
    @Output()
    disposeRequested = new EventEmitter<void>();
 

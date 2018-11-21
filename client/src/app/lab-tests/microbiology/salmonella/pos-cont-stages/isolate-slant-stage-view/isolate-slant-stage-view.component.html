@@ -1,19 +1,29 @@
-<div class="slant-data-ro">
+<div class="slant-stage-row">
 
-   <div class="colony-appearance-ro">{{(form.get('colonyAppearance').value)}}</div>
+   <div class="colony-appearance" matTooltip="colony appearance">
+      <span>{{(form.get('colonyAppearance').value)}}</span>
+   </div>
 
-   <app-isolate-slant-tube-view *ngIf="form.get('tsiTubeTest')" [form]="form.get('tsiTubeTest')">
+   <app-isolate-slant-tube-view matTooltip="TSI slant tube"
+      [form]="form.get('tsiTubeTest')"
+      [tubeType]="'TSI'">
    </app-isolate-slant-tube-view>
 
-   <app-isolate-slant-tube-view *ngIf="form.get('liaTubeTest')" [form]="form.get('liaTubeTest')">
+   <app-isolate-slant-tube-view matTooltip="LIA slant tube"
+      [form]="form.get('liaTubeTest')"
+      [tubeType]="'LIA'">
    </app-isolate-slant-tube-view>
 
-   <span class="urea-ro">
-      Ur{{form.get(['ureaDetection']).value === true ? '+' : form.get(['ureaDetection']).value === false ? '&minus;' : ''}}
+   <span class="urea" matTooltip="Urea">
+      <span *ngIf="form.get(['ureaDetection'])?.value != null">
+         Ur{{form.get(['ureaDetection']).value === true ? '+' : form.get(['ureaDetection']).value === false ? '&minus;' : ''}}
+      </span>
    </span>
 
-   <span class="oxidase-ro" *ngIf="includeOxidase">
-      Ox{{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
+   <span class="oxidase" *ngIf="includeOxidase" matTooltip="Oxidase">
+      <span *ngIf="form.get(['oxidaseDetection'])?.value != null">
+         Ox{{form.get(['oxidaseDetection']).value === true ? '+' : form.get(['oxidaseDetection']).value === false ? '&minus;' : ''}}
+      </span>
    </span>
 
 </div>

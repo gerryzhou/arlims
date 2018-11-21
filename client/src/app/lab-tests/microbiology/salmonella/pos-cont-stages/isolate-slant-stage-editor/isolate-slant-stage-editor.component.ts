@@ -24,6 +24,9 @@ export class IsolateSlantStageEditorComponent implements OnChanges {
    @Input()
    selectiveAgarDisplayName: string;
 
+   @Input()
+   showUnsetAffordances = false;
+
    isolateNumber: number;
    isolateDescription = '';
 

@@ -17,11 +17,11 @@ export class IsolateSlantTubeEditorComponent implements OnChanges {
    @Input()
    isolateDescription: string;
 
+   @Input()
+   showUnsetAffordances = false;
+
    slantValues: string[];
    buttValues: string[];
-
-   slantValueCssClass: string;
-   buttValueCssClass: string;
 
    constructor() { }
 
@@ -29,17 +29,5 @@ export class IsolateSlantTubeEditorComponent implements OnChanges {
    {
       this.slantValues = this.tubeType === 'TSI' ? ['K', 'A'] : ['K', 'A', 'R'];
       this.buttValues = ['K', 'A'];
-      this.onSlantChanged(this.form.get('slant').value);
-      this.onButtChanged(this.form.get('butt').value);
-   }
-
-   onSlantChanged(newValue: string)
-   {
-      this.slantValueCssClass = (this.tubeType || 'any') + '-' + newValue;
-   }
-
-   onButtChanged(newValue: string)
-   {
-      this.buttValueCssClass = (this.tubeType || 'any') + '-' + newValue;
    }
 }

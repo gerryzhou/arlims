@@ -45,6 +45,9 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    @Input()
    showIsolateNumber = true;
 
+   @Input()
+   showUnsetAffordances = false;
+
    selAgars: SelectiveAgar[] = [
       { formGroupName: 'he', displayName: 'HE'},
       { formGroupName: 'xld', displayName: 'XLD'},

@@ -1,15 +1,32 @@
-.slant-tube-ro {
+.slant-tube {
    display: flex;
    align-items: center;
    justify-content: flex-start;
    padding: 2px;
-   margin: 0 1px;
    border: 1px solid gray;
    border-radius: 5px;
 }
 
-.slant-tube-field-ro {
+.slant-tube-field {
    min-width: 10px;
-   min-height: 10px;
+   min-height: 18px;
+   margin: 0 1.5px;
+}
+
+.TSI-K {
+   border-top: 5px solid #c44;
+   border-bottom: 5px solid #c44;
+}
+.LIA-K {
+   border-top: 5px solid #cc89cc;
+   border-bottom: 5px solid #cc89cc;
+}
+.TSI-A,.LIA-A {
+   border-top: 5px solid #d8d800;
+   border-bottom: 5px solid #d8d800;
+}
+.LIA-R {
+   border-top: 5px solid #9F1D35;
+   border-bottom: 5px solid #9F1D35;
 }
 

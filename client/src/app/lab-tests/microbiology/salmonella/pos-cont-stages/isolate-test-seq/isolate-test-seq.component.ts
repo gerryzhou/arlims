@@ -45,6 +45,9 @@ export class IsolateTestSeqComponent implements OnChanges {
    @Input()
    showIsolateNumber = true;
 
+   @Input()
+   showUnsetAffordances = false;
+
    @Output()
    disposeRequested = new EventEmitter<void>();
 

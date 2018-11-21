@@ -1,43 +1,60 @@
-<div class="main-row" [formGroup]="form">
+<mat-expansion-panel [formGroup]="form">
 
-   <mat-select class="colony-appearance" formControlName="colonyAppearance" matTooltip="colony appearance">
-      <mat-option [value]="null"></mat-option>
-      <mat-option [value]="'T'">T</mat-option>
-      <mat-option [value]="'NT'">N</mat-option>
-      <mat-option [value]="'AT'">AT</mat-option>
-      <mat-option [value]="'NG'">NG</mat-option>
-   </mat-select>
+   <mat-expansion-panel-header>
+      <app-isolate-slant-stage-view [form]="form" [includeOxidase]="includeOxidase"></app-isolate-slant-stage-view>
+   </mat-expansion-panel-header>
 
-   <app-isolate-slant-tube-editor
-      [form]="form.get('tsiTubeTest')"
-      [tubeType]="'TSI'"
-      [isolateDescription]="isolateDescription">
-   </app-isolate-slant-tube-editor>
+   <div class="editor-controls-stack">
 
-   <app-isolate-slant-tube-editor
-      [form]="form.controls['liaTubeTest']"
-      [tubeType]="'LIA'"
-      [isolateDescription]="isolateDescription">
-   </app-isolate-slant-tube-editor>
+      <mat-radio-group class="field-stack" formControlName="colonyAppearance">
+         <div class="field-label">Colony Appearance</div>
+         <div class="field-values-row">
+            <mat-radio-button [value]="'T'">T</mat-radio-button>
+            <mat-radio-button [value]="'NT'">NT</mat-radio-button>
+            <mat-radio-button [value]="'AT'">AT</mat-radio-button>
+            <mat-radio-button [value]="'NG'">NG</mat-radio-button>
+            <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+         </div>
+      </mat-radio-group>
 
-   <span class="urea" matTooltip="Urea">
-      <span class="urea-label">Ur</span>
-      <mat-select formControlName="ureaDetection">
-         <mat-option [value]="null"></mat-option>
-         <mat-option [value]="true">+</mat-option>
-         <mat-option [value]="false">&minus;</mat-option>
-      </mat-select>
-   </span>
+      <div class="field-stack">
+         <span class="section-label">TSI</span>
+         <app-isolate-slant-tube-editor
+            [form]="form.get('tsiTubeTest')"
+            [tubeType]="'TSI'"
+            [isolateDescription]="isolateDescription"
+            [showUnsetAffordances]="showUnsetAffordances">
+         </app-isolate-slant-tube-editor>
+      </div>
 
-   <span class="oxidase" matTooltip="oxidase" *ngIf="includeOxidase">
-      <span class="oxidase-label">Ox</span>
-      <mat-select formControlName="oxidaseDetection">
-         <mat-option [value]="null"></mat-option>
-         <mat-option [value]="true">+</mat-option>
-         <mat-option [value]="false">&minus;</mat-option>
-      </mat-select>
-   </span>
+      <div class="field-stack">
+         <span class="section-label">LIA</span>
+         <app-isolate-slant-tube-editor
+            [form]="form.controls['liaTubeTest']"
+            [tubeType]="'LIA'"
+            [isolateDescription]="isolateDescription"
+            [showUnsetAffordances]="showUnsetAffordances">
+         </app-isolate-slant-tube-editor>
+      </div>
 
-</div>
+      <div class="urea-oxidase-row">
+         <mat-radio-group class="field-stack" formControlName="ureaDetection">
+            <span class="field-label">Urea</span>
+            <mat-radio-button [value]="true">+</mat-radio-button>
+            <mat-radio-button [value]="false">&minus;</mat-radio-button>
+            <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+         </mat-radio-group>
+
+         <mat-radio-group class="field-stack" formControlName="oxidaseDetection">
+            <span class="field-label">Oxidase</span>
+            <mat-radio-button [value]="true">+</mat-radio-button>
+            <mat-radio-button [value]="false">&minus;</mat-radio-button>
+            <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+         </mat-radio-group>
+      </div>
+
+   </div>
+
+</mat-expansion-panel>
 
 

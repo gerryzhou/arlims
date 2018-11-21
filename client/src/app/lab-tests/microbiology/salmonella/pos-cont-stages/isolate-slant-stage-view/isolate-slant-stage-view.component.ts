@@ -5,7 +5,6 @@ import {FormGroup} from '@angular/forms';
    selector: 'app-isolate-slant-stage-view',
    templateUrl: './isolate-slant-stage-view.component.html',
    styleUrls: ['./isolate-slant-stage-view.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IsolateSlantStageViewComponent {
 

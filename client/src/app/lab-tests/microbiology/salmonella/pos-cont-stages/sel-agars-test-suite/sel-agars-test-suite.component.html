@@ -23,6 +23,7 @@
             [selectiveAgarDisplayName]="selAgar.displayName"
             [showDisposeButton]="true"
             [showIsolateNumber]="showIsolateNumber"
+            [showUnsetAffordances]="showUnsetAffordances"
             (disposeRequested)="removeIsolateTestSequence(selAgar.formGroupName, seqUid)"
             (failureDeclared)="onIsolateTestSequenceFailureDeclared(selAgar.formGroupName, seqUid)">
          </app-isolate-test-seq>

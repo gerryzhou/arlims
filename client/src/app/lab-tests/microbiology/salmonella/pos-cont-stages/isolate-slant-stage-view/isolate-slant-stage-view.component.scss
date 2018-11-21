@@ -1,9 +1,16 @@
-.slant-data-ro {
+.slant-stage-row {
    display: flex;
-   align-items: center;
+   align-items: stretch;
 }
 
-.colony-appearance-ro {
+app-isolate-slant-tube-view {
+   margin: 0 2px;
+}
+
+.colony-appearance {
+   display: flex;
+   align-items: center;
+   justify-content: center;
    padding: 2px;
    border: 1px solid lightgray;
    border-radius: 5px;
@@ -12,10 +19,12 @@
    margin-right: 2px;
 }
 
-.oxidase-ro,.urea-ro {
+.oxidase,.urea {
+   display: flex;
+   align-items: center;
    min-width: 10px;
    min-height: 10px;
-   margin: 2px;
+   margin: 0 2px;
    padding: 2px;
    padding: 2px;
    border: 1px solid lightgray;

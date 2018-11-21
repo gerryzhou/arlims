@@ -1,35 +1,29 @@
-<div class="main-row" [formGroup]="form">
+<div class="field-stacks-row" [formGroup]="form">
 
-   <div class="tube-label">{{tubeType}}</div>
+   <mat-radio-group class="field-stack" formControlName="slant">
+      <span class="field-label">Slant</span>
+      <mat-radio-button *ngFor="let v of slantValues" [value]="v">{{v}}</mat-radio-button>
+      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+   </mat-radio-group>
 
-   <div class="field-area" [ngClass]="slantValueCssClass">
-      <mat-select class="select-field" formControlName="slant" matTooltip="slant" (valueChange)="onSlantChanged($event)">
-         <mat-option [value]="null"></mat-option>
-         <mat-option *ngFor="let v of slantValues" [value]="v">{{v}}</mat-option>
-      </mat-select>
-   </div>
+   <mat-radio-group class="field-stack" formControlName="butt">
+      <span class="field-label">Butt</span>
+      <mat-radio-button *ngFor="let v of buttValues" [value]="v">{{v}}</mat-radio-button>
+      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+   </mat-radio-group>
 
-   <div class="field-area" [ngClass]="buttValueCssClass">
-      <mat-select class="select-field" formControlName="butt" matTooltip="butt" (valueChange)="onButtChanged($event)">
-         <mat-option [value]="null"></mat-option>
-         <mat-option *ngFor="let v of buttValues" [value]="v">{{v}}</mat-option>
-      </mat-select>
-   </div>
+   <mat-radio-group class="field-stack" formControlName="h2s">
+      <span class="field-label">H<sub>2</sub>S</span>
+      <mat-radio-button [value]="true">+</mat-radio-button>
+      <mat-radio-button [value]="false">&minus;</mat-radio-button>
+      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+   </mat-radio-group>
 
-   <div class="field-area">
-      <mat-select class="select-field" formControlName="h2s" matTooltip="H2S">
-         <mat-option [value]="null"></mat-option>
-         <mat-option [value]="true">+</mat-option>
-         <mat-option [value]="false">&minus;</mat-option>
-      </mat-select>
-   </div>
-
-   <div class="field-area">
-      <mat-select class="select-field" formControlName="gas" matTooltip="gas">
-         <mat-option [value]="null"></mat-option>
-         <mat-option [value]="true">+</mat-option>
-         <mat-option [value]="false">&minus;</mat-option>
-      </mat-select>
-   </div>
+   <mat-radio-group class="field-stack" formControlName="gas">
+      <span class="field-label">Gas</span>
+      <mat-radio-button [value]="true">+</mat-radio-button>
+      <mat-radio-button [value]="false">&minus;</mat-radio-button>
+      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+   </mat-radio-group>
 
 </div>

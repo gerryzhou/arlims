@@ -1,11 +1,7 @@
-.main-row {
-   display: flex;
-   flex-flow: row wrap;
-   align-items: center;
-}
-
-mat-select.colony-appearance {
-   width: 40px;
+.editor-controls-stack {
+   display:flex;
+   flex-flow: column nowrap;
+   align-items: flex-start;
 }
 
 .oxidase,.urea {
@@ -26,4 +22,34 @@ mat-select.colony-appearance {
    font-weight: bold;
 }
 
+.field-label,.section-label {
+   font-size: larger;
+   font-weight: bold;
+}
 
+.mat-radio-button {
+   margin: 0 10px 0 5px;
+}
+
+.field-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: flex-start;
+   margin-bottom: 10px;
+}
+
+.field-values-row {
+   margin-left: 10px;
+
+   > * {
+      margin: 5px 10px 5px 5px;
+   }
+}
+
+.urea-oxidase-row {
+   display: flex;
+
+   > * {
+      margin-right: 10px;
+   }
+}

@@ -17,7 +17,9 @@
       <mat-tab-group>
 
          <mat-tab label="Subs/Composites">
+
             <div class="test-units-area">
+
                <app-one-pos-test-unit-cont-tests *ngFor="let testUnitNum of sortedTestUnitNums"
                   [stage]="stage"
                   [showOtherStageDataAsContext]="showOtherStageDataAsContext"
@@ -27,9 +29,12 @@
                   [showDisposeButton]="!viewOnly && stage==='SLANT'"
                   [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
                   [appUser]="appUser"
+                  [showUnsetAffordances]="showUnsetAffordances"
                   (disposeRequested)="removeTestUnitNumber(testUnitNum)">
                </app-one-pos-test-unit-cont-tests>
+
             </div>
+
          </mat-tab>
 
          <mat-tab label="Controls">
@@ -47,7 +52,8 @@
                      [medium]="'RV&TT'"
                      [appUser]="appUser"
                      [showAddIsolatesButton]="false"
-                     [showIsolateNumber]="false">
+                     [showIsolateNumber]="false"
+                     [showUnsetAffordances]="showUnsetAffordances">
                   </app-sel-agars-test-suite>
                   <mat-radio-group formControlName="mediumSatisfactory" *ngIf="stage === 'IDENT'">
                      <span>control satisfactory</span>
@@ -68,7 +74,8 @@
                      [medium]="'RV&TT'"
                      [appUser]="appUser"
                      [showAddIsolatesButton]="false"
-                     [showIsolateNumber]="false">
+                     [showIsolateNumber]="false"
+                     [showUnsetAffordances]="showUnsetAffordances">
                   </app-sel-agars-test-suite>
                   <mat-radio-group formControlName="salmonellaGaminaraSatisfactory" *ngIf="stage === 'IDENT'">
                      <span>control satisfactory</span>
@@ -91,7 +98,8 @@
                         [medium]="'RV&TT'"
                         [appUser]="appUser"
                         [showAddIsolatesButton]="false"
-                        [showIsolateNumber]="false">
+                        [showIsolateNumber]="false"
+                        [showUnsetAffordances]="showUnsetAffordances">
                      </app-sel-agars-test-suite>
                   </ng-container>
                   <div class="salmonella-diarizonae-satisfactory" *ngIf="stage === 'IDENT'">

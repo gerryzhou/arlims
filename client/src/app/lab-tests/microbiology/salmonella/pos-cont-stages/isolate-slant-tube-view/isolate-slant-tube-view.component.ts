@@ -11,6 +11,9 @@ export class IsolateSlantTubeViewComponent {
    @Input()
    form: FormGroup; // slant tube data form group
 
+   @Input()
+   tubeType: string;
+
    constructor() { }
 
 }
