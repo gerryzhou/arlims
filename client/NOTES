@@ -1,5 +1,3 @@
-Slant stage editor expansion panels are in mixed state in pos cont controls area.
-
 SLANT stage
   Add field to isolate test seq declaring that identification is needed.
   When present, show rightward arrow.

@@ -1,7 +1,7 @@
 .isolate-row {
    display: flex;
    flex-flow: row wrap;
-   align-items: center;
+   align-items: flex-start;
    &.failed {
       background: // striped background
          repeating-linear-gradient(
@@ -28,6 +28,10 @@
    text-align: center;
 }
 
+app-isolate-identification-view {
+   margin: 10px;
+}
+
 .menu-header {
    margin: 0 10px;
    font-weight: bold;
@@ -38,6 +42,9 @@ button.remove mat-icon {
    color: red;
 }
 
+button.row-actions {
+   margin-top: 10px;
+}
 
 .ident-editing-area {
    display: flex;
