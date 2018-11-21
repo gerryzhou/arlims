@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="isolate-row" [class.failed]="form.get('failure') != null" *ngIf="form">
+<div [formGroup]="form" class="isolate-row" [class.failed]="form.get('failure') != null" *ngIf="form">
 
    <div class="isolate-num" matTooltip="isolate number" *ngIf="showIsolateNumber">{{isolateNumber}}</div>
 
@@ -20,7 +20,7 @@
 
    <!-- IDENT stage editing -->
    <div class="ident-editing-area" *ngIf="stage === 'IDENT' && !viewOnly">
-      <button class="link" *ngIf="!viewOnly && form.get('identification') == null"
+      <button class="link" *ngIf="!viewOnly && form.get('identification') == null" type="button"
               (click)="createIdentificationFormGroup()">
          enter API20E/Vitek data
       </button>
@@ -44,35 +44,37 @@
          <span class="menu-header">Actions for {{isolateDescription}}</span>
          <hr>
          <div class="menu-item">
-            <button mat-button class="remove" *ngIf="showDisposeButton" (click)="onDisposeRequested()">
+            <button mat-button class="remove" *ngIf="showDisposeButton" (click)="onDisposeRequested()" type="button">
                 <mat-icon>delete_forever</mat-icon> delete isolate
             </button>
          </div>
          <div class="menu-item">
-            <button mat-button class="fail" *ngIf="!this.form.controls.failure" (click)="promptEditFailureInfo()">
+            <button mat-button class="fail" *ngIf="!this.form.controls.failure" type="button"
+               (click)="promptEditFailureInfo()">
                <mat-icon>thumb_down</mat-icon> mark isolate as failed
             </button>
          </div>
          <div class="menu-item">
-            <button mat-button class="unfail" *ngIf="!!this.form.controls.failure" (click)="clearFailure()">
+            <button mat-button class="unfail" *ngIf="!!this.form.controls.failure" type="button"
+                (click)="clearFailure()">
                 <mat-icon>thumb_up</mat-icon> mark isolate as not failed
             </button>
          </div>
          <div class="menu-item">
-            <button mat-button *ngIf="!!this.form.controls.failure" (click)="promptEditFailureInfo()">
+            <button mat-button *ngIf="!!this.form.controls.failure" (click)="promptEditFailureInfo()" type="button">
                <mat-icon>edit</mat-icon><mat-icon>thumb_down</mat-icon> edit failure information
             </button>
          </div>
          <div class="menu-item" *ngIf="stage === 'IDENT' && form.get('identification') != null">
-            <button mat-button *ngIf="!viewOnly" (click)="removeIdentificationFormGroup()">
+            <button mat-button *ngIf="!viewOnly" (click)="removeIdentificationFormGroup()" type="button">
                remove API20E/Vitek data
             </button>
          </div>
       </mat-menu>
 
-      <button class="hover-link" [matMenuTriggerFor]="actionsMenu">
+      <button class="hover-link" [matMenuTriggerFor]="actionsMenu" type="button">
          <mat-icon>more_vert</mat-icon>
       </button>
    </div>
 
-</form>
+</div>
