@@ -1,12 +1,10 @@
-sel agar test suite component
-  Show message when no isolates are displayable and fix layout problems if any remain.
-
 SLANT stage
   Move creation of empty ident structure within isolate test seq into slant stage.
     For now just add add/remove actions in popup menu at end of row.
       "Mark isolate as requiring API/Vitek identification."
       "Remove API/Vitek identification requirement."
     When present, show rightward arrow or circled 'i' icon.
+  Expansion panel in controls section has improper top padding.
 
 
 Media control needs only "No Growth" (NG) and "Growth" (G) option only.
