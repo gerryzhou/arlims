@@ -97,12 +97,3 @@ mat-toolbar-row {
 .mat-select-arrow {
   color: rgba(0, 0, 0, .15) !important;
 }
-
-// This is a workaround for an angular material bug where expansion panels don't render properly when in hidden tabs.
-// See https://github.com/angular/material2/issues/5269
-.mat-expansion-panel-header {
-   height: 48px;
-}
-.mat-expansion-panel-content:not(.mat-expanded):not(.ng-animating){
-   display: none;
-}
