@@ -29,4 +29,7 @@ app-isolate-slant-tube-view {
    padding: 2px;
    border: 1px solid lightgray;
    border-radius: 5px;
+   &.oxidase {
+      margin-right: 10px;
+   }
 }

@@ -1,10 +1,14 @@
 SLANT stage
-  Add field to isolate test seq declaring that identification is needed.
-  When present, show rightward arrow.
-  "Mark isolate as requiring API/Vitek identification."
-  "Remove API/Vitek identification requirement."
+  Move creation of empty ident structure within isolate test seq into slant stage.
+    For now just add add/remove actions in popup menu at end of row.
+      "Mark isolate as requiring API/Vitek identification."
+      "Remove API/Vitek identification requirement."
+    When present, show rightward arrow or circled 'i' icon.
 IDENT
   Add filtering based on identification-required declaration.
+    sel agar test suite
+      In onChanges calculate and set field containing which isolates are showable based on stage and presence of ident structure.
+      If none are showable, just show a "no isolates needing identification" message.
 
 
 Media control needs only "No Growth" (NG) and "Growth" (G) option only.

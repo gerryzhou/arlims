@@ -48,7 +48,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    @Input()
    showUnsetAffordances = false;
 
-   selAgars: SelectiveAgar[] = [
+   readonly SEL_AGARS: SelectiveAgar[] = [
       { formGroupName: 'he', displayName: 'HE'},
       { formGroupName: 'xld', displayName: 'XLD'},
       { formGroupName: 'bs24h', displayName: 'BS 24h'},
@@ -62,7 +62,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    constructor(private changeDetectorRef: ChangeDetectorRef, private dialogSvc: MatDialog)
    {
       this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
-      for ( const selAgarName of Object.keys(this.selAgars) )
+      for ( const selAgarName of Object.keys(this.SEL_AGARS) )
          this.displayOrderedIsolateTestSeqUidsBySelAgar[selAgarName] = [];
    }
 
@@ -72,7 +72,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
 
       if ( this.formChangesSubscription )
          this.formChangesSubscription.unsubscribe();
-      this.formChangesSubscription = this.form.valueChanges.subscribe(value => {
+      this.formChangesSubscription = this.form.valueChanges.subscribe(() => {
          this.refreshDisplayOrderedIsolateTestSeqUids();
          this.changeDetectorRef.markForCheck();
       });
@@ -130,7 +130,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
       else
       {
          this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
-         for ( const selAgar of this.selAgars )
+         for ( const selAgar of this.SEL_AGARS )
          {
             const fgName = selAgar.formGroupName;
             this.displayOrderedIsolateTestSeqUidsBySelAgar[fgName] = this.getDisplayOrderedIsolateTestSeqUids(fgName);
@@ -140,8 +140,14 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
 
    private getDisplayOrderedIsolateTestSeqUids(selAgar: string): string[]
    {
-      const fg = this.form.get(selAgar) as FormGroup;
-      return Object.keys(fg.controls).sort();
+      const selAgarFg = this.form.get(selAgar) as FormGroup;
+
+      const isolateUids = Object.keys(selAgarFg.controls);
+
+      if ( this.stage === 'IDENT' )
+         return isolateUids.filter(isolateUid => selAgarFg.get([isolateUid, 'identification']) != null).sort();
+      else
+         return isolateUids.sort();
    }
 
    ngOnDestroy()
