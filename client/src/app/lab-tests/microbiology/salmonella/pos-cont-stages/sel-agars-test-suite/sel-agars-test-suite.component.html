@@ -1,34 +1,44 @@
-<div class="sel-agars-stack">
+<div class="sel-agars-stack" *ngIf="containsDisplayableIsolate; else noDisplayableIsolate">
 
-   <div class="sel-agar-row" *ngFor="let selAgar of SEL_AGARS">
+   <ng-container *ngFor="let selAgar of SEL_AGARS">
+      <ng-container *ngIf="displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName].length > 0">
 
-      <div class="sel-agar-label-stack">
-         <div class="sel-agar-label">{{selAgar.displayName}}</div>
-         <button class="add-isolate hover-link" type="button" matTooltip="add isolate"
-                 *ngIf="!viewOnly && showAddIsolatesButton"
-                 (click)="promptAddNewIsolateTestSequence(selAgar.formGroupName)">
-            <mat-icon>add_circle_outline</mat-icon>
-         </button>
-      </div>
+         <div class="sel-agar-row">
 
-      <div class="isolate-test-seqs-stack">
-         <app-isolate-test-seq *ngFor="let seqUid of displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName]"
-            [stage]="stage"
-            [viewContextData]="showOtherStageDataAsContext"
-            [viewOnly]="viewOnly"
-            [form]="this.form.get([selAgar.formGroupName, seqUid])"
-            [includeOxidase]="includeOxidase"
-            [testUnitDescription]="testUnitDescription"
-            [medium]="medium"
-            [selectiveAgarDisplayName]="selAgar.displayName"
-            [showDisposeButton]="true"
-            [showIsolateNumber]="showIsolateNumber"
-            [showUnsetAffordances]="showUnsetAffordances"
-            (disposeRequested)="removeIsolateTestSequence(selAgar.formGroupName, seqUid)"
-            (failureDeclared)="onIsolateTestSequenceFailureDeclared(selAgar.formGroupName, seqUid)">
-         </app-isolate-test-seq>
-      </div>
+            <div class="sel-agar-label-stack">
+               <div class="sel-agar-label">{{selAgar.displayName}}</div>
+               <button class="add-isolate hover-link" *ngIf="!viewOnly && showAddIsolatesButton" type="button"
+                       (click)="promptAddNewIsolateTestSequence(selAgar.formGroupName)" matTooltip="add isolate">
+                  <mat-icon>add_circle_outline</mat-icon>
+               </button>
+            </div>
 
-   </div>
+            <div class="isolate-test-seqs-stack">
+               <app-isolate-test-seq *ngFor="let seqUid of displayOrderedIsolateTestSeqUidsBySelAgar[selAgar.formGroupName]"
+                  [stage]="stage"
+                  [viewContextData]="showOtherStageDataAsContext"
+                  [viewOnly]="viewOnly"
+                  [form]="this.form.get([selAgar.formGroupName, seqUid])"
+                  [includeOxidase]="includeOxidase"
+                  [testUnitDescription]="testUnitDescription"
+                  [medium]="medium"
+                  [selectiveAgarDisplayName]="selAgar.displayName"
+                  [showDisposeButton]="true"
+                  [showIsolateNumber]="showIsolateNumber"
+                  [showUnsetAffordances]="showUnsetAffordances"
+                  (disposeRequested)="removeIsolateTestSequence(selAgar.formGroupName, seqUid)"
+                  (failureDeclared)="onIsolateTestSequenceFailureDeclared(selAgar.formGroupName, seqUid)">
+               </app-isolate-test-seq>
+            </div>
+
+         </div>
+
+      </ng-container>
+   </ng-container>
 
 </div>
+<ng-template #noDisplayableIsolate>
+   <div class="no-isolates-message">
+      ( no isolates )
+   </div>
+</ng-template>

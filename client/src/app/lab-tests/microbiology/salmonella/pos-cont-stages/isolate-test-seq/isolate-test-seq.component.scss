@@ -1,7 +1,7 @@
 .isolate-row {
    display: flex;
    flex-flow: row wrap;
-   align-items: flex-start;
+   align-items: center;
    &.failed {
       background: // striped background
          repeating-linear-gradient(

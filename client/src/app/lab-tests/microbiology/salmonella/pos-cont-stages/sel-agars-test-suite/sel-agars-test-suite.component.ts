@@ -48,6 +48,8 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    @Input()
    showUnsetAffordances = false;
 
+   containsDisplayableIsolate: boolean;
+
    readonly SEL_AGARS: SelectiveAgar[] = [
       { formGroupName: 'he', displayName: 'HE'},
       { formGroupName: 'xld', displayName: 'XLD'},
@@ -64,6 +66,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
       this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
       for ( const selAgarName of Object.keys(this.SEL_AGARS) )
          this.displayOrderedIsolateTestSeqUidsBySelAgar[selAgarName] = [];
+      this.containsDisplayableIsolate = false;
    }
 
    ngOnChanges()
@@ -120,22 +123,20 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
       fg.addControl(uid, makeIsolateTestSequenceFormGroup(emptyTestSeq));
    }
 
-   private refreshDisplayOrderedIsolateTestSeqUids(selAgarName: string | null = null)
+   private refreshDisplayOrderedIsolateTestSeqUids()
    {
-      if ( selAgarName != null )
+      let displayableIsolateFound = false;
+      this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
+      for ( const selAgar of this.SEL_AGARS )
       {
-         this.displayOrderedIsolateTestSeqUidsBySelAgar = Object.assign({}, this.displayOrderedIsolateTestSeqUidsBySelAgar);
-         this.displayOrderedIsolateTestSeqUidsBySelAgar[selAgarName] = this.getDisplayOrderedIsolateTestSeqUids(selAgarName);
+         const fgName = selAgar.formGroupName;
+         const displayIsolateUids = this.getDisplayOrderedIsolateTestSeqUids(fgName);
+         this.displayOrderedIsolateTestSeqUidsBySelAgar[fgName] = displayIsolateUids;
+         if ( displayIsolateUids.length > 0 )
+            displayableIsolateFound = true;
       }
-      else
-      {
-         this.displayOrderedIsolateTestSeqUidsBySelAgar = {};
-         for ( const selAgar of this.SEL_AGARS )
-         {
-            const fgName = selAgar.formGroupName;
-            this.displayOrderedIsolateTestSeqUidsBySelAgar[fgName] = this.getDisplayOrderedIsolateTestSeqUids(fgName);
-         }
-      }
+
+      this.containsDisplayableIsolate = displayableIsolateFound;
    }
 
    private getDisplayOrderedIsolateTestSeqUids(selAgar: string): string[]
