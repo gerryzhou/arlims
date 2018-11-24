@@ -9,8 +9,7 @@
                (click)="onSamplingMethodClicked(samplingMethod)">
                {{samplingMethod.description}}
             </button>
-            <!-- TODO: Import mat-divider in module and reenable. -->
-            <!--<mat-divider></mat-divider>-->
+            <mat-divider></mat-divider>
             <button mat-menu-item (click)="onManualEntrySamplingMethodSelected()">
                enter sampling method numbers manually
             </button>
@@ -22,7 +21,7 @@
 
       <div formGroupName="samplingMethod" class="sampling-method-numbers">
 
-         <mat-icon>
+         <mat-icon class="user-modifiable-icon">
             {{form.get(['samplingMethod', 'userModifiable']).value === true ? 'lock_open' : 'lock'}}
          </mat-icon>
 

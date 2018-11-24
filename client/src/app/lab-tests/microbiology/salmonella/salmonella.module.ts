@@ -18,6 +18,7 @@ import {
    MatDialogModule,
    MatTooltipModule,
    MatTabsModule,
+   MatDividerModule,
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
@@ -65,6 +66,7 @@ import {IsolateIdentificationEditorComponent} from './pos-cont-stages/isolate-id
       MatDialogModule,
       MatTooltipModule,
       MatTabsModule,
+      MatDividerModule,
       //
       CommonComponentsModule,
       SalmonellaRoutingModule,

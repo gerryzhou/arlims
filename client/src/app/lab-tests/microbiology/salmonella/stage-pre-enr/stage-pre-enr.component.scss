@@ -22,7 +22,11 @@
    .sampling-method-numbers {
       display: flex;
       flex-flow: row wrap;
+      align-items: center;
       mat-form-field {
+         margin-right: 10px;
+      }
+      .user-modifiable-icon {
          margin-right: 10px;
       }
    }
