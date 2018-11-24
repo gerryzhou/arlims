@@ -1,12 +1,14 @@
 Done
 ----
-Field level attachments.
+- Support field level attachments with Vidas as example.
+- SLANT stage editing redesigned to use single dropdown per isolate.
+- Add identification required declaration in SLANT stage.
+- In IDENT stage, only show isolates that require identification as declared in SLANT stage.
+- Sampling methods now are configurable to be user modifiable or not.
+    Standard methods are not modifiable as indicated by lock icon.
 
-
-Subs/composites area of pre-enr stage needs revisiting
-  Add flag to sampling method for whether can be modified or not ("fixed")
-  Disable fields for the ones that are not marked modifiable.
-  Add "free entry" as option as well which is modifiable.
+TODO
+----
 
 Stage status: Just use completion of controls as status (John) for slant/ident stages.
 

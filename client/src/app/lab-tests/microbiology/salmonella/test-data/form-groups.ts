@@ -30,6 +30,7 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
             extractedGramsPerSub: new FormControl(testData.preEnrData.samplingMethod.extractedGramsPerSub),
             numberOfSubs: new FormControl(testData.preEnrData.samplingMethod.numberOfSubs),
             compositeMassGrams: new FormControl(testData.preEnrData.samplingMethod.compositeMassGrams),
+            userModifiable: new FormControl(testData.preEnrData.samplingMethod.userModifiable || false),
          }),
          samplingMethodExceptionsNotes: new FormControl(testData.preEnrData.samplingMethodExceptionsNotes),
 

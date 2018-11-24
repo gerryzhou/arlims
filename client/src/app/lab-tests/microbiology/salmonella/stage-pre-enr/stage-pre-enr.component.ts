@@ -83,6 +83,15 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
             });
    }
 
+   onManualEntrySamplingMethodSelected()
+   {
+      const samplingMethodformGroup = this.form.get('samplingMethod');
+      if (!samplingMethodformGroup) return;
+
+      const userModifiable = samplingMethodformGroup.get('userModifiable');
+      if (userModifiable) userModifiable.setValue(true);
+   }
+
    onSamplingMethodClicked(samplingMethod: SamplingMethod)
    {
       const samplingMethodformGroup = this.form.get('samplingMethod');
@@ -102,6 +111,9 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
       const compMassCtrl = samplingMethodformGroup.get('compositeMassGrams');
       if (compMassCtrl) compMassCtrl.setValue(samplingMethod.compositeMassGrams);
+
+      const userModifiable = samplingMethodformGroup.get('userModifiable');
+      if (userModifiable) userModifiable.setValue(samplingMethod.userModifiable);
    }
 
    onSampleTestUnitsFieldChanged()

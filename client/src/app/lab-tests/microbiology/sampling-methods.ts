@@ -7,6 +7,7 @@ export interface SamplingMethod {
    compositeMassGrams?: number;
    numberOfSubsPerComposite?: number;
    numberOfSubs?: number;
+   userModifiable?: boolean;
 }
 
 export interface SampleTestUnits {
