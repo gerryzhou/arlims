@@ -96,7 +96,7 @@
                         [showUnsetAffordances]="showUnsetAffordances">
                      </app-sel-agars-test-suite>
                   </ng-container>
-                  <div class="salmonella-diarizonae-satisfactory" *ngIf="stage === 'IDENT'">
+                  <div *ngIf="stage === 'IDENT'">
                      <mat-radio-group formControlName="salmonellaDiarizonaeSatisfactory">
                         <span>control satisfactory</span>
                         <mat-radio-button [value]="true">Y</mat-radio-button>
@@ -141,7 +141,7 @@
                         </mat-select>
                      </span>
                   </div>
-                  <div class="p-aerugi-satisfactory" *ngIf="stage === 'IDENT'">
+                  <div *ngIf="stage === 'IDENT'">
                      <mat-radio-group formControlName="pAerugiSatisfactory">
                         <span>control satisfactory</span>
                         <mat-radio-button [value]="true">Y</mat-radio-button>

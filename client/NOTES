@@ -1,29 +1,20 @@
-Media control needs only "No Growth" (NG) and "Growth" (G) option only.
-   continuationControls/medium
-      medium -> mediumControlGrowth
+Done
+----
+Field level attachments.
 
 
-Stage status: Just use completion of controls as status (John) for slant/ident stages.
-
-IDENT
-  Need to add page/dialog for building octet code.
-  New test units in SLANT stage are not showing in IDENT stage until slant data is saved.
-    Are form change events fired when positive test units are added to match Vidas positives?
-
-PRE-ENR stage
-  Need method/protocol code/name dropdown which is populated from FACTS api.
-
-Nov 15 Meeting Notes/TODOs
---------------------------
 Subs/composites area of pre-enr stage needs revisiting
   Add flag to sampling method for whether can be modified or not ("fixed")
   Disable fields for the ones that are not marked modifiable.
   Add "free entry" as option as well which is modifiable.
 
+Stage status: Just use completion of controls as status (John) for slant/ident stages.
 
-Field-level attachments
------------------------
-Listen for change events, update attachedFilesByTestPart and resultsFiles members so display is kept up to date.
+IDENT
+  Need to add page/dialog for building octet code.
+
+PRE-ENR stage
+  Need method/protocol code/name dropdown which is populated from FACTS api.
 
 Test listing/search page
   Reagent search
