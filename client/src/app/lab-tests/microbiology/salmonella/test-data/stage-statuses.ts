@@ -137,8 +137,7 @@ function vidasStatusCode(testData: TestData): FieldValuesStatusCode
          data.testUnitDetections,
          data.positiveControlDetection,
          data.mediumControlDetection,
-      ]
-         .concat(spiking ? [data.spikeDetection] : [])
+      ].concat(spiking ? [data.spikeDetection] : [])
    );
 }
 
@@ -263,9 +262,9 @@ function contControlsStatusCode
          return (
             contControls.pAerugiOxidaseDetection != null &&
             contControls.pVulgarisUreaDetection != null &&
+            contControls.mediumControlGrowth != null &&
             selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaGaminara, false, true, testConfig)  &&
-            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaDiarizonae, true, true, testConfig) &&
-            selectiveAgarsTestSuiteComplete(stage, contControls.medium, false, true, testConfig)
+            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaDiarizonae, true, true, testConfig)
          ) ? 'c' : 'i';
       case 'IDENT':
          return (
@@ -273,11 +272,11 @@ function contControlsStatusCode
             contControls.salmonellaDiarizonaeSatisfactory != null &&
             contControls.pVulgarisSatisfactory            != null &&
             contControls.pAerugiSatisfactory              != null &&
+            contControls.mediumControlGrowth              != null &&
             contControls.mediumSatisfactory               != null &&
             isolateIdentificationStatus(contControls.pVulgarisIdentification) === 'c' &&
             selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaGaminara, false, true, testConfig)  &&
-            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaDiarizonae, true, true, testConfig) &&
-            selectiveAgarsTestSuiteComplete(stage, contControls.medium, false, true, testConfig)
+            selectiveAgarsTestSuiteComplete(stage, contControls.salmonellaDiarizonae, true, true, testConfig)
          ) ? 'c' : 'i';
    }
 }

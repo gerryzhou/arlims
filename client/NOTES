@@ -1,5 +1,8 @@
-
 Media control needs only "No Growth" (NG) and "Growth" (G) option only.
+   continuationControls/medium
+      medium -> mediumControlGrowth
+
+
 Stage status: Just use completion of controls as status (John) for slant/ident stages.
 
 IDENT

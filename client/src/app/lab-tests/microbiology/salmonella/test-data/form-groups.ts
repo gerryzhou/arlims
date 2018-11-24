@@ -139,7 +139,7 @@ export function makeContinuationControlsFormGroup(contControls: ContinuationCont
       pVulgarisSatisfactory: new FormControl(contControls.pVulgarisSatisfactory),
       pAerugiOxidaseDetection: new FormControl(contControls.pAerugiOxidaseDetection),
       pAerugiSatisfactory: new FormControl(contControls.pAerugiSatisfactory),
-      medium: makeSelectiveAgarsTestSuiteFormGroup(contControls.medium),
+      mediumControlGrowth: new FormControl(contControls.mediumControlGrowth),
       mediumSatisfactory: new FormControl(contControls.mediumSatisfactory),
    });
 }

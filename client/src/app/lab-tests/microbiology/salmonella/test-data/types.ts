@@ -98,7 +98,7 @@ export interface ContinuationControls
    pVulgarisSatisfactory: boolean | null;
    pAerugiOxidaseDetection?: boolean| null;
    pAerugiSatisfactory: boolean | null;
-   medium: SelectiveAgarsTestSuite;
+   mediumControlGrowth: boolean | null;
    mediumSatisfactory: boolean | null;
 }
 
@@ -187,7 +187,7 @@ export function makeEmptyContinuationControls(username: string): ContinuationCon
       pVulgarisSatisfactory: null,
       pAerugiOxidaseDetection: null,
       pAerugiSatisfactory: null,
-      medium: makeEmptySelectiveAgarsTestSuite(1, 1, username),
+      mediumControlGrowth: null,
       mediumSatisfactory: null,
    };
 }

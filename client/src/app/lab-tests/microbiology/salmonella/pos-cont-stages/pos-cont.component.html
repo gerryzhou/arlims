@@ -43,18 +43,12 @@
 
                <div class="control">
                   <div class="control-name">Media Control</div>
-                  <app-sel-agars-test-suite
-                     [stage]="stage"
-                     [showOtherStageDataAsContext]="showOtherStageDataAsContext"
-                     [viewOnly]="viewOnly"
-                     [form]="form.get(['continuationControls', 'medium'])"
-                     [testUnitDescription]="'media control'"
-                     [medium]="'RV&TT'"
-                     [appUser]="appUser"
-                     [showAddIsolatesButton]="false"
-                     [showIsolateNumber]="false"
-                     [showUnsetAffordances]="showUnsetAffordances">
-                  </app-sel-agars-test-suite>
+                  <mat-radio-group formControlName="mediumControlGrowth" *ngIf="stage === 'SLANT'">
+                     <span>medium growth</span>
+                     <mat-radio-button [value]="true">Y</mat-radio-button>
+                     <mat-radio-button [value]="false">N</mat-radio-button>
+                     <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+                  </mat-radio-group>
                   <mat-radio-group formControlName="mediumSatisfactory" *ngIf="stage === 'IDENT'">
                      <span>control satisfactory</span>
                      <mat-radio-button [value]="true">Y</mat-radio-button>
