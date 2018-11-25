@@ -293,7 +293,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
                 row.getLong(1),
                 row.getString(2),
                 row.getString(3),
-                Optional.ofNullable(row.getString(4)),
+                row.getString(4),
                 LabTestTypeCode.valueOf(row.getString(5)),
                 row.getString(6),
                 row.getString(7),
@@ -641,6 +641,91 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         return new TestAuditInfo(testTypeCode, testRow, contextRow);
     }
+
+    @Override
+    public List<SampleInTest> findTestsContainingText(String searchText)
+    {
+        String sql =
+            "select " +
+            "t.id,t.sample_op_id,s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num," + // col 1...
+            "s.pac,s.product_name,tt.code,tt.name,tt.short_name,t.created," + // col 4...
+            "ce.short_name created_by_emp,t.last_saved,se.short_name last_saved_emp," + // col 10...
+            "(select count(*) from test_file tf where tf.test_id = t.id) attached_files_count," + // col 13
+            "TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date," + // col 14
+            "t.note,t.stage_statuses_json,t.reviewed,re.short_name reviewed_by_emp," + // col 15
+            "t.saved_to_facts,fe.short_name saved_to_facts_by_emp," + // col 19, 20
+            "s.lid, s.paf, s.split_ind, facts_status, facts_status_timestamp, last_refreshed_from_facts," + // col 21...
+            "s.sampling_org,subject\n" + // col 27, 28
+            "from test t\n" +
+            "join sample_op s on t.sample_op_id = s.id\n" +
+            "join test_type tt on t.test_type_id = tt.id\n" +
+            "join employee ce on ce.id = t.created_by_emp_id\n" +
+            "join employee se on se.id = t.last_saved_by_emp_id\n" +
+            "left join employee re on re.id = t.reviewed_by_emp_id\n" +
+            "left join employee fe on fe.id = t.last_saved_by_emp_id\n" +
+            "where contains(t.test_data_json, ?) > 0";
+
+        RowMapper<SampleInTest> rowMapper = (row, rowNum) -> {
+            LabTestMetadata tmd =
+                new LabTestMetadata(
+                    row.getLong(1),
+                    row.getLong(2),
+                    row.getString(3),
+                    row.getString(4),
+                    row.getString(5),
+                    LabTestTypeCode.valueOf(row.getString(6)),
+                    row.getString(7),
+                    row.getString(8),
+                    row.getTimestamp(9).toInstant(),
+                    row.getString(10),
+                    row.getTimestamp(11).toInstant(),
+                    row.getString(12),
+                    row.getInt(13),
+                    Optional.ofNullable(row.getString(14)).map(LocalDate::parse),
+                    Optional.ofNullable(row.getString(15)),
+                    Optional.ofNullable(row.getString(16)),
+                    Optional.ofNullable(row.getTimestamp(17)).map(Timestamp::toInstant),
+                    Optional.ofNullable(row.getString(18)), // reviewed by emp
+                    Optional.ofNullable(row.getTimestamp(19)).map(Timestamp::toInstant),
+                    Optional.ofNullable(row.getString(20)) // saved to facts by emp
+                );
+
+            Optional<String> lid = Optional.ofNullable(row.getString(21));
+            Optional<String> paf = Optional.ofNullable(row.getString(22));
+            Optional<String> splitInd = Optional.ofNullable(row.getString(23));
+            String factsStatus = row.getString(24);
+            Instant factsStatusTimestamp = row.getTimestamp(25).toInstant();
+            Instant lastRefreshedFromFactsTimestamp = row.getTimestamp(26).toInstant();
+            Optional<String> samplingOrg = Optional.ofNullable(row.getString(27));
+            Optional<String> subject = Optional.ofNullable(row.getString(28));
+
+            Sample s =
+                new Sample(
+                    tmd.getSampleId(),
+                    tmd.getSampleNum(),
+                    tmd.getPac(),
+                    lid,
+                    paf,
+                    tmd.getProductName(),
+                    splitInd,
+                    factsStatus,
+                    factsStatusTimestamp,
+                    lastRefreshedFromFactsTimestamp,
+                    samplingOrg,
+                    subject,
+                    Optional.empty(), // assignments omitted
+                    Optional.empty()  // tests omitted
+                );
+
+            return new SampleInTest(s, tmd);
+        };
+
+        // TODO: Consider modifying the searchText here to guarantee that it forms a valid text query, that only certain operators are used, etc.
+
+        return jdbc.query(sql, rowMapper, searchText);
+    }
+
+
 
     private static String md5(byte[] data)
     {

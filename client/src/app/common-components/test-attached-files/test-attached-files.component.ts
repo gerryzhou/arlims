@@ -8,9 +8,8 @@ import * as FileSaver from 'file-saver';
 
 import {FilesSelectorComponent} from '../files-selector/files-selector.component';
 import {TestAttachedFiles} from '../../routing/test-attached-files.resolver';
-import {SampleInTest} from '../../shared/models/sample-in-test';
 import {ApiUrlsService, TestsService, UserContextService} from '../../shared/services';
-import {CreatedTestAttachedFiles, TestAttachedFileMetadata} from '../../../generated/dto';
+import {CreatedTestAttachedFiles, TestAttachedFileMetadata, SampleInTest} from '../../../generated/dto';
 
 @Component({
   selector: 'app-test-attached-files',

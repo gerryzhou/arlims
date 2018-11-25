@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Observable, throwError, zip} from 'rxjs';
 import {TestsService, UserContextService} from '../shared/services';
-import {TestAttachedFileMetadata} from '../../generated/dto';
-import {SampleInTest} from '../shared/models/sample-in-test';
+import {SampleInTest, TestAttachedFileMetadata} from '../../generated/dto';
 import {map} from 'rxjs/operators';
 
 

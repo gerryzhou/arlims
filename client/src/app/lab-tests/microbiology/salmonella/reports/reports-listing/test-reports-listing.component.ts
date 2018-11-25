@@ -3,11 +3,10 @@ import {ActivatedRoute} from '@angular/router';
 import {map} from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
-import {SampleInTest} from '../../../../../shared/models/sample-in-test';
 import {TestsService} from '../../../../../shared/services';
 import {emptyTestData, TestData} from '../../test-data';
 import {LabGroupTestData} from '../../../../../shared/models/lab-group-test-data';
-import {AuditLogEntry} from '../../../../../../generated/dto';
+import {SampleInTest, AuditLogEntry} from '../../../../../../generated/dto';
 import {IMP_SLM_VIDAS_PDF_REPORT_NAME, makePdfReportData} from '../pdf-report-data';
 
 @Component({

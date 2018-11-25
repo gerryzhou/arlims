@@ -11,7 +11,7 @@ public class LabTestMetadata
     private long sampleId;
     private String sampleNum;
     private String pac;
-    private Optional<String> productName;
+    private String productName;
     private LabTestTypeCode testTypeCode;
     private String testTypeName;
     private String testTypeShortName;
@@ -35,7 +35,7 @@ public class LabTestMetadata
             long sampleId,
             String sampleNum,
             String pac,
-            Optional<String> productName,
+            String productName,
             LabTestTypeCode testTypeCode,
             String testTypeName,
             String testTypeShortName,
@@ -83,7 +83,7 @@ public class LabTestMetadata
 
     public String getPac() { return pac; }
 
-    public Optional<String> getProductName() { return productName; }
+    public String getProductName() { return productName; }
 
     public LabTestTypeCode getTestTypeCode() { return testTypeCode; }
 

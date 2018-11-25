@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.io.InputStreamResource;
@@ -181,7 +180,17 @@ public class TestController extends ControllerBase
         testDataService.deleteTestAttachedFile(testId, attachedFileId, currentUser);
     }
 
-    @GetMapping("{testId}/report/{reportName}")
+
+    @GetMapping("text-search/{searchText}")
+    public List<SampleInTest> findTestsContainingText
+        (
+            @PathVariable String searchText
+        )
+    {
+        return testDataService.findTestsContainingText(searchText);
+    }
+
+    @GetMapping("{testId:\\d+}/report/{reportName}")
     public ResponseEntity<InputStreamResource> getTestDataReport
         (
             @PathVariable long testId,
@@ -195,19 +204,10 @@ public class TestController extends ControllerBase
             new ResourceNotFoundException("no test data exists for test " + testId)
         );
 
-        LabTestMetadata testMetadata = testDataService.getTestMetadata(testId);
-
-        Report report = reportService.makeReport(reportName, testDataJson, testMetadata);
-
-        return
-            ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment;filename=" + report.getSuggestedFileName())
-            .contentLength(report.getReportFile().toFile().length())
-            .body(new InputStreamResource(Files.newInputStream(report.getReportFile())));
+        return getTestDataReportForProvidedTestData(testId, reportName, testDataJson);
     }
 
-    @PostMapping("{testId}/report/{reportName}")
+    @PostMapping("{testId:\\d+}/report/{reportName}")
     public ResponseEntity<InputStreamResource> getTestDataReportForProvidedTestData
         (
             @PathVariable long testId,

@@ -74,7 +74,7 @@ class AcroformReportService
             if ( sampleNumField != null) sampleNumField.setValue(testMetadata.getSampleNum());
 
             PDField productNameField = acroForm.getField("testmd_productName");
-            if ( productNameField != null) productNameField.setValue(testMetadata.getProductName().orElse(""));
+            if ( productNameField != null) productNameField.setValue(testMetadata.getProductName());
 
             setTestDataFields(acroForm, testDataJsonNode, "");
 

@@ -6,9 +6,8 @@ import * as moment from 'moment';
 
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
-import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {AppUser, LabResource, TestAttachedFileMetadata} from '../../../../../generated/dto';
+import {AppUser, LabResource, TestAttachedFileMetadata, SampleInTest} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
    emptyTestData,

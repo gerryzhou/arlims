@@ -31,4 +31,6 @@ public interface TestDataService
     TestAttachedFileContents getTestAttachedFileContents(long attachedFileId, long testId);
 
     void deleteTestAttachedFile(long testId, long attachedFileId, AppUser user);
+
+    List<SampleInTest> findTestsContainingText(String searchText);
 }

@@ -9,11 +9,12 @@ import {
    LabGroupContents,
    AppUser,
    Sample,
+   SampleInTest,
    LabTestType,
    LabResource,
-   LabResourceType, UserRegistration,
+   LabResourceType,
+   UserRegistration,
 } from '../../../generated/dto';
-import {SampleInTest} from '../models/sample-in-test';
 import {AppInternalUrlsService} from './app-internal-urls.service';
 import {Router} from '@angular/router';
 

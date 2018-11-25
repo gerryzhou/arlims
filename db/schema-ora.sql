@@ -13,3 +13,5 @@ alter table audit_entry
   add constraint ck_audent_objfromval_isjson check (object_from_value_json is json format json strict);
 alter table audit_entry
   add constraint ck_audent_objtoval_isjson check (object_to_value_json is json format json strict);
+
+create index ix_test_testdatajson on test(test_data_json) indextype is ctxsys.context;

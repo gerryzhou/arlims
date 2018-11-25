@@ -31,9 +31,9 @@ public class Sample
 
     private final Optional<String> subject;
 
-    private final List<SampleAssignment> assignments;
+    private final Optional<List<SampleAssignment>> assignments;
 
-    private final List<LabTestMetadata> tests;
+    private final Optional<List<LabTestMetadata>> tests;
 
     public Sample
         (
@@ -49,8 +49,8 @@ public class Sample
             Instant lastRefreshedFromFactsInstant,
             Optional<String> samplingOrganization,
             Optional<String> subject,
-            List<SampleAssignment> assignments,
-            List<LabTestMetadata> tests
+            Optional<List<SampleAssignment>> assignments,
+            Optional<List<LabTestMetadata>> tests
         )
     {
         this.id = id;
@@ -93,7 +93,7 @@ public class Sample
 
     public Optional<String> getSubject() { return subject; }
 
-    public List<SampleAssignment> getAssignments() { return assignments; }
+    public Optional<List<SampleAssignment>> getAssignments() { return assignments; }
 
-    public List<LabTestMetadata> getTests() { return tests; }
+    public Optional<List<LabTestMetadata>> getTests() { return tests; }
 }

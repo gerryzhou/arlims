@@ -2,9 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 
-import {SampleInTest} from '../../../../shared/models/sample-in-test';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {LabResource, TestAttachedFileMetadata} from '../../../../../generated/dto';
+import {LabResource, TestAttachedFileMetadata, SampleInTest} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, makeTestDataFormGroup} from '../test-data';
 import {TestConfig} from '../test-config';

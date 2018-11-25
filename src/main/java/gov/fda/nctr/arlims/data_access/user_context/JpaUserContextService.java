@@ -291,8 +291,8 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                         dbSample.getLastRefreshedFromFacts(),
                         opt(dbSample.getSamplingOrganization()),
                         opt(dbSample.getSubject()),
-                        assignments,
-                        tests
+                        opt(assignments),
+                        opt(tests)
                     );
             })
             .collect(toList());
@@ -434,7 +434,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                 s.getId(),
                 sampleNum,
                 s.getPac(),
-                opt(s.getProductName()),
+                s.getProductName(),
                 t.getTestType().getCode(),
                 t.getTestType().getName(),
                 t.getTestType().getShortName(),

@@ -10,18 +10,25 @@ Done
 TODO
 ----
 
-Stage status: Just use completion of controls as status (John) for slant/ident stages.
+Test Search Page
+----------------
+Initially empty, no resolver necessary.
+Search bar at top
+  full text search field
+  date range
+  test types
+  FACTS statuses
+
+
 
 IDENT
   Need to add page/dialog for building octet code.
 
+Stage status: Just use completion of controls as status (John) for slant/ident stages.
+
 PRE-ENR stage
   Need method/protocol code/name dropdown which is populated from FACTS api.
 
-Test listing/search page
-  Reagent search
-    Add text index on json column.
-  Filter via date ranges, test types, FACTS statuses, and full text search of test data.
 
 Turn off preloading for salmonella test module.
 
