@@ -15,3 +15,44 @@ alter table audit_entry
   add constraint ck_audent_objtoval_isjson check (object_to_value_json is json format json strict);
 
 create index ix_test_testdatajson on test(test_data_json) indextype is ctxsys.context;
+
+-- TODO: Ask Steve T. for create view priv on scidevel for labelng.
+create or replace view test_v as
+  select
+    t.id test_id,
+    t.sample_op_id,
+    s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num,
+    s.pac,
+    s.product_name,
+    tt.code type_code,
+    tt.name type_name,
+    tt.short_name type_short_name,
+    t.created created,
+    ce.short_name created_by_emp,
+    t.last_saved last_saved,
+    se.short_name last_saved_emp,
+    (select count(*) from test_file tf where tf.test_id = t.id) attached_files_count,
+    TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date,
+    t.note,
+    t.stage_statuses_json,
+    t.reviewed,
+    re.short_name reviewed_by_emp,
+    t.saved_to_facts,
+    fe.short_name saved_to_facts_by_emp,
+    s.lid,
+    s.paf,
+    s.split_ind,
+    s.facts_status facts_status,
+    s.facts_status_timestamp facts_status_ts,
+    s.last_refreshed_from_facts,
+    s.sampling_org,
+    s.subject subject,
+    t.test_data_json
+  from test t
+  join sample_op s on t.sample_op_id = s.id
+  join test_type tt on t.test_type_id = tt.id
+  join employee ce on ce.id = t.created_by_emp_id
+  join employee se on se.id = t.last_saved_by_emp_id
+  left join employee re on re.id = t.reviewed_by_emp_id
+  left join employee fe on fe.id = t.last_saved_by_emp_id
+;

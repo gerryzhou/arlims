@@ -38,6 +38,41 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
 
+    private static final List<String> TESTV_SAMPLE_IN_TEST_MAPPED_COLS =
+        Arrays.asList(
+            "TEST_ID",
+            "SAMPLE_OP_ID",
+            "SAMPLE_NUM",
+            "PAC",
+            "PRODUCT_NAME",
+            "TYPE_CODE",
+            "TYPE_NAME",
+            "TYPE_SHORT_NAME",
+            "CREATED",
+            "CREATED_BY_EMP",
+            "LAST_SAVED",
+            "LAST_SAVED_EMP",
+            "ATTACHED_FILES_COUNT",
+            "BEGIN_DATE",
+            "NOTE",
+            "STAGE_STATUSES_JSON",
+            "REVIEWED",
+            "REVIEWED_BY_EMP",
+            "SAVED_TO_FACTS",
+            "SAVED_TO_FACTS_BY_EMP",
+            "LID",
+            "PAF",
+            "SPLIT_IND",
+            "FACTS_STATUS",
+            "FACTS_STATUS_TS",
+            "LAST_REFRESHED_FROM_FACTS",
+            "SAMPLING_ORG",
+            "SUBJECT"
+        );
+
+    private static final String TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR =
+        String.join(",", TESTV_SAMPLE_IN_TEST_MAPPED_COLS);
+
     public JdbcTestDataService
         (
             JdbcTemplate jdbcTemplate,
@@ -643,29 +678,46 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     }
 
     @Override
-    public List<SampleInTest> findTestsContainingText(String searchText)
+    public List<SampleInTest> findTests
+        (
+            Optional<String> searchText,
+            Optional<Instant> fromTimestamp,
+            Optional<Instant> toTimestamp,
+            Optional<String> testTimestampProperty
+        )
     {
-        String sql =
-            "select " +
-            "t.id,t.sample_op_id,s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num," + // col 1...
-            "s.pac,s.product_name,tt.code,tt.name,tt.short_name,t.created," + // col 4...
-            "ce.short_name created_by_emp,t.last_saved,se.short_name last_saved_emp," + // col 10...
-            "(select count(*) from test_file tf where tf.test_id = t.id) attached_files_count," + // col 13
-            "TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date," + // col 14
-            "t.note,t.stage_statuses_json,t.reviewed,re.short_name reviewed_by_emp," + // col 15
-            "t.saved_to_facts,fe.short_name saved_to_facts_by_emp," + // col 19, 20
-            "s.lid, s.paf, s.split_ind, facts_status, facts_status_timestamp, last_refreshed_from_facts," + // col 21...
-            "s.sampling_org,subject\n" + // col 27, 28
-            "from test t\n" +
-            "join sample_op s on t.sample_op_id = s.id\n" +
-            "join test_type tt on t.test_type_id = tt.id\n" +
-            "join employee ce on ce.id = t.created_by_emp_id\n" +
-            "join employee se on se.id = t.last_saved_by_emp_id\n" +
-            "left join employee re on re.id = t.reviewed_by_emp_id\n" +
-            "left join employee fe on fe.id = t.last_saved_by_emp_id\n" +
-            "where contains(t.test_data_json, ?) > 0";
+        List<String> whereCriteria = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        String tsProp = testTimestampProperty.orElse("last_saved");
+        searchText.ifPresent(textQuery -> {
+            whereCriteria.add("contains(test_data_json, ?) > 0");
+            params.add(textQuery);
+        });
+        fromTimestamp.ifPresent(fts -> {
+            whereCriteria.add(tsProp + " >= ?");
+            params.add(new java.sql.Timestamp(fts.toEpochMilli()));
+        });
+        toTimestamp.ifPresent(tts -> {
+            whereCriteria.add(tsProp + " <= ?");
+            params.add(new java.sql.Timestamp(tts.toEpochMilli()));
+        });
 
-        RowMapper<SampleInTest> rowMapper = (row, rowNum) -> {
+        String sql =
+            "select " + TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR + " from test_v\n" +
+            (!whereCriteria.isEmpty() ? "where " + String.join("\nand\n", whereCriteria): "");
+
+        RowMapper<SampleInTest> rowMapper = getTestVSampleInTestRowMapper();
+
+        // TODO: Consider cleaning/escaping the searchText here to guarantee that it forms a valid text query,
+        //       that only certain operators are used, etc.
+
+        return jdbc.query(sql, params.toArray(), rowMapper);
+    }
+
+    // RowMapper creating SampleInTests from TEST_V rows, assuming column order specified in TESTV_SAMPLE_IN_TEST_MAPPED_COLS.
+    private RowMapper<SampleInTest> getTestVSampleInTestRowMapper()
+    {
+        return (row, rowNum) -> {
             LabTestMetadata tmd =
                 new LabTestMetadata(
                     row.getLong(1),
@@ -719,13 +771,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
             return new SampleInTest(s, tmd);
         };
-
-        // TODO: Consider modifying the searchText here to guarantee that it forms a valid text query, that only certain operators are used, etc.
-
-        return jdbc.query(sql, rowMapper, searchText);
     }
-
-
 
     private static String md5(byte[] data)
     {

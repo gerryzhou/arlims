@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -180,14 +181,27 @@ public class TestController extends ControllerBase
         testDataService.deleteTestAttachedFile(testId, attachedFileId, currentUser);
     }
 
-
-    @GetMapping("text-search/{searchText}")
-    public List<SampleInTest> findTestsContainingText
+    @GetMapping("search")
+    public List<SampleInTest> findTests
         (
-            @PathVariable String searchText
+            @RequestParam(value="tq",   required=false) Optional<String> searchText,
+            @RequestParam(value="fts", required=false) Optional<Instant> fromTimestamp,
+            @RequestParam(value="tts", required=false) Optional<Instant> toTimestamp,
+            @RequestParam(value="tsp", required=false) Optional<String> timestampProperty
         )
     {
-        return testDataService.findTestsContainingText(searchText);
+        System.out.println("searchText = [" + searchText + "], fromTimestamp = [" + fromTimestamp + "], toTimestamp = [" + toTimestamp + "]");
+
+        timestampProperty.ifPresent(tsProp -> {
+            if ( !tsProp.equals("created")  &&
+                 !tsProp.equals("last_saved") &&
+                 !tsProp.equals("begin_date") &&
+                 !tsProp.equals("reviewed") &&
+                 !tsProp.equals("saved_to_facts") )
+                throw new IllegalArgumentException("Invalid timestamp property in tests search.");
+        });
+
+        return testDataService.findTests(searchText, fromTimestamp, toTimestamp, timestampProperty);
     }
 
     @GetMapping("{testId:\\d+}/report/{reportName}")

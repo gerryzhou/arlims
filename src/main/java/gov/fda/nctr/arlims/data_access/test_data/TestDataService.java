@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.data_access.test_data;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,5 +33,11 @@ public interface TestDataService
 
     void deleteTestAttachedFile(long testId, long attachedFileId, AppUser user);
 
-    List<SampleInTest> findTestsContainingText(String searchText);
+    List<SampleInTest> findTests
+        (
+            Optional<String> searchText,
+            Optional<Instant> fromTimestamp,
+            Optional<Instant> toTimestamp,
+            Optional<String> timestampProperty // controls which timestamp property of the test is constrained by from/to timestamps
+        );
 }

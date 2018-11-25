@@ -30,14 +30,16 @@ import {TruncateModule} from '@yellowspot/ng-truncate';
 
 import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
+import {AlertMessageComponent} from './alerts/alert-message.component';
+import {CommonComponentsModule} from './common-components/common-components.module';
 import {UserContextService, LoadingStatusService, LoadingStatusInterceptor, ApiUrlsService} from './shared/services';
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
-import {AlertMessageComponent} from './alerts/alert-message.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
-import {CommonComponentsModule} from './common-components/common-components.module';
+import {TestsSearchComponent} from './tests-search/tests-search.component';
 import {LoginComponent} from './login/login.component';
-import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interceptor';
 import {RegistrationComponent} from './registration/registration.component';
+import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interceptor';
+import {TestsSearchQueryComponent} from './tests-search/query/tests-search-query.component';
 
 @NgModule({
    declarations: [
@@ -45,8 +47,10 @@ import {RegistrationComponent} from './registration/registration.component';
       AlertMessageComponent,
       SamplesListingComponent,
       SamplesListingOptionsComponent,
+      TestsSearchComponent,
       LoginComponent,
       RegistrationComponent,
+      TestsSearchQueryComponent,
    ],
    entryComponents: [
      // (dialog components here)

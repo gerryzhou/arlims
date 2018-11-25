@@ -71,7 +71,7 @@ export class ApiUrlsService {
 
    reportUrl(testId: number, reportName: string): string
    {
-      return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${reportName}`);
+      return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${encodeURIComponent(reportName)}`);
    }
 
    refreshUserOrganziationSampleOpsUrl(): string
@@ -79,6 +79,25 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/lab-group/refresh-user-org-sample-ops`);
    }
 
+   testTextSearchUrl
+      (
+         textSearch: string | null,
+         fromMoment: Moment | null,
+         toMoment: Moment | null,
+      )
+      : string
+   {
+      let searchParams = new HttpParams();
+
+      if ( textSearch )
+         searchParams = searchParams.append('tq', textSearch);
+      if ( fromMoment )
+         searchParams = searchParams.append('fts', fromMoment.toISOString());
+      if ( toMoment )
+         searchParams = searchParams.append('tts', toMoment.toISOString());
+
+      return this.location.prepareExternalUrl(`/api/tests/search?${searchParams.toString()}`);
+   }
 
 
    auditLogEntriesQueryUrl
