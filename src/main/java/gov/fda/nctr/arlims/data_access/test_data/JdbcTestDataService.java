@@ -18,6 +18,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
@@ -28,6 +30,7 @@ import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.models.dto.*;
+import static java.lang.String.join;
 
 
 @Service
@@ -71,7 +74,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         );
 
     private static final String TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR =
-        String.join(",", TESTV_SAMPLE_IN_TEST_MAPPED_COLS);
+        join(",", TESTV_SAMPLE_IN_TEST_MAPPED_COLS);
 
     public JdbcTestDataService
         (
@@ -683,35 +686,56 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             Optional<String> searchText,
             Optional<Instant> fromTimestamp,
             Optional<Instant> toTimestamp,
-            Optional<String> testTimestampProperty
+            Optional<String> testTimestampProperty,
+            Optional<List<String>> sampleOpStatusCodes,
+            Optional<List<String>> labTestTypeCodes
         )
     {
         List<String> whereCriteria = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
-        String tsProp = testTimestampProperty.orElse("last_saved");
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
         searchText.ifPresent(textQuery -> {
-            whereCriteria.add("contains(test_data_json, ?) > 0");
-            params.add(textQuery);
+            whereCriteria.add("contains(test_data_json, :textQuery) > 0");
+            params.addValue("textQuery", textQuery);
         });
+
+        String tsProp = testTimestampProperty.orElse("created");
         fromTimestamp.ifPresent(fts -> {
-            whereCriteria.add(tsProp + " >= ?");
-            params.add(new java.sql.Timestamp(fts.toEpochMilli()));
+            whereCriteria.add(tsProp + " >= :fts");
+            params.addValue("fts", new java.sql.Timestamp(fts.toEpochMilli()));
         });
         toTimestamp.ifPresent(tts -> {
-            whereCriteria.add(tsProp + " <= ?");
-            params.add(new java.sql.Timestamp(tts.toEpochMilli()));
+            whereCriteria.add(tsProp + " <= :tts");
+            params.addValue("tts", new java.sql.Timestamp(tts.toEpochMilli()));
+        });
+
+        sampleOpStatusCodes.ifPresent(codes -> {
+            if ( codes.isEmpty() )
+                whereCriteria.add("facts_status is null");
+            else
+            {
+                whereCriteria.add("facts_status in (:statusCodes)");
+                params.addValue("statusCodes", codes);
+            }
+        });
+
+        labTestTypeCodes.ifPresent(codes -> {
+            if ( codes.isEmpty() )
+                whereCriteria.add("type_code is null");
+            else
+            {
+                whereCriteria.add("type_code in (:typeCodes)");
+                params.addValue("typeCodes", codes);
+            }
         });
 
         String sql =
             "select " + TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR + " from test_v\n" +
-            (!whereCriteria.isEmpty() ? "where " + String.join("\nand\n", whereCriteria): "");
+            (!whereCriteria.isEmpty() ? "where " + join("\nand\n", whereCriteria): "");
 
         RowMapper<SampleInTest> rowMapper = getTestVSampleInTestRowMapper();
 
-        // TODO: Consider cleaning/escaping the searchText here to guarantee that it forms a valid text query,
-        //       that only certain operators are used, etc.
-
-        return jdbc.query(sql, params.toArray(), rowMapper);
+        return new NamedParameterJdbcTemplate(jdbc).query(sql, params, rowMapper);
     }
 
     // RowMapper creating SampleInTests from TEST_V rows, assuming column order specified in TESTV_SAMPLE_IN_TEST_MAPPED_COLS.

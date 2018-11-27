@@ -12,10 +12,15 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 import gov.fda.nctr.arlims.data_access.test_data.TestAttachedFileContents;
 import gov.fda.nctr.arlims.data_access.test_data.TestDataService;
@@ -34,6 +39,8 @@ public class TestController extends ControllerBase
     private final TestDataService testDataService;
     private final TestDataReportService reportService;
 
+    private final ObjectMapper jsonSerializer;
+
     public TestController
         (
             TestDataService testDataService,
@@ -42,6 +49,8 @@ public class TestController extends ControllerBase
     {
         this.testDataService = testDataService;
         this.reportService = reportService;
+
+        this.jsonSerializer = Jackson2ObjectMapperBuilder.json().build();
     }
 
     @PostMapping("new")
@@ -184,13 +193,16 @@ public class TestController extends ControllerBase
     @GetMapping("search")
     public List<SampleInTest> findTests
         (
-            @RequestParam(value="tq",   required=false) Optional<String> searchText,
+            @RequestParam(value="tq",  required=false) Optional<String>  searchText,
             @RequestParam(value="fts", required=false) Optional<Instant> fromTimestamp,
             @RequestParam(value="tts", required=false) Optional<Instant> toTimestamp,
-            @RequestParam(value="tsp", required=false) Optional<String> timestampProperty
+            @RequestParam(value="tsp", required=false) Optional<String>  timestampProperty,
+            @RequestParam(value="ss",  required=false) Optional<String>  sampleOpStatusCodesJson,
+            @RequestParam(value="ltt", required=false) Optional<String>  labTestTypeCodesJson
         )
     {
-        System.out.println("searchText = [" + searchText + "], fromTimestamp = [" + fromTimestamp + "], toTimestamp = [" + toTimestamp + "]");
+        Optional<List<String>> sampleOpStatusCodes = sampleOpStatusCodesJson.map(this::parseJsonStringArray);
+        Optional<List<String>> labTestTypeCodes = labTestTypeCodesJson.map(this::parseJsonStringArray);
 
         timestampProperty.ifPresent(tsProp -> {
             if ( !tsProp.equals("created")  &&
@@ -201,7 +213,17 @@ public class TestController extends ControllerBase
                 throw new IllegalArgumentException("Invalid timestamp property in tests search.");
         });
 
-        return testDataService.findTests(searchText, fromTimestamp, toTimestamp, timestampProperty);
+        Optional<String> prepdTextQuery = searchText.map(this::prepareTextQuery);
+
+        return
+            testDataService.findTests(
+                prepdTextQuery,
+                fromTimestamp,
+                toTimestamp,
+                timestampProperty,
+                sampleOpStatusCodes,
+                labTestTypeCodes
+            );
     }
 
     @GetMapping("{testId:\\d+}/report/{reportName}")
@@ -240,6 +262,26 @@ public class TestController extends ControllerBase
             "attachment;filename=" + report.getSuggestedFileName())
             .contentLength(report.getReportFile().toFile().length())
             .body(new InputStreamResource(Files.newInputStream(report.getReportFile())));
+    }
+
+    private String prepareTextQuery(String textQuery)
+    {
+        // (Could do something more sophisticated here which would allow use of some text query operators.)
+        return "{" + textQuery.replace('{', ' ').replace('}', ' ') + "}";
+    }
+
+    private List<String> parseJsonStringArray(String codesJson)
+    {
+        try
+        {
+            CollectionType collType = jsonSerializer.getTypeFactory().constructCollectionType(List.class, String.class);
+
+            return jsonSerializer.readValue(codesJson, collType);
+        }
+        catch(IOException ioe)
+        {
+            throw new BadRequestException("invalid json string array");
+        }
     }
 
     @ExceptionHandler(BadRequestException.class)

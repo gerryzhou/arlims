@@ -38,6 +38,8 @@ public interface TestDataService
             Optional<String> searchText,
             Optional<Instant> fromTimestamp,
             Optional<Instant> toTimestamp,
-            Optional<String> timestampProperty // controls which timestamp property of the test is constrained by from/to timestamps
+            Optional<String> timestampProperty,
+            Optional<List<String>> sampleOpStatusCodes,
+            Optional<List<String>> labTestTypeCodes
         );
 }

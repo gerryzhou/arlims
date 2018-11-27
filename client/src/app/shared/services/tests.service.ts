@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of as observable} from 'rxjs';
+import {from, Observable, of as observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
 
@@ -10,10 +10,12 @@ import {
    CreatedTestMetadata,
    DataModificationInfo,
    LabTestTypeCode,
-   OptimisticDataUpdateResult, TestAttachedFileMetadata,
+   OptimisticDataUpdateResult, SampleInTest, TestAttachedFileMetadata,
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
+import {Moment} from "moment";
+import {SampleOpStatusCode} from "../models/sample-op-status";
 
 @Injectable({
   providedIn: 'root'
@@ -27,13 +29,21 @@ export class TestsService {
       )
    {}
 
-   createTest(sampleId: number, testTypeCode: LabTestTypeCode, testBeginDate: string): Observable<CreatedTestMetadata>
+   createTest
+      (
+         sampleId: number,
+         testTypeCode: LabTestTypeCode,
+         testBeginDate: string
+      )
+      : Observable<CreatedTestMetadata>
    {
       const url = this.apiUrlsSvc.newTestUrl();
-      const body = new HttpParams()
+      const body =
+         new HttpParams()
          .set('sampleId', sampleId.toString())
          .set('testTypeCode', testTypeCode)
          .set('testBeginDate', testBeginDate);
+
       return this.httpClient.post<CreatedTestMetadata>(url, body);
    }
 
@@ -57,7 +67,14 @@ export class TestsService {
       );
    }
 
-   attachFilesToTest(testId: number, files: File[], role: string|null, testDataPart: string|null): Observable<CreatedTestAttachedFiles>
+   attachFilesToTest
+      (
+         testId: number,
+         files: File[],
+         role: string|null,
+         testDataPart: string|null
+      )
+      : Observable<CreatedTestAttachedFiles>
    {
       const formData: FormData = new FormData();
 
@@ -69,7 +86,14 @@ export class TestsService {
       return this.httpClient.post<CreatedTestAttachedFiles>(this.apiUrlsSvc.newTestAttachedFilesUrl(testId), formData);
    }
 
-   updateTestAttachedFileMetadata(attachedFileId: number, testId: number, role: string|null, testDataPart: string|null, name: string)
+   updateTestAttachedFileMetadata
+      (
+         attachedFileId: number,
+         testId: number,
+         role: string|null,
+         testDataPart: string|null,
+         name: string
+      )
    {
       const formData: FormData = new FormData();
 
@@ -173,13 +197,42 @@ export class TestsService {
       );
    }
 
-   getTestReportBlobForPostedTestData(testId: number, reportName: string, testData: any): Observable<Blob>
+   getTestReportBlobForPostedTestData
+      (
+         testId: number,
+         reportName: string,
+         testData: any
+      )
+      : Observable<Blob>
    {
       const reportUrl = this.apiUrlsSvc.reportUrl(testId, reportName);
 
       return this.httpClient.post(reportUrl, testData, {responseType: 'blob'});
    }
 
+   findTests
+      (
+         searchText: string | null,
+         fromTimestamp: Moment | null,
+         toTimestamp: Moment | null,
+         timestampProperty: string | null,
+         includeStatusCodes: SampleOpStatusCode[] | null,
+         includeTestTypeCodes: LabTestTypeCode[] | null
+      )
+      : Observable<SampleInTest[]>
+   {
+      const searchUrl =
+         this.apiUrlsSvc.testsSearchUrl(
+            searchText,
+            fromTimestamp,
+            toTimestamp,
+            timestampProperty,
+            includeStatusCodes,
+            includeTestTypeCodes
+         );
+
+      return this.httpClient.get<SampleInTest[]>(searchUrl);
+   }
 }
 
 export class SaveResult {

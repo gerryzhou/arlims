@@ -1,3 +1,65 @@
-<p>
-  tests-search-query works!
-</p>
+<form [formGroup]="form">
+
+   <div class="criteria-panel">
+
+      <div class="criteria-group search">
+         <mat-icon>search</mat-icon>
+         <mat-form-field>
+            <input formControlName="searchText" matInput placeholder="search">
+         </mat-form-field>
+      </div>
+
+      <div class="criteria-group">
+         <mat-form-field>
+            <input matInput formControlName="fromTimestamp" [matDatepicker]="fromDatepicker" placeholder="from date">
+            <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromDatepicker></mat-datepicker>
+         </mat-form-field>
+      </div>
+
+      <div class="criteria-group">
+         <mat-form-field>
+            <input matInput formControlName="toTimestamp" [matDatepicker]="toDatepicker" placeholder="to date">
+            <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #toDatepicker></mat-datepicker>
+         </mat-form-field>
+      </div>
+
+      <div class="criteria-group">
+         <mat-form-field>
+            <mat-select formControlName="timestampPropertyName" placeholder="time property">
+               <mat-option [value]="'created'">created</mat-option>
+               <mat-option [value]="'last_saved'">last saved</mat-option>
+               <mat-option [value]="'begin_date'">begin date</mat-option>
+               <mat-option [value]="'reviewed'">reviewed</mat-option>
+               <mat-option [value]="'saved_to_facts'">saved to FACTS</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+
+      <mat-form-field class="criteria-group">
+         <mat-select placeholder="include statuses" [formControl]="selectedStatusesCtl" multiple>
+            <mat-select-trigger>
+               <span *ngFor="let status of selectedStatusesCtl.value" class="selected-statuses-trigger-text">
+                  {{status}}
+               </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let status of ALL_SAMPLE_OP_STATUSES" [value]="status.code">
+               {{status.displayName}} ({{status.code}})
+            </mat-option>
+         </mat-select>
+      </mat-form-field>
+
+      <div class="criteria-group">
+         <mat-form-field>
+            <mat-select formControlName="testTypeCode" placeholder="test type">
+               <mat-option [value]="null"></mat-option>
+               <mat-option *ngFor="let tt of labTestTypes$ | async" [value]="tt.code">{{tt.name}}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+
+   </div>
+
+</form>
+

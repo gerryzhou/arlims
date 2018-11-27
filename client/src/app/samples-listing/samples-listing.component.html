@@ -10,7 +10,7 @@
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
 
-   <button mat-button (click)="expandOrContractAllSamples()">
+   <button mat-button type="button" (click)="expandOrContractAllSamples()">
       {{expandedSampleIds.size > 0 ? 'collapse samples' : 'expand samples'}}
    </button>
 
@@ -22,12 +22,12 @@
    <div class="refresh-panel">
       <mat-menu #refreshDataMenu="matMenu">
          <div class="menu-item" >
-            <button mat-button (click)="reload()">
+            <button mat-button type="button" (click)="reload()">
                refresh from database
             </button>
          </div>
          <div class="menu-item" >
-            <button class="menu-item" mat-button (click)="refreshFromFacts()">
+            <button class="menu-item" mat-button type="button" (click)="refreshFromFacts()">
                update database from FACTS and refresh from database
             </button>
          </div>
@@ -40,7 +40,7 @@
 
 </div> <!-- control area -->
 
-<div class="listing">
+<div>
    <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
       <mat-checkbox [(ngModel)]="selectableSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
       <app-sample

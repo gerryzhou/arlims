@@ -36,7 +36,6 @@ export class ResourceControlAssignments {
          if (!result) return;
          this.assignResourceCodes(result.resourceCodes);
          const unassigned = this.unassignedResourceCodes;
-         console.log('Unassigned: ', unassigned.size, ', message svc: ', alertMsgSvc);
          if ( unassigned.size > 0 && alertMsgSvc )
          {
             console.log('sending alert about unassigned');
@@ -84,6 +83,7 @@ export class ResourceControlAssignments {
 
       // If a resource code's match to a control is suitably unambiguous then it is applied as the control's value, and is no
       // longer considered assigned. An empty set of assigned codes is left for the control to indicate that a code was applied to it.
+      // @ts-ignore
       for (const [controlName, controlResourceCodes] of resourceAssignments.assignedResourceCodesByTargetControlName.entries())
       {
          if (controlResourceCodes.size === 1)
@@ -131,6 +131,7 @@ export class ResourceControlAssignments {
       const resourceCodesByCodeType: Map<string, Set<string>> =
          getResourceCodeValuesByCodeType(resourceCodes, this.resourceTypeCodeExtractor);
 
+      // @ts-ignore
       for (const [controlName, controlResourceTypes] of this.resourceTypeListsByTargetControlName.entries())
       {
          if (isEmptyString(this.formGroup.get(controlName).value))  // only consider empty target fields
@@ -147,6 +148,7 @@ export class ResourceControlAssignments {
                      resourceCodesByTargetControlName.set(controlName, controlResourceCodes);
                   }
 
+                  // @ts-ignore
                   for (const resourceCode of resourceCodesOfType)
                   {
                      controlResourceCodes.add(resourceCode);

@@ -1,7 +1,9 @@
 import {Component, EventEmitter, Input, Output, OnChanges, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {ListingOptions, SAMPLE_OP_STATUSES, SampleOpStatus} from './listing-options';
 import {Subscription} from 'rxjs';
+
+import {ListingOptions} from './listing-options';
+import {SAMPLE_OP_STATUSES, SampleOpStatus} from '../../shared/models/sample-op-status';
 
 @Component({
    selector: 'app-samples-listing-options',

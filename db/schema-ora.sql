@@ -16,7 +16,6 @@ alter table audit_entry
 
 create index ix_test_testdatajson on test(test_data_json) indextype is ctxsys.context;
 
--- TODO: Ask Steve T. for create view priv on scidevel for labelng.
 create or replace view test_v as
   select
     t.id test_id,
@@ -42,7 +41,7 @@ create or replace view test_v as
     s.lid,
     s.paf,
     s.split_ind,
-    s.facts_status facts_status,
+    s.facts_status,
     s.facts_status_timestamp facts_status_ts,
     s.last_refreshed_from_facts,
     s.sampling_org,

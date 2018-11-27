@@ -9,9 +9,12 @@ Done
 
 TODO
 ----
+RV-7361256
 
 Test Search Page
 ----------------
+Add test type search params as for status codes.
+
 Initially empty, no resolver necessary.
 Search bar at top
   full text search field
@@ -37,7 +40,7 @@ FACTS Writing
     Creating a test should update sample op status in FACTS.
 
 Create validation functions for test stages.
-   Maybe can return enough information to implement status code functions by delegating to the validatino functions.
+   Maybe can return enough information to implement status code functions by delegating to the validation functions.
 
 Subcomponents under pos-cont-stages need conflict data to be passed in and rendered.
 

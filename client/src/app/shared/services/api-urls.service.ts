@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import {HttpParams} from '@angular/common/http';
 import {Moment} from 'moment';
+import {SampleOpStatusCode} from "../models/sample-op-status";
+import {LabTestTypeCode} from "../../../generated/dto";
 
 
 @Injectable({providedIn: 'root'})
@@ -79,11 +81,14 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/lab-group/refresh-user-org-sample-ops`);
    }
 
-   testTextSearchUrl
+   testsSearchUrl
       (
          textSearch: string | null,
-         fromMoment: Moment | null,
-         toMoment: Moment | null,
+         fromTimestamp: Moment | null,
+         toTimestamp: Moment | null,
+         timestampProperty: string | null,
+         includeStatusCodes: SampleOpStatusCode[] | null,
+         includeTestTypeCodes: LabTestTypeCode[] | null
       )
       : string
    {
@@ -91,10 +96,17 @@ export class ApiUrlsService {
 
       if ( textSearch )
          searchParams = searchParams.append('tq', textSearch);
-      if ( fromMoment )
-         searchParams = searchParams.append('fts', fromMoment.toISOString());
-      if ( toMoment )
-         searchParams = searchParams.append('tts', toMoment.toISOString());
+      if ( fromTimestamp )
+         searchParams = searchParams.append('fts', fromTimestamp.toISOString());
+      if ( toTimestamp )
+         searchParams = searchParams.append('tts', toTimestamp.toISOString());
+      if ( (fromTimestamp || toTimestamp) && timestampProperty )
+         searchParams = searchParams.append('tsp', timestampProperty);
+      if ( includeStatusCodes )
+         searchParams = searchParams.append('ss', JSON.stringify(includeStatusCodes));
+      if ( includeTestTypeCodes )
+         searchParams = searchParams.append('ltt', JSON.stringify(includeTestTypeCodes));
+
 
       return this.location.prepareExternalUrl(`/api/tests/search?${searchParams.toString()}`);
    }

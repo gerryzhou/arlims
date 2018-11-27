@@ -1,0 +1,19 @@
+.criteria-panel {
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: center;
+   align-items: center;
+}
+
+.criteria-group {
+   margin: 3px 10px;
+   &.search {
+      display: flex;
+      align-items: center;
+   }
+}
+
+.selected-statuses-trigger-text {
+   opacity: 0.75;
+   font-size: 0.75em;
+}

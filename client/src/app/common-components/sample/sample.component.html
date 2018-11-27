@@ -89,7 +89,12 @@
       </div>
 
       <div class="sample-actions">
-         <span><button mat-mini-fab (click)="promptCreateNewTest()"><mat-icon>add</mat-icon></button> Create a new test</span>
+         <span>
+            <button mat-mini-fab *ngIf="labGroupTestTypes.length > 0" (click)="promptCreateNewTest()">
+               <mat-icon>add</mat-icon>
+            </button>
+            Create a new test
+         </span>
       </div>
 
    </div>

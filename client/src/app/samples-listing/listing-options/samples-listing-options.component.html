@@ -1,19 +1,14 @@
-<!-- TODO: Add additional filtering options as requested by John.
-   [Requested by John] Test type selection for filtering to samples that have a test of the given type.
-      (Maybe it should be optional whether to actually hide other test types in resulting samples.)
-   [Maybe] Sorting options: last modified, test begin date, facts status.
--->
 <form [formGroup]="form">
-   <div class="options-panel">
+   <div class="criteria-panel">
 
-      <div class="option-group search">
+      <div class="criteria-group search">
          <mat-icon>search</mat-icon>
          <mat-form-field>
             <input formControlName="searchText" matInput placeholder="Search">
          </mat-form-field>
       </div>
 
-      <mat-form-field class="option-group">
+      <mat-form-field class="criteria-group">
          <mat-select placeholder="Include Statuses" [formControl]="includeStatusesCtl" multiple>
             <mat-select-trigger>
                <span *ngFor="let status of includeStatusesCtl.value" class="selected-statuses-trigger-text">
@@ -26,7 +21,7 @@
          </mat-select>
       </mat-form-field>
 
-      <div class="option-group">
+      <div class="criteria-group">
          <mat-menu #otherOptionsMenu="matMenu">
             <div class="menu-item">
                 <mat-slide-toggle formControlName="includeSamplesAssignedOnlyToOtherUsers">

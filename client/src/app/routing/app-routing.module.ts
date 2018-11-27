@@ -12,6 +12,7 @@ import {ModulePreloadingStrategy} from './module-preloading-strategy';
 import {AuthenticatedUserGuard} from './authenticated-user-guard';
 import {AdminUserGuard} from './admin-user-guard';
 import {RegistrationComponent} from '../registration/registration.component';
+import {TestsSearchComponent} from '../tests-search/tests-search.component';
 
 const routes: Routes = [
    {
@@ -29,6 +30,12 @@ const routes: Routes = [
       component: SamplesListingComponent,
       resolve: { labGroupContents: LabGroupContentsResolver },
       data: {title: 'Samples Listing'},
+      canActivate: [AuthenticatedUserGuard],
+   },
+   {
+      path: 'tests-search',
+      component: TestsSearchComponent,
+      data: {title: 'Tests Search'},
       canActivate: [AuthenticatedUserGuard],
    },
    {

@@ -21,7 +21,8 @@ import {
    MatExpansionModule,
    MatSnackBarModule,
    MatSlideToggleModule,
-   MatDialogModule
+   MatDialogModule,
+   MatDatepickerModule
 } from '@angular/material';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {MatButtonModule} from '@angular/material/button';
@@ -79,6 +80,7 @@ import {TestsSearchQueryComponent} from './tests-search/query/tests-search-query
       MatSnackBarModule,
       MatSlideToggleModule,
       MatDialogModule,
+      MatDatepickerModule,
       MatMomentDateModule,
       TruncateModule,
       // app modules which are NOT LOADED LAZILY

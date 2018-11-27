@@ -1,5 +1,10 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {flatMap, map, take} from 'rxjs/operators';
+import * as moment from 'moment';
+import {Moment} from 'moment';
+
 import {
    CreatedTestMetadata,
    LabGroupContents,
@@ -10,12 +15,9 @@ import {
    SampleOpsRefreshResults
 } from '../../generated/dto';
 import {AlertMessageService, UserContextService} from '../shared/services';
-import {ListingOptions, SampleOpStatusCode} from './listing-options/listing-options';
-import {Observable} from 'rxjs';
-import * as moment from 'moment';
-import {Moment} from 'moment';
+import {ListingOptions} from './listing-options/listing-options';
 import {LabGroupService} from '../shared/services/lab-group-service';
-import {flatMap, map, take} from 'rxjs/operators';
+import {SampleOpStatusCode} from '../shared/models/sample-op-status';
 
 @Component({
    selector: 'app-samples-listing',
