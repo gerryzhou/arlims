@@ -99,8 +99,6 @@ function organizeTestsBySample(sampleInTests: SampleInTest[]): Sample[]
          sample.tests.push(sampleInTest.testMetadata);
    }
 
-   console.log(sampleInTests, Array.from(samplesById.values()));
-
    return Array.from(samplesById.values());
 }
 

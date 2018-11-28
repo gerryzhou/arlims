@@ -1,0 +1,11 @@
+.query-control-row {
+   display: flex;
+   flex-flow: row nowrap;
+   align-items: center;
+}
+
+.query-button {
+   margin-left: 20px;
+   background-color: limegreen;
+   color: white;
+}

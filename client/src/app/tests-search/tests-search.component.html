@@ -1,20 +1,23 @@
-<app-tests-search-query
-   [initialQuery]="defaultQuery"
-   (queryChanged)="queryChanged($event)">
-</app-tests-search-query>
+<div class="query-control-row">
 
-<button mat-button type="button" (click)="doQuery()">Search</button>
+   <app-tests-search-query
+      [initialQuery]="defaultQuery"
+      (queryChanged)="queryChanged($event)">
+   </app-tests-search-query>
+
+   <button mat-button class="query-button" type="button" (click)="doQuery()">Search</button>
+
+</div>
+
 
 <div>
-   <div class="sample-container" *ngFor="let sample of resultSamples | async">
-      <app-sample
-         [sample]="sample"
-         [showAssociatedItems]="expandedSampleIds.has(sample.id)"
-         [showAssociatedItemsSummaryInSampleMetadata]="true"
-         [showTestDeleteButtons]="false"
-         (headerClick)="toggleSampleExpanded(sample.id)">
-      </app-sample>
-   </div>
+   <app-sample *ngFor="let sample of resultSamples | async"
+      [sample]="sample"
+      [showAssociatedItems]="expandedSampleIds.has(sample.id)"
+      [showAssociatedItemsSummaryInSampleMetadata]="true"
+      [showTestDeleteButtons]="false"
+      (headerClick)="toggleSampleExpanded(sample.id)">
+   </app-sample>
 </div>
 
 
