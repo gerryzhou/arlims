@@ -74,9 +74,7 @@ export class TestsSearchComponent {
          this.expandedSampleIds.add(sampleId);
       }
    }
-
 }
-
 
 function organizeTestsBySample(sampleInTests: SampleInTest[]): Sample[]
 {
