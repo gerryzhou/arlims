@@ -1,15 +1,47 @@
-Done
-----
-- Support field level attachments with Vidas as example.
-- SLANT stage editing redesigned to use single dropdown per isolate.
-- Add identification required declaration in SLANT stage.
-- In IDENT stage, only show isolates that require identification as declared in SLANT stage.
-- Sampling methods now are configurable to be user modifiable or not.
-    Standard methods are not modifiable as indicated by lock icon.
-
 TODO
 ----
-RV-7361256
+Add file attachment point in IDENT stage.
+
+File attachments need ordering.
+  Add ordering numeric field and reference label.
+
+Employee hours management in WRAPUP stage
+  Columns: Name Role Hours
+    Role = original/lead | check | additional
+  Include all users that saved/modified the test.
+  Each analyst is original or additional or check.
+
+FACTS writing
+
+------------------------------------------------------------------------------------------------
+Done
+----
+PRE-ENR sampling methods
+  Active lock/unlock icon for toggling sampling method modifiable status.
+  Visually partition sampling method choices into Composites/Subs sections.
+  Put bounding box around composite-related fields.
+  Fields are still over-determined because it might be confusing switching between modes.
+    The minimal necessary fields would be:
+      composite test units: grams per sub, subs per composite, number of composites
+      sub test units: grams per sub, subs
+Fix text search index update problem.
+------------------------------------------------------------------------------------------------
+
+Try upgrade to Spring Boot 2.1 / Spring 5.1.
+
+Sampling methods selection and editing in PRE-ENR stage
+  John: Add new sampling method with no composites (0), set composite items to 0/null and hide or disable composite items.
+    Hiding/disabling may complicate things a bit (e.g. vs. showing conflicts in hidden fields).
+    Hide composite fields area when number of composites is 0.
+    composite test units: enter
+      grams per sub, subs per composite, number of composites
+    sub test units: enter
+      grams per sub, subs
+    Other quantities can always be calculated from these.
+        compositeMassGrams = subsPerComposite * extractedGramsPerSub ?
+        numberOfSubs = subsPerComposite * numberOfComposites
+
+
 
 Test Search Page
 ----------------
