@@ -37,6 +37,8 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    @Input()
    samplingMethodChoices: SamplingMethod[];
 
+   sampleMethodChoicesByTestUnitType = { subsMethods: <SamplingMethod[]>[], compsMethods: <SamplingMethod[]>[] };
+
    @Input()
    showUnsetAffordances = false;
 
@@ -64,6 +66,11 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
             .set('mediumBatchId', ['RV', 'TT', 'LAC'])
       );
 
+      this.sampleMethodChoicesByTestUnitType = {
+         compsMethods: this.samplingMethodChoices.filter(m => m.numberOfComposites > 0),
+         subsMethods:  this.samplingMethodChoices.filter(m => !(m.numberOfComposites > 0)),
+      };
+
       this.subscribeToSampleTestUnitChanges();
    }
 
@@ -90,6 +97,15 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
       const userModifiable = samplingMethodformGroup.get('userModifiable');
       if (userModifiable) userModifiable.setValue(true);
+   }
+
+   onToggleSamplingMethodManualEntry()
+   {
+      const samplingMethodformGroup = this.form.get('samplingMethod');
+      if (!samplingMethodformGroup) return;
+
+      const userModifiable = samplingMethodformGroup.get('userModifiable');
+      if ( userModifiable != null ) userModifiable.setValue(!userModifiable.value);
    }
 
    onSamplingMethodClicked(samplingMethod: SamplingMethod)

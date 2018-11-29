@@ -2,30 +2,44 @@
 
    <div class="sampling-method area">
 
-      <span class="title-row">
-         <span class="title">Sampling method</span>
+      <span>
+         <span class="methods-title">Sampling method</span>
          <mat-menu #samplingMethodMenu="matMenu">
-            <button mat-menu-item *ngFor="let samplingMethod of samplingMethodChoices"
+
+            <span class="methods-section-header">Composite Methods</span>
+            <button mat-menu-item *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.compsMethods"
                (click)="onSamplingMethodClicked(samplingMethod)">
                {{samplingMethod.description}}
             </button>
+
             <mat-divider></mat-divider>
+
+            <span class="methods-section-header">Subsample / Other Methods</span>
+            <button mat-menu-item *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.subsMethods"
+               (click)="onSamplingMethodClicked(samplingMethod)">
+               {{samplingMethod.description}}
+            </button>
+
             <button mat-menu-item (click)="onManualEntrySamplingMethodSelected()">
                enter sampling method numbers manually
             </button>
          </mat-menu>
+
          <button mat-button [matMenuTriggerFor]="samplingMethodMenu" [disabled]="form.disabled">
             Select a sampling method <mat-icon>more_vert</mat-icon>
          </button>
       </span>
 
-      <div formGroupName="samplingMethod" class="sampling-method-numbers">
+      <div formGroupName="samplingMethod" class="method-numbers">
 
-         <mat-icon class="user-modifiable-icon">
-            {{form.get(['samplingMethod', 'userModifiable']).value === true ? 'lock_open' : 'lock'}}
-         </mat-icon>
+         <button mat-icon-button (click)="onToggleSamplingMethodManualEntry()">
+            <mat-icon class="user-modifiable-icon">
+               {{form.get(['samplingMethod', 'userModifiable']).value === true ? 'lock_open' : 'lock'}}
+            </mat-icon>
+         </button>
 
-         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
+         <div class="field-area"
+              [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
             <mat-form-field>
                <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
                   [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
@@ -38,7 +52,8 @@
             </app-conflicting-field-value>
          </div>
 
-         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubs !== undefined">
+         <div class="field-area"
+              [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubs !== undefined">
             <mat-form-field>
                <input formControlName="numberOfSubs" type="number" min="0" step="1" matInput
                   [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
@@ -51,48 +66,54 @@
             </app-conflicting-field-value>
          </div>
 
-         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfComposites !== undefined">
-            <mat-form-field>
-               <input formControlName="numberOfComposites" type="number" min="0" step="1" matInput
-                  [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
-                  placeholder="Composites">
-            </mat-form-field>
-            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-               [conflictValue]="conflicts.samplingMethod.numberOfComposites"
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.samplingMethod.numberOfComposites = undefined">
-            </app-conflicting-field-value>
-         </div>
+         <div class="composite-fields-area">
+            <div class="field-area"
+                 [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfComposites !== undefined">
+               <mat-form-field>
+                  <input formControlName="numberOfComposites" type="number" min="0" step="1" matInput
+                         [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
+                         placeholder="Composites">
+               </mat-form-field>
+               <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+                                            [conflictValue]="conflicts.samplingMethod.numberOfComposites"
+                                            [conflictWhoWhen]="conflictsWhoWhen"
+                                            (dismiss)="conflicts.samplingMethod.numberOfComposites = undefined">
+               </app-conflicting-field-value>
+            </div>
 
-         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.compositeMassGrams !== undefined">
-            <mat-form-field>
-               <input formControlName="compositeMassGrams" type="number" min="0" step="1" matInput
-                  [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
-                  placeholder="Grams per composite">
-            </mat-form-field>
-            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-               [conflictValue]="conflicts.samplingMethod.compositeMassGrams"
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.samplingMethod.compositeMassGrams = undefined">
-            </app-conflicting-field-value>
-         </div>
+            <div class="field-area"
+                 [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.compositeMassGrams !== undefined">
+               <mat-form-field>
+                  <input formControlName="compositeMassGrams" type="number" min="0" step="1" matInput
+                         [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
+                         placeholder="Grams per composite">
+               </mat-form-field>
+               <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+                                            [conflictValue]="conflicts.samplingMethod.compositeMassGrams"
+                                            [conflictWhoWhen]="conflictsWhoWhen"
+                                            (dismiss)="conflicts.samplingMethod.compositeMassGrams = undefined">
+               </app-conflicting-field-value>
+            </div>
 
-         <div class="field-area" [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubsPerComposite !== undefined">
-            <mat-form-field>
-               <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
-                  [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
-                  placeholder="Subs per composite">
-            </mat-form-field>
-            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-               [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.samplingMethod.numberOfSubsPerComposite = undefined">
-            </app-conflicting-field-value>
+            <div class="field-area"
+                 [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubsPerComposite !== undefined">
+               <mat-form-field>
+                  <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
+                         [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
+                         placeholder="Subs per composite">
+               </mat-form-field>
+               <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
+                                            [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"
+                                            [conflictWhoWhen]="conflictsWhoWhen"
+                                            (dismiss)="conflicts.samplingMethod.numberOfSubsPerComposite = undefined">
+               </app-conflicting-field-value>
+            </div>
          </div>
 
       </div> <!-- sampling method numbers -->
 
-      <div class="field-area exceptions" [class.conflicted]="conflicts.samplingMethodExceptionsNotes !== undefined">
+      <div class="field-area method-exceptions"
+           [class.conflicted]="conflicts.samplingMethodExceptionsNotes !== undefined">
          <mat-form-field>
             <input formControlName="samplingMethodExceptionsNotes" type="text" matInput
                placeholder="Sampling method exceptions">
@@ -137,9 +158,8 @@
       </div>
 
       <div class="field-area"
-         [class.conflicted]="conflicts.blenderJarId !== undefined"
-         [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('blenderJarId')">
-
+           [class.conflicted]="conflicts.blenderJarId !== undefined"
+           [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('blenderJarId')">
          <mat-form-field>
             <input formControlName="blenderJarId" type="text" matInput placeholder="Blender jar">
          </mat-form-field>
@@ -160,7 +180,6 @@
       <div class="field-area"
            [class.conflicted]="conflicts.bagId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('bagId')">
-
          <mat-form-field>
             <input formControlName="bagId" type="text" matInput placeholder="Bag">
          </mat-form-field>
@@ -232,8 +251,9 @@
                   <input formControlName="incubatorId" type="text" matInput placeholder="Incubator">
                </ng-template>
             </mat-form-field>
-            <button *ngIf="incubators && allowTogglingSelects && !form.disabled" (click)="toggleSelectIncubator()"
-                    mat-icon-button matTooltip="toggle between a select list and free-from text entry">
+            <button mat-icon-button
+                    *ngIf="incubators && allowTogglingSelects && !form.disabled" (click)="toggleSelectIncubator()"
+                    matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
             </button>
          </span>
@@ -244,8 +264,8 @@
          </app-conflicting-field-value>
       </div>
 
-      <button class="apply-resources-btn" (click)="promptApplyResources()" *ngIf="!form.disabled"
-         mat-icon-button color="accent">
+      <button mat-icon-button class="apply-resources-btn" color="accent"
+              (click)="promptApplyResources()" *ngIf="!form.disabled">
          <mat-icon>flash_on</mat-icon>
       </button>
 
