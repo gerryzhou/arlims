@@ -9,7 +9,6 @@ IDENT stage
    Add NA option to control-satisfactory radio groups.
 
 File attachments
-  Add ordering numeric field and reference label.
   Replace "role" with "label".
 
 Allow saving test data to file.
@@ -17,10 +16,25 @@ Allow saving test data to file.
 Employee hours management in WRAPUP stage
   Columns: Name Role Hours
     Role = original/lead | check | additional
+    See screenshot - actually need all columns in screenshot except "Position Class".
   Include all users that saved/modified the test.
   Each analyst is original or additional or check.
 
+Sample received-from
+  Call api with sample num and person id.
+  Button next to field to do lookup live, for now.
+    Will get receipt date and person id. If more than one record, let user select.
+
 FACTS writing
+  FACTS Status Update
+    Analyst should be able to change status from "Assigned" to "In Progress" from their inbox.
+  Method source codes:
+    AOAC through Vidas (negatives)
+    BAM if for positives (method code B160 for SLM)
+    Y on spiking => Y on "kit comparison test?" field
+      Plus some other kit comparison test data would then need to be supplied.
+      S.Gaminara control is the spiking control, so it's data will be sent to FACTS.
+
 
 ------------------------------------------------------------------------------------------------
 Done
