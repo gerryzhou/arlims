@@ -12,7 +12,7 @@
       </div>
    </div>
 
-   <div *ngIf="formInitialized">
+   <div *ngIf="this.form.get('testUnitsContinuationTests')">
 
       <mat-tab-group>
 
@@ -24,7 +24,7 @@
                   [stage]="stage"
                   [showOtherStageDataAsContext]="showOtherStageDataAsContext"
                   [viewOnly]="viewOnly"
-                  [form]="testUnitsFormGroup.get(testUnitNum.toString())"
+                  [form]="this.form.get('testUnitsContinuationTests').get(testUnitNum.toString())"
                   [testUnitNumber]="testUnitNum"
                   [showDisposeButton]="!viewOnly && stage==='SLANT'"
                   [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"

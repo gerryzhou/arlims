@@ -1,9 +1,18 @@
 TODO
 ----
-Add file attachment point in IDENT stage.
+Remove CONTROLS stage content into SEL-ENR stage and remove the stage.
 
-File attachments need ordering.
+IDENT stage
+   Add file attachment point in IDENT stage.
+   Add short reference label text field at end of row, referencing file attachment label.
+   Identification text field should be lengthened a bit.
+   Add NA option to control-satisfactory radio groups.
+
+File attachments
   Add ordering numeric field and reference label.
+  Replace "role" with "label".
+
+Allow saving test data to file.
 
 Employee hours management in WRAPUP stage
   Columns: Name Role Hours

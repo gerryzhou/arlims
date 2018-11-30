@@ -1,6 +1,8 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
+import {arraysEqual} from '../../../../shared/util/data-objects';
 import {
    makeEmptyContinuationControls, makeEmptySelectiveAgarsTestSuite, makeContinuationControlsFormGroup, makeContinuationTestsFormGroup,
    makeTestUnitsContinuationTestsFormGroup, PositivesContinuationData, ContinuationTests, countIsolates,
@@ -26,7 +28,7 @@ export class PosContComponent implements OnChanges {
    viewOnly = false;
 
    @Input()
-   form: FormGroup; // May be empty of controls until user chooses to initiate positives continuation tests (if !formInitialized).
+   form: FormGroup; // May be empty of controls until user chooses to initiate positives continuation tests.
 
    @Input()
    vidasPositiveSampleTestUnitNumbers: number[] | null = null;
@@ -49,12 +51,6 @@ export class PosContComponent implements OnChanges {
    @Input()
    appUser: AppUser;
 
-   // Whether the child controls have been created in the form group yet.
-   formInitialized = false;
-
-   // The 'testUnitsContinuationTests' child control for the test unit continuation tests, if initialized.
-   testUnitsFormGroup: FormGroup | null = null;
-
    defaultNumIsolatesPerSelectiveAgarPlate = 2;
 
    // Differences in test numbers represented here vs Vidas positives.
@@ -64,32 +60,47 @@ export class PosContComponent implements OnChanges {
 
    sampleTestUnitsTypeAbrev = 'sub/comp';
 
-   sortedTestUnitNums: number[];
+   sortedTestUnitNums: number[] = [];
 
-   constructor() { }
+   formSubscription: Subscription | null;
+
+   constructor() {}
 
    ngOnChanges()
    {
-      this.formInitialized = Object.keys(this.form.controls).length > 0;
-      this.testUnitsFormGroup = this.formInitialized ? this.form.get('testUnitsContinuationTests') as FormGroup : null;
-
       this.sampleTestUnitsTypeAbrev = this.sampleTestUnitsType === 'subsample' ? 'sub' : 'comp';
 
       this.defaultNumIsolatesPerSelectiveAgarPlate =
          this.testConfig ? this.testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2 : 2;
 
       this.refreshTestUnitNumbersDependents();
+
+      if ( this.formSubscription )
+         this.formSubscription.unsubscribe();
+      this.formSubscription = this.form.valueChanges.subscribe(() => {
+         const testUnitNums = this.readSortedTestUnitNumbersFromForm();
+         if ( !arraysEqual(testUnitNums, this.sortedTestUnitNums) )
+         {
+            console.log(`${this.stage} form change: test unit numbers changed, refreshing test unit number dependents.`)
+            this.refreshTestUnitNumbersDependents();
+         }
+      });
    }
 
    addUnrepresentedVidasPositivesContinuationTestsFormGroups()
    {
-      if ( !this.formInitialized )
+      let testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup || null;
+      if ( !testUnitsFormGroup )
+      {
          this.initFormGroup();
+         testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup;
+      }
 
       for ( const newTestUnitNum of this.testUnitNumbersDiff.unrepresentedVidasPositives )
       {
          const emptyContTestsFormGroup = makeContinuationTestsFormGroup(this.makeEmptyContinuationTests());
-         this.testUnitsFormGroup.addControl(newTestUnitNum.toString(), emptyContTestsFormGroup);
+
+         testUnitsFormGroup.addControl(newTestUnitNum.toString(), emptyContTestsFormGroup);
       }
 
       this.refreshTestUnitNumbersDependents();
@@ -97,19 +108,11 @@ export class PosContComponent implements OnChanges {
 
    private initFormGroup()
    {
-      if ( !this.formInitialized )
-      {
-         const emptyTestUnitsFormGroup = makeTestUnitsContinuationTestsFormGroup({});
-         const emptyContControlsFormGroup = makeContinuationControlsFormGroup(makeEmptyContinuationControls(this.appUser.username));
+      const emptyTestUnitsFormGroup = makeTestUnitsContinuationTestsFormGroup({});
+      const emptyContControlsFormGroup = makeContinuationControlsFormGroup(makeEmptyContinuationControls(this.appUser.username));
 
-         this.form.addControl('testUnitsContinuationTests', emptyTestUnitsFormGroup);
-         this.form.addControl('continuationControls', emptyContControlsFormGroup);
-
-         this.formInitialized = true;
-         this.testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup;
-      }
-      else
-         console.log('Ignoring attempt to add positives continuation controls form group when this form group is already present.');
+      this.form.addControl('testUnitsContinuationTests', emptyTestUnitsFormGroup);
+      this.form.addControl('continuationControls', emptyContControlsFormGroup);
    }
 
    private makeEmptyContinuationTests(): ContinuationTests
@@ -127,7 +130,9 @@ export class PosContComponent implements OnChanges {
 
    removeTestUnitNumber(testUnitNum: number)
    {
-      this.testUnitsFormGroup.removeControl(testUnitNum.toString());
+      const testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup;
+      testUnitsFormGroup.removeControl(testUnitNum.toString());
+
       this.refreshTestUnitNumbersDependents();
    }
 
@@ -139,13 +144,15 @@ export class PosContComponent implements OnChanges {
       };
    }
 
-   private getSortedTestUnitNumbers(): number[]
+   private readSortedTestUnitNumbersFromForm(): number[]
    {
-      if ( this.testUnitsFormGroup == null )
+      const testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup;
+
+      if ( testUnitsFormGroup == null )
          return [];
 
       return (
-         Object.keys(this.testUnitsFormGroup.controls)
+         Object.keys(testUnitsFormGroup.controls)
          .map(testUnitNumStr => parseInt(testUnitNumStr))
          .sort()
       );
@@ -158,7 +165,7 @@ export class PosContComponent implements OnChanges {
 
       const testUnitNums = new Set(this.vidasPositiveSampleTestUnitNumbers);
 
-      for ( const repTestUnitNum of this.getSortedTestUnitNumbers() )
+      for ( const repTestUnitNum of this.readSortedTestUnitNumbersFromForm() )
          testUnitNums.delete(repTestUnitNum);
 
       return Array.from(testUnitNums.values()).sort();
@@ -166,7 +173,7 @@ export class PosContComponent implements OnChanges {
 
    private getRepresentedNonVidasPositiveTestUnitNumbers(): number[]
    {
-      const reprTestUnitNums = this.getSortedTestUnitNumbers();
+      const reprTestUnitNums = this.readSortedTestUnitNumbersFromForm();
 
       if ( this.vidasPositiveSampleTestUnitNumbers == null )
          return reprTestUnitNums;
@@ -181,7 +188,7 @@ export class PosContComponent implements OnChanges {
 
    private refreshTestUnitNumbersDependents()
    {
-      this.sortedTestUnitNums = this.getSortedTestUnitNumbers();
+      this.sortedTestUnitNums = this.readSortedTestUnitNumbersFromForm();
 
       this.testUnitNumbersDiff = this.makeRepresentedTestUnitNumbersDiffVsVidas();
 
