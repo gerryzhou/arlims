@@ -29,11 +29,11 @@ $batch-resource-text-color: lightyellow;
    flex-flow: column nowrap;
    justify-content: center;
    padding: 14px;
-   width: 200px;
+   min-width: 100px;
    text-align: center;
    border: 3px solid darkgray;
    background: beige;
-   font-size: 110%;
+   font-size: 105%;
    font-weight: bold;
 }
 
