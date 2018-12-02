@@ -1,11 +1,8 @@
 TODO
 ----
-Fix file upload error when ordering is provided.
-  org.springframework.web.HttpMediaTypeNotSupportedException: Content type 'application/octet-stream'
+Remove CONTROLS stage content into SEL-ENR stage and remove the stage.
 
 Allow saving test data to file.
-
-Remove CONTROLS stage content into SEL-ENR stage and remove the stage.
 
 IDENT stage
    Add file attachment point in IDENT stage.
