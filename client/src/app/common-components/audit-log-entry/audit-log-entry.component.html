@@ -38,7 +38,7 @@
                <li *ngFor="let attachedFileDescr of analyzedEntry.attachedFileDescrs">
                   {{attachedFileDescr.fileName}}<br>
                   ({{attachedFileDescr.size / 1000}} KB)<br>
-                  <span *ngIf="attachedFileDescr.role">Role: {{attachedFileDescr.role}}</span>
+                  <span *ngIf="attachedFileDescr.label">Label: {{attachedFileDescr.label}}</span>
                </li>
             </ul>
          </div>

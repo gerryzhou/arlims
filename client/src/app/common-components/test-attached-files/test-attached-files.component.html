@@ -9,6 +9,15 @@
 
       <table mat-table [dataSource]="attachedFilesTableDataSource">
 
+         <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let af">
+               <button mat-icon-button (click)="promptUpdateFileMetadata(af)" type="button">
+                  <mat-icon>edit</mat-icon>
+               </button>
+            </td>
+         </ng-container>
+
          <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Attached File</th>
             <td mat-cell *matCellDef="let af">
@@ -16,10 +25,17 @@
             </td>
          </ng-container>
 
-         <ng-container matColumnDef="role">
-            <th mat-header-cell *matHeaderCellDef>Role</th>
+         <ng-container matColumnDef="label">
+            <th mat-header-cell *matHeaderCellDef>Label</th>
             <td mat-cell *matCellDef="let af">
-               {{af.role}}
+               {{af.label}}
+            </td>
+         </ng-container>
+
+         <ng-container matColumnDef="ordering">
+            <th mat-header-cell *matHeaderCellDef>Ordering</th>
+            <td mat-cell *matCellDef="let af">
+               {{af.ordering}}
             </td>
          </ng-container>
 
@@ -74,10 +90,14 @@
             Attach the below files
          </button>
 
-         <span>with role</span>
+         <span>with label</span>
 
          <mat-form-field>
-            <input matInput placeholder="enter role (optional)" formControlName="role">
+            <input matInput formControlName="label" placeholder="enter label (optional)">
+         </mat-form-field>
+
+         <mat-form-field>
+            <input matInput type="number" formControlName="ordering" placeholder="enter ordering">
          </mat-form-field>
 
       </form>

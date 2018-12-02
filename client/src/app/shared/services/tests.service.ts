@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {from, Observable, of as observable} from 'rxjs';
+import {Observable, of as observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
+import {Moment} from 'moment';
 
 import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
 import {ApiUrlsService} from './api-urls.service';
@@ -14,8 +15,7 @@ import {
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
-import {Moment} from "moment";
-import {SampleOpStatusCode} from "../models/sample-op-status";
+import {SampleOpStatusCode} from '../models/sample-op-status';
 
 @Injectable({
   providedIn: 'root'
@@ -71,14 +71,17 @@ export class TestsService {
       (
          testId: number,
          files: File[],
-         role: string|null,
-         testDataPart: string|null
+         label: string | null,
+         ordering: number | null,
+         testDataPart: string | null
       )
       : Observable<CreatedTestAttachedFiles>
    {
       const formData: FormData = new FormData();
 
-      formData.append('role', role);
+      if ( label ) formData.append('label', label);
+      if ( ordering ) formData.append('ordering', ordering.toString());
+
       formData.append('testDataPart', testDataPart);
 
       files.forEach(file => formData.append('files', file, file.name));
@@ -90,18 +93,21 @@ export class TestsService {
       (
          attachedFileId: number,
          testId: number,
-         role: string|null,
-         testDataPart: string|null,
+         label: string | null,
+         ordering: number | null,
+         testDataPart: string | null,
          name: string
       )
    {
-      const formData: FormData = new FormData();
+      let body =
+         new HttpParams()
+         .set('name', name)
+         .set('testDataPart', testDataPart)
+         .set('ordering', (ordering || 0).toString());
 
-      formData.append('role', role);
-      formData.append('testDataPart', testDataPart);
-      formData.append('name', name);
+      if ( label ) body = body.set('label', label);
 
-      return this.httpClient.post(this.apiUrlsSvc.testAttachedFileMetadataUrl(attachedFileId, testId), formData);
+      return this.httpClient.post(this.apiUrlsSvc.testAttachedFileMetadataUrl(attachedFileId, testId), body);
    }
 
    deleteTestAttachedFile(attachedFileId: number, testId: number)

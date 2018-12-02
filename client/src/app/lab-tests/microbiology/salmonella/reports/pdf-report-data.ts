@@ -177,7 +177,7 @@ function fieldDiffsText(fieldDiffsByParentPath: ParentPathDisplayableFieldDiffs[
 function describeAttachedFile(attachedFile: AttachedFileDescr): string
 {
    return attachedFile.fileName + '  ' + (attachedFile.size / 1000) + ' KB' +
-      (attachedFile.role ? '  [' + attachedFile.role + ']' : '') +
+      (attachedFile.label ? '  [' + attachedFile.label + ']' : '') +
       '\n';
 }
 

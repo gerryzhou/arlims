@@ -25,9 +25,9 @@ public interface TestDataService
 
     List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId);
 
-    List<Long> attachFilesToTest(long testId, List<MultipartFile> files, Optional<String> role, Optional<String> testDataPart, AppUser user);
+    List<Long> attachFilesToTest(long testId, List<MultipartFile> files, Optional<String> label, int ordering,  Optional<String> testDataPart, AppUser user);
 
-    void updateTestAttachedFileMetadata(long testId, long attachedFileId, Optional<String> role, Optional<String> testDataPart, String name, AppUser user);
+    void updateTestAttachedFileMetadata(long testId, long attachedFileId, Optional<String> label, int ordering, Optional<String> testDataPart, String name, AppUser user);
 
     TestAttachedFileContents getTestAttachedFileContents(long attachedFileId, long testId);
 

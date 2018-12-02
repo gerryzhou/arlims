@@ -8,7 +8,8 @@ public class TestAttachedFileMetadata
 {
     private final long attachedFileId;
     private final long testId;
-    private final Optional<String> role;
+    private final Optional<String> label;
+    private final int ordering;
     private final Optional<String> testDataPart;
     private final String fileName;
     private final long size;
@@ -18,7 +19,8 @@ public class TestAttachedFileMetadata
         (
             long testId,
             long attachedFileId,
-            Optional<String> role,
+            Optional<String> label,
+            int ordering,
             Optional<String> testDataPart,
             String fileName,
             long size,
@@ -27,7 +29,8 @@ public class TestAttachedFileMetadata
     {
         this.attachedFileId = attachedFileId;
         this.testId = testId;
-        this.role = role;
+        this.label = label;
+        this.ordering = ordering;
         this.testDataPart = testDataPart;
         this.fileName = fileName;
         this.size = size;
@@ -38,7 +41,9 @@ public class TestAttachedFileMetadata
 
     public long getTestId() { return testId; }
 
-    public Optional<String> getRole() { return role; }
+    public Optional<String> getLabel() { return label; }
+
+    public int getOrdering() { return ordering; }
 
     public Optional<String> getTestDataPart() { return testDataPart; }
 

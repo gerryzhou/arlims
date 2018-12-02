@@ -131,15 +131,18 @@ public class TestController extends ControllerBase
         (
             @PathVariable long attachedFileId,
             @PathVariable long testId,
-            @RequestPart("role") Optional<String> role,
-            @RequestPart("testDataPart") Optional<String> testDataPart,
-            @RequestPart("name") String name,
+            @RequestParam("label") Optional<String> label,
+            @RequestParam("ordering") Optional<Integer> ordering,
+            @RequestParam("testDataPart") Optional<String> testDataPart,
+            @RequestParam("name") String name,
             Authentication authentication
         )
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        testDataService.updateTestAttachedFileMetadata(testId, attachedFileId, role, testDataPart, name, currentUser);
+        int ord = ordering.orElse(0);
+
+        testDataService.updateTestAttachedFileMetadata(testId, attachedFileId, label, ord, testDataPart, name, currentUser);
     }
 
     @PostMapping("{testId:\\d+}/attached-files/new")
@@ -147,15 +150,18 @@ public class TestController extends ControllerBase
         (
             @PathVariable long testId,
             @RequestPart("files") MultipartFile[] files,
-            @RequestPart("role") Optional<String> role,
+            @RequestPart("label") Optional<String> label,
+            @RequestPart("ordering") Optional<String> orderingStr,
             @RequestPart("testDataPart") Optional<String> testDataPart,
             Authentication authentication
         )
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
+        int ord = orderingStr.map(Integer::parseInt).orElse(0);
+
         List<Long> attachedFileIds =
-            testDataService.attachFilesToTest(testId, Arrays.asList(files), role, testDataPart, currentUser);
+            testDataService.attachFilesToTest(testId, Arrays.asList(files), label, ord, testDataPart, currentUser);
 
         return new CreatedTestAttachedFiles(testId, attachedFileIds);
     }

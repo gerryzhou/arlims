@@ -2,14 +2,16 @@ import {AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, ViewCh
 import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatPaginator, MatTableDataSource} from '@angular/material';
 import {map} from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
 import {FilesSelectorComponent} from '../files-selector/files-selector.component';
 import {TestAttachedFiles} from '../../routing/test-attached-files.resolver';
-import {ApiUrlsService, TestsService, UserContextService} from '../../shared/services';
+import {AlertMessageService, ApiUrlsService, TestsService, UserContextService} from '../../shared/services';
 import {CreatedTestAttachedFiles, TestAttachedFileMetadata, SampleInTest} from '../../../generated/dto';
+import {AttachedFileMetadataDialogComponent} from '../attached-file-metadata-dialog/attached-file-metadata-dialog.component';
+import {AttachedFileMetadataDialogData} from '../attached-file-metadata-dialog/attached-file-metadata-dialog-data';
 
 @Component({
   selector: 'app-test-attached-files',
@@ -37,22 +39,25 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
 
    // table of currently attached files
    readonly attachedFilesTableDataSource: MatTableDataSource<TestAttachedFileMetadata>;
-   readonly attachedFilesDisplayColumns = ['name', 'role', 'uploaded', 'size', 'delete'];
+   readonly attachedFilesDisplayColumns = ['edit', 'name', 'label', 'ordering', 'uploaded', 'size', 'delete'];
    @ViewChild('attachedFilesPaginator') readonly attachedFilesPaginator: MatPaginator;
 
    @ViewChild('filesSelector') readonly filesSelector: FilesSelectorComponent;
 
    readonly newAttachmentsForm = new FormGroup({
-      role: new FormControl(''),
+      label: new FormControl(''),
+      ordering: new FormControl(''),
    });
 
    constructor
       (
          private httpClient: HttpClient,
          private activatedRoute: ActivatedRoute,
+         private dialogSvc: MatDialog,
          private apiUrlsSvc: ApiUrlsService,
          private testsSvc: TestsService,
-         private usrCtxSvc: UserContextService
+         private usrCtxSvc: UserContextService,
+         private alertMsgSvc: AlertMessageService,
       )
    {
       const testAttachedFiles = <TestAttachedFiles>this.activatedRoute.snapshot.data['testAttachedFiles'];
@@ -85,7 +90,8 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
                this.attachedFilesChange.emit(this.attachedFiles);
             },
             err => {
-                // TODO: Add alert message for error.
+               this.alertMsgSvc.alertWarning('Could not refresh the attached files list due to error.');
+               console.error('Error occurred while trying to refresh attached files: ', err);
             }
          );
       this.usrCtxSvc.refreshLabGroupContents();
@@ -95,12 +101,14 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
    {
       const pendingFiles = this.filesSelector.selectedFiles;
 
-      if (pendingFiles.length === 0) return;
+      if ( pendingFiles.length === 0 )
+         return;
 
       this.testsSvc.attachFilesToTest(
          this.testId,
          pendingFiles,
-         this.newAttachmentsForm.get('role').value,
+         this.newAttachmentsForm.get('label').value,
+         +this.newAttachmentsForm.get('ordering').value,
          this.testDataPart
       ).subscribe(
          (res: CreatedTestAttachedFiles) => {
@@ -109,13 +117,12 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
             this.refreshAttachedFiles();
          },
          err => {
-            // TODO: Add alert message for error.
-            // if ( err.error && err.error.message )
-            //    this.errors.push(err.error.message) // service message
-            // else if ( err.message )                // http level message
-            //    this.errors.push(err.message);
-            // else
-            //    this.errors.push("An unknown error occurred.");
+            console.error('Error occurred while trying to attach files to test: ', err);
+            const msg = err.error && err.error.message || err.message;
+            if ( msg )
+               this.alertMsgSvc.alertWarning(`Error attaching files: ${err.error.message}`);
+            else
+               this.alertMsgSvc.alertWarning(`An error occurred while trying to attach files.`);
          }
       );
    }
@@ -130,6 +137,45 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
          .subscribe();
    }
 
+   promptUpdateFileMetadata(attachedFile: TestAttachedFileMetadata)
+   {
+      const dlg = this.dialogSvc.open(AttachedFileMetadataDialogComponent, {
+         width: 'calc(75%)',
+         data: {
+            attachedFileId: attachedFile.attachedFileId,
+            testId: attachedFile.testId,
+            testDataPart: attachedFile.testDataPart,
+            fileName: attachedFile.fileName,
+            label: attachedFile.label,
+            ordering: attachedFile.ordering,
+         }
+      });
+
+      dlg.afterClosed().subscribe((fmd: AttachedFileMetadataDialogData) => {
+         if (fmd)
+         {
+            this.testsSvc.updateTestAttachedFileMetadata(
+               fmd.attachedFileId,
+               fmd.testId,
+               fmd.label,
+               fmd.ordering,
+               fmd.testDataPart,
+               fmd.fileName
+            ).subscribe(
+               () => { this.refreshAttachedFiles(); },
+               err => {
+                  console.error('Error occurred while trying to updated attached file metadata: ', err);
+                  const msg = err.error && err.error.message || err.message;
+                  if ( msg )
+                     this.alertMsgSvc.alertWarning(`Error updating attached file properties: ${err.error.message}`);
+                  else
+                     this.alertMsgSvc.alertWarning(`An error occurred while trying to update attached file properties.`);
+               }
+            );
+         }
+      });
+   }
+
    removeAttachedFile(attachedFile: TestAttachedFileMetadata)
    {
       this.testsSvc.deleteTestAttachedFile(attachedFile.attachedFileId, attachedFile.testId).subscribe(
@@ -137,13 +183,12 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
              this.refreshAttachedFiles();
           },
           err => {
-             // TODO: Add alert message for error.
-             // if ( err.error && err.error.message )
-             //    this.errors.push(err.error.message) // service message
-             // else if ( err.message )                // http level message
-             //    this.errors.push(err.message);
-             // else
-             //    this.errors.push("An unknown error occurred.");
+             console.error('Error trying to remove attached file: ', err);
+             const msg = err.error && err.error.message || err.message;
+             if ( msg )
+                this.alertMsgSvc.alertWarning(`Error removing attached file: ${err.error.message}`);
+             else
+                this.alertMsgSvc.alertWarning(`An error occurred while trying to remove the attached file.`);
           }
       );
    }

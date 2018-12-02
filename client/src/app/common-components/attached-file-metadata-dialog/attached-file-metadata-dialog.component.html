@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Edit Attached File Metadata</h2>
+
+<mat-dialog-content>
+
+   <div class="field">
+      <mat-form-field>
+         <input matInput [(ngModel)]="data.fileName" placeholder="File name">
+      </mat-form-field>
+   </div>
+
+   <div class="field">
+      <mat-form-field>
+         <input matInput [(ngModel)]="data.label" placeholder="Reference label">
+      </mat-form-field>
+   </div>
+
+   <div class="field">
+      <mat-form-field>
+         <input matInput type="number" [(ngModel)]="data.ordering" placeholder="Ordering" min="0" step="1">
+      </mat-form-field>
+   </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+   <button mat-button mat-dialog-close>Cancel</button>
+   <button mat-button [mat-dialog-close]="data" color="primary" [disabled]="!data.fileName">
+      Save
+   </button>
+</mat-dialog-actions>
+

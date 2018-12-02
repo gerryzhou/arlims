@@ -65,6 +65,7 @@ export interface AttachedFileDescr
    testAttachedFileId: number;
    fileName: string;
    size: number;
-   role: string;
+   label: string | null;
+   ordering: number | null;
 }
 

@@ -28,6 +28,7 @@ import {SimpleInputDialogComponent} from './simple-input-dialog/simple-input-dia
 import {AuditLogEntryComponent} from './audit-log-entry/audit-log-entry.component';
 import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.component';
 import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
+import {AttachedFileMetadataDialogComponent} from './attached-file-metadata-dialog/attached-file-metadata-dialog.component';
 
 @NgModule({
    imports: [
@@ -64,12 +65,14 @@ import {TestAttachedFilesComponent} from './test-attached-files/test-attached-fi
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
       TestAttachedFilesComponent,
+      AttachedFileMetadataDialogComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
       ResourceCodesDialogComponent,
       ConfirmDialogComponent,
       SimpleInputDialogComponent,
+      AttachedFileMetadataDialogComponent,
       // (dialog components here as well as in declarations)
    ],
    exports: [

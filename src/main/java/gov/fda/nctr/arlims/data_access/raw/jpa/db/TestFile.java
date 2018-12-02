@@ -27,7 +27,10 @@ public class TestFile
     private Long testId;
 
     @Size(max = 50)
-    private String role;
+    private String label;
+
+    @Column(name="ORDERING", nullable=false) @NotNull
+    private Long ordering;
 
     @Column(name="TEST_DATA_PART") @Size(max = 4000)
     private String testDataPart;
@@ -46,7 +49,8 @@ public class TestFile
     public TestFile
         (
             @NotNull Test test,
-            @Size(max = 50) String role,
+            @Size(max = 50) String label,
+            @NotNull Long ordering,
             @Size(max = 4000) String testDataPart,
             @Size(max = 200) String name,
             @NotNull byte[] data
@@ -54,7 +58,8 @@ public class TestFile
     {
         this.test = test;
         this.testId = test.getId();
-        this.role = role;
+        this.label = label;
+        this.ordering = ordering;
         this.testDataPart = testDataPart;
         this.name = name;
         this.data = data;
@@ -69,8 +74,11 @@ public class TestFile
     public Long getTestId() { return testId; }
     public void setTestId(Long testId) { this.testId = testId; }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public String getLabel() { return label; }
+    public void setLabel(String label) { this.label = label; }
+
+    public Long getOrdering() { return ordering; }
+    public void setOrdering(Long ordering) { this.ordering = ordering; }
 
     public String getTestDataPart() { return testDataPart; }
     public void setTestDataPart(String testDataPart) { this.testDataPart = testDataPart; }
