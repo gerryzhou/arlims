@@ -1,7 +1,5 @@
 TODO
 ----
-Allow saving test data to file.
-
 IDENT stage
    Add file attachment point in IDENT stage.
    Add short reference label text field at end of row, referencing file attachment label.
@@ -40,6 +38,7 @@ PRE-ENR sampling methods
 Done
 ----
 Test file attachments: Allow control of ordering and add label for referencing.
+Remove controls stage and add its items to pre-enr.
 
 ------------------------------------------------------------------------------------------------
 

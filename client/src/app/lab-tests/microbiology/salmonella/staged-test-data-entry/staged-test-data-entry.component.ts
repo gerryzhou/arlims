@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 import {MatStepper} from '@angular/material';
 import * as moment from 'moment';
+import * as FileSaver from 'file-saver';
 
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
@@ -228,5 +229,14 @@ export class StagedTestDataEntryComponent implements OnInit {
    toggleShowUnsetAffordances()
    {
       this.showUnsetAffordances = !this.showUnsetAffordances;
+   }
+
+   promptSaveTestDataToFile()
+   {
+      const blob = new Blob([JSON.stringify(this.testDataForm.value)], {type: 'application/json;charset=utf-8'});
+      const s = this.sampleInTest.sample;
+      const t = this.sampleInTest.testMetadata;
+      const ts = moment().format('YYYY-MM-DD[@]HHmmss');
+      FileSaver.saveAs(blob, `${ts} ${s.sampleNumber} ${t.testTypeShortName} [test ${t.testId}].json`, true);
    }
 }
