@@ -71,15 +71,6 @@
          </app-stage-vidas>
       </mat-step>
 
-      <mat-step label="CONTROLS">
-         <app-stage-controls class="test-stage"
-            [form]="testDataForm.get('controlsData')"
-            [conflicts]="conflictsTestData.controlsData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
-         </app-stage-controls>
-      </mat-step>
-
       <mat-step label="SLANT">
          <app-pos-cont class="test-stage"
             [stage]="'SLANT'"

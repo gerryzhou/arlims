@@ -29,7 +29,6 @@ import {StagePreEnrComponent} from './stage-pre-enr/stage-pre-enr.component';
 import {StageSelEnrComponent} from './stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from './stage-vidas/stage-vidas.component';
-import {StageControlsComponent} from './stage-controls/stage-controls.component';
 import {PosContComponent} from './pos-cont-stages/pos-cont.component';
 import {StageWrapupComponent} from './stage-wrapup/stage-wrapup.component';
 import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-confirm-deactivate-guard';
@@ -79,7 +78,6 @@ import {IsolateIdentificationEditorComponent} from './pos-cont-stages/isolate-id
       StageSelEnrComponent,
       StageMBrothComponent,
       StageVidasComponent,
-      StageControlsComponent,
       PosContComponent,
       StageWrapupComponent,
       TestReportsListingComponent,

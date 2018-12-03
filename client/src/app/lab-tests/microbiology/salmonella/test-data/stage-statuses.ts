@@ -25,7 +25,6 @@ export const TEST_STAGES: Stage[] = [
    {name: 'SEL-ENR',  statusCodeFn: selEnrStatusCode},
    {name: 'M-BROTH',  statusCodeFn: mBrothStatusCode},
    {name: 'VIDAS',    statusCodeFn: vidasStatusCode},
-   {name: 'CONTROLS', statusCodeFn: controlsStatusCode},
    {name: 'SLANT',    statusCodeFn: slantStatusCode},
    {name: 'IDENT',    statusCodeFn: identStatusCode},
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
@@ -103,6 +102,9 @@ function selEnrStatusCode(testData: TestData): FieldValuesStatusCode
       data.rvttWaterBathId,
       data.positiveControlGrowth,
       data.mediumControlGrowth,
+      data.systemControlsGrowth,
+      data.collectorControlsGrowth,
+      data.bacterialControlsUsed,
    ]);
    const spiking = spikingSpecified(testData);
    const spikeCountPresent = !!data.spikePlateCount;
@@ -139,35 +141,6 @@ function vidasStatusCode(testData: TestData): FieldValuesStatusCode
          data.mediumControlDetection,
       ].concat(spiking ? [data.spikeDetection] : [])
    );
-}
-
-function controlsStatusCode(testData: TestData): FieldValuesStatusCode
-{
-   const data = testData.controlsData;
-
-   const usageFieldsStatus = statusForRequiredFieldValues([
-      data.systemControlsUsed,
-      data.collectorControlsUsed,
-      data.bacterialControlsUsed,
-   ]);
-
-   switch ( usageFieldsStatus  )
-   {
-      case 'i': return 'i';
-      case 'e': return 'e';
-      case 'c':
-      {
-         if (data.systemControlsUsed &&
-            (!data.systemControlTypes || data.systemControlTypes.trim().length === 0 || data.systemControlsGrowth == null))
-            return 'i';
-
-         if (data.collectorControlsUsed &&
-            (!data.collectorControlTypes || data.collectorControlTypes.trim().length === 0 || data.collectorControlsGrowth == null))
-            return 'i';
-
-         return 'c';
-      }
-   }
 }
 
 function slantStatusCode

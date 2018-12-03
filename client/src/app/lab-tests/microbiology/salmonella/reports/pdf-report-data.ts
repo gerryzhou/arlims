@@ -9,6 +9,7 @@ import {arrayContainsNonValue, arrayContainsValue, countValueOccurrences} from '
 import {TestData} from '../test-data';
 import {AuditLogEntry} from '../../../../../generated/dto';
 import {AnalyzedAuditLogEntry, AttachedFileDescr} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
+import {stringify} from "querystring";
 
 export const IMP_SLM_VIDAS_PDF_REPORT_NAME = 'imp_slm_vidas.pdf';
 const SIX_SPACES = Array(7).join(' ');
@@ -74,16 +75,16 @@ export function makePdfReportData(testData: TestData, auditLogEntries: AuditLogE
       if ( !testData.vidasData.spikeDetection ) repData.vidasData.spikeDetectionWarn = '*';
    }
 
-   if ( testData.controlsData.systemControlsGrowth != null )
+   if ( testData.selEnrData.systemControlsGrowth != null )
    {
-      repData.controlsData.systemControlsGrowth = testData.controlsData.systemControlsGrowth ? 'Growth' : 'No growth';
-      if ( testData.controlsData.systemControlsGrowth ) repData.controlsData.systemControlsGrowthWarn = '*';
+      repData.selEnrData.systemControlsGrowth = growthText(testData.selEnrData.systemControlsGrowth);
+      if ( testData.selEnrData.systemControlsGrowth === 'G' ) repData.selEnrData.systemControlsGrowthWarn = '*';
    }
 
-   if ( testData.controlsData.collectorControlsGrowth != null )
+   if ( testData.selEnrData.collectorControlsGrowth != null )
    {
-      repData.controlsData.collectorControlsGrowth = testData.controlsData.collectorControlsGrowth ? 'Growth' : 'No growth';
-      if ( testData.controlsData.collectorControlsGrowth ) repData.controlsData.collectorControlsGrowthWarn = '*';
+      repData.selEnrData.collectorControlsGrowth = growthText(testData.selEnrData.collectorControlsGrowth);
+      if ( testData.selEnrData.collectorControlsGrowth === 'G' ) repData.selEnrData.collectorControlsGrowthWarn = '*';
    }
 
    repData.wrapupData.reserveSampleDisposition = testData.wrapupData.reserveSampleDisposition != null ?
@@ -97,6 +98,18 @@ export function makePdfReportData(testData: TestData, auditLogEntries: AuditLogE
 
    return repData;
 }
+
+function growthText(growthMeasurement: 'G' | 'NG' | 'NA' | null): string
+{
+   switch ( growthMeasurement )
+   {
+      case 'G': return 'Growth';
+      case 'NG': return 'No growth';
+      case 'NA': return 'Not used';
+      case null: return '';
+   }
+}
+
 
 function makeCompositeDetectionsListText(detections: boolean[]): string
 {

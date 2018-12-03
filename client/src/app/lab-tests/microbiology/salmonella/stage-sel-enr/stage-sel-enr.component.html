@@ -1,49 +1,5 @@
 <form [formGroup]="form">
 
-   <div class="row controls">
-
-      <div class="field-area positive-control-growth"
-           [class.conflicted]="conflicts.positiveControlGrowth !== undefined"
-           [class.growth]="positiveControlGrowthControl.value === true"
-           [class.no-growth]="positiveControlGrowthControl.value === false">
-         <mat-radio-group formControlName="positiveControlGrowth">
-            <div>Positive control growth</div>
-            <div>
-               <mat-radio-button [value]="true">growth</mat-radio-button>
-               <mat-radio-button [value]="false">no growth</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
-            </div>
-         </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.positiveControlGrowth"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.positiveControlGrowth = undefined">
-         </app-conflicting-field-value>
-      </div>
-
-      <div class="expanding-flex-space"></div>
-
-      <div class="field-area medium-control-growth"
-           [class.conflicted]="conflicts.mediumControlGrowth !== undefined"
-           [class.growth]="mediumControlGrowthControl.value === true"
-           [class.no-growth]="mediumControlGrowthControl.value === false">
-         <mat-radio-group formControlName="mediumControlGrowth">
-            <div>Medium control growth</div>
-            <div>
-               <mat-radio-button [value]="true">growth</mat-radio-button>
-               <mat-radio-button [value]="false">no growth</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
-            </div>
-         </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.mediumControlGrowth"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.mediumControlGrowth = undefined">
-         </app-conflicting-field-value>
-      </div>
-
-   </div>
-
 
    <div class="row">
 
@@ -160,6 +116,148 @@
             [conflictValue]="conflicts.rvttWaterBathId"
             [conflictWhoWhen]="conflictsWhoWhen"
             (dismiss)="conflicts.rvttWaterBathId = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+   </div>
+
+   <div class="row">
+
+      <div class="field-area positive-control-growth"
+           [class.conflicted]="conflicts.positiveControlGrowth !== undefined"
+           [class.growth]="positiveControlGrowthControl.value === true"
+           [class.no-growth]="positiveControlGrowthControl.value === false">
+         <mat-radio-group formControlName="positiveControlGrowth">
+            <div>Positive control growth</div>
+            <div>
+               <mat-radio-button [value]="true">growth</mat-radio-button>
+               <mat-radio-button [value]="false">no growth</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.positiveControlGrowth"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.positiveControlGrowth = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area medium-control-growth"
+           [class.conflicted]="conflicts.mediumControlGrowth !== undefined"
+           [class.growth]="mediumControlGrowthControl.value === true"
+           [class.no-growth]="mediumControlGrowthControl.value === false">
+         <mat-radio-group formControlName="mediumControlGrowth">
+            <div>Medium control growth</div>
+            <div>
+               <mat-radio-button [value]="true">growth</mat-radio-button>
+               <mat-radio-button [value]="false">no growth</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.mediumControlGrowth"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.mediumControlGrowth = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area bacterial-controls" [class.conflicted]="conflicts.bacterialControlsUsed !== undefined">
+         <mat-radio-group formControlName="bacterialControlsUsed">
+            <div>Bacterial controls used</div>
+            <div>
+               <mat-radio-button [value]="true">Y</mat-radio-button>
+               <mat-radio-button [value]="false">N</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.bacterialControlsUsed"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.bacterialControlsUsed = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+   </div>
+
+
+   <!-- system controls -->
+   <div class="row">
+
+      <div class="field-area system-controls-growth" (change)="onSystemControlsGrowthChanged()"
+           [class.conflicted]="conflicts.systemControlsGrowth !== undefined"
+           [class.growth]="systemControlsGrowthControl.value === 'G'"
+           [class.no-growth]="systemControlsGrowthControl.value === 'NG'">
+         <mat-radio-group formControlName="systemControlsGrowth">
+            <div>System controls growth</div>
+            <div>
+               <mat-radio-button [value]="'G'">growth</mat-radio-button>
+               <mat-radio-button [value]="'NG'">no growth</mat-radio-button>
+               <mat-radio-button [value]="'NA'">not used</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.systemControlsGrowth"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.systemControlsGrowth = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area sys-ctrl-types" [class.conflicted]="conflicts.systemControlTypes!== undefined">
+         <div class="row">
+            <mat-form-field>
+               <input formControlName="systemControlTypes" type="text" matInput placeholder="System control types">
+            </mat-form-field>
+            <div class="ctrl-types-predefined-inputs" *ngIf="!form.disabled">
+               <button class="link" (click)="appendSystemControlType('none')">none</button>
+               <button class="link" (click)="appendSystemControlType('knife')">knife</button>
+               <button class="link" (click)="appendSystemControlType('spoon')">spoon</button>
+               <button class="link" (click)="appendSystemControlType('spatula')">spatula</button>
+            </div>
+         </div>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.systemControlTypes"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.systemControlTypes = undefined">
+         </app-conflicting-field-value>
+      </div>
+   </div>
+
+   <!-- collector controls -->
+   <div class="row">
+      <div class="field-area collector-controls-growth" (change)="onCollectorControlsGrowthChanged()"
+           [class.conflicted]="conflicts.collectorControlsGrowth !== undefined"
+           [class.growth]="collectorControlsGrowthControl.value === 'G'"
+           [class.no-growth]="collectorControlsGrowthControl.value === 'NG'">
+         <mat-radio-group formControlName="collectorControlsGrowth">
+            <div>Collector controls growth</div>
+            <div>
+               <mat-radio-button [value]="'G'">growth</mat-radio-button>
+               <mat-radio-button [value]="'NG'">no growth</mat-radio-button>
+               <mat-radio-button [value]="'NA'">not used</mat-radio-button>
+               <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
+            </div>
+         </mat-radio-group>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.collectorControlsGrowth"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.collectorControlsGrowth = undefined">
+         </app-conflicting-field-value>
+      </div>
+
+      <div class="field-area coll-ctrl-types" [class.conflicted]="conflicts.collectorControlTypes!== undefined">
+         <div class="row">
+            <mat-form-field>
+               <input formControlName="collectorControlTypes" type="text" matInput placeholder="Collector control types">
+            </mat-form-field>
+            <div class="ctrl-types-predefined-inputs" *ngIf="!form.disabled">
+               <button class="link" (click)="appendCollectorControlType('none')">none</button>
+            </div>
+         </div>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.collectorControlTypes"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.collectorControlTypes = undefined">
          </app-conflicting-field-value>
       </div>
 

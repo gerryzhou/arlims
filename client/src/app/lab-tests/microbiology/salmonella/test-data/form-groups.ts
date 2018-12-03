@@ -52,6 +52,11 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          rvttWaterBathId: new FormControl(testData.selEnrData.rvttWaterBathId),
          positiveControlGrowth: new FormControl(testData.selEnrData.positiveControlGrowth),
          mediumControlGrowth: new FormControl(testData.selEnrData.mediumControlGrowth),
+         systemControlsGrowth: new FormControl(testData.selEnrData.systemControlsGrowth),
+         systemControlTypes: new FormControl(testData.selEnrData.systemControlTypes),
+         collectorControlsGrowth: new FormControl(testData.selEnrData.collectorControlsGrowth),
+         collectorControlTypes: new FormControl(testData.selEnrData.collectorControlTypes),
+         bacterialControlsUsed: new FormControl(testData.selEnrData.bacterialControlsUsed),
       }),
       mBrothData: new FormGroup({
          mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
@@ -68,15 +73,6 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          positiveControlDetection: new FormControl(testData.vidasData.positiveControlDetection),
          mediumControlDetection: new FormControl(testData.vidasData.mediumControlDetection),
          spikeDetection: new FormControl(testData.vidasData.spikeDetection),
-      }),
-      controlsData: new FormGroup({
-         systemControlsUsed: new FormControl(testData.controlsData.systemControlsUsed),
-         systemControlTypes: new FormControl(testData.controlsData.systemControlTypes),
-         systemControlsGrowth: new FormControl(testData.controlsData.systemControlsGrowth),
-         collectorControlsUsed: new FormControl(testData.controlsData.collectorControlsUsed),
-         collectorControlTypes: new FormControl(testData.controlsData.collectorControlTypes),
-         collectorControlsGrowth: new FormControl(testData.controlsData.collectorControlsGrowth),
-         bacterialControlsUsed: new FormControl(testData.controlsData.bacterialControlsUsed),
       }),
       posContData: makePositivesContinuationDataFormGroup(testData.posContData, username),
       wrapupData: new FormGroup({

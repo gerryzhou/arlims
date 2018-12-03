@@ -10,7 +10,6 @@ describe('microbiology salmonella test data functions', () => {
             {stageName: 'SEL-ENR', fieldValuesStatus: 'e'},
             {stageName: 'M-BROTH', fieldValuesStatus: 'e'},
             {stageName: 'VIDAS', fieldValuesStatus: 'e'},
-            {stageName: 'CONTROLS', fieldValuesStatus: 'e'},
             {stageName: 'POS-CONT', fieldValuesStatus: 'e'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'e'},
          ]);
@@ -52,6 +51,11 @@ describe('microbiology salmonella test data functions', () => {
             rvttWaterBathId: 'x',
             positiveControlGrowth: true,
             mediumControlGrowth: true,
+            systemControlTypes: 'x',
+            systemControlsGrowth: 'G',
+            collectorControlTypes: 'x',
+            collectorControlsGrowth: 'G',
+            bacterialControlsUsed: false,
          },
          mBrothData: {
             mBrothBatchId: 'x',
@@ -65,15 +69,6 @@ describe('microbiology salmonella test data functions', () => {
             positiveControlDetection: true,
             mediumControlDetection: false,
             spikeDetection: false,
-         },
-         controlsData: {
-            systemControlsUsed: true,
-            systemControlTypes: 'x',
-            systemControlsGrowth: true,
-            collectorControlsUsed: true,
-            collectorControlTypes: 'x',
-            collectorControlsGrowth: true,
-            bacterialControlsUsed: false,
          },
          posContData: null, // TODO
          wrapupData: {
@@ -89,7 +84,6 @@ describe('microbiology salmonella test data functions', () => {
             {stageName: 'SEL-ENR', fieldValuesStatus: 'c'},
             {stageName: 'M-BROTH', fieldValuesStatus: 'c'},
             {stageName: 'VIDAS', fieldValuesStatus: 'c'},
-            {stageName: 'CONTROLS', fieldValuesStatus: 'c'},
             {stageName: 'POS-CONT', fieldValuesStatus: 'c'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
          ]);
@@ -128,6 +122,11 @@ describe('microbiology salmonella test data functions', () => {
             // rvttWaterBathId [required field omitted]
             positiveControlGrowth: true,
             mediumControlGrowth: true,
+            systemControlTypes: 'x',
+            systemControlsGrowth: 'G',
+            collectorControlTypes: 'x',
+            collectorControlsGrowth: 'G',
+            bacterialControlsUsed: false,
          },
          mBrothData: {
             mBrothBatchId: 'x',
@@ -135,15 +134,6 @@ describe('microbiology salmonella test data functions', () => {
          },
          vidasData: {
             // [all required fields omitted]
-         },
-         controlsData: {
-            systemControlsUsed: true,
-            systemControlTypes: 'x',
-            systemControlsGrowth: true,
-            collectorControlsUsed: true,
-            collectorControlTypes: 'x',
-            // collectorControlsGrowth: true, [required field omitted]
-            bacterialControlsUsed: false,
          },
          posContData: null,
          wrapupData: {
@@ -158,7 +148,6 @@ describe('microbiology salmonella test data functions', () => {
             {stageName: 'SEL-ENR', fieldValuesStatus: 'i'},
             {stageName: 'M-BROTH', fieldValuesStatus: 'i'},
             {stageName: 'VIDAS', fieldValuesStatus: 'e'},
-            {stageName: 'CONTROLS', fieldValuesStatus: 'i'},
             {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
          ]);
    });

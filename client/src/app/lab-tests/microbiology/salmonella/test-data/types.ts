@@ -6,7 +6,6 @@ export interface TestData {
    selEnrData:   SelEnrData;
    mBrothData:   MBrothData;
    vidasData:    VidasData;
-   controlsData: ControlsData;
    posContData:  PositivesContinuationData;
    wrapupData:   WrapupData;
 }
@@ -44,6 +43,11 @@ export interface SelEnrData {
    rvttWaterBathId?: string | null;
    positiveControlGrowth?: boolean | null;
    mediumControlGrowth?: boolean | null;
+   systemControlsGrowth?: 'G' | 'NG' | 'NA' | null;
+   systemControlTypes?: string | null;
+   collectorControlsGrowth?: 'G' | 'NG' | 'NA' | null;
+   collectorControlTypes?: string | null;
+   bacterialControlsUsed?: boolean | null;
 }
 
 export interface MBrothData {
@@ -59,16 +63,6 @@ export interface VidasData {
    positiveControlDetection?: boolean | null;
    mediumControlDetection?: boolean | null;
    spikeDetection?: boolean | null;
-}
-
-export interface ControlsData {
-   systemControlsUsed?: boolean | null;
-   systemControlTypes?: string | null;
-   systemControlsGrowth?: boolean | null;
-   collectorControlsUsed?: boolean | null;
-   collectorControlTypes?: string | null;
-   collectorControlsGrowth?: boolean | null;
-   bacterialControlsUsed?: boolean | null;
 }
 
 export interface PositivesContinuationData
@@ -169,7 +163,6 @@ export function emptyTestData(): TestData {
       selEnrData: {},
       mBrothData: {},
       vidasData: {},
-      controlsData: {},
       posContData: null,
       wrapupData: {},
    };

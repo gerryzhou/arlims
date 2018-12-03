@@ -37,7 +37,8 @@ export class StageSelEnrComponent implements OnChanges {
 
    positiveControlGrowthControl: AbstractControl;
    mediumControlGrowthControl: AbstractControl;
-
+   systemControlsGrowthControl: AbstractControl;
+   collectorControlsGrowthControl: AbstractControl;
 
    constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
 
@@ -58,7 +59,44 @@ export class StageSelEnrComponent implements OnChanges {
 
       this.positiveControlGrowthControl = this.form.get('positiveControlGrowth');
       this.mediumControlGrowthControl = this.form.get('mediumControlGrowth');
+      this.systemControlsGrowthControl = this.form.get('systemControlsGrowth');
+      this.collectorControlsGrowthControl = this.form.get('collectorControlsGrowth');
+      this.onSystemControlsGrowthChanged();
+      this.onCollectorControlsGrowthChanged();
    }
+
+   onSystemControlsGrowthChanged()
+   {
+      if ( this.form.get('systemControlsGrowth').value !== 'NA' && this.form.enabled )
+         this.form.get('systemControlTypes').enable();
+      else
+         this.form.get('systemControlTypes').disable();
+   }
+
+   onCollectorControlsGrowthChanged()
+   {
+      if ( this.form.get('collectorControlsGrowth').value !== 'NA' && this.form.enabled )
+         this.form.get('collectorControlTypes').enable();
+      else
+         this.form.get('collectorControlTypes').disable();
+   }
+
+   appendSystemControlType(ctrlType: string)
+   {
+      const formCtrl = this.form.get('systemControlTypes');
+      const origValue = formCtrl.value || '';
+      const newValue = ctrlType === 'none' ? 'none' : origValue.length === 0 ? ctrlType :  origValue + ', ' + ctrlType;
+      formCtrl.setValue(newValue);
+   }
+
+   appendCollectorControlType(ctrlType: string)
+   {
+      const formCtrl = this.form.get('collectorControlTypes');
+      const origValue = formCtrl.value || '';
+      const newValue = ctrlType === 'none' ? 'none' : origValue.length === 0 ? ctrlType :  origValue + ', ' + ctrlType;
+      formCtrl.setValue(newValue);
+   }
+
 
    promptApplyResources()
    {
