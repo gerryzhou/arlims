@@ -19,6 +19,10 @@ public interface TestDataService
 
     boolean saveTestData(long testId, String testDataJson, String stageStatusesJson, String previousMd5, AppUser user);
 
+    void restoreTestDatas(List<TestSaveData> saveDatas, AppUser user);
+
+    void restoreTestData(long testId, String testDataJson, String stageStatusesJson, AppUser user);
+
     Optional<DataModificationInfo> getTestDataModificationInfo(long testId);
 
     LabTestMetadata getTestMetadata(long testId);

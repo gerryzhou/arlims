@@ -173,6 +173,22 @@ export class TestsService {
       );
    }
 
+   // Write database data directly to the database without update conflicts management, as when restoring from backup.
+   restoreTestData
+      (
+         saveDataFiles: File[]
+      )
+      : Observable<void>
+   {
+      const formData: FormData = new FormData();
+
+      saveDataFiles.forEach(file => formData.append('saveDataFiles', file, file.name));
+
+      const url = this.apiUrlsSvc.restoreTestSaveDatasUrl();
+
+      return this.httpClient.post(url, formData).pipe(map(() => {}));
+   }
+
    private mergeWithTestDataFromDatabase
       (
          testData: any,

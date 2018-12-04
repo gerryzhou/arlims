@@ -116,13 +116,21 @@
       <div>
          <mat-menu #optionsMenu="matMenu">
             <button type="button" mat-menu-item  (click)="toggleShowUnsetAffordances()">Toggle showing 'unset' option for supporting fields</button>
+            <mat-divider></mat-divider>
+            <button mat-button type="button" class="save-to-file" (click)="promptSaveTestDataToFile()">
+               Save test data to file
+            </button>
+            <input type="file" #restoreFilesInput style="display:none"
+                   (change)="restoreTestDataFromSaveFile($event.target.files)">
+            <button mat-button type="button" class="restore-from-file" (click)="restoreFilesInput.click()">
+               Restore test data from file
+            </button>
          </mat-menu>
          <button mat-button type="button" [matMenuTriggerFor]="optionsMenu">
-            Options <mat-icon>more_vert</mat-icon>
+            <mat-icon>settings</mat-icon>
          </button>
       </div>
       <button mat-button type="submit" color="primary">Save</button>
-      <button mat-button type="button" class="save-to-file" (click)="promptSaveTestDataToFile()">Save to file</button>
    </div>
 
 </form>

@@ -1,11 +1,13 @@
 package gov.fda.nctr.arlims.controllers;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.io.InputStreamResource;
@@ -19,7 +21,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
 import gov.fda.nctr.arlims.data_access.test_data.TestAttachedFileContents;
@@ -30,6 +31,7 @@ import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.reports.Report;
 import gov.fda.nctr.arlims.reports.TestDataReportService;
 import gov.fda.nctr.arlims.security.AppUserAuthentication;
+import static java.util.stream.Collectors.toList;
 
 
 @RestController
@@ -115,6 +117,27 @@ public class TestController extends ControllerBase
 
             return new OptimisticDataUpdateResult(false, maybeMod);
         }
+    }
+
+    @PostMapping("restore-save-datas")
+    @RolesAllowed("ROLE_ADMIN")
+    public void restoreTestSaveDatas
+        (
+            @RequestPart("saveDataFiles") MultipartFile[] saveDataFiles,
+            Authentication authentication
+        )
+    {
+        AppUser user = ((AppUserAuthentication)authentication).getAppUser();
+
+        List<TestSaveData> saveDatas =
+            Arrays.stream(saveDataFiles)
+            .map(saveDataFile -> {
+                try { return jsonSerializer.readValue(saveDataFile.getBytes(), TestSaveData.class); }
+                catch(Exception e) { throw new RuntimeException(e); }
+            })
+            .collect(toList());
+
+        testDataService.restoreTestDatas(saveDatas, user);
     }
 
     @GetMapping("{testId:\\d+}/attached-files/metadatas")

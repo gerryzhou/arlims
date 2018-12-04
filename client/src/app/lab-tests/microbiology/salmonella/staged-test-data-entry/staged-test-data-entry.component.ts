@@ -8,7 +8,7 @@ import * as FileSaver from 'file-saver';
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {AppUser, LabResource, TestAttachedFileMetadata, SampleInTest} from '../../../../../generated/dto';
+import {AppUser, LabResource, TestAttachedFileMetadata, SampleInTest, TestSaveData} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
    emptyTestData,
@@ -161,13 +161,10 @@ export class StagedTestDataEntryComponent implements OnInit {
       )
       .subscribe(
          saveResults => {
-             if (saveResults.saved)
+             if ( saveResults.saved )
              {
-                this.usrCtxSvc.refreshLabGroupContents();
-                this.clearConflictsData();
                 this.alertMsgSvc.alertSuccess('Test data saved.', true);
-                this.testDataForm.markAsPristine();
-                this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));
+                this.doAfterSaveNavigation();
              }
              else
              {
@@ -233,10 +230,44 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    promptSaveTestDataToFile()
    {
-      const blob = new Blob([JSON.stringify(this.testDataForm.value)], {type: 'application/json;charset=utf-8'});
       const s = this.sampleInTest.sample;
-      const t = this.sampleInTest.testMetadata;
+      const td = this.testDataForm.value;
+      const tmd = this.sampleInTest.testMetadata;
+
+      const saveData: TestSaveData = {
+         testId: tmd.testId,
+         testDataJson: JSON.stringify(td),
+         stageStatusesJson: JSON.stringify(getTestStageStatuses(td, this.testConfig)),
+      };
+
+      const blob = new Blob([JSON.stringify(saveData)], {type: 'application/json;charset=utf-8'});
+
       const ts = moment().format('YYYY-MM-DD[@]HHmmss');
-      FileSaver.saveAs(blob, `${ts} ${s.sampleNumber} ${t.testTypeShortName} [test ${t.testId}].json`, true);
+
+      FileSaver.saveAs(blob, `${ts} ${s.sampleNumber} ${tmd.testTypeShortName}.json`, true);
    }
+
+   restoreTestDataFromSaveFile(files: FileList)
+   {
+      if ( files.length !== 1 )
+      {
+         console.log(`Expected save data files list of length 1, got list of length ${files.length}.`);
+         return;
+      }
+
+      this.testsSvc.restoreTestData(Array.from(files)).subscribe(() => {
+         this.alertMsgSvc.alertSuccess('Test data restored.', true);
+         this.doAfterSaveNavigation();
+      });
+   }
+
+   private doAfterSaveNavigation()
+   {
+      this.clearConflictsData();
+      this.testDataForm.markAsPristine();
+      // TODO: Set sample to expand as state in new context samples service instead of in the url.
+      this.usrCtxSvc.refreshLabGroupContents();
+      this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));
+   }
+
 }

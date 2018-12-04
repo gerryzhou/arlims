@@ -250,6 +250,62 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         return saved;
     }
 
+    @Transactional
+    @Override
+    public void restoreTestData
+        (
+            long testId,
+            String testDataJson,
+            String stageStatusesJson,
+            AppUser user
+        )
+    {
+        String newMd5 = md5OfUtf8Bytes(testDataJson);
+
+        String sql =
+            "update test\n" +
+            "set test_data_json = ?, stage_statuses_json = ?, last_saved = ?, last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
+            "where id = ?";
+
+        int updateCount =
+            jdbc.update(sql,
+                testDataJson,
+                stageStatusesJson,
+                new java.sql.Timestamp(Instant.now().toEpochMilli()),
+                user.getEmployeeId(),
+                newMd5,
+                testId
+            );
+
+        boolean saved = updateCount > 0;
+
+        if ( saved )
+        {
+            VersionedTestData origTestData = getVersionedTestData(testId);
+
+            logTestDataSaved(testId, origTestData.getTestDataJson(), testDataJson, user);
+        }
+        else
+            throw new RuntimeException("test id not found");
+    }
+
+    @Transactional
+    @Override
+    public void restoreTestDatas(List<TestSaveData> saveDatas, AppUser user)
+    {
+        for (TestSaveData saveData: saveDatas)
+        {
+            log.info("Restoring test save data for test " + saveData.getTestId() + ".");
+
+            restoreTestData(
+                saveData.getTestId(),
+                saveData.getTestDataJson(),
+                saveData.getStageStatusesJson(),
+                user
+            );
+        }
+    }
+
     private void logTestDataSaved
         (
             long testId,
