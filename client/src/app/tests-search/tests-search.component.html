@@ -13,7 +13,7 @@
 <div>
    <app-sample *ngFor="let sample of resultSamples | async"
       [sample]="sample"
-      [showAssociatedItems]="expandedSampleIds.has(sample.id)"
+      [showAssociatedItems]="true"
       [showAssociatedItemsSummaryInSampleMetadata]="true"
       [showTestDeleteButtons]="false"
       (headerClick)="toggleSampleExpanded(sample.id)">
