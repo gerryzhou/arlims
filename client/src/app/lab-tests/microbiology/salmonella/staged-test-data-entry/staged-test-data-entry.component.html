@@ -115,16 +115,24 @@
       <div class="expanding-flex-space"></div>
       <div>
          <mat-menu #optionsMenu="matMenu">
-            <button type="button" mat-menu-item  (click)="toggleShowUnsetAffordances()">Toggle showing 'unset' option for supporting fields</button>
+            <button type="button" mat-menu-item
+                    (click)="toggleShowUnsetAffordances()">
+               Toggle showing 'unset' option for supporting fields
+            </button>
             <mat-divider></mat-divider>
-            <button mat-button type="button" class="save-to-file" (click)="promptSaveTestDataToFile()">
+            <button type="button" mat-menu-item (click)="promptSaveTestDataToFile()">
+               <mat-icon class="compound-icon-left">save</mat-icon>
+               <mat-icon>arrow_back</mat-icon>
                Save test data to file
             </button>
             <input type="file" #restoreFilesInput style="display:none"
                    (change)="restoreTestDataFromSaveFile($event.target.files)">
-            <button mat-button type="button" class="restore-from-file" (click)="restoreFilesInput.click()">
+            <button type="button" mat-menu-item (click)="restoreFilesInput.click()">
+               <mat-icon class="compound-icon-left">save</mat-icon>
+               <mat-icon>arrow_forward</mat-icon>
                Restore test data from file
             </button>
+            <mat-divider></mat-divider>
          </mat-menu>
          <button mat-button type="button" [matMenuTriggerFor]="optionsMenu">
             <mat-icon>settings</mat-icon>
