@@ -159,6 +159,20 @@
 
    </div>
 
+   <!-- attached files for IDENT stage -->
+   <mat-expansion-panel class="attached-files" *ngIf="stage === 'IDENT'">
+      <mat-expansion-panel-header>
+         {{identAttachedFiles.length}} attached file{{identAttachedFiles.length == 1 ? '': 's'}}
+      </mat-expansion-panel-header>
+      <app-test-attached-files *ngIf="!viewOnly"
+         [testId]="testId"
+         [testDataPart]="IDENT_ATTACHED_FILES_KEY"
+         [attachedFiles]="identAttachedFiles"
+         [modificationsEnabled]="true"
+         (attachedFilesChange)="onIdentAttachedFilesChanged($event)">
+      </app-test-attached-files>
+   </mat-expansion-panel>
+
    <div class="stage-options-bottom-bar">
       <button class="link" type="button" (click)="toggleShowOtherStageDataAsContext()">
          {{showOtherStageDataAsContext ? 'Hide' : 'Show'}} {{stage === 'IDENT' ? 'SLANT' : 'IDENT'}} isolate test data

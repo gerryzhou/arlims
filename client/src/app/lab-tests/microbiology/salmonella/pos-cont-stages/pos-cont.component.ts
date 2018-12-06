@@ -9,7 +9,7 @@ import {
 } from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {TestConfig} from '../test-config';
-import {AppUser} from '../../../../../generated/dto';
+import {AppUser, TestAttachedFileMetadata} from '../../../../../generated/dto';
 
 @Component({
    selector: 'app-pos-cont',
@@ -17,6 +17,12 @@ import {AppUser} from '../../../../../generated/dto';
    styleUrls: ['./pos-cont.component.scss']
 })
 export class PosContComponent implements OnChanges {
+
+   @Input()
+   form: FormGroup; // May be empty of controls until user chooses to initiate positives continuation tests.
+
+   @Input()
+   testId: number;
 
    @Input()
    stage: 'SLANT' | 'IDENT';
@@ -28,13 +34,13 @@ export class PosContComponent implements OnChanges {
    viewOnly = false;
 
    @Input()
-   form: FormGroup; // May be empty of controls until user chooses to initiate positives continuation tests.
-
-   @Input()
    vidasPositiveSampleTestUnitNumbers: number[] | null = null;
 
    @Input()
    sampleTestUnitsType: string | null = null;
+
+   @Input()
+   attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
    @Input()
    testConfig: TestConfig | null;
@@ -62,7 +68,11 @@ export class PosContComponent implements OnChanges {
 
    sortedTestUnitNums: number[] = [];
 
+   identAttachedFiles: TestAttachedFileMetadata[];
+
    formSubscription: Subscription | null;
+
+   readonly IDENT_ATTACHED_FILES_KEY = 'ident';
 
    constructor() {}
 
@@ -73,6 +83,8 @@ export class PosContComponent implements OnChanges {
       this.defaultNumIsolatesPerSelectiveAgarPlate =
          this.testConfig ? this.testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2 : 2;
 
+      this.identAttachedFiles = this.attachedFilesByTestPart.get(this.IDENT_ATTACHED_FILES_KEY) || [];
+
       this.refreshTestUnitNumbersDependents();
 
       if ( this.formSubscription )
@@ -81,7 +93,6 @@ export class PosContComponent implements OnChanges {
          const testUnitNums = this.readSortedTestUnitNumbersFromForm();
          if ( !arraysEqual(testUnitNums, this.sortedTestUnitNums) )
          {
-            console.log(`${this.stage} form change: test unit numbers changed, refreshing test unit number dependents.`)
             this.refreshTestUnitNumbersDependents();
          }
       });
@@ -216,6 +227,11 @@ export class PosContComponent implements OnChanges {
    toggleShowOtherStageDataAsContext()
    {
       this.showOtherStageDataAsContext = !this.showOtherStageDataAsContext;
+   }
+
+   onIdentAttachedFilesChanged(attachedFiles: TestAttachedFileMetadata[])
+   {
+      this.identAttachedFiles = attachedFiles;
    }
 }
 

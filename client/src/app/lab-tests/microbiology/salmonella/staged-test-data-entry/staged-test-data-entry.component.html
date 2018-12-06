@@ -73,8 +73,10 @@
 
       <mat-step label="SLANT">
          <app-pos-cont class="test-stage"
-            [stage]="'SLANT'"
             [form]="testDataForm.get('posContData')"
+            [testId]="sampleInTest.testMetadata.testId"
+            [stage]="'SLANT'"
+            [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
             [sampleTestUnitsType]="sampleTestUnitsType"
             [testConfig]="testConfig"
@@ -87,8 +89,10 @@
 
       <mat-step label="IDENT">
          <app-pos-cont class="test-stage"
-            [stage]="'IDENT'"
             [form]="testDataForm.get('posContData')"
+            [testId]="sampleInTest.testMetadata.testId"
+            [stage]="'IDENT'"
+            [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
             [sampleTestUnitsType]="sampleTestUnitsType"
             [testConfig]="testConfig"

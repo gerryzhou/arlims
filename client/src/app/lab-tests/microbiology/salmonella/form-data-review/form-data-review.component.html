@@ -63,8 +63,10 @@
    <div>
       <h3>SLANT</h3>
       <app-pos-cont class="test-stage"
-         stage="SLANT"
          [form]="testDataForm.get('posContData')"
+         [testId]="sampleInTest.testMetadata.testId"
+         stage="SLANT"
+         [attachedFilesByTestPart]="attachedFilesByTestPart"
          [viewOnly]="true"
          [conflicts]="conflictsTestData.posContData"
          [conflictsWhoWhen]="conflictsEmployeeTimestamp">
@@ -74,8 +76,10 @@
    <div>
       <h3>IDENT</h3>
       <app-pos-cont class="test-stage"
-         stage="IDENT"
          [form]="testDataForm.get('posContData')"
+         [testId]="sampleInTest.testMetadata.testId"
+         stage="IDENT"
+         [attachedFilesByTestPart]="attachedFilesByTestPart"
          [viewOnly]="true"
          [conflicts]="conflictsTestData.posContData"
          [conflictsWhoWhen]="conflictsEmployeeTimestamp">
