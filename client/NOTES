@@ -1,8 +1,6 @@
 TODO
 ----
 IDENT stage
-   Add short reference label text field at end of row, referencing file attachment label.
-   Identification text field should be lengthened a bit.
    Add NA option to control-satisfactory radio groups.
 
 Employee hours management in WRAPUP stage
@@ -40,7 +38,7 @@ Test file attachments: Allow control of ordering and add label for referencing.
 Remove controls stage and add its items to pre-enr.
 Allow saving and restoring test data to and from files.
 Add file attachment point in IDENT stage.
-
+Add reference label text field at end of isolate test seq row, referencing file attachment label.
 ------------------------------------------------------------------------------------------------
 
 Try upgrade to Spring Boot 2.1 / Spring 5.1.

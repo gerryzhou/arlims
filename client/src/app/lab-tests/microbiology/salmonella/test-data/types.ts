@@ -130,6 +130,7 @@ export interface IsolateIdentification
    method: IdentificationMethod | null;
    identCode: string | null;
    identText: string | null;
+   attachmentLabel: string | null;
    positive: boolean | null;
 }
 
@@ -208,6 +209,7 @@ export function makeEmptyIsolateIdentification(): IsolateIdentification
       method: null,
       identCode: null,
       identText: null,
+      attachmentLabel: null,
       positive: null,
    };
 }

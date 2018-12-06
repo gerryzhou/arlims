@@ -3,5 +3,8 @@
    <div class="ident-code-ro">{{form.get(['identification', 'identCode'])?.value}}</div>
    <div class="ident-text-ro">{{form.get(['identification', 'identText'])?.value}}</div>
    <div class="ident-positive-ro">{{form.get(['identification', 'positive'])?.value | plusMinus }}</div>
+   <div class="attachment-label-ro" *ngIf="form.get(['identification', 'attachmentLabel'])?.value">
+      {{form.get(['identification', 'attachmentLabel'])?.value}}
+   </div>
 </div>
 

@@ -1,7 +1,8 @@
 <div class="main-row" [formGroup]="form">
 
    <div class="field-area method">
-      <mat-select formControlName="method" placeholder="method" (valueChange)="onMethodChanged($event)">
+      <mat-select formControlName="method" placeholder="method" (valueChange)="onMethodChanged($event)"
+         matTooltip="identification method">
          <mat-option [value]="null"></mat-option>
          <mat-option [value]="'API20E'">API20E</mat-option>
          <mat-option [value]="'Vitek'">Vitek</mat-option>
@@ -9,19 +10,25 @@
    </div>
 
    <div class="field-area ident-code">
-      <input formControlName="identCode" type="text" matInput placeholder="identification code">
+      <input formControlName="identCode" type="text" matInput placeholder="identification code"
+         matTooltip="identification code">
    </div>
 
    <div class="field-area ident-text">
-      <input formControlName="identText" type="text" matInput placeholder="identification text">
+      <input formControlName="identText" type="text" matInput placeholder="identification text"
+         matTooltip="identification text">
    </div>
 
    <div class="field-area positive">
-      <mat-select formControlName="positive" placeholder="+/-">
+      <mat-select formControlName="positive" placeholder="+/-" matTooltip="positive/negative">
          <mat-option [value]="null"></mat-option>
          <mat-option [value]="true">+</mat-option>
          <mat-option [value]="false">&minus;</mat-option>
       </mat-select>
+   </div>
+
+   <div class="field-area attachment-label">
+      <input formControlName="attachmentLabel" type="text" matInput matTooltip="attachment reference label">
    </div>
 
 </div>

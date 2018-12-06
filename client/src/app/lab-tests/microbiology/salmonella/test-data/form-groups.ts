@@ -202,6 +202,7 @@ export function makeIsolateIdentificationFormGroup(isolateIdent: IsolateIdentifi
       method:    new FormControl(isolateIdent && isolateIdent.method || null),
       identCode: new FormControl(isolateIdent && isolateIdent.identCode || null),
       identText: new FormControl(isolateIdent && isolateIdent.identText || null),
+      attachmentLabel: new FormControl(isolateIdent && isolateIdent.attachmentLabel || null),
       positive:  new FormControl(isolateIdent && isolateIdent.positive || null),
    });
 }

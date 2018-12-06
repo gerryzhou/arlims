@@ -399,7 +399,8 @@ function slantTubeTestStatus(slantTest: SlantTubeTest): FieldValuesStatusCode
 
 function isolateIdentificationStatus(ident: IsolateIdentification)
 {
-   if ( ident == null || ident.positive == null && ident.identCode == null && ident.identText == null )
+   if ( ident == null ||
+        ident.positive == null && ident.identCode == null && ident.identText == null && ident.attachmentLabel == null )
       return 'e';
    else if ( ident.positive != null && ident.identCode != null && ident.identText != null )
       return 'c';
