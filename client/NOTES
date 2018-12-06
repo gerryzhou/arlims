@@ -1,8 +1,5 @@
 TODO
 ----
-IDENT stage
-   Add NA option to control-satisfactory radio groups.
-
 Employee hours management in WRAPUP stage
   Columns: Name Role Hours
     Role = original/lead | check | additional
