@@ -5,6 +5,7 @@ Employee hours management in WRAPUP stage
     Role = original/lead | check | additional
     See screenshot - actually need all columns in screenshot except "Position Class".
   Include all users that saved/modified the test.
+    Add to test metadata?
   Each analyst is original or additional or check.
 
 Sample received-from
