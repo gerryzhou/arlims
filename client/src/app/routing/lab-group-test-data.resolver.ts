@@ -35,6 +35,11 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
          )
       );
 
+      const includeAuditEntries = !!route.data['includeAuditLogEntries'];
+      const auditEntries$ = includeAuditEntries ?
+         this.auditLogSvc.getEntriesForTest(testId)
+         : obsof(null);
+
       return (
          zip(
             testConfig$,
@@ -42,13 +47,21 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
             this.testsService.getTestAttachedFilesMetadatas(testId),
             sampleInTest$,
             this.usrCtxSvc.getLabResourcesByType(),
-            !!route.data['includeAuditLogEntries'] ? this.auditLogSvc.getEntriesForTest(testId) : obsof(null),
+            auditEntries$,
             this.usrCtxSvc.getAuthenticatedUser(),
          )
          .pipe(
-            map(([labGroupTestConfig, versionedTestData, attachedFiles, sampleInTest, labResourcesByType, auditLogEntries, appUser]) =>
-                ({labGroupTestConfig, versionedTestData, attachedFiles, sampleInTest, labResourcesByType, auditLogEntries, appUser})
-            )
+            map(([labGroupTestConfig, versionedTestData, attachedFiles, sampleInTest, labResourcesByType, auditLogEntries, appUser]) => (
+               {
+                  labGroupTestConfig,
+                  versionedTestData,
+                  attachedFiles,
+                  sampleInTest,
+                  labResourcesByType,
+                  auditLogEntries,
+                  appUser
+               }
+            ))
          )
       );
    }
