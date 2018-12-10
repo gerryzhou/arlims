@@ -1,14 +1,5 @@
 TODO
 ----
-Employee hours management
-   WRAPUP stage
-     test data structure:
-       timeChargesByEmployeeId: TestTimeCharges
-     Add to form group as was done for isolate test sequences.
-   Show as table in wrapup stage view.
-   Create dialog allowing editing of EmployeeTime (new or existing).
-     Use test service call to set the employee list.
-
 Sample received-from
   Call api with sample num and person id.
   Button next to field to do lookup live, for now.
