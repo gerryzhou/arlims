@@ -26,6 +26,7 @@ export class UserTimeChargeDialogComponent {
             timeCharge: {
                role: null,
                hours: null,
+               assignmentStatus: null,
                enteredTimestamp: null,
             }
          };
@@ -60,6 +61,7 @@ export class UserTimeChargeDialogComponent {
          this.data.userTimeCharge.userShortName &&
          this.data.userTimeCharge.timeCharge &&
          this.data.userTimeCharge.timeCharge.role &&
+         this.data.userTimeCharge.timeCharge.assignmentStatus &&
          this.data.userTimeCharge.timeCharge.hours != null
       );
    }

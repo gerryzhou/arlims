@@ -6,9 +6,13 @@ export interface TimeCharge {
 
    hours: number;
 
+   assignmentStatus: AssignmentStatus;
+
    enteredTimestamp: string;
 
 }
+
+export type AssignmentStatus = 'I' | 'C';
 
 export interface TestTimeCharges {
 
@@ -36,6 +40,7 @@ export function makeTimeChargeFormGroup(timeCharge: TimeCharge): FormGroup
 {
    return new FormGroup({
       role: new FormControl(timeCharge.role),
+      assignmentStatus: new FormControl(timeCharge.assignmentStatus),
       hours: new FormControl(timeCharge.hours),
       enteredTimestamp: new FormControl(timeCharge.enteredTimestamp),
    });

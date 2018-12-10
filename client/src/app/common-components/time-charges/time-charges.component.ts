@@ -27,7 +27,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
    formChangesSubscription: Subscription;
 
    readonly tableDataSource: MatTableDataSource<UserTimeCharge>;
-   readonly tableDisplayColumns = ['edit', 'user', 'role', 'hours', 'delete'];
+   readonly tableDisplayColumns = ['edit', 'user', 'role', 'status', 'hours', 'delete'];
 
    constructor
       (
@@ -58,9 +58,10 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
          userShortNames.map(userShortName => {
             const timeCharge = this.form.get(userShortName).value;
             const role = timeCharge.role;
+            const assignmentStatus = timeCharge.assignmentStatus;
             const hours = +timeCharge.hours;
             const enteredTimestamp = timeCharge.enteredTimestamp;
-            return { userShortName, timeCharge: { role, hours, enteredTimestamp } };
+            return { userShortName, timeCharge: { role, assignmentStatus, hours, enteredTimestamp } };
          });
 
       this.tableDataSource.data =

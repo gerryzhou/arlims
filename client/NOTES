@@ -1,5 +1,62 @@
-TODO
-----
+FACTS WRITING
+-------------
+Problem area = 'MICROID'
+Genus = 'SLML'
+Species = 'SLML998' ("Not Speciated")
+Method Source = 'AOAC' ("Association of Official Analytical Chemists")
+  because using Vidas
+Method code = 'T2004.03' for ARL Vidas SLM tests, other labs may use other codes.
+ Let use choose from selection obtained from 2.1.4.31	GET /LabsDataService/api/MicMethodCodes  (p.53 Leidos API docs)
+
+If spiking was done:
+  Kit Cmpr Test = Y
+  Enter Kit Test data:
+    Sub/Comp #: Which sub/comp was used for spiking
+    Rapid Method Results (Vidas) = POS/NEG
+    Conventional Method Results = NA (since Vidas is always done prior to conventional methods)
+    Spike Results: POS/NEG
+    Genus/Species Used for Spike: S. cerro for ARL, may vary by lab
+    Kit compare remarks: text describing results, for ARL something like "7 CFUs on blood agar"
+
+If testing subs:
+  specify "individual subs examined"
+else (testing composites)
+  specify "# subs used comp" (subs per composite), and
+  "# comp exam" (number of composites)
+
+In either case, also specify # positives detected in #Subs/Comp Detect Fnd.
+
+If # positives is 0, then the data entry is done and hours are entered.
+
+If # positives is > 0:
+  Add new line under the sample for "Method Applied".
+  MICROID / SLML / SLML998 as before
+  Method Source = BAM
+  Method Code = B160 ("SALMONELLA - CONVENTIONAL") as specified in BAM.
+  Kit Compressor Test = N
+  Num [Subs/]Composites examined = num positives from Vidas results
+  #Subs/Comp Detect Fnd = number of positive identifications made among the positive continuations
+
+If any identifications were made (positive #Subs/Comp Detect Fnd in last step):
+  Enter findings ("Micro-Id Find"):
+    Sub/Comp # = 1 (relative numbering among Vidas positives?)
+    Genus/Species as above
+    Presence/Sterility Results = POS (always form slm)
+    Need one isolate-send record for each of Serology, PFGE, and WGS (in that order, per positive sub/comp).
+    num isolates sent = 1
+    FDA Confirmation Lab = ARKL
+    Confirmation Type = for the three records: SALMONELLA SEROTYPING (SPECIATION), PFGE - SALMONELLA, WGS - Salmonella
+      (Need codes for these.)
+    Then "send isolate" action is done, which results in the creation of a secondary PAF ("SAL", "GSA", "WGS").
+      These are splits 1,2,3 of the sample, created by FACTS during the above.
+
+Accomplishment Hours Entry
+  Hours credited to: for ARL, the lab group parent org (ARKL)
+  Assignment Status needed here per employee entry ("Completed" or "In Progress")?
+
+------------------------------------------------------------------------------------------------
+
+
 Sample received-from
   Call api with sample num and person id.
   Button next to field to do lookup live, for now.

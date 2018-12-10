@@ -36,6 +36,17 @@
 
    <div class="field">
       <mat-form-field>
+         <mat-select placeholder="Assignment Status"
+            [(ngModel)]="data.userTimeCharge.timeCharge.assignmentStatus">
+            <mat-option [value]="null"></mat-option>
+            <mat-option [value]="'I'">In Progress</mat-option>
+            <mat-option [value]="'C'">Completed</mat-option>
+         </mat-select>
+      </mat-form-field>
+   </div>
+
+   <div class="field">
+      <mat-form-field>
          <input matInput type="number" min="0" placeholder="Hours"
             [(ngModel)]="data.userTimeCharge.timeCharge.hours">
       </mat-form-field>
