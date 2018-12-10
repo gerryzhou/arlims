@@ -1,0 +1,60 @@
+<div class="table-container mat-elevation-z8"
+     *ngIf="tableDataSource.data.length > 0; else noCharges">
+
+   <table mat-table [dataSource]="tableDataSource">
+
+      <ng-container matColumnDef="edit">
+         <th mat-header-cell *matHeaderCellDef></th>
+         <td mat-cell *matCellDef="let utc">
+            <button mat-icon-button (click)="promptUpdateUserTimeCharge(utc)" type="button">
+               <mat-icon>edit</mat-icon>
+            </button>
+         </td>
+      </ng-container>
+
+      <ng-container matColumnDef="user">
+         <th mat-header-cell *matHeaderCellDef class="user">User</th>
+         <td mat-cell *matCellDef="let utc">
+            {{utc.userShortName}}
+         </td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+         <th mat-header-cell *matHeaderCellDef>Role</th>
+         <td mat-cell *matCellDef="let utc">
+            {{utc.timeCharge.role}}
+         </td>
+      </ng-container>
+
+      <ng-container matColumnDef="hours">
+         <th mat-header-cell *matHeaderCellDef>Hours</th>
+         <td mat-cell *matCellDef="let utc">
+            {{utc.timeCharge.hours}}
+         </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+         <th mat-header-cell *matHeaderCellDef></th>
+         <td mat-cell *matCellDef="let utc">
+            <button mat-icon-button (click)="removeUserTimeCharge(utc)" type="button">
+               <mat-icon>delete_forever</mat-icon>
+            </button>
+         </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="tableDisplayColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: tableDisplayColumns"></tr>
+
+   </table>
+
+</div> <!-- table container -->
+
+<ng-template #noCharges>
+   <div class="no-charges-message">
+      <span>( no time entries )</span>
+   </div>
+</ng-template>
+
+<button mat-button type="button" (click)="promptCreateUserTimeCharge()">
+   Add time charge
+</button>

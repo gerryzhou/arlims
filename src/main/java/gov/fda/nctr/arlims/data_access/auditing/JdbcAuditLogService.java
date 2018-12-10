@@ -154,6 +154,15 @@ public class JdbcAuditLogService extends ServiceBase implements AuditLogService
         return jdbc.query(sql, params.toArray(), rowMapper);
     }
 
+    @Override
+    public List<Long> getTestModifyingEmployees(long testId)
+    {
+        String sql = "select distinct acting_emp_id from audit_entry where test_id = ?";
+
+        return jdbc.queryForList(sql, Long.class, testId);
+    }
+
+
     private ObjectWriter makeJsonWriter()
     {
         ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build();

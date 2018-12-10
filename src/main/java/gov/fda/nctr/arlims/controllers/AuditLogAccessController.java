@@ -56,5 +56,14 @@ public class AuditLogAccessController extends ControllerBase
             );
     }
 
+    @GetMapping("{testId:\\d+}/modifying-employees")
+    public List<Long> getTestModifyingEmployees
+        (
+            @PathVariable long testId
+        )
+    {
+        return auditLogService.getTestModifyingEmployees(testId);
+    }
+
 }
 

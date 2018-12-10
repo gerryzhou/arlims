@@ -1,0 +1,25 @@
+.table-container {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
+
+   th, td {
+      padding: 0 20px;
+   }
+   th.user {
+      min-width: 200px;
+   }
+}
+
+.no-charges-message {
+   display: flex;
+   min-width: 200px;
+   justify-content: center;
+   margin: 15px;
+
+   span {
+      color: white;
+      background-color: darkgray;
+      padding: 10px;
+   }
+}

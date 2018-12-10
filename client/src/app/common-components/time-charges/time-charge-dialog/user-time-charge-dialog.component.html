@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Edit Employee Time</h2>
+
+<mat-dialog-content>
+
+   <div class="field" *ngIf="userFieldEditable; else fixedUser">
+      <mat-form-field>
+         <mat-select placeholder="Employee"
+            [(ngModel)]="data.userTimeCharge.userShortName">
+            <mat-option [value]="null">
+               <span *ngIf="!data.availableUsers">( no qualifying employees )</span>
+            </mat-option>
+            <mat-option *ngFor="let user of data.availableUsers || []"
+               [value]="user.shortName">
+               <span>{{user.username}} ({{user.shortName}})</span>
+            </mat-option>
+         </mat-select>
+      </mat-form-field>
+   </div>
+   <ng-template #fixedUser>
+      <span [matTooltip]="data.userTimeCharge" class="field">
+         {{data.userTimeCharge.userShortName}}
+      </span>
+   </ng-template>
+
+   <div class="field">
+      <mat-form-field>
+         <mat-select placeholder="Role"
+            [(ngModel)]="data.userTimeCharge.timeCharge.role">
+            <mat-option [value]="null"></mat-option>
+            <mat-option [value]="'lead'">lead</mat-option>
+            <mat-option [value]="'additional'">additional</mat-option>
+            <mat-option [value]="'check'">check</mat-option>
+         </mat-select>
+      </mat-form-field>
+   </div>
+
+   <div class="field">
+      <mat-form-field>
+         <input matInput type="number" min="0" placeholder="Hours"
+            [(ngModel)]="data.userTimeCharge.timeCharge.hours">
+      </mat-form-field>
+   </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+   <button mat-button mat-dialog-close>Cancel</button>
+   <button mat-button (click)="acceptAndCloseIfValid()" [disabled]="!isDataValid()"
+           color="primary">
+      OK
+   </button>
+</mat-dialog-actions>
+

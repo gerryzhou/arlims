@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Location } from '@angular/common';
+import {Injectable} from '@angular/core';
+import {Location} from '@angular/common';
 import {HttpParams} from '@angular/common/http';
 import {Moment} from 'moment';
-import {SampleOpStatusCode} from "../models/sample-op-status";
-import {LabTestTypeCode} from "../../../generated/dto";
+
+import {SampleOpStatusCode} from '../models/sample-op-status';
+import {LabTestTypeCode} from '../../../generated/dto';
 
 
 @Injectable({providedIn: 'root'})
@@ -145,6 +146,12 @@ export class ApiUrlsService {
 
       return this.location.prepareExternalUrl('/api/audit-log/entries') + '?' + searchParams.toString();
    }
+
+   testModifyingEmployeeIdsUrl(testId: number)
+   {
+      return this.location.prepareExternalUrl(`/api/audit-log/${testId}/modifying-employees`);
+   }
+
 
    isAppApiUrl(url: string)
    {

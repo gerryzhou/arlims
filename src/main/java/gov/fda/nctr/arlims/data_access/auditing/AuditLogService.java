@@ -39,4 +39,7 @@ public interface AuditLogService
             boolean includeChangeData,
             boolean includeUnchangedSaves
         );
+
+    List<Long> getTestModifyingEmployees(long testId);
+
 }

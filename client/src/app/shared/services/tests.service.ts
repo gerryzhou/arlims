@@ -255,6 +255,13 @@ export class TestsService {
 
       return this.httpClient.get<SampleInTest[]>(searchUrl);
    }
+
+   getTestModifyingEmployeeIds(testId: number): Observable<number[]>
+   {
+      return this.httpClient.get<number[]>(
+         this.apiUrlsSvc.testModifyingEmployeeIdsUrl(testId)
+      );
+   }
 }
 
 export class SaveResult {

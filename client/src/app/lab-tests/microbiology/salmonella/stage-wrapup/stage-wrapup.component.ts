@@ -1,7 +1,12 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 import {WrapupData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
+import {UserReference} from '../../../../../generated/dto';
+import {UserContextService} from '../../../../shared/services';
 
 @Component({
    selector: 'app-stage-wrapup',
@@ -26,7 +31,17 @@ export class StageWrapupComponent implements OnChanges {
    destinationsEnabled = false;
    otherDescriptionEnabled = false;
 
-   constructor() { }
+   labGroupUsers$: Observable<UserReference[]>;
+
+   constructor
+       (
+          private userCtxSvc: UserContextService,
+       )
+   {
+      this.labGroupUsers$ = userCtxSvc.getLabGroupContents().pipe(
+         map(lgc => lgc.memberUsers)
+      );
+   }
 
    updateControlEnablements() {
       const reserveSampleDispositionCtrl = this.form.get('reserveSampleDisposition');

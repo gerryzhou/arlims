@@ -1,4 +1,5 @@
 import {SamplingMethod} from '../../sampling-methods';
+import {TestTimeCharges} from '../../../../shared/models/time-charges';
 
 export interface TestData {
    prepData:     PrepData;
@@ -144,6 +145,7 @@ export interface WrapupData {
    reserveSampleDisposition?: ReserveSampleDisposition | null;
    reserveSampleDestinations?: string | null;
    reserveSampleOtherDescription?: string | null;
+   testTimeCharges: TestTimeCharges;
 }
 
 export type ColonyAppearance = 'T' | 'AT'| 'NT'| 'NG';
@@ -165,7 +167,9 @@ export function emptyTestData(): TestData {
       mBrothData: {},
       vidasData: {},
       posContData: null,
-      wrapupData: {},
+      wrapupData: {
+         testTimeCharges: {}
+      },
    };
 }
 

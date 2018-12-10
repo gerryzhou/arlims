@@ -29,6 +29,8 @@ import {AuditLogEntryComponent} from './audit-log-entry/audit-log-entry.componen
 import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.component';
 import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
 import {AttachedFileMetadataDialogComponent} from './attached-file-metadata-dialog/attached-file-metadata-dialog.component';
+import {TimeChargesComponent} from './time-charges/time-charges.component';
+import {UserTimeChargeDialogComponent} from './time-charges/time-charge-dialog/user-time-charge-dialog.component';
 
 @NgModule({
    imports: [
@@ -66,6 +68,8 @@ import {AttachedFileMetadataDialogComponent} from './attached-file-metadata-dial
       DataFieldDiffsComponent,
       TestAttachedFilesComponent,
       AttachedFileMetadataDialogComponent,
+      TimeChargesComponent,
+      UserTimeChargeDialogComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
@@ -73,6 +77,7 @@ import {AttachedFileMetadataDialogComponent} from './attached-file-metadata-dial
       ConfirmDialogComponent,
       SimpleInputDialogComponent,
       AttachedFileMetadataDialogComponent,
+      UserTimeChargeDialogComponent,
       // (dialog components here as well as in declarations)
    ],
    exports: [
@@ -91,6 +96,8 @@ import {AttachedFileMetadataDialogComponent} from './attached-file-metadata-dial
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
       TestAttachedFilesComponent,
+      TimeChargesComponent,
+      UserTimeChargeDialogComponent,
    ],
 })
 export class CommonComponentsModule { }

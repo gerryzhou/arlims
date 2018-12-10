@@ -8,6 +8,7 @@ import {
    PositivesContinuationData, SelectiveAgarsTestSuite, SlantTubeTest,
    TestData
 } from './types';
+import {makeTestTimeChargesFormGroup} from '../../../../shared/models/time-charges';
 
 export function makeTestDataFormGroup(testData: TestData, username: string): FormGroup
 {
@@ -79,6 +80,7 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
          reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
+         testTimeCharges: makeTestTimeChargesFormGroup(testData.wrapupData.testTimeCharges),
       }),
    });
 }
@@ -215,3 +217,4 @@ export function makeIsolateTestSequenceFailureFormGroup(failure: IsolateTestSequ
       notes: new FormControl(failure.notes),
    });
 }
+

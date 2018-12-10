@@ -53,4 +53,13 @@
 
    </div>
 
+   <div class="time-charges-area">
+      <h3>Time Accounting</h3>
+      <app-time-charges
+         [form]="form.get('testTimeCharges')"
+         [availableUsers]="labGroupUsers$ | async"
+         [viewOnly]="form.disabled">
+      </app-time-charges>
+   </div>
+
 </form>
