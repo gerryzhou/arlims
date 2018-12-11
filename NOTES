@@ -1,3 +1,5 @@
+Set log level to debug for:
+  gov.fda.nctr.arlims.data_access.facts.LabsDSFactsAccessService
 
 
 Create accounts for Rick, Ash, Joseph, Wen, Paul.

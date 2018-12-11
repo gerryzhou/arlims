@@ -77,7 +77,9 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         log.info("Age cap for lab inbox items is " + apiConfig.getLabInboxAssignedStatusAgeCutoffDays() + " days.");
 
         HttpHeaders defaultRequestHeaders = new HttpHeaders();
-        defaultRequestHeaders.add(HttpHeaders.AUTHORIZATION, authorizationHeaderValue(apiConfig));
+        String authHeaderVal = authorizationHeaderValue(apiConfig);
+        log.debug("Using auth header value \"" + authHeaderVal + "\" for Labs API calls.");
+        defaultRequestHeaders.add(HttpHeaders.AUTHORIZATION, authHeaderVal);
         defaultRequestHeaders.add("sourceApplicationID", apiConfig.getAppId());
         this.fixedHeaders = defaultRequestHeaders;
 
@@ -86,6 +88,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         ObjectMapper jsonSerializer = Jackson2ObjectMapperBuilder.json().build();
         this.jsonReader = jsonSerializer.reader();
     }
+
 
     public List<LabInboxItem> getLabInboxItems(List<String> statusCodes, Optional<String> accomplishingOrg)
     {
