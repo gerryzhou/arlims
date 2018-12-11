@@ -1,5 +1,35 @@
+Setup interactive env for posting data to API.
+  Try posting example data.
+
+Get FACTS account working in test env.
+
+First test save - change status to I if not already.
+
+Hide composite fields when subs are selected.
+
+Put TT under RV in SLANT stage, then orient TSI and LIA horizontally.
+  Don't require so much vertical space for isolate data entry.
+Identification:
+  Text for API - only 5 or so codes, can just use a dropdown.
+  Remove +/- field.
+
+VIDAS
+  Add methodRemarks text field.
+
 FACTS WRITING
 -------------
+actionIndicator
+  ? Maybe Y if positives were detected.
+analysisResultsRemarksText
+  Add to ALIS ui in WRAPUP
+lowestDilutionTestedCode
+  ?
+methodModificationIndicator: N
+quantifiedIndicator: N
+sampleAnalysisId: From labs inbox.
+examinedType: COMPOSITES or SUBS
+
+
 Problem area = 'MICROID'
 Genus = 'SLML'
 Species = 'SLML998' ("Not Speciated")
