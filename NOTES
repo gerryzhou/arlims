@@ -1,7 +1,3 @@
-Set log level to debug for:
-  gov.fda.nctr.arlims.data_access.facts.LabsDSFactsAccessService
-
-
 Create accounts for Rick, Ash, Joseph, Wen, Paul.
 
 Send email of priorities with estimated completion times to John next week sometime.
@@ -210,3 +206,4 @@ Security doc required: System Security Plan (SSP), Risk Assessment, and Authoriz
 
 Oracle 12.2 Availability:
   https://blogs.oracle.com/upgrade/oracle-database-12201-on-premises-is-now-available%2c-too
+
