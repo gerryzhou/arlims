@@ -5,7 +5,7 @@ import {merge, Subscription} from 'rxjs';
 import {LabResource} from '../../../../../generated/dto';
 import {PreEnrData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import {makeSampleTestUnits, SampleTestUnits, SamplingMethod} from '../../sampling-methods';
+import {SampleTestUnits, SamplingMethod, TestUnitsType} from '../../sampling-methods';
 import {ResourceControlAssignments} from '../../../resource-assignments';
 import {MatDialog} from '@angular/material';
 import {AlertMessageService} from '../../../../shared/services/alerts';
@@ -54,6 +54,8 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
    resourceAssignments: ResourceControlAssignments;
 
+   testUnitsTypeDescr = 'subs/comps';
+
    constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
 
    ngOnChanges()
@@ -76,9 +78,11 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
    private subscribeToSampleTestUnitChanges()
    {
-      const samplingMethodformGroup = this.form.get('samplingMethod');
-      const testUnitsCountCtrl = samplingMethodformGroup.get('testUnitsCount');
-      const testUnitsTypeCtrl = samplingMethodformGroup.get('testUnitsType');
+      const samplingMethodFormGroup = this.form.get('samplingMethod');
+      if ( !samplingMethodFormGroup ) return;
+
+      const testUnitsTypeCtrl = samplingMethodFormGroup.get('testUnitsType');
+      const testUnitsCountCtrl = samplingMethodFormGroup.get('testUnitsCount');
 
       if (this.sampleTestUnitsChangeSubcription)
          this.sampleTestUnitsChangeSubcription.unsubscribe();
@@ -88,60 +92,79 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
          .subscribe(() => { this.onSampleTestUnitsFieldChanged(); });
    }
 
-   onManualEntrySamplingMethodSelected()
-   {
-      const samplingMethodformGroup = this.form.get('samplingMethod');
-      if (!samplingMethodformGroup) return;
-
-      const userModifiable = samplingMethodformGroup.get('userModifiable');
-      if (userModifiable) userModifiable.setValue(true);
-   }
-
    onToggleSamplingMethodManualEntry()
    {
-      const samplingMethodformGroup = this.form.get('samplingMethod');
-      if (!samplingMethodformGroup) return;
+      const samplingMethodFormGroup = this.form.get('samplingMethod');
+      if (!samplingMethodFormGroup) return;
 
-      const userModifiable = samplingMethodformGroup.get('userModifiable');
+      const userModifiable = samplingMethodFormGroup.get('userModifiable');
       if ( userModifiable != null ) userModifiable.setValue(!userModifiable.value);
    }
 
    onSamplingMethodClicked(samplingMethod: SamplingMethod)
    {
-      const samplingMethodformGroup = this.form.get('samplingMethod');
-      if (!samplingMethodformGroup) return;
+      const samplingMethodFormGroup = this.form.get('samplingMethod');
+      if (!samplingMethodFormGroup) return;
 
-      samplingMethodformGroup.get('testUnitsType').setValue(samplingMethod.testUnitsType);
-      samplingMethodformGroup.get('testUnitsCount').setValue(samplingMethod.testUnitsCount);
+      samplingMethodFormGroup.get('testUnitsType').setValue(samplingMethod.testUnitsType);
+      samplingMethodFormGroup.get('testUnitsCount').setValue(samplingMethod.testUnitsCount);
 
-      const numSubsPerCompCtl = samplingMethodformGroup.get('numberOfSubsPerComposite');
+      const numSubsPerCompCtl = samplingMethodFormGroup.get('numberOfSubsPerComposite');
       numSubsPerCompCtl.setValue(samplingMethod.numberOfSubsPerComposite);
 
-      const extractedGramsPerSub = samplingMethodformGroup.get('extractedGramsPerSub');
+      const extractedGramsPerSub = samplingMethodFormGroup.get('extractedGramsPerSub');
       extractedGramsPerSub.setValue(samplingMethod.extractedGramsPerSub);
 
-      switch ( samplingMethod.testUnitsType )
-      {
-         case 'composite':
-            numSubsPerCompCtl.enable();
-            extractedGramsPerSub.enable();
-            break;
-         case 'subsample':
-            numSubsPerCompCtl.disable();
-            extractedGramsPerSub.disable();
-      }
-
-      const userModifiable = samplingMethodformGroup.get('userModifiable');
+      const userModifiable = samplingMethodFormGroup.get('userModifiable');
       if (userModifiable) userModifiable.setValue(samplingMethod.userModifiable);
+
+      this.setSamplingMethodFieldEnablements(samplingMethod.testUnitsType);
+   }
+
+   onManualEntrySamplingMethodSelected(testUnitsType: TestUnitsType | null)
+   {
+      const samplingMethodFormGroup = this.form.get('samplingMethod');
+      if (!samplingMethodFormGroup) return;
+
+      samplingMethodFormGroup.get('testUnitsType').setValue(testUnitsType);
+
+      const userModifiable = samplingMethodFormGroup.get('userModifiable');
+      if (userModifiable) userModifiable.setValue(true);
+
+      this.setSamplingMethodFieldEnablements(testUnitsType);
    }
 
    onSampleTestUnitsFieldChanged()
    {
-      const samplingMethodformGroup = this.form.get('samplingMethod');
-      const numSubs = +samplingMethodformGroup.get('numberOfSubs').value;
-      const numComps = +samplingMethodformGroup.get('numberOfComposites').value;
+      const samplingMethodFormGroup = this.form.get('samplingMethod');
+      if ( !samplingMethodFormGroup ) return;
 
-      this.sampleTestUnitsChange.emit(makeSampleTestUnits(numSubs, numComps));
+      const testUnitsType = samplingMethodFormGroup.get('testUnitsType').value;
+      const testUnitsCount = (+samplingMethodFormGroup.get('testUnitsCount').value) || null;
+
+      this.testUnitsTypeDescr = testUnitsType == null ? 'subs/comps' :
+            testUnitsType === 'subsample' ? 'subs'
+            : 'comps';
+
+      this.sampleTestUnitsChange.emit({testUnitsType, testUnitsCount});
+   }
+
+   private setSamplingMethodFieldEnablements(testUnitsType: TestUnitsType | null)
+   {
+      const numSubsPerCompCtl = this.form.get(['samplingMethod', 'numberOfSubsPerComposite']);
+      const extractedGramsPerSub = this.form.get(['samplingMethod', 'extractedGramsPerSub']);
+
+      switch ( testUnitsType )
+      {
+         case 'subsample':
+            numSubsPerCompCtl.disable();
+            extractedGramsPerSub.disable();
+            break;
+         default:
+            numSubsPerCompCtl.enable();
+            extractedGramsPerSub.enable();
+            break;
+      }
    }
 
    toggleSelectBalance()

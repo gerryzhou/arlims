@@ -7,10 +7,10 @@ import {LabResource, TestAttachedFileMetadata, SampleInTest} from '../../../../.
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, makeTestDataFormGroup} from '../test-data';
 import {TestConfig} from '../test-config';
-import {makeSampleTestUnits} from '../../sampling-methods';
 import {UserContextService} from '../../../../shared/services';
 import {AnalyzedAuditLogEntry} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
 import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
+import {TestUnitsType} from '../../sampling-methods';
 
 @Component({
    selector: 'app-micro-slm-form-data-review',
@@ -26,7 +26,7 @@ export class FormDataReviewComponent implements OnInit {
    readonly conflictsEmployeeTimestamp: EmployeeTimestamp | null;
 
    sampleTestUnitsCount: number | null;
-   sampleTestUnitsType: string | null;
+   sampleTestUnitsType: TestUnitsType | null;
 
    readonly attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
@@ -58,7 +58,7 @@ export class FormDataReviewComponent implements OnInit {
       this.attachedFilesByTestPart = makeAttachedFilesByTestPartMap(labGroupTestData);
 
       const sm = testData.preEnrData.samplingMethod;
-      const sampleTestUnits = makeSampleTestUnits(sm.numberOfSubs, sm.numberOfComposites);
+      const sampleTestUnits = {testUnitsType: sm.testUnitsType, testUnitsCount: sm.testUnitsCount};
       this.sampleTestUnitsCount = sampleTestUnits.testUnitsCount;
       this.sampleTestUnitsType = sampleTestUnits.testUnitsType;
 

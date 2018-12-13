@@ -26,7 +26,7 @@ import {StageMBrothComponent} from '../stage-m-broth/stage-m-broth.component';
 import {StageVidasComponent} from '../stage-vidas/stage-vidas.component';
 import {PosContComponent} from '../pos-cont-stages/pos-cont.component';
 import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
-import {makeSampleTestUnits, SampleTestUnits} from '../../sampling-methods';
+import {SampleTestUnits, TestUnitsType} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
 
@@ -59,8 +59,8 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    showUnsetAffordances = false;
 
+   sampleTestUnitsType: TestUnitsType | null;
    sampleTestUnitsCount: number | null;
-   sampleTestUnitsType: string | null;
 
    vidasPositiveSampleTestUnitNumbers: number[] | null;
 
@@ -117,9 +117,8 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.testDataForm = makeTestDataFormGroup(this.originalTestData, labGroupTestData.appUser.username);
 
       const sm = this.originalTestData.preEnrData.samplingMethod;
-      const sampleTestUnits = makeSampleTestUnits(sm.numberOfSubs, sm.numberOfComposites);
-      this.sampleTestUnitsCount = sampleTestUnits.testUnitsCount;
-      this.sampleTestUnitsType = sampleTestUnits.testUnitsType;
+      this.sampleTestUnitsType = sm.testUnitsType;
+      this.sampleTestUnitsCount = sm.testUnitsCount;
 
       this.vidasPositiveSampleTestUnitNumbers =
          this.originalTestData ? getVidasPositiveTestUnitNumbers(this.originalTestData.vidasData) : [];

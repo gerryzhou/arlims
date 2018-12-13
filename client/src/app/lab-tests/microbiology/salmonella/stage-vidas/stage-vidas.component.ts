@@ -5,6 +5,7 @@ import {VidasData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {LabResource, TestAttachedFileMetadata} from '../../../../../generated/dto';
 import {arraysEqual} from '../../../../shared/util/data-objects';
+import {TestUnitsType} from '../../sampling-methods';
 
 @Component({
    selector: 'app-stage-vidas',
@@ -39,7 +40,7 @@ export class StageVidasComponent implements OnChanges {
    @Input()
    sampleTestUnitsCount: number | null = null;
    @Input()
-   sampleTestUnitsType: string | null = null;
+   sampleTestUnitsType: TestUnitsType | null = null;
 
    @Input()
    spiking: boolean | null = null;

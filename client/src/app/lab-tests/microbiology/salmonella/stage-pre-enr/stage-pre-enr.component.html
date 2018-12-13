@@ -5,8 +5,10 @@
       <span>
          <span class="methods-title">Sampling method</span>
          <mat-menu #samplingMethodMenu="matMenu">
+            <span class="methods-section-header" *ngIf="sampleMethodChoicesByTestUnitType.compsMethods.length > 0">
+               Composite Methods
+            </span>
 
-            <span class="methods-section-header">Composite Methods</span>
             <button mat-menu-item *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.compsMethods"
                (click)="onSamplingMethodClicked(samplingMethod)">
                {{samplingMethod.description}}
@@ -14,14 +16,23 @@
 
             <mat-divider></mat-divider>
 
-            <span class="methods-section-header">Subsample / Other Methods</span>
+            <span class="methods-section-header" *ngIf="sampleMethodChoicesByTestUnitType.subsMethods.length > 0">
+               Subsample Methods
+            </span>
+
             <button mat-menu-item *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.subsMethods"
                (click)="onSamplingMethodClicked(samplingMethod)">
                {{samplingMethod.description}}
             </button>
 
-            <button mat-menu-item (click)="onManualEntrySamplingMethodSelected()">
-               enter sampling method numbers manually
+            <span class="methods-section-header">Manual Entry Methods</span>
+
+            <button mat-menu-item (click)="onManualEntrySamplingMethodSelected('composite')">
+               Enter composites method numbers manually
+            </button>
+
+            <button mat-menu-item (click)="onManualEntrySamplingMethodSelected('subsample')">
+               Enter subsamples method numbers manually
             </button>
          </mat-menu>
 
@@ -41,10 +52,10 @@
          <div class="field-area"
               [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.testUnitsType !== undefined">
             <mat-radio-group formControlName="testUnitsType">
-               <div>Examined units type</div>
+               <div>Examining:</div>
                <div>
-                  <mat-radio-button [value]="subsample">subs</mat-radio-button>
-                  <mat-radio-button [value]="composite">composites</mat-radio-button>
+                  <mat-radio-button [value]="'subsample'">subs</mat-radio-button>
+                  <mat-radio-button [value]="'composite'">composites</mat-radio-button>
                   <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
                </div>
             </mat-radio-group>
@@ -60,7 +71,7 @@
             <mat-form-field>
                <input formControlName="testUnitsCount" type="number" min="0" step="1" matInput
                       [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
-                      placeholder="Examined units count">
+                      [placeholder]="'Examined ' + testUnitsTypeDescr">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                [conflictValue]="conflicts.samplingMethod.testUnitsCount"
@@ -74,7 +85,7 @@
             <mat-form-field>
                <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
                       [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
-                      placeholder="Subs per composite">
+                      placeholder="Subs per comp">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"

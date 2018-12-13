@@ -10,6 +10,7 @@ import {
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {TestConfig} from '../test-config';
 import {AppUser, TestAttachedFileMetadata} from '../../../../../generated/dto';
+import {TestUnitsType} from '../../sampling-methods';
 
 @Component({
    selector: 'app-pos-cont',
@@ -37,7 +38,7 @@ export class PosContComponent implements OnChanges {
    vidasPositiveSampleTestUnitNumbers: number[] | null = null;
 
    @Input()
-   sampleTestUnitsType: string | null = null;
+   sampleTestUnitsType: TestUnitsType | null = null;
 
    @Input()
    attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;

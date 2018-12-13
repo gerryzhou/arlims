@@ -9,7 +9,6 @@ import {arrayContainsNonValue, arrayContainsValue, countValueOccurrences} from '
 import {TestData} from '../test-data';
 import {AuditLogEntry} from '../../../../../generated/dto';
 import {AnalyzedAuditLogEntry, AttachedFileDescr} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
-import {stringify} from "querystring";
 
 export const IMP_SLM_VIDAS_PDF_REPORT_NAME = 'imp_slm_vidas.pdf';
 const SIX_SPACES = Array(7).join(' ');
@@ -25,6 +24,14 @@ export function makePdfReportData(testData: TestData, auditLogEntries: AuditLogE
    repData.prepData.labelAttachmentType = testData.prepData.labelAttachmentType != null ?
       testData.prepData.labelAttachmentType.toLowerCase().replace('_', ' ')
       : null;
+
+   if ( testData.preEnrData.samplingMethod != null  )
+   {
+      const sm = testData.preEnrData.samplingMethod;
+      repData.preEnrData.samplingMethod.numberOfSubs = (sm.numberOfSubsPerComposite || 0) * (sm.testUnitsCount || 0);
+      repData.preEnrData.samplingMethod.numberOfComposites = (sm.testUnitsCount || 0);
+      repData.preEnrData.samplingMethod.compositeMassGrams = (sm.numberOfSubsPerComposite || 0) * (sm.extractedGramsPerSub || 0);
+   }
 
    if ( testData.selEnrData.positiveControlGrowth != null  )
    {

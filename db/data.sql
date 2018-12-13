@@ -49,19 +49,17 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
         '"name": "25gx15S-1C-3375mlBr",' ||
         '"description": "25 grams from each of 15 subs tested as one 375g composite, 3375mls of pre-enriched broth added",' ||
         '"extractedGramsPerSub": 25,' ||
-        '"numberOfSubs": 15,' ||
-        '"numberOfComposites": 1,' ||
-        '"compositeMassGrams": 375,' ||
-        '"numberOfSubsPerComposite": 15' ||
+        '"numberOfSubsPerComposite": 15,' ||
+        '"testUnitsCount": 1,' ||
+        '"testUnitsType": "composite"' ||
         '},' ||
         '{' ||
         '"name": "25gx30S-2C-3375mlBr",' ||
         '"description": "25 grams from each of 30 subs tested as two 375g composites, 3375mls of pre-enriched broth/composite",' ||
         '"extractedGramsPerSub": 25,' ||
-        '"numberOfSubs": 30,' ||
-        '"numberOfComposites": 2,' ||
-        ' "compositeMassGrams": 375,' ||
-        ' "numberOfSubsPerComposite": 15' ||
+        '"numberOfSubsPerComposite": 15,' ||
+        '"testUnitsCount": 2,' ||
+        '"testUnitsType": "composite"' ||
         '}' ||
       ']' ||
     '}',

@@ -1,17 +1,9 @@
-Subs/Composits Representation Change
-   Adjust layout in pre-enr view.
-   Modify sampling method choices list.
-      Composite options (sub fields hidden)
-      Other Composite (unlocked fields, sub fields hidden)
-      Other Subs (unlocked fields)
-   Adjust fields in lab-group config in lab group test config.
+Subs/Composites Representation Change
    Adjust fields in pdf report.
 
-
-First test save - change status to I if not already.
-
-Put TT under RV in SLANT stage, then orient TSI and LIA horizontally.
-  Don't require so much vertical space for isolate data entry.
+Put TT under RV in SLANT stage, then orient TSI and LIA to use less vertical space.
+  John would prefer button groups (radios) without the selection circle.
+  Orient field options downwards and button columns should be close together, like a grid.
 
 Identification:
   Text for API - only 5 or so codes, can just use a dropdown.
@@ -21,8 +13,18 @@ VIDAS
   Add methodRemarks text field.
 
 
+Sample custodian in PREP stage
+  for sample received-from/date fields
+  Call api with sample num and person id (api doesn't exist yet as of Dec 13 2018).
+  Button next to field to do lookup live, for now.
+    Will get receipt date and person id. If more than one record, let user select.
+
 FACTS WRITING PROCESS
 ---------------------
+First test save - change status to I if not already.
+
+Grams per sub should go into remarks in FACTS.
+
 actionIndicator
   ? Maybe Y if positives were detected.
 analysisResultsRemarksText
@@ -91,12 +93,6 @@ Accomplishment Hours Entry
 
 ------------------------------------------------------------------------------------------------
 
-
-Sample received-from
-  Call api with sample num and person id.
-  Button next to field to do lookup live, for now.
-    Will get receipt date and person id. If more than one record, let user select.
-
 FACTS writing
   FACTS Status Update
     Analyst should be able to change status from "Assigned" to "In Progress" from their inbox.
@@ -106,12 +102,6 @@ FACTS writing
     Y on spiking => Y on "kit comparison test?" field
       Plus some other kit comparison test data would then need to be supplied.
       S.Gaminara control is the spiking control, so it's data will be sent to FACTS.
-
-PRE-ENR sampling methods
-  Fields are still over-determined because it might be confusing switching between modes.
-    The minimal necessary fields would be:
-      composite test units: grams per sub, subs per composite, number of composites
-      sub test units: grams per sub, subs
 
 ------------------------------------------------------------------------------------------------
 Done
@@ -124,19 +114,6 @@ Add reference label text field at end of isolate test seq row, referencing file 
 ------------------------------------------------------------------------------------------------
 
 Try upgrade to Spring Boot 2.1 / Spring 5.1.
-
-Sampling methods selection and editing in PRE-ENR stage
-  John: Add new sampling method with no composites (0), set composite items to 0/null and hide or disable composite items.
-    Hiding/disabling may complicate things a bit (e.g. vs. showing conflicts in hidden fields).
-    Hide composite fields area when number of composites is 0.
-    composite test units: enter
-      grams per sub, subs per composite, number of composites
-    sub test units: enter
-      grams per sub, subs
-    Other quantities can always be calculated from these.
-        compositeMassGrams = subsPerComposite * extractedGramsPerSub ?
-        numberOfSubs = subsPerComposite * numberOfComposites
-
 
 
 Test Search Page
