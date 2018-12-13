@@ -26,22 +26,19 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
       }),
       preEnrData: new FormGroup({
          samplingMethod: new FormGroup({
-            numberOfComposites: new FormControl(testData.preEnrData.samplingMethod.numberOfComposites),
+            testUnitsType: new FormControl(testData.preEnrData.samplingMethod.testUnitsType),
+            testUnitsCount: new FormControl(testData.preEnrData.samplingMethod.testUnitsCount),
             numberOfSubsPerComposite: new FormControl(testData.preEnrData.samplingMethod.numberOfSubsPerComposite),
             extractedGramsPerSub: new FormControl(testData.preEnrData.samplingMethod.extractedGramsPerSub),
-            numberOfSubs: new FormControl(testData.preEnrData.samplingMethod.numberOfSubs),
-            compositeMassGrams: new FormControl(testData.preEnrData.samplingMethod.compositeMassGrams),
             userModifiable: new FormControl(testData.preEnrData.samplingMethod.userModifiable || false),
          }),
          samplingMethodExceptionsNotes: new FormControl(testData.preEnrData.samplingMethodExceptionsNotes),
-
          balanceId: new FormControl(testData.preEnrData.balanceId),
          blenderJarId: new FormControl(testData.preEnrData.blenderJarId),
          bagId: new FormControl(testData.preEnrData.bagId),
          mediumBatchId: new FormControl(testData.preEnrData.mediumBatchId),
          mediumType: new FormControl(testData.preEnrData.mediumType),
          incubatorId: new FormControl(testData.preEnrData.incubatorId),
-
          sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
       }),
       selEnrData: new FormGroup({

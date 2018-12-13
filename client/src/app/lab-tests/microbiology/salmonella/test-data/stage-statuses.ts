@@ -71,10 +71,9 @@ function preEnrStatusCode(testData: TestData): FieldValuesStatusCode
    const samplingMethodFieldsStatus =
       !data.samplingMethod ? 'e' :
          statusForRequiredFieldValues([
-            data.samplingMethod.numberOfSubs,
-            data.samplingMethod.numberOfComposites,
+            data.samplingMethod.testUnitsType,
+            data.samplingMethod.testUnitsCount,
             data.samplingMethod.numberOfSubsPerComposite,
-            data.samplingMethod.compositeMassGrams,
             data.samplingMethod.extractedGramsPerSub,
          ]);
 

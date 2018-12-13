@@ -67,8 +67,8 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
       );
 
       this.sampleMethodChoicesByTestUnitType = {
-         compsMethods: this.samplingMethodChoices.filter(m => m.numberOfComposites > 0),
-         subsMethods:  this.samplingMethodChoices.filter(m => !(m.numberOfComposites > 0)),
+         compsMethods: this.samplingMethodChoices.filter(m => m.testUnitsType === 'composite'),
+         subsMethods:  this.samplingMethodChoices.filter(m => !(m.testUnitsType === 'composite')),
       };
 
       this.subscribeToSampleTestUnitChanges();
@@ -77,17 +77,15 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    private subscribeToSampleTestUnitChanges()
    {
       const samplingMethodformGroup = this.form.get('samplingMethod');
-      const numSubsCtrl = samplingMethodformGroup.get('numberOfSubs');
-      const numCompsCtrl = samplingMethodformGroup.get('numberOfComposites');
+      const testUnitsCountCtrl = samplingMethodformGroup.get('testUnitsCount');
+      const testUnitsTypeCtrl = samplingMethodformGroup.get('testUnitsType');
 
       if (this.sampleTestUnitsChangeSubcription)
          this.sampleTestUnitsChangeSubcription.unsubscribe();
 
       this.sampleTestUnitsChangeSubcription =
-         merge(numSubsCtrl.valueChanges, numCompsCtrl.valueChanges)
-            .subscribe(() => {
-               this.onSampleTestUnitsFieldChanged();
-            });
+         merge(testUnitsCountCtrl.valueChanges, testUnitsTypeCtrl.valueChanges)
+         .subscribe(() => { this.onSampleTestUnitsFieldChanged(); });
    }
 
    onManualEntrySamplingMethodSelected()
@@ -113,20 +111,25 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
       const samplingMethodformGroup = this.form.get('samplingMethod');
       if (!samplingMethodformGroup) return;
 
-      const numCompsCtrl = samplingMethodformGroup.get('numberOfComposites');
-      if (numCompsCtrl) numCompsCtrl.setValue(samplingMethod.numberOfComposites);
+      samplingMethodformGroup.get('testUnitsType').setValue(samplingMethod.testUnitsType);
+      samplingMethodformGroup.get('testUnitsCount').setValue(samplingMethod.testUnitsCount);
 
-      const numSubsPerCompCtrl = samplingMethodformGroup.get('numberOfSubsPerComposite');
-      if (numSubsPerCompCtrl) numSubsPerCompCtrl.setValue(samplingMethod.numberOfSubsPerComposite);
+      const numSubsPerCompCtl = samplingMethodformGroup.get('numberOfSubsPerComposite');
+      numSubsPerCompCtl.setValue(samplingMethod.numberOfSubsPerComposite);
 
-      const massPerSubCtrl = samplingMethodformGroup.get('extractedGramsPerSub');
-      if (massPerSubCtrl) massPerSubCtrl.setValue(samplingMethod.extractedGramsPerSub);
+      const extractedGramsPerSub = samplingMethodformGroup.get('extractedGramsPerSub');
+      extractedGramsPerSub.setValue(samplingMethod.extractedGramsPerSub);
 
-      const numSubsCtrl = samplingMethodformGroup.get('numberOfSubs');
-      if (numSubsCtrl) numSubsCtrl.setValue(samplingMethod.numberOfSubs);
-
-      const compMassCtrl = samplingMethodformGroup.get('compositeMassGrams');
-      if (compMassCtrl) compMassCtrl.setValue(samplingMethod.compositeMassGrams);
+      switch ( samplingMethod.testUnitsType )
+      {
+         case 'composite':
+            numSubsPerCompCtl.enable();
+            extractedGramsPerSub.enable();
+            break;
+         case 'subsample':
+            numSubsPerCompCtl.disable();
+            extractedGramsPerSub.disable();
+      }
 
       const userModifiable = samplingMethodformGroup.get('userModifiable');
       if (userModifiable) userModifiable.setValue(samplingMethod.userModifiable);

@@ -2,11 +2,10 @@
 export interface SamplingMethod {
    name?: string;
    description?: string;
-   extractedGramsPerSub?: number;
-   numberOfComposites?: number;
-   compositeMassGrams?: number;
-   numberOfSubsPerComposite?: number;
-   numberOfSubs?: number;
+   testUnitsType?: 'subsample' | 'composite' | null;
+   testUnitsCount?: number | null;
+   numberOfSubsPerComposite?: number; // composites only
+   extractedGramsPerSub?: number;     // composites only
    userModifiable?: boolean;
 }
 

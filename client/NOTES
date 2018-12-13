@@ -1,7 +1,12 @@
-Hide composite-related fields when subs are selected.
-  Composite options (sub fields hidden)
-  Other Composite (unlocked fields, sub fields hidden)
-  Other Subs (unlocked fields)
+Subs/Composits Representation Change
+   Adjust layout in pre-enr view.
+   Modify sampling method choices list.
+      Composite options (sub fields hidden)
+      Other Composite (unlocked fields, sub fields hidden)
+      Other Subs (unlocked fields)
+   Adjust fields in lab-group config in lab group test config.
+   Adjust fields in pdf report.
+
 
 First test save - change status to I if not already.
 

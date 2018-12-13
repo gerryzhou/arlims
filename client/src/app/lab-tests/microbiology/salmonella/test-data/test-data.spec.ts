@@ -28,11 +28,10 @@ describe('microbiology salmonella test data functions', () => {
          },
          preEnrData: {
             samplingMethod: {
-               extractedGramsPerSub: 1,
-               numberOfComposites: 1,
-               compositeMassGrams: 1,
+               testUnitsType: 'composite',
+               testUnitsCount: 1,
                numberOfSubsPerComposite: 1,
-               numberOfSubs: 1,
+               extractedGramsPerSub: 1,
             },
             balanceId: 'x',
             blenderJarId: 'x',
@@ -74,6 +73,7 @@ describe('microbiology salmonella test data functions', () => {
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
             reserveSampleDestinations: 'x',
+            testTimeCharges: {},
          }
       };
 
@@ -101,11 +101,10 @@ describe('microbiology salmonella test data functions', () => {
          },
          preEnrData: {
             samplingMethod: {
-               extractedGramsPerSub: 1,
-               numberOfComposites: 1,
-               compositeMassGrams: 1,
+               testUnitsType: 'composite',
+               testUnitsCount: 1,
                numberOfSubsPerComposite: 1,
-               numberOfSubs: 1,
+               extractedGramsPerSub: 1,
             },
             balanceId: 'x',
             // blenderJarId // required field omitted
@@ -138,6 +137,7 @@ describe('microbiology salmonella test data functions', () => {
          posContData: null,
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
+            testTimeCharges: {}
          }
       };
 
