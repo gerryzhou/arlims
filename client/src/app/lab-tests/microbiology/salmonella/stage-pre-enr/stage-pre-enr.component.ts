@@ -54,7 +54,7 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
    resourceAssignments: ResourceControlAssignments;
 
-   testUnitsTypeDescr = 'subs/comps';
+   testUnitsTypeDescr = 'subs/comps?';
 
    constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
 
@@ -74,6 +74,7 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
       };
 
       this.subscribeToSampleTestUnitChanges();
+      this.onSampleTestUnitsFieldChanged();
    }
 
    private subscribeToSampleTestUnitChanges()
@@ -142,9 +143,9 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
       const testUnitsType = samplingMethodFormGroup.get('testUnitsType').value;
       const testUnitsCount = (+samplingMethodFormGroup.get('testUnitsCount').value) || null;
 
-      this.testUnitsTypeDescr = testUnitsType == null ? 'subs/comps' :
+      this.testUnitsTypeDescr = testUnitsType == null ? 'subs/comps?' :
             testUnitsType === 'subsample' ? 'subs'
-            : 'comps';
+            : 'composites';
 
       this.sampleTestUnitsChange.emit({testUnitsType, testUnitsCount});
    }

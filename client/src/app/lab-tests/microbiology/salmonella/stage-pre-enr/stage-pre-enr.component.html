@@ -41,7 +41,9 @@
          </button>
       </span>
 
-      <div formGroupName="samplingMethod" class="method-numbers">
+      <div formGroupName="samplingMethod"
+         class="method-numbers"
+         *ngIf="form.get(['samplingMethod', 'testUnitsType']).value">
 
          <button mat-icon-button (click)="onToggleSamplingMethodManualEntry()">
             <mat-icon class="user-modifiable-icon">
@@ -49,29 +51,38 @@
             </mat-icon>
          </button>
 
-         <div class="field-area"
+         <div class="field-area" *ngIf="form.get(['samplingMethod', 'userModifiable']).value; else subsCompsReadOnly"
               [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.testUnitsType !== undefined">
             <mat-radio-group formControlName="testUnitsType">
                <div>Examining:</div>
                <div>
-                  <mat-radio-button [value]="'subsample'">subs</mat-radio-button>
-                  <mat-radio-button [value]="'composite'">composites</mat-radio-button>
-                  <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
+                  <mat-radio-button [value]="'subsample'">
+                     subs
+                  </mat-radio-button>
+                  <mat-radio-button [value]="'composite'">
+                     composites
+                  </mat-radio-button>
+                  <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">
+                     unset
+                  </mat-radio-button>
                </div>
             </mat-radio-group>
             <app-conflicting-field-value
-               [conflictValue]="conflicts.testUnitsType"
+               [conflictValue]="conflicts.samplingMethod.testUnitsType"
                [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.testUnitsType = undefined">
+               (dismiss)="conflicts.samplingMethod.testUnitsType = undefined">
             </app-conflicting-field-value>
          </div>
+         <ng-template #subsCompsReadOnly>
+            <div class="test-units-type-ro">Examining: <b>{{testUnitsTypeDescr}}</b></div>
+         </ng-template>
 
          <div class="field-area"
               [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.testUnitsCount !== undefined">
             <mat-form-field>
                <input formControlName="testUnitsCount" type="number" min="0" step="1" matInput
-                      [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
-                      [placeholder]="'Examined ' + testUnitsTypeDescr">
+                  [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
+                  [placeholder]="'Examined ' + testUnitsTypeDescr">
             </mat-form-field>
             <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
                [conflictValue]="conflicts.samplingMethod.testUnitsCount"
@@ -110,7 +121,7 @@
 
       </div> <!-- sampling method numbers -->
 
-      <div class="field-area method-exceptions"
+      <div class="field-area method-exceptions" *ngIf="form.get(['samplingMethod', 'testUnitsType']).value"
            [class.conflicted]="conflicts.samplingMethodExceptionsNotes !== undefined">
          <mat-form-field>
             <input formControlName="samplingMethodExceptionsNotes" type="text" matInput
