@@ -1,29 +1,33 @@
 <div class="field-stacks-row" [formGroup]="form">
 
-   <mat-radio-group class="field-stack" formControlName="slant">
-      <span class="field-label">Slant</span>
-      <mat-radio-button *ngFor="let v of slantValues" [value]="v">{{v}}</mat-radio-button>
-      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-   </mat-radio-group>
+   <div class="field-column">
+      <mat-button-toggle-group formControlName="slant" matTooltip="slant" vertical>
+         <mat-button-toggle *ngFor="let v of slantValues" [value]="v">{{v}}</mat-button-toggle>
+         <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-button-toggle>
+      </mat-button-toggle-group>
+   </div>
 
-   <mat-radio-group class="field-stack" formControlName="butt">
-      <span class="field-label">Butt</span>
-      <mat-radio-button *ngFor="let v of buttValues" [value]="v">{{v}}</mat-radio-button>
-      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-   </mat-radio-group>
+   <div class="field-column">
+      <mat-button-toggle-group formControlName="butt" matTooltip="butt" vertical>
+         <mat-button-toggle *ngFor="let v of buttValues" [value]="v">{{v}}</mat-button-toggle>
+         <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-button-toggle>
+      </mat-button-toggle-group>
+   </div>
 
-   <mat-radio-group class="field-stack" formControlName="h2s">
-      <span class="field-label">H<sub>2</sub>S</span>
-      <mat-radio-button [value]="true">+</mat-radio-button>
-      <mat-radio-button [value]="false">&minus;</mat-radio-button>
-      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-   </mat-radio-group>
+   <div class="field-column">
+      <mat-button-toggle-group formControlName="h2s" matTooltip="H2S" vertical>
+         <mat-button-toggle [value]="true">+</mat-button-toggle>
+         <mat-button-toggle [value]="false">&minus;</mat-button-toggle>
+         <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-button-toggle>
+      </mat-button-toggle-group>
+   </div>
 
-   <mat-radio-group class="field-stack" formControlName="gas">
-      <span class="field-label">Gas</span>
-      <mat-radio-button [value]="true">+</mat-radio-button>
-      <mat-radio-button [value]="false">&minus;</mat-radio-button>
-      <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-   </mat-radio-group>
+   <div class="field-column">
+      <mat-button-toggle-group formControlName="gas" matTooltip="gas" vertical>
+         <mat-button-toggle [value]="true">+</mat-button-toggle>
+         <mat-button-toggle [value]="false">&minus;</mat-button-toggle>
+         <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-button-toggle>
+      </mat-button-toggle-group>
+   </div>
 
 </div>

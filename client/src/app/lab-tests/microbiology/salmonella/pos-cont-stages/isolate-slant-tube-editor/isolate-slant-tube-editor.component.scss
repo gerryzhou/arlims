@@ -2,24 +2,19 @@
    display: flex;
    flex-flow: row wrap;
    align-items: flex-start;
-   margin: 5px;
 }
 
-.field-label {
-   font-weight: bold;
-   font-size: 110%;
-}
-
-.field-stack {
+.field-column {
    display: flex;
    flex-flow: column nowrap;
-   align-items: center;
-   min-width: 30px;
-   margin: 5px 10px;
-   border: 3px solid lightgray;
-   border-radius: 5px;
-   > * {
-      margin: 10px;
-   }
+   align-items: stretch;
+   margin: 0 2px;
 }
+
+.button-group-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: stretch;
+}
+
 

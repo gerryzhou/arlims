@@ -1,55 +1,21 @@
-.editor-controls-stack {
+.sections-row {
    display:flex;
-   flex-flow: column nowrap;
+   flex-flow: row wrap;
    align-items: flex-start;
 }
 
-.oxidase,.urea {
-   display: flex;
-   align-items: center;
-   border: 1px solid gray;
-   padding: 0 0 0 3px;
-   border-radius: 5px;
-   margin-right: 3px;
-   mat-select {
-      margin-left: 5px;
-      min-width: 25px;
-   }
-}
-
-.oxidase-label,.urea-label {
-   font-size: smaller;
-   font-weight: bold;
-}
-
-.field-label,.section-label {
-   font-size: larger;
-   font-weight: bold;
-}
-
-.mat-radio-button {
-   margin: 0 10px 0 5px;
-}
-
-.field-stack {
+.field-column {
    display: flex;
    flex-flow: column nowrap;
-   align-items: flex-start;
-   margin-bottom: 10px;
+   align-items: stretch;
+   margin: 5px;
 }
 
-.field-values-row {
-   margin-left: 10px;
-
-   > * {
-      margin: 5px 10px 5px 5px;
-   }
+.section-label {
+   font-weight: bold;
+   margin: 5px;
+   padding: 5px 5px 0 5px;
+   border-bottom: 3px solid darkgray;
+   text-align: center;
 }
 
-.urea-oxidase-row {
-   display: flex;
-
-   > * {
-      margin-right: 10px;
-   }
-}

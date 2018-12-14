@@ -1,10 +1,7 @@
-See if it's possible to use the personal inbox to load data.
-  Determine if any necessary data is missing vs. lab inbox.
-  Time calls vs. lab inbox.
-
-Put TT under RV in SLANT stage, then orient TSI and LIA to use less vertical space.
+Use space more efficiently in SLANT stage editing panels.
   John would prefer button groups (radios) without the selection circle.
   Orient field options downwards and button columns should be close together, like a grid.
+  If necessary, put TT under RV in SLANT stage, then orient TSI and LIA to use less vertical space.
 
 Identification:
   Text for API - only 5 or so codes, can just use a dropdown.
@@ -12,6 +9,10 @@ Identification:
 
 VIDAS
   Add methodRemarks text field.
+
+See if it's possible to use the personal inbox to load data.
+  Determine if any necessary data is missing vs. lab inbox.
+  Time calls vs. lab inbox.
 
 
 Sample custodian in PREP stage

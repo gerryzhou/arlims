@@ -1,25 +1,29 @@
 <mat-expansion-panel [formGroup]="form">
 
    <mat-expansion-panel-header>
-      <app-isolate-slant-stage-view [form]="form" [includeOxidase]="includeOxidase"></app-isolate-slant-stage-view>
+      <app-isolate-slant-stage-view [form]="form" [includeOxidase]="includeOxidase">
+      </app-isolate-slant-stage-view>
    </mat-expansion-panel-header>
 
    <ng-template matExpansionPanelContent>
-      <div class="editor-controls-stack">
+      <div class="sections-row">
 
-         <mat-radio-group class="field-stack" formControlName="colonyAppearance">
-            <div class="field-label">Colony Appearance</div>
-            <div class="field-values-row">
-               <mat-radio-button [value]="'T'">T</mat-radio-button>
-               <mat-radio-button [value]="'NT'">NT</mat-radio-button>
-               <mat-radio-button [value]="'AT'">AT</mat-radio-button>
-               <mat-radio-button [value]="'NG'">NG</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-            </div>
-         </mat-radio-group>
+         <div class="field-column">
+            <div class="section-label" matTooltip="colony appearance">App</div>
+            <mat-button-toggle-group formControlName="colonyAppearance"
+                                     matTooltip="colony appearance" vertical>
+               <mat-button-toggle [value]="'T'">T</mat-button-toggle>
+               <mat-button-toggle [value]="'NT'">NT</mat-button-toggle>
+               <mat-button-toggle [value]="'AT'">AT</mat-button-toggle>
+               <mat-button-toggle [value]="'NG'">NG</mat-button-toggle>
+               <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">
+                  unset
+               </mat-button-toggle>
+            </mat-button-toggle-group>
+         </div>
 
-         <div class="field-stack">
-            <span class="section-label">TSI</span>
+         <div class="field-column">
+            <div class="section-label">TSI</div>
             <app-isolate-slant-tube-editor
                [form]="form.get('tsiTubeTest')"
                [tubeType]="'TSI'"
@@ -28,8 +32,8 @@
             </app-isolate-slant-tube-editor>
          </div>
 
-         <div class="field-stack">
-            <span class="section-label">LIA</span>
+         <div class="field-column">
+            <div class="section-label">LIA</div>
             <app-isolate-slant-tube-editor
                [form]="form.controls['liaTubeTest']"
                [tubeType]="'LIA'"
@@ -38,20 +42,28 @@
             </app-isolate-slant-tube-editor>
          </div>
 
-         <div class="urea-oxidase-row">
-            <mat-radio-group class="field-stack" formControlName="ureaDetection">
-               <span class="field-label">Urea</span>
-               <mat-radio-button [value]="true">+</mat-radio-button>
-               <mat-radio-button [value]="false">&minus;</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-            </mat-radio-group>
+         <div class="field-column">
+            <div class="section-label" matTooltip="urea">Ur</div>
+            <mat-button-toggle-group formControlName="ureaDetection"
+                                     matTooltip="urea" vertical>
+               <mat-button-toggle [value]="true">+</mat-button-toggle>
+               <mat-button-toggle [value]="false">&minus;</mat-button-toggle>
+               <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">
+                  unset
+               </mat-button-toggle>
+            </mat-button-toggle-group>
+         </div>
 
-            <mat-radio-group class="field-stack" formControlName="oxidaseDetection">
-               <span class="field-label">Oxidase</span>
-               <mat-radio-button [value]="true">+</mat-radio-button>
-               <mat-radio-button [value]="false">&minus;</mat-radio-button>
-               <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
-            </mat-radio-group>
+         <div class="field-column">
+            <div class="section-label" matTooltip="oxidase">Ox</div>
+            <mat-button-toggle-group formControlName="oxidaseDetection"
+                                     matTooltip="oxidase" vertical>
+               <mat-button-toggle [value]="true">+</mat-button-toggle>
+               <mat-button-toggle [value]="false">&minus;</mat-button-toggle>
+               <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">
+                  unset
+               </mat-button-toggle>
+            </mat-button-toggle-group>
          </div>
 
       </div>
