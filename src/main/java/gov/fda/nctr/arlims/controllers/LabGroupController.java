@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.SampleOpRefreshService;
 import gov.fda.nctr.arlims.models.dto.*;
-import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpsRefreshResults;
+import gov.fda.nctr.arlims.models.dto.facts.sample_ops_refresh.SampleOpsRefreshResults;
 import gov.fda.nctr.arlims.security.AppUserAuthentication;
 
 

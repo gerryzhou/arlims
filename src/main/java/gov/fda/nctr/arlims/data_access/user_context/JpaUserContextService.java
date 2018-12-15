@@ -281,6 +281,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
                     new Sample(
                         dbSample.getId(),
                         sampleNum,
+                        dbSample.getWorkId(),
                         dbSample.getPac(),
                         opt(dbSample.getLid()),
                         opt(dbSample.getPaf()),

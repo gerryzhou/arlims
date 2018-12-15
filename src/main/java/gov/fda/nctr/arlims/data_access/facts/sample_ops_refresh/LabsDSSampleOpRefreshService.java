@@ -16,10 +16,10 @@ import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
-import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpFailure;
-import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpIdent;
-import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpsRefreshResults;
-import gov.fda.nctr.arlims.models.dto.sample_ops_refresh.SampleOpsResults;
+import gov.fda.nctr.arlims.models.dto.facts.sample_ops_refresh.SampleOpFailure;
+import gov.fda.nctr.arlims.models.dto.facts.sample_ops_refresh.SampleOpIdent;
+import gov.fda.nctr.arlims.models.dto.facts.sample_ops_refresh.SampleOpsRefreshResults;
+import gov.fda.nctr.arlims.models.dto.facts.sample_ops_refresh.SampleOpsResults;
 import static gov.fda.nctr.arlims.data_access.facts.sample_ops_refresh.ReportingUtils.*;
 
 

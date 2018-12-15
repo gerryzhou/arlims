@@ -11,6 +11,8 @@ public class Sample
 
     private final String sampleNum;
 
+    private final long operationId;
+
     private final String pac;
 
     private final Optional<String> lid;
@@ -39,6 +41,7 @@ public class Sample
         (
             long id,
             String sampleNum,
+            long operationId,
             String pac,
             Optional<String> lid,
             Optional<String> paf,
@@ -55,6 +58,7 @@ public class Sample
     {
         this.id = id;
         this.sampleNum = sampleNum;
+        this.operationId = operationId;
         this.pac = pac;
         this.lid = lid;
         this.paf = paf;
@@ -72,6 +76,8 @@ public class Sample
     public long getId() { return id; }
 
     public String getSampleNumber() { return sampleNum; }
+
+    public long getOperationId() { return operationId; }
 
     public String getPac() { return pac; }
 

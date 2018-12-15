@@ -33,6 +33,8 @@ public class FactsApiConfig
 
     private int labInboxAssignedStatusAgeCutoffDays = 30;
 
+    private boolean logSampleAnalysisSubmissionDetails = false;
+
 
     public String getAppOidUsername() { return appOidUsername; }
     public void setAppOidUsername(String appOidUsername) { this.appOidUsername = appOidUsername; }
@@ -57,4 +59,12 @@ public class FactsApiConfig
 
     public int getLabInboxAssignedStatusAgeCutoffDays() { return labInboxAssignedStatusAgeCutoffDays; }
     public void setLabInboxAssignedStatusAgeCutoffDays(int labInboxAssignedStatusAgeCutoffDays) { this.labInboxAssignedStatusAgeCutoffDays = labInboxAssignedStatusAgeCutoffDays; }
+
+    public boolean isLogLabInboxResults() { return logLabInboxResults; }
+
+    public boolean getLogSampleAnalysisSubmissionDetails() { return logSampleAnalysisSubmissionDetails; }
+    public void setLogSampleAnalysisSubmissionDetails(boolean logSampleAnalysisSubmissionDetails)
+    {
+        this.logSampleAnalysisSubmissionDetails = logSampleAnalysisSubmissionDetails;
+    }
 }

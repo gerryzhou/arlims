@@ -1,11 +1,7 @@
-Use space more efficiently in SLANT stage editing panels.
-  John would prefer button groups (radios) without the selection circle.
-  Orient field options downwards and button columns should be close together, like a grid.
-  If necessary, put TT under RV in SLANT stage, then orient TSI and LIA to use less vertical space.
+Post to FACTS from within microbiology module directly after saving, using api urls service.
 
-Identification:
-  Text for API - only 5 or so codes, can just use a dropdown.
-  Remove +/- field.
+Text for API - only 5 or so codes, can just use a dropdown.
+Remove +/- field.
 
 VIDAS
   Add methodRemarks text field.

@@ -27,9 +27,12 @@ import org.hobsoft.spring.resttemplatelogger.LoggingCustomizer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
 
 @Service
@@ -47,9 +50,11 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     private final SecureRandom secureRandom;
 
     private final ObjectReader jsonReader;
+    private final ObjectWriter jsonWriter;
 
     private static final String LAB_INBOX_RESOURCE = "LabsInbox";
     private static final String WORK_DETAILS_RESOURCE = "WorkDetails";
+    private static final String SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE = "SampleAnalysesMicrobiology";
 
     private static final String UPPER_ALPHANUM ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -87,6 +92,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         ObjectMapper jsonSerializer = Jackson2ObjectMapperBuilder.json().build();
         this.jsonReader = jsonSerializer.reader();
+        this.jsonWriter = jsonSerializer.writer();
     }
 
 
@@ -125,11 +131,17 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
             String uri = uriBldr.build(false).encode().toUriString();
 
-            HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true));
+            HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
 
             log.info("Retrieving inbox items for " + orgName + ".");
 
-            ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(uri, HttpMethod.GET, reqEntity, LabInboxItem[].class);
+            ResponseEntity<LabInboxItem[]> resp =
+                restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    reqEntity,
+                    LabInboxItem[].class
+                );
 
             List<LabInboxItem> inboxItems =
                 Arrays.stream(resp.getBody())
@@ -156,9 +168,15 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             .queryParam("objectFilters", "statusCode")
             .toUriString();
 
-        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true));
+        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
 
-        ResponseEntity<StatusCodeObj[]> resp = restTemplate.exchange(url, HttpMethod.GET, reqEntity, StatusCodeObj[].class);
+        ResponseEntity<StatusCodeObj[]> resp =
+            restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                reqEntity,
+                StatusCodeObj[].class
+            );
 
         StatusCodeObj[] statusCodeObjs = resp.getBody();
 
@@ -168,14 +186,52 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             return Optional.empty();
     }
 
-    private HttpHeaders newRequestHeaders(boolean acceptJson)
+    public MicrobiologySampleAnalysisSubmissionResponse submitMicrobiologySampleAnalysis
+        (
+            MicrobiologySampleAnalysisSubmission subm
+        )
     {
-        HttpHeaders hdrs = new HttpHeaders();
-        hdrs.addAll(fixedHeaders);
-        hdrs.add("sourceTransactionID", generateApiTransactionId());
+        log.info(
+            "Submitting microbiology sample analysis" +
+            ( apiConfig.getLogSampleAnalysisSubmissionDetails() ? ":\n  " + toJson(subm) : "." )
+        );
+
+        HttpEntity<String> reqEntity =
+            new HttpEntity<>(
+                toJson(subm),
+                newRequestHeaders(true, true)
+            );
+
+        ResponseEntity<MicrobiologySampleAnalysisSubmissionResponse> resp =
+            restTemplate.exchange(
+                apiConfig.getBaseUrl() + SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE,
+                HttpMethod.POST,
+                reqEntity,
+                MicrobiologySampleAnalysisSubmissionResponse.class
+            );
+
+        MicrobiologySampleAnalysisSubmissionResponse res = resp.getBody();
+
+        log.info(
+            "Microbiology sample analysis submitted successfully" +
+            ( apiConfig.getLogSampleAnalysisSubmissionDetails() ?
+                " with response:\n  " + toJson(res)
+                : "." )
+        );
+
+        return res;
+    }
+
+    private HttpHeaders newRequestHeaders(boolean acceptJson, boolean contentTypeJson)
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.addAll(fixedHeaders);
+        headers.add("sourceTransactionID", generateApiTransactionId());
         if ( acceptJson )
-            hdrs.setAccept(singletonList(new MediaType("application", "json", StandardCharsets.UTF_8)));
-        return hdrs;
+            headers.setAccept(singletonList(new MediaType("application", "json", StandardCharsets.UTF_8)));
+        if ( contentTypeJson )
+            headers.setContentType(new MediaType("application", "json"));
+        return headers;
     }
 
     private String generateApiTransactionId()
@@ -212,6 +268,18 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
                 super.handleError(response); // throws appropriate determined by status code
             }
         };
+    }
+
+    private String toJson(Object o)
+    {
+        try
+        {
+            return jsonWriter.writeValueAsString(o);
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }
 

@@ -8,7 +8,14 @@ import * as FileSaver from 'file-saver';
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {AppUser, LabResource, TestAttachedFileMetadata, SampleInTest, TestSaveData} from '../../../../../generated/dto';
+import {
+   AppUser,
+   LabResource,
+   TestAttachedFileMetadata,
+   SampleInTest,
+   TestSaveData,
+   MicrobiologySampleAnalysisSubmissionResponse, MicrobiologySampleAnalysisSubmission, MicrobiologyAnalysisFinding
+} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
    emptyTestData,
@@ -16,7 +23,7 @@ import {
    getTestStageStatuses, getVidasPositiveTestUnitNumbers,
    makeTestDataFormGroup,
    TEST_STAGES,
-   TestData
+   TestData, vidasStatusCode
 } from '../test-data';
 import {TestConfig} from '../test-config';
 import {StagePrepComponent} from '../stage-prep/stage-prep.component';
@@ -29,6 +36,8 @@ import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {SampleTestUnits, TestUnitsType} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
+import {Observable} from 'rxjs';
+import {countValueOccurrences} from '../../../test-stages';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data-entry',
@@ -146,16 +155,18 @@ export class StagedTestDataEntryComponent implements OnInit {
       ];
    }
 
-   onFormSubmit()
+   saveTestData()
    {
       console.log('Saving test data: ', this.testDataForm.value);
 
+      const testData = this.testDataForm.value;
+
       this.testsSvc.saveTestData(
          this.sampleInTest.testMetadata.testId,
-         this.testDataForm.value,
+         testData,
          this.originalTestData,
          this.originalTestDataMd5,
-         testData => getTestStageStatuses(testData, this.testConfig),
+         (td) => getTestStageStatuses(td, this.testConfig),
          this.jsonFieldFormatter
       )
       .subscribe(
@@ -163,6 +174,18 @@ export class StagedTestDataEntryComponent implements OnInit {
              if ( saveResults.saved )
              {
                 this.alertMsgSvc.alertSuccess('Test data saved.', true);
+                /* TODO: Enable Vidas writing here when impl is finished.
+                if ( this.stage === 'VIDAS' && this.shouldSubmitVidasAnalysisResults(testData) )
+                {
+                   console.log('Saving Vidas analysis data to FACTS.');
+                   this.submitVidasAnalysisResults(testData).subscribe(factsSaveResponse => {
+                      console.log('FACTS response for Vidas submission: ', factsSaveResponse)
+                      this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
+                      this.doAfterSaveNavigation();
+                   });
+                }
+                else
+                */
                 this.doAfterSaveNavigation();
              }
              else
@@ -269,4 +292,53 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));
    }
 
+   private shouldSubmitVidasAnalysisResults(testData: TestData): boolean
+   {
+      return vidasStatusCode(testData) === 'c';
+   }
+
+   /* TODO
+   private submitVidasAnalysisResults(testData: TestData): Observable<MicrobiologySampleAnalysisSubmissionResponse>
+   {
+      // TODO: Should check test data for completeness here as values are extracted.
+
+      const sample = this.sampleInTest.sample;
+      const positivesCount = countValueOccurrences(testData.vidasData.testUnitDetections, true);
+      const samplingMethod = testData.preEnrData.samplingMethod;
+      if ( !samplingMethod.testUnitsType )
+      {
+         this.alertMsgSvc.alertWarning('Cannot submit data to FACTS, the sampling method is incomplete in stage PRE-ENR.');
+         return;
+      }
+      const examinedType = samplingMethod.testUnitsType === 'composite' ? 'COMPOSITES' : 'SUBSAMPLES';
+      const examinedNumber = samplingMethod.testUnitsCount;
+      const subSamplesUsedCompositeNumber = samplingMethod.testUnitsType === 'composite' ? samplingMethod.numberOfSubsPerComposite : null;
+      const subSamplesDetectableFindingsNumber = samplingMethod.testUnitsType === 'subsample' ? positivesCount : null;
+      const findings: MicrobiologyAnalysisFinding[] = []; // TODO
+
+      const subm: MicrobiologySampleAnalysisSubmission = {
+         operationId: sample.operationId,
+         accomplishingOrgName: this.appUser.labGroupFactsParentOrgName,
+         actionIndicator: positivesCount > 0 ? 'Y' : 'N',
+         problemCode: 'MICROID',
+         genusCode: 'SLML',
+         speciesCode: 'SLML998',
+         methodSourceCode: 'AOAC',
+         methodCode: 'T2004.03',
+         // methodModificationIndicator: 'N',
+         kitTestIndicator: 'N', // TODO: Y for spiking but then need to include kit test structure.
+         examinedType,
+         examinedNumber,
+         subSamplesUsedCompositeNumber,
+         subSamplesDetectableFindingsNumber,
+         quantifiedIndicator: 'N',
+         analysisResultsRemarksText: 'Posted from ALIS', // TODO
+         analysisMicFindings: findings,
+      };
+
+      // TODO: Post the submission.
+
+      return null;
+   }
+   */
 }

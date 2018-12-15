@@ -46,6 +46,7 @@ create or replace view test_v as
     s.last_refreshed_from_facts,
     s.sampling_org,
     s.subject subject,
+    s.work_id operation_id,
     t.test_data_json
   from test t
   join sample_op s on t.sample_op_id = s.id

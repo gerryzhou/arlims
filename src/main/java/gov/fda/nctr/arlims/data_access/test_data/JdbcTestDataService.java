@@ -70,7 +70,8 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             "FACTS_STATUS_TS",
             "LAST_REFRESHED_FROM_FACTS",
             "SAMPLING_ORG",
-            "SUBJECT"
+            "SUBJECT",
+            "OPERATION_ID" // 29
         );
 
     private static final String TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR =
@@ -854,11 +855,13 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             Instant lastRefreshedFromFactsTimestamp = row.getTimestamp(26).toInstant();
             Optional<String> samplingOrg = Optional.ofNullable(row.getString(27));
             Optional<String> subject = Optional.ofNullable(row.getString(28));
+            long opId = row.getLong(29);
 
             Sample s =
                 new Sample(
                     tmd.getSampleId(),
                     tmd.getSampleNum(),
+                    opId,
                     tmd.getPac(),
                     lid,
                     paf,

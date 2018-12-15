@@ -1,4 +1,4 @@
-package gov.fda.nctr.arlims.models.dto.sample_ops_refresh;
+package gov.fda.nctr.arlims.models.dto.facts.sample_ops_refresh;
 
 
 public class SampleOpsRefreshResults

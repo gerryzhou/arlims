@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 import static java.util.stream.Collectors.toList;
 
 
@@ -175,4 +177,13 @@ public class FakeFactsAccessService implements FactsAccessService
     {
         return Optional.of("C");
     }
+
+    public MicrobiologySampleAnalysisSubmissionResponse submitMicrobiologySampleAnalysis
+        (
+            MicrobiologySampleAnalysisSubmission subm
+        )
+    {
+        return new MicrobiologySampleAnalysisSubmissionResponse(1234);
+    }
+
 }

@@ -117,7 +117,6 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/tests/search?${searchParams.toString()}`);
    }
 
-
    auditLogEntriesQueryUrl
       (
          fromMoment: Moment | null,
@@ -152,6 +151,10 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/audit-log/${testId}/modifying-employees`);
    }
 
+   factsMicrobiologySampleAnalysisUrl()
+   {
+      return this.location.prepareExternalUrl('/api/facts/sample-analysis/micro');
+   }
 
    isAppApiUrl(url: string)
    {

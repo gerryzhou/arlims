@@ -126,7 +126,7 @@ function mBrothStatusCode(testData: TestData): FieldValuesStatusCode
    ]);
 }
 
-function vidasStatusCode(testData: TestData): FieldValuesStatusCode
+export function vidasStatusCode(testData: TestData): FieldValuesStatusCode
 {
    const data = testData.vidasData;
    const spiking = spikingSpecified(testData);
