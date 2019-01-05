@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class Sample
+public class SampleOp
 {
-    private final long id;
+    private final long opId;
 
-    private final String sampleNum;
+    private final long sampleTrackingNum;
 
-    private final long operationId;
+    private final long sampleTrackingSubNum;
 
     private final String pac;
 
@@ -23,7 +23,7 @@ public class Sample
 
     private final Optional<String> splitInd;
 
-    private final String factsStatus;
+    private final String factsStatus; // (code)
 
     private final Instant factsStatusTimestamp;
 
@@ -33,15 +33,15 @@ public class Sample
 
     private final Optional<String> subject;
 
-    private final Optional<List<SampleAssignment>> assignments;
-
     private final Optional<List<LabTestMetadata>> tests;
 
-    public Sample
+    private final Optional<List<SampleOpAssignment>> assignments;
+
+    public SampleOp
         (
-            long id,
-            String sampleNum,
-            long operationId,
+            long opId,
+            long sampleTrackingNum,
+            long sampleTrackingSubNum,
             String pac,
             Optional<String> lid,
             Optional<String> paf,
@@ -52,13 +52,13 @@ public class Sample
             Instant lastRefreshedFromFactsInstant,
             Optional<String> samplingOrganization,
             Optional<String> subject,
-            Optional<List<SampleAssignment>> assignments,
-            Optional<List<LabTestMetadata>> tests
+            Optional<List<LabTestMetadata>> tests,
+            Optional<List<SampleOpAssignment>> assignments
         )
     {
-        this.id = id;
-        this.sampleNum = sampleNum;
-        this.operationId = operationId;
+        this.opId = opId;
+        this.sampleTrackingNum = sampleTrackingNum;
+        this.sampleTrackingSubNum = sampleTrackingSubNum;
         this.pac = pac;
         this.lid = lid;
         this.paf = paf;
@@ -69,15 +69,15 @@ public class Sample
         this.lastRefreshedFromFactsInstant = lastRefreshedFromFactsInstant;
         this.samplingOrganization = samplingOrganization;
         this.subject = subject;
-        this.assignments = assignments;
         this.tests = tests;
+        this.assignments = assignments;
     }
 
-    public long getId() { return id; }
+    public long getOpId() { return opId; }
 
-    public String getSampleNumber() { return sampleNum; }
+    public long getSampleTrackingNum() { return sampleTrackingNum; }
 
-    public long getOperationId() { return operationId; }
+    public long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
 
     public String getPac() { return pac; }
 
@@ -99,7 +99,7 @@ public class Sample
 
     public Optional<String> getSubject() { return subject; }
 
-    public Optional<List<SampleAssignment>> getAssignments() { return assignments; }
-
     public Optional<List<LabTestMetadata>> getTests() { return tests; }
+
+    public Optional<List<SampleOpAssignment>> getAssignments() { return assignments; }
 }

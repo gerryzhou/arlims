@@ -29,8 +29,6 @@ public class FactsApiConfig
 
     private int readTimeout = 0;
 
-    private boolean logLabInboxResults = false;
-
     private int labInboxAssignedStatusAgeCutoffDays = 30;
 
     private boolean logSampleAnalysisSubmissionDetails = false;
@@ -54,13 +52,8 @@ public class FactsApiConfig
     public int getReadTimeout() { return readTimeout; }
     public void setReadTimeout(int readTimeout) { this.readTimeout = readTimeout; }
 
-    public boolean getLogLabInboxResults() { return logLabInboxResults; }
-    public void setLogLabInboxResults(boolean logLabInboxResults) { this.logLabInboxResults = logLabInboxResults; }
-
     public int getLabInboxAssignedStatusAgeCutoffDays() { return labInboxAssignedStatusAgeCutoffDays; }
     public void setLabInboxAssignedStatusAgeCutoffDays(int labInboxAssignedStatusAgeCutoffDays) { this.labInboxAssignedStatusAgeCutoffDays = labInboxAssignedStatusAgeCutoffDays; }
-
-    public boolean isLogLabInboxResults() { return logLabInboxResults; }
 
     public boolean getLogSampleAnalysisSubmissionDetails() { return logSampleAnalysisSubmissionDetails; }
     public void setLogSampleAnalysisSubmissionDetails(boolean logSampleAnalysisSubmissionDetails)

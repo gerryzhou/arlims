@@ -35,8 +35,6 @@ class AcroformReportService
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private static final String APPENDICES_KEY = "_appendices";
-    private static final int APPENDIX_MAX_LINES_PER_PAGE = 40;
-    private static final int APPENDIX_MAX_BLANK_LINE_NUM = 30;
 
     public AcroformReportService(ReportsConfig config)
     {
@@ -71,7 +69,7 @@ class AcroformReportService
             PDAcroForm acroForm = docCatalog.getAcroForm();
 
             PDField sampleNumField = acroForm.getField("testmd_sampleNum");
-            if ( sampleNumField != null) sampleNumField.setValue(testMetadata.getSampleNum());
+            if ( sampleNumField != null) sampleNumField.setValue(sampleNum(testMetadata));
 
             PDField productNameField = acroForm.getField("testmd_productName");
             if ( productNameField != null) productNameField.setValue(testMetadata.getProductName());
@@ -87,7 +85,7 @@ class AcroformReportService
         return new Report(
             reportFile,
             "application/pdf",
-            testMetadata.getTestTypeCode() +"-" + testMetadata.getSampleNum() + ".pdf"
+        testMetadata.getTestTypeCode() + "_" + sampleNum(testMetadata) + ".pdf"
         );
     }
 
@@ -229,5 +227,9 @@ class AcroformReportService
         else return fieldName + "_" + component;
     }
 
+    private String sampleNum(LabTestMetadata testMetadata)
+    {
+        return testMetadata.getSampleTrackingNum() + "-" + testMetadata.getSampleTrackingSubNum();
+    }
 }
 

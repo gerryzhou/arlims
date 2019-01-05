@@ -10,11 +10,11 @@ public interface UserContextService
 {
     UserContext getUserContext(String username);
 
+    LabGroupContents getLabGroupContents(long factsPersonId);
+
     AppUser loadUser(String username);
 
     AppUser getUser(String username);
-
-    LabGroupContents getLabGroupContents(long employeeId);
 
     void createNewUser(UserRegistration userRegistration, AppUser creatingUser);
 }

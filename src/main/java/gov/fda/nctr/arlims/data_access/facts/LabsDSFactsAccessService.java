@@ -5,19 +5,20 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-
 import static java.time.temporal.ChronoUnit.DAYS;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.joining;
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpMethod.GET;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
@@ -41,8 +43,6 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 {
     private final FactsApiConfig apiConfig;
 
-    private final JdbcTemplate jdbc;
-
     private final RestTemplate restTemplate;
 
     private final HttpHeaders fixedHeaders;
@@ -53,7 +53,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     private final ObjectWriter jsonWriter;
 
     private static final String LAB_INBOX_RESOURCE = "LabsInbox";
-    private static final String WORK_DETAILS_RESOURCE = "WorkDetails";
+    private static final String EMPLOYEE_INBOX_RESOURCE = "PersonInbox";
     private static final String SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE = "SampleAnalysesMicrobiology";
 
     private static final String UPPER_ALPHANUM ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -62,12 +62,10 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     public LabsDSFactsAccessService
         (
             FactsApiConfig apiConfig,
-            JdbcTemplate jdbc,
             RestTemplateBuilder restTemplateBuilder
         )
     {
         this.apiConfig = apiConfig;
-        this.jdbc = jdbc;
         this.restTemplate =
             restTemplateBuilder
             .setConnectTimeout(apiConfig.getConnectTimeout())
@@ -79,7 +77,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         log.info("Setting API call connection and read timeouts to " +
             apiConfig.getConnectTimeout() + " and " +
             apiConfig.getReadTimeout() + " respectively.");
-        log.info("Age cap for lab inbox items is " + apiConfig.getLabInboxAssignedStatusAgeCutoffDays() + " days.");
+        log.info("Age cap for inbox items is " + apiConfig.getLabInboxAssignedStatusAgeCutoffDays() + " days.");
 
         HttpHeaders defaultRequestHeaders = new HttpHeaders();
         String authHeaderVal = authorizationHeaderValue(apiConfig);
@@ -96,14 +94,44 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     }
 
 
-    public List<LabInboxItem> getLabInboxItems(List<String> statusCodes, Optional<String> accomplishingOrg)
+    @Override
+    @Async
+    public CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems
+        (
+            long employeeId,
+            List<String> statusCodes
+        )
     {
-        List<LabInboxItem> resInboxItems = new ArrayList<>();
+        String includeFields =
+          "workId,analysisSample,collectionSample,tdSampleNumber,sampleTrackingSubNum,pacCode," +
+          "statusCode,statusDate,subjectText,remarksText,registerTargetCompletionDate," +
+          "personId,firstName,lastName,mdlIntlName,leadInd";
 
-        List<String> orgNames =
-            accomplishingOrg.isPresent() ? singletonList(accomplishingOrg.get())
-            : jdbc.queryForList("select distinct facts_parent_org_name from lab_group", String.class);
+        UriComponentsBuilder uriBldr =
+            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
+            .queryParam("statusCodes", String.join(",", statusCodes))
+            .queryParam("objectFilters", includeFields);
 
+        String uri = uriBldr.build(false).encode().toUriString();
+
+        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
+
+        ResponseEntity<EmployeeInboxItem[]> resp =
+            restTemplate.exchange(uri, GET, reqEntity, EmployeeInboxItem[].class);
+
+        List<EmployeeInboxItem> inboxItems = Arrays.stream(resp.getBody()).collect(toList());
+
+        return completedFuture(inboxItems);
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<List<LabInboxItem>> getLabInboxItems
+        (
+            String orgName,
+            List<String> statusCodes
+        )
+    {
         Optional<String> minAssignedToStatusDateStr = apiConfig.getLabInboxAssignedStatusAgeCutoffDays() > 0 ?
             Optional.of(LocalDate.now().minus(apiConfig.getLabInboxAssignedStatusAgeCutoffDays(), DAYS)
                 .format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
@@ -117,76 +145,33 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             "assignedToPersonId,assignedToFirstName,assignedToLastName,assignedToStatusCode,assignedToStatusDate," +
             "assignedToWorkAssignmentDate";
 
-        for ( String orgName : orgNames )
-        {
-            UriComponentsBuilder uriBldr =
-                UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
-                .queryParam("accomplishingOrgName", orgName)
-                .queryParam("statusCodes", String.join(",", statusCodes))
-                .queryParam("objectFilters", includeFields);
+        UriComponentsBuilder uriBldr =
+            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
+            .queryParam("accomplishingOrgName", orgName)
+            .queryParam("statusCodes", String.join(",", statusCodes))
+            .queryParam("objectFilters", includeFields);
 
-            minAssignedToStatusDateStr.ifPresent(cutoffDateStr ->
-                uriBldr.queryParam("statusDateFrom", cutoffDateStr)
-            );
+        minAssignedToStatusDateStr.ifPresent(cutoffDateStr ->
+            uriBldr.queryParam("statusDateFrom", cutoffDateStr)
+        );
 
-            String uri = uriBldr.build(false).encode().toUriString();
-
-            HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
-
-            log.info("Retrieving inbox items for " + orgName + ".");
-
-            ResponseEntity<LabInboxItem[]> resp =
-                restTemplate.exchange(
-                    uri,
-                    HttpMethod.GET,
-                    reqEntity,
-                    LabInboxItem[].class
-                );
-
-            List<LabInboxItem> inboxItems =
-                Arrays.stream(resp.getBody())
-                .collect(toList());
-
-            if ( apiConfig.getLogLabInboxResults() )
-                log.info(
-                    "Retrieved " + inboxItems.size() + " inbox items for " + orgName + ":\n  " +
-                    inboxItems.stream().map(Object::toString).collect(joining("\n  "))
-                );
-
-            inboxItems.forEach(resInboxItems::add);
-        }
-
-        return resInboxItems;
-    }
-
-    @Override
-    public Optional<String> getWorkStatus(long workId)
-    {
-        String url =
-            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + WORK_DETAILS_RESOURCE)
-            .queryParam("workId", workId)
-            .queryParam("objectFilters", "statusCode")
-            .toUriString();
+        String uri = uriBldr.build(false).encode().toUriString();
 
         HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
 
-        ResponseEntity<StatusCodeObj[]> resp =
-            restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                reqEntity,
-                StatusCodeObj[].class
-            );
+        log.info("Retrieving inbox items for " + orgName + ".");
 
-        StatusCodeObj[] statusCodeObjs = resp.getBody();
+        ResponseEntity<LabInboxItem[]> resp =
+            restTemplate.exchange(uri, GET, reqEntity, LabInboxItem[].class);
 
-        if ( statusCodeObjs.length == 1 )
-            return Optional.of(statusCodeObjs[0].statusCode);
-        else
-            return Optional.empty();
+        List<LabInboxItem> inboxItems = Arrays.stream(resp.getBody()).collect(toList());
+
+        return completedFuture(inboxItems);
     }
 
-    public MicrobiologySampleAnalysisSubmissionResponse submitMicrobiologySampleAnalysis
+    @Override
+    @Async
+    public CompletableFuture<MicrobiologySampleAnalysisSubmissionResponse> submitMicrobiologySampleAnalysis
         (
             MicrobiologySampleAnalysisSubmission subm
         )
@@ -219,7 +204,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
                 : "." )
         );
 
-        return res;
+        return completedFuture(res);
     }
 
     private HttpHeaders newRequestHeaders(boolean acceptJson, boolean contentTypeJson)
@@ -283,7 +268,3 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     }
 }
 
-class StatusCodeObj
-{
-    String statusCode;
-}

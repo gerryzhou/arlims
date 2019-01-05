@@ -13,8 +13,7 @@ import gov.fda.nctr.arlims.data_access.raw.jpa.db.Test;
 @Repository
 public interface TestRepository extends JpaRepository<Test,Long>
 {
-    @Query(value = "SELECT t FROM Test t JOIN FETCH t.testType where t.sampleOpId in (:sampleOpIds)")
-    List<Test> findBySampleOpIdIn(@Param("sampleOpIds") List<Long> sampleOpIds);
-
+    @Query(value = "SELECT t FROM Test t JOIN FETCH t.testType where t.opId in (:opIds)")
+    List<Test> findByOpIdIn(@Param("opIds") List<Long> opIds);
 }
 

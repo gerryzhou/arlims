@@ -8,8 +8,9 @@ import java.util.Optional;
 public class LabTestMetadata
 {
     private long testId;
-    private long sampleId;
-    private String sampleNum;
+    private long opId;
+    private long sampleTrackingNum;
+    private long sampleTrackingSubNum;
     private String pac;
     private String productName;
     private LabTestTypeCode testTypeCode;
@@ -32,8 +33,9 @@ public class LabTestMetadata
     public LabTestMetadata
         (
             long testId,
-            long sampleId,
-            String sampleNum,
+            long opId,
+            long sampleTrackingNum,
+            long sampleTrackingSubNum,
             String pac,
             String productName,
             LabTestTypeCode testTypeCode,
@@ -54,8 +56,9 @@ public class LabTestMetadata
         )
     {
         this.testId = testId;
-        this.sampleId = sampleId;
-        this.sampleNum = sampleNum;
+        this.opId = opId;
+        this.sampleTrackingNum = sampleTrackingNum;
+        this.sampleTrackingSubNum = sampleTrackingSubNum;
         this.pac = pac;
         this.productName = productName;
         this.testTypeCode = testTypeCode;
@@ -77,9 +80,11 @@ public class LabTestMetadata
 
     public long getTestId() { return testId; }
 
-    public long getSampleId() { return sampleId; }
+    public long getOpId() { return opId; }
 
-    public String getSampleNum() { return sampleNum; }
+    public long getSampleTrackingNum() { return sampleTrackingNum; }
+
+    public long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
 
     public String getPac() { return pac; }
 

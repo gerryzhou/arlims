@@ -1,3 +1,44 @@
+Client app changes
+  Rename dto "Sample" to "SampleOp" and "SampleInTest" to "SampleOpTest".
+  Change usages of "sampleId" to "opId". E.g. for test creation.
+  Remove "show samples assigned to others" feature.
+    This will have to be re-implemented a different way, involving server access.
+  Remove unnecessary sample metadata fields from Sample and ui views.
+    Assignments should be removed, replace by (new) leadInd.
+  Remove or disable tests search feature.
+    Will need to be reimplemented somewhat on server side to get sample md from elsewhere.
+
+FACTS POSTING
+-------------
+Review and complete.
+
+DB MODS (when back on FDA network)
+-------
+Just regenerate from jpa defs in devl and create ddl scripts from resulting schema.
+
+LABSDS API CHANGES NEEDED
+-------------------------
+Person inbox
+  Needs
+    product name (most important)
+    paf
+    lid
+    split ind
+    sampling org
+  Also it's unclear which sample number is needed among:
+    analysisSample
+    collectionSample
+    tdSampleNumber
+
+Need endpoint to fetch sample metadata for a given work id.
+  Need at least:
+    sample tracking num
+    sample tracking sub num
+    pac
+    product name
+  Though more information will be better for the future (lid, paf etc).
+  Use this when available in JdbcTestDataService.
+
 
 
 Create accounts for Rick, Ash, Joseph, Wen, Paul.

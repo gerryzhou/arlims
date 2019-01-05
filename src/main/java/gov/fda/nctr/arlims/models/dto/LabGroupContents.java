@@ -9,7 +9,7 @@ public class LabGroupContents
     private final String name;
     private final List<LabTestType> supportedTestTypes;
     private final List<UserReference> memberUsers;
-    private final List<Sample> activeSamples;
+    private final List<SampleOp> userActiveSampleOps;
     private final List<LabResource> managedResources;
 
     public LabGroupContents
@@ -18,7 +18,7 @@ public class LabGroupContents
             String name,
             List<LabTestType> testTypes,
             List<UserReference> memberUsers,
-            List<Sample> activeSamples,
+            List<SampleOp> userActiveSampleOps,
             List<LabResource> managedResources
         )
     {
@@ -26,7 +26,7 @@ public class LabGroupContents
         this.name = name;
         this.supportedTestTypes = testTypes;
         this.memberUsers = memberUsers;
-        this.activeSamples = activeSamples;
+        this.userActiveSampleOps = userActiveSampleOps;
         this.managedResources = managedResources;
     }
 
@@ -38,7 +38,7 @@ public class LabGroupContents
 
     public List<UserReference> getMemberUsers() { return memberUsers; }
 
-    public List<Sample> getActiveSamples() { return activeSamples; }
+    public List<SampleOp> getActiveSamples() { return userActiveSampleOps; }
 
     public List<LabResource> getManagedResources() { return managedResources; }
 }

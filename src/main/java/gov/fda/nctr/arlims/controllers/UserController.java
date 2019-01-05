@@ -65,7 +65,7 @@ public class UserController extends ControllerBase
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        return userContextService.getLabGroupContents(currentUser.getEmployeeId());
+        return userContextService.getLabGroupContents(currentUser.getFactsPersonId());
     }
 
 

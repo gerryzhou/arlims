@@ -317,7 +317,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       const findings: MicrobiologyAnalysisFinding[] = []; // TODO
 
       const subm: MicrobiologySampleAnalysisSubmission = {
-         operationId: sample.operationId,
+         operationId: sample.opId,
          accomplishingOrgName: this.appUser.labGroupFactsParentOrgName,
          actionIndicator: positivesCount > 0 ? 'Y' : 'N',
          problemCode: 'MICROID',

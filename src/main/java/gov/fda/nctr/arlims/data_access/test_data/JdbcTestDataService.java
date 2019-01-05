@@ -18,8 +18,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
@@ -30,7 +28,6 @@ import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.models.dto.*;
-import static java.lang.String.join;
 
 
 @Service
@@ -41,41 +38,6 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
 
-    private static final List<String> TESTV_SAMPLE_IN_TEST_MAPPED_COLS =
-        Arrays.asList(
-            "TEST_ID",
-            "SAMPLE_OP_ID",
-            "SAMPLE_NUM",
-            "PAC",
-            "PRODUCT_NAME",
-            "TYPE_CODE",
-            "TYPE_NAME",
-            "TYPE_SHORT_NAME",
-            "CREATED",
-            "CREATED_BY_EMP",
-            "LAST_SAVED",
-            "LAST_SAVED_EMP",
-            "ATTACHED_FILES_COUNT",
-            "BEGIN_DATE",
-            "NOTE",
-            "STAGE_STATUSES_JSON",
-            "REVIEWED",
-            "REVIEWED_BY_EMP",
-            "SAVED_TO_FACTS",
-            "SAVED_TO_FACTS_BY_EMP",
-            "LID",
-            "PAF",
-            "SPLIT_IND",
-            "FACTS_STATUS",
-            "FACTS_STATUS_TS",
-            "LAST_REFRESHED_FROM_FACTS",
-            "SAMPLING_ORG",
-            "SUBJECT",
-            "OPERATION_ID" // 29
-        );
-
-    private static final String TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR =
-        join(",", TESTV_SAMPLE_IN_TEST_MAPPED_COLS);
 
     public JdbcTestDataService
         (
@@ -91,7 +53,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     @Override
     public long createTest
         (
-            long sampleOpId,
+            long opId,
             LabTestTypeCode testTypeCode,
             String testBeginDate,
             AppUser user
@@ -101,7 +63,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         String sql =
             "insert into test " +
-                "(sample_op_id, test_type_id, lab_group_id, begin_date, test_data_md5," +
+                "(op_id, test_type_id, lab_group_id, begin_date, test_data_md5," +
                 "created, created_by_emp_id, last_saved, last_saved_by_emp_id)\n" +
             "values(" +
                 "?," +
@@ -114,7 +76,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         PreparedStatementCreator psc = conn -> {
             final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
-            ps.setLong(1, sampleOpId);
+            ps.setLong(1, opId);
             ps.setString(2, testTypeCode.toString());
             ps.setLong(3, user.getEmployeeId());
             ps.setString(4, testBeginDate);
@@ -364,17 +326,21 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     @Override
     public LabTestMetadata getTestMetadata(long testId)
     {
+        // TODO: Need to fetch this basic sample/op metadata from modified WorkDetails (or new) LABSDS api endpoint.
+        long sampleTrackingNum = 1234567;
+        long sampleTrackingSubNum = 0;
+        String productName = "DUMMY PRODUCT";
+        String pac = "1234";
+
         String sql =
             "select " +
-            "t.sample_op_id, s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, " +
-            "s.pac, s.product_name, tt.code, tt.name, tt.short_name, t.created, " +
+            "t.op_id, tt.code, tt.name, tt.short_name, t.created, " +
             "ce.short_name created_by_emp, t.last_saved, se.short_name last_saved_emp, " +
             "(select count(*) from test_file tf where tf.test_id = t.id) attached_files_count," +
             "TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date, " +
             "t.note, t.stage_statuses_json, t.reviewed, re.short_name reviewed_by_emp, " +
             "t.saved_to_facts, fe.short_name saved_to_facts_by_emp\n" +
             "from test t\n" +
-            "join sample_op s on t.sample_op_id = s.id\n" +
             "join test_type tt on t.test_type_id = tt.id\n" +
             "join employee ce on ce.id = t.created_by_emp_id\n" +
             "join employee se on se.id = t.last_saved_by_emp_id\n" +
@@ -386,24 +352,25 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             new LabTestMetadata(
                 testId,
                 row.getLong(1),
-                row.getString(2),
+                sampleTrackingNum,
+                sampleTrackingSubNum,
+                pac,
+                productName,
+                LabTestTypeCode.valueOf(row.getString(2)),
                 row.getString(3),
                 row.getString(4),
-                LabTestTypeCode.valueOf(row.getString(5)),
+                row.getTimestamp(5).toInstant(),
                 row.getString(6),
-                row.getString(7),
-                row.getTimestamp(8).toInstant(),
-                row.getString(9),
-                row.getTimestamp(10).toInstant(),
-                row.getString(11),
-                row.getInt(12),
-                Optional.ofNullable(row.getString(13)).map(LocalDate::parse),
-                Optional.ofNullable(row.getString(14)),
-                Optional.ofNullable(row.getString(15)),
-                Optional.ofNullable(row.getTimestamp(16)).map(Timestamp::toInstant),
-                Optional.ofNullable(row.getString(17)), // reviewed by emp
-                Optional.ofNullable(row.getTimestamp(18)).map(Timestamp::toInstant),
-                Optional.ofNullable(row.getString(19)) // saved to facts by emp
+                row.getTimestamp(7).toInstant(),
+                row.getString(8),
+                row.getInt(9),
+                Optional.ofNullable(row.getString(10)).map(LocalDate::parse),
+                Optional.ofNullable(row.getString(11)),
+                Optional.ofNullable(row.getString(12)),
+                Optional.ofNullable(row.getTimestamp(13)).map(Timestamp::toInstant),
+                Optional.ofNullable(row.getString(14)), // reviewed by emp
+                Optional.ofNullable(row.getTimestamp(15)).map(Timestamp::toInstant),
+                Optional.ofNullable(row.getString(16)) // saved to facts by emp
             );
 
         return jdbc.queryForObject(sql, rowMapper, testId);
@@ -741,14 +708,11 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     {
         String contextSql =
             "select\n" +
-              "s.id sample_op_id, s.facts_status sample_facts_status, s.lab_group_id lab_group_id, lg.name lab_group, " +
-              "s.last_refreshed_from_facts, s.lid, s.pac, s.paf, s.product_name, " +
-              "s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num, s.sampling_org, " +
-              "t.id test_id, t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
+              "t.id test_id, t.op_id op_id, lg.name lab_group, " +
+              "t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
               "tt.name test_type_name, tt.code \"TEST_TYPE_CODE\"\n" +
-            "from sample_op s\n" +
+            "from test t\n" +
             "join lab_group lg on s.lab_group_id = lg.id\n" +
-            "join test t on t.sample_op_id = s.id\n" +
             "join test_type tt on t.test_type_id = tt.id\n" +
             "where t.id = ?";
 
@@ -761,8 +725,9 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
         return new TestAuditInfo(testTypeCode, testRow, contextRow);
     }
 
+    /*
     @Override
-    public List<SampleInTest> findTests
+    public List<SampleOpTest> findTests
         (
             Optional<String> searchText,
             Optional<Instant> fromTimestamp,
@@ -814,13 +779,13 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             "select " + TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR + " from test_v\n" +
             (!whereCriteria.isEmpty() ? "where " + join("\nand\n", whereCriteria): "");
 
-        RowMapper<SampleInTest> rowMapper = getTestVSampleInTestRowMapper();
+        RowMapper<SampleOpTest> rowMapper = getTestVSampleInTestRowMapper();
 
         return new NamedParameterJdbcTemplate(jdbc).query(sql, params, rowMapper);
     }
 
     // RowMapper creating SampleInTests from TEST_V rows, assuming column order specified in TESTV_SAMPLE_IN_TEST_MAPPED_COLS.
-    private RowMapper<SampleInTest> getTestVSampleInTestRowMapper()
+    private RowMapper<SampleOpTest> getTestVSampleInTestRowMapper()
     {
         return (row, rowNum) -> {
             LabTestMetadata tmd =
@@ -858,7 +823,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             long opId = row.getLong(29);
 
             Sample s =
-                new Sample(
+                new SampleOp(
                     tmd.getSampleId(),
                     tmd.getSampleNum(),
                     opId,
@@ -876,9 +841,10 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
                     Optional.empty()  // tests omitted
                 );
 
-            return new SampleInTest(s, tmd);
+            return new SampleOpTest(s, tmd);
         };
     }
+    */
 
     private static String md5(byte[] data)
     {

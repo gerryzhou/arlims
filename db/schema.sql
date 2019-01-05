@@ -63,7 +63,7 @@ create table EMPLOYEE
 (
   ID                     NUMBER(19) generated as identity
     primary key,
-  FACTS_PERSON_ID        NUMBER(19)
+  FACTS_PERSON_ID        NUMBER(19) not null
     constraint UN_EMP_FACTSPERSONID
       unique,
   FDA_EMAIL_ACCOUNT_NAME VARCHAR2(150 char) not null
@@ -133,88 +133,6 @@ create index IX_EMPROLE_ROLEID
   on EMPLOYEE_ROLE (ROLE_ID)
 /
 
-create table SAMPLE_OP
-(
-  ID                        NUMBER(19) generated as identity
-    primary key,
-  FACTS_STATUS              VARCHAR2(1 char)   not null,
-  FACTS_STATUS_TIMESTAMP    TIMESTAMP(6)       not null,
-  LAB_GROUP_ID              NUMBER(19)         not null
-    constraint FK_SMPOP_LABGROUP
-      references LAB_GROUP,
-  LAST_REFRESHED_FROM_FACTS TIMESTAMP(6)       not null,
-  LID                       VARCHAR2(20 char),
-  OPERATION_CODE            VARCHAR2(255 char) not null,
-  PAC                       VARCHAR2(20 char)  not null,
-  PAF                       VARCHAR2(20 char),
-  PRODUCT_NAME              VARCHAR2(100 char),
-  SAMPLE_ANALYSIS_ID        NUMBER(19)         not null,
-  SAMPLE_TRACKING_NUM       NUMBER(19)         not null,
-  SAMPLE_TRACKING_SUB_NUM   NUMBER(19)         not null,
-  SAMPLING_ORG              VARCHAR2(30 char),
-  SPLIT_IND                 VARCHAR2(1 char),
-  SUBJECT                   VARCHAR2(4000 char),
-  WORK_ID                   NUMBER(19)         not null
-    constraint UN_SMPOP_WORKID
-      unique,
-  WORK_REQUEST_ID           NUMBER(19)         not null
-)
-/
-
-create index IX_SMPOP_LABGRPID
-  on SAMPLE_OP (LAB_GROUP_ID)
-/
-
-create index IX_SMPOP_FACTSSTATUS
-  on SAMPLE_OP (FACTS_STATUS)
-/
-
-create table SAMPLE_OP_ASSIGNMENT
-(
-  ID               NUMBER(19) generated as identity
-    primary key,
-  ASSIGNED_INSTANT TIMESTAMP(6),
-  EMPLOYEE_ID      NUMBER(19) not null
-    constraint FK_SAMPOPAST_EMP
-      references EMPLOYEE,
-  LEAD             NUMBER(1),
-  SAMPLE_OP_ID     NUMBER(19) not null
-    constraint FK_SAMPOPAST_SMPOP
-      references SAMPLE_OP,
-  constraint UN_SMPOPAST_SMPIDEMPID
-    unique (SAMPLE_OP_ID, EMPLOYEE_ID)
-)
-/
-
-create index IX_SAMPOPAST_EMPID
-  on SAMPLE_OP_ASSIGNMENT (EMPLOYEE_ID)
-/
-
-create table SAMPLE_OP_REFRESH_NOTICE
-(
-  ID                           NUMBER(19) generated as identity
-    primary key,
-  ACTION                       VARCHAR2(50 char) not null,
-  INBOX_ITEM_ACCOMPLISHING_ORG VARCHAR2(50 char),
-  INBOX_ITEM_JSON              CLOB,
-  NOTICE                       VARCHAR2(4000 char),
-  SAMPLE_OP_JSON               CLOB,
-  SAMPLE_PARENT_ORG            VARCHAR2(50 char),
-  TIMESTAMP                    TIMESTAMP(6)      not null
-)
-/
-
-create index IX_SMPRFRNTC_TIMESTAMP
-  on SAMPLE_OP_REFRESH_NOTICE (TIMESTAMP)
-/
-
-create index IX_SMPRFRNTC_SMPPORG
-  on SAMPLE_OP_REFRESH_NOTICE (SAMPLE_PARENT_ORG)
-/
-
-create index IX_SMPRFRNTC_ITEMPORG
-  on SAMPLE_OP_REFRESH_NOTICE (INBOX_ITEM_ACCOMPLISHING_ORG)
-/
 
 create table TEST_TYPE
 (
@@ -277,9 +195,7 @@ create table TEST
   REVIEWED_BY_EMP_ID       NUMBER(19)
     constraint FK_TST_EMP_REVIEWED
       references EMPLOYEE,
-  SAMPLE_OP_ID             NUMBER(19)        not null
-    constraint FK_TST_RCVSMP
-      references SAMPLE_OP,
+  OP_ID             NUMBER(19)        not null,
   SAVED_TO_FACTS           TIMESTAMP(6),
   SAVED_TO_FACTS_BY_EMP_ID NUMBER(19)
     constraint FK_TST_EMP_SAVEDTOFACTS
@@ -297,8 +213,8 @@ create table TEST
 )
 /
 
-create index IX_TST_SMPOPID
-  on TEST (SAMPLE_OP_ID)
+create index IX_TST_OPID
+  on TEST (OP_ID)
 /
 
 create index IX_TST_TESTTYPEID

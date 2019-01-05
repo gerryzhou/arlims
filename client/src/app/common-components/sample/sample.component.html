@@ -32,14 +32,19 @@
             </span>
          </div>
 
-         <div *ngIf="sample.lid">
-            <span class="field-label">lid: </span>
-            <span class="field-value">{{sample.lid}}</span>
+         <div>
+            <span class="field-label">op: </span>
+            <span class="field-value">{{sample.opId}}</span>
          </div>
-         <div *ngIf="sample.paf">
-            <span class="field-label">paf: </span>
-            <span class="field-value">{{sample.paf}}</span>
-         </div>
+
+         <!--<div *ngIf="sample.lid">-->
+            <!--<span class="field-label">lid: </span>-->
+            <!--<span class="field-value">{{sample.lid}}</span>-->
+         <!--</div>-->
+         <!--<div *ngIf="sample.paf">-->
+            <!--<span class="field-label">paf: </span>-->
+            <!--<span class="field-value">{{sample.paf}}</span>-->
+         <!--</div>-->
 
          <div class="sampling-org-stack">
             <div *ngIf="sample.samplingOrganization">

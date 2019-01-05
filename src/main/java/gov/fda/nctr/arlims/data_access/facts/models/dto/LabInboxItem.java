@@ -1,16 +1,13 @@
 package gov.fda.nctr.arlims.data_access.facts.models.dto;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.node.TextNode;
+
+import gov.fda.nctr.arlims.data_access.facts.JsonTimestampToLocalDateDeserializer;
 
 
 public class LabInboxItem
@@ -115,11 +112,7 @@ public class LabInboxItem
 
     public Instant getRequestDate() { return requestDate; }
 
-//    @JsonIgnore
-//    public Optional<LocalDate> getScheduledCompletionDate() { return Optional.ofNullable(scheduledCompletionDate); }
-
     public LocalDate getScheduledCompletionDate() { return scheduledCompletionDate; }
-
 
     public String getSamplingOrg() { return samplingOrg; }
 
@@ -189,20 +182,6 @@ public class LabInboxItem
         ", assignedToWorkAssignmentDate=" + assignedToWorkAssignmentDate +
         '}';
     }
+
 }
 
-class JsonTimestampToLocalDateDeserializer extends JsonDeserializer<LocalDate>
-{
-    @Override
-    public LocalDate deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException
-    {
-        TextNode node = jp.getCodec().readTree(jp);
-        String dateString = node.textValue();
-
-        int spaceIx = dateString.indexOf(' ');
-        if ( spaceIx == -1 )
-            return LocalDate.parse(dateString);
-        else
-            return LocalDate.parse(dateString.substring(0, spaceIx));
-    }
-}

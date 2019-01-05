@@ -19,10 +19,7 @@ create index ix_test_testdatajson on test(test_data_json) indextype is ctxsys.co
 create or replace view test_v as
   select
     t.id test_id,
-    t.sample_op_id,
-    s.sample_tracking_num || '-' || s.sample_tracking_sub_num sample_num,
-    s.pac,
-    s.product_name,
+    t.op_id,
     tt.code type_code,
     tt.name type_name,
     tt.short_name type_short_name,
@@ -38,18 +35,8 @@ create or replace view test_v as
     re.short_name reviewed_by_emp,
     t.saved_to_facts,
     fe.short_name saved_to_facts_by_emp,
-    s.lid,
-    s.paf,
-    s.split_ind,
-    s.facts_status,
-    s.facts_status_timestamp facts_status_ts,
-    s.last_refreshed_from_facts,
-    s.sampling_org,
-    s.subject subject,
-    s.work_id operation_id,
     t.test_data_json
   from test t
-  join sample_op s on t.sample_op_id = s.id
   join test_type tt on t.test_type_id = tt.id
   join employee ce on ce.id = t.created_by_emp_id
   join employee se on se.id = t.last_saved_by_emp_id

@@ -1,4 +1,8 @@
+
+POSTING Test Results to FACTS
+-----------------------------
 Post to FACTS from within microbiology module directly after saving, using api urls service.
+  Move this logic out of the controller into a test-specific service.
 
 Text for API - only 5 or so codes, can just use a dropdown.
 Remove +/- field.

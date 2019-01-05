@@ -1,5 +1,7 @@
 package gov.fda.nctr.arlims.controllers;
 
+import java.util.concurrent.ExecutionException;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +32,9 @@ public class FactsController extends ControllerBase
         (
             @RequestBody MicrobiologySampleAnalysisSubmission subm
         )
+        throws ExecutionException, InterruptedException
     {
-        return factsSvc.submitMicrobiologySampleAnalysis(subm);
+        return factsSvc.submitMicrobiologySampleAnalysis(subm).get();
     }
 }
 

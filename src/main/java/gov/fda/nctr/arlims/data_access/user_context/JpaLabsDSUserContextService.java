@@ -2,10 +2,13 @@ package gov.fda.nctr.arlims.data_access.user_context;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import static java.util.Collections.emptyList;
+
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import javax.transaction.Transactional;
@@ -19,22 +22,22 @@ import org.springframework.stereotype.Service;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
+import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
 import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.LabResource;
-import gov.fda.nctr.arlims.models.dto.SampleAssignment;
 
 
 @Service
-public class JpaUserContextService extends ServiceBase implements UserContextService
+public class JpaLabsDSUserContextService extends ServiceBase implements UserContextService
 {
+    private final FactsAccessService factsAccessService;
     private final EmployeeRepository employeeRepo;
     private final LabGroupRepository labGroupRepo;
-    private final SampleOpRepository sampleOpRepo;
-    private final SampleOpAssignmentRepository sampleOpAssignmentRepo;
     private final TestRepository testRepo;
     private final LabResourceRepository labResourceRepo;
     private final RoleRepository roleRepo;
@@ -46,41 +49,91 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 
     private final Pattern barPattern = Pattern.compile("\\|");
 
-    private static List<String> USER_CONTEXT_SAMPLE_OP_STATUSES = Arrays.asList("S", "I", "O");
+    private static List<String> EMPLOYEE_INBOX_ACTIVE_STATUSES = Arrays.asList("S", "I", "T");
+    private static List<String> LAB_INBOX_ACTIVE_STATUSES = Arrays.asList("S", "I", "O");
 
-
-    public JpaUserContextService
+    public JpaLabsDSUserContextService
         (
+            FactsAccessService factsAccessService,
             EmployeeRepository employeeRepo,
             LabGroupRepository labGroupRepo,
-            SampleOpRepository sampleOpRepo,
-            SampleOpAssignmentRepository sampleOpAssignmentRepo,
             TestRepository testRepo,
             LabResourceRepository labResourceRepo,
             RoleRepository roleRepo,
+            AuditLogService dataChangeAuditingSvc,
             NamedParameterJdbcTemplate jdbcTemplate,
-            BCryptPasswordEncoder bcryptEncoder,
-            AuditLogService dataChangeAuditingSvc
+            BCryptPasswordEncoder bcryptEncoder
         )
     {
+        this.factsAccessService = factsAccessService;
         this.employeeRepo = employeeRepo;
         this.labGroupRepo = labGroupRepo;
-        this.sampleOpRepo = sampleOpRepo;
-        this.sampleOpAssignmentRepo = sampleOpAssignmentRepo;
         this.testRepo = testRepo;
         this.labResourceRepo = labResourceRepo;
         this.roleRepo = roleRepo;
+        this.dataChangeAuditingSvc = dataChangeAuditingSvc;
         this.jdbcTemplate = jdbcTemplate;
         this.bcryptEncoder = bcryptEncoder;
+
         this.usersByUsername = new ConcurrentHashMap<>(500);
-        this.dataChangeAuditingSvc = dataChangeAuditingSvc;
     }
 
     @Transactional
     @Override
-    public LabGroupContents getLabGroupContents(long employeeId)
+    public UserContext getUserContext(String username)
     {
-        LabGroup labGroup = this.labGroupRepo.findByEmployeeId(employeeId).orElseThrow(() ->
+        Employee emp = employeeRepo.findWithLabGroupByFdaEmailAccountName(username).orElseThrow(() ->
+            new ResourceNotFoundException("employee record not found")
+        );
+
+        CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
+            factsAccessService.getEmployeeInboxItems(
+                emp.getFactsPersonId(),
+                EMPLOYEE_INBOX_ACTIVE_STATUSES
+            );
+
+        LabGroup labGroup = emp.getLabGroup();
+
+        List<LabTestType> testTypes = getLabGroupTestTypes(labGroup);
+
+        List<UserReference> users = getLabGroupUsers(labGroup);
+
+        List<LabResource> labResources = getLabGroupLabResources(labGroup);
+
+        AppUser user = makeUser(emp);
+
+        usersByUsername.put(user.getUsername(), user);
+
+        try
+        {
+            List<SampleOp> userSampleOps = getUserActiveSamples(inboxItems$.get(), users);
+
+            return
+                new UserContext(
+                    user,
+                    new LabGroupContents(
+                        labGroup.getId(),
+                        labGroup.getName(),
+                        testTypes,
+                        users,
+                        userSampleOps,
+                        labResources
+                    )
+                );
+        }
+        catch (InterruptedException | ExecutionException e)
+        { throw new RuntimeException(e); }
+    }
+
+
+    @Transactional
+    @Override
+    public LabGroupContents getLabGroupContents(long factsPersonId)
+    {
+        CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
+            factsAccessService.getEmployeeInboxItems(factsPersonId, LAB_INBOX_ACTIVE_STATUSES);
+
+        LabGroup labGroup = this.labGroupRepo.findByFactsPersonId(factsPersonId).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
         );
 
@@ -88,20 +141,53 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
 
         List<UserReference> users = getLabGroupUsers(labGroup);
 
-        List<Sample> samples = getLabGroupActiveSamples(labGroup, users);
-
         List<LabResource> labResources = getLabGroupLabResources(labGroup);
 
-        return
-            new LabGroupContents(
-                labGroup.getId(),
-                labGroup.getName(),
-                testTypes,
-                users,
-                samples,
-                labResources
-            );
+        try
+        {
+            List<SampleOp> userSampleOps = getUserActiveSamples(inboxItems$.get(), users);
+
+            return
+                new LabGroupContents(
+                    labGroup.getId(),
+                    labGroup.getName(),
+                    testTypes,
+                    users,
+                    userSampleOps,
+                    labResources
+                );
+        }
+        catch (InterruptedException | ExecutionException e)
+        { throw new RuntimeException(e); }
+
     }
+
+    @Transactional
+    @Override
+    public AppUser loadUser(String username)
+    {
+        Employee emp = employeeRepo.findWithRolesByFdaEmailAccountName(username).orElseThrow(() ->
+            new UsernameNotFoundException("employee record not found for user '" + username + "'")
+        );
+
+        AppUser user = makeUser(emp);
+
+        usersByUsername.put(user.getUsername(), user);
+
+        return  user;
+    }
+
+    @Override
+    public AppUser getUser(String username)
+    {
+        AppUser user = usersByUsername.get(username);
+
+        if ( user != null )
+            return user;
+        else
+            return loadUser(username);
+    }
+
 
     @Transactional
     @Override
@@ -179,181 +265,62 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
         }
     }
 
-    @Transactional
-    @Override
-    public AppUser loadUser(String username)
+    private List<SampleOp> getUserActiveSamples
+        (
+            List<EmployeeInboxItem> inboxItems,
+            List<UserReference> labGroupUsers
+        )
     {
-        Employee emp = employeeRepo.findWithRolesByFdaEmailAccountName(username).orElseThrow(() ->
-            new UsernameNotFoundException("employee record not found for user '" + username + "'")
-        );
+        List<Long> opIds = inboxItems.stream().map(EmployeeInboxItem::getWorkId).collect(toList());
 
-        AppUser user = makeUser(emp);
+        Map<Long, List<Test>> testsByOpId = opIds.isEmpty() ? emptyMap()
+            : testRepo.findByOpIdIn(opIds).stream().collect(groupingBy(Test::getOpId));
 
-        usersByUsername.put(user.getUsername(), user);
-
-        return  user;
-    }
-
-    @Override
-    public AppUser getUser(String username)
-    {
-        AppUser user = usersByUsername.get(username);
-
-        if ( user != null )
-            return user;
-        else
-            return loadUser(username);
-    }
-
-    @Transactional
-    @Override
-    public UserContext getUserContext(String username)
-    {
-        Employee emp = employeeRepo.findWithLabGroupByFdaEmailAccountName(username).orElseThrow(() ->
-            new ResourceNotFoundException("employee record not found")
-        );
-
-        LabGroup labGroup = emp.getLabGroup();
-
-        List<LabTestType> testTypes = getLabGroupTestTypes(labGroup);
-
-        List<UserReference> users = getLabGroupUsers(labGroup);
-
-        List<Sample> samples = getLabGroupActiveSamples(labGroup, users);
-
-        List<LabResource> labResources = getLabGroupLabResources(labGroup);
-
-        AppUser user = makeUser(emp);
-
-        usersByUsername.put(user.getUsername(), user);
-
-        return
-            new UserContext(
-                user,
-                new LabGroupContents(
-                    labGroup.getId(),
-                    labGroup.getName(),
-                    testTypes,
-                    users,
-                    samples,
-                    labResources
-                )
-            );
-    }
-
-    private List<Sample> getLabGroupActiveSamples(LabGroup labGroup, List<UserReference> labGroupUsers)
-    {
-        List<SampleOp> dbSampleOps =
-            sampleOpRepo.findByLabGroupIdAndFactsStatusIn(labGroup.getId(), USER_CONTEXT_SAMPLE_OP_STATUSES);
-
-        List<Long> sampleOpIds = dbSampleOps.stream().map(SampleOp::getId).collect(toList());
+        Map<Long, Integer> fileCountsByTestId = getAttachedFileCountsByTestIdForTestOpIds(opIds);
 
         Map<Long, UserReference> usersById =
             labGroupUsers.stream()
             .collect(Collectors.toMap(UserReference::getEmployeeId, userRef -> userRef));
 
-        Map<Long, List<SampleAssignment>> sampleAssignmentsBySampleOpId = getSampleAssignmentsBySampleOpId(sampleOpIds, usersById);
-
-        Map<Long, List<Test>> testsBySampleOpId = getTestsBySampleOpId(sampleOpIds);
-
-        Map<Long, Integer> attachedFileCountsByTestId = getAttachedFileCountsByTestId(sampleOpIds);
-
         return
-            dbSampleOps.stream()
-            .map(dbSample -> {
-                long sampleOpId = dbSample.getId();
-
-                List<SampleAssignment> assignments =
-                    sampleAssignmentsBySampleOpId.getOrDefault(sampleOpId, emptyList());
+            inboxItems.stream()
+            .map(inboxItem -> {
+                long opId = inboxItem.getWorkId();
 
                 List<LabTestMetadata> tests =
-                    testsBySampleOpId.getOrDefault(sampleOpId, emptyList()).stream()
+                    testsByOpId.getOrDefault(opId, emptyList()).stream()
                     .map(test -> {
-                        int numAttachedFiles = attachedFileCountsByTestId.getOrDefault(test.getId(),0);
-                        return makeLabTestMetadata(test, dbSample, numAttachedFiles, usersById);
+                        int numAttachedFiles = fileCountsByTestId.getOrDefault(test.getId(),0);
+                        return makeLabTestMetadata(test, inboxItem, numAttachedFiles, usersById);
                     })
                     .collect(toList());
 
-                String sampleNum = dbSample.getSampleTrackingNumber() + "-" +
-                                   dbSample.getSampleTrackingSubNumber();
-
-                return
-                    new Sample(
-                        dbSample.getId(),
-                        sampleNum,
-                        dbSample.getWorkId(),
-                        dbSample.getPac(),
-                        opt(dbSample.getLid()),
-                        opt(dbSample.getPaf()),
-                        dbSample.getProductName(),
-                        opt(dbSample.getSplitInd()),
-                        dbSample.getFactsStatus(),
-                        dbSample.getFactsStatusTimestamp(),
-                        dbSample.getLastRefreshedFromFacts(),
-                        opt(dbSample.getSamplingOrganization()),
-                        opt(dbSample.getSubject()),
-                        opt(assignments),
-                        opt(tests)
-                    );
+                return makeSampleOp(inboxItem, tests);
             })
             .collect(toList());
     }
 
-    private Map<Long, Integer> getAttachedFileCountsByTestId(List<Long> testSampleOpIds)
+    private Map<Long, Integer> getAttachedFileCountsByTestIdForTestOpIds(List<Long> opIds)
     {
         Map<Long, Integer> res = new HashMap<>();
 
-        if ( testSampleOpIds.isEmpty() )
+        if ( opIds.isEmpty() )
             return res;
 
         String sql =
             "select tf.test_id, count(*) files\n" +
             "from test_file tf\n" +
-            "where tf.test_id in (select t.id from test t where t.sample_op_id in (:sampleOpIds))\n" +
+            "where tf.test_id in (select t.id from test t where t.op_id in (:opIds))\n" +
             "group by tf.test_id";
 
         Map<String,Object> params = new HashMap<>();
-        params.put("sampleOpIds", testSampleOpIds);
+        params.put("opIds", opIds);
 
         jdbcTemplate.query(sql, params, rs -> {
             res.put(rs.getLong(1), rs.getInt(2));
         });
 
         return res;
-    }
-
-    private Map<Long, List<Test>> getTestsBySampleOpId(List<Long> sampleOpIds)
-    {
-        return !sampleOpIds.isEmpty() ?
-            testRepo.findBySampleOpIdIn(sampleOpIds).stream().collect(groupingBy(Test::getSampleOpId))
-            : new HashMap<>();
-    }
-
-    private Map<Long, List<SampleAssignment>> getSampleAssignmentsBySampleOpId
-        (
-            List<Long> sampleOpIds,
-            Map<Long, UserReference> usersById
-        )
-    {
-        if ( sampleOpIds.isEmpty() )
-            return new HashMap<>();
-        else return
-            sampleOpAssignmentRepo.findBySampleOpIdIn(sampleOpIds).stream()
-            .map(a -> {
-                String empShortName =
-                    opt(usersById.get(a.getEmployeeId()))
-                    .map(UserReference::getShortName)
-                    .orElse("NA");
-
-                return
-                    new SampleAssignment(
-                        a.getSampleOpId(),
-                        empShortName,
-                        opt(a.getAssignedInstant()),
-                        opt(a.getLead())
-                    );
-            })
-            .collect(groupingBy(SampleAssignment::getSampleId));
     }
 
     private List<LabTestType> getLabGroupTestTypes(LabGroup labGroup)
@@ -377,7 +344,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     private List<String> parseReportNames(String namesBarSeparated)
     {
         if ( namesBarSeparated == null )
-            return Collections.emptyList();
+            return emptyList();
         else
             return Arrays.asList(barPattern.split(namesBarSeparated));
     }
@@ -401,7 +368,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
     private LabTestMetadata makeLabTestMetadata
         (
             Test t,
-            SampleOp s,
+            EmployeeInboxItem inboxItem,
             int attachedFilesCount,
             Map<Long, UserReference> usersById
         )
@@ -426,16 +393,14 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
             .flatMap(empId -> opt(usersById.get(empId)))
             .map(UserReference::getShortName);
 
-        String sampleNum = s.getSampleTrackingNumber() + "-" +
-                           s.getSampleTrackingSubNumber();
-
         return
             new LabTestMetadata(
                 t.getId(),
-                s.getId(),
-                sampleNum,
-                s.getPac(),
-                s.getProductName(),
+                inboxItem.getWorkId(),
+                inboxItem.getTdSampleNumber(),
+                inboxItem.getSampleTrackingSubNum(),
+                inboxItem.getPacCode(),
+                inboxItem.getCfsanProductDesc(),
                 t.getTestType().getCode(),
                 t.getTestType().getName(),
                 t.getTestType().getShortName(),
@@ -454,6 +419,38 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
             );
     }
 
+    private SampleOp makeSampleOp(EmployeeInboxItem inboxItem, List<LabTestMetadata> tests)
+    {
+        SampleOpAssignment assignment =
+            new SampleOpAssignment(
+                inboxItem.getPersonId(),
+                inboxItem.getFirstName(),
+                inboxItem.getLastName(),
+                opt(inboxItem.getMdlIntlName()),
+                opt(inboxItem.getLeadInd())
+            );
+
+        return
+            new SampleOp(
+                inboxItem.getWorkId(),
+                inboxItem.getTdSampleNumber(),
+                inboxItem.getSampleTrackingSubNum(),
+                inboxItem.getPacCode(),
+                opt(inboxItem.getLid()),
+                opt(inboxItem.getPaf()),
+                inboxItem.getCfsanProductDesc(),
+                inboxItem.getSplitInd(),
+                inboxItem.getStatusCode(),
+                inboxItem.getStatusDate(),
+                Instant.now(),
+                opt(inboxItem.getSamplingOrg()),
+                opt(inboxItem.getSubjectText()),
+                opt(tests),
+                opt(singletonList(assignment))
+            );
+    }
+
+
     private AppUser makeUser(Employee emp)
     {
         List<RoleName> roleNames = emp.getRoles().stream().map(Role::getName).collect(toList());
@@ -464,7 +461,7 @@ public class JpaUserContextService extends ServiceBase implements UserContextSer
             new AppUser(
                 emp.getId(),
                 emp.getFdaEmailAccountName(),
-                opt(emp.getFactsPersonId()),
+                emp.getFactsPersonId(),
                 emp.getShortName(),
                 emp.getLabGroupId(),
                 lg.getName(),

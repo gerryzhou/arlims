@@ -9,8 +9,8 @@ import javax.validation.constraints.*;
 @Table(
     uniqueConstraints = {
         @UniqueConstraint(name="UN_EMP_FDAEMAILACCN", columnNames = {"FDA_EMAIL_ACCOUNT_NAME"}),
-        @UniqueConstraint(name="UN_EMP_SHORTNAMELABGRP", columnNames = {"SHORT_NAME", "LAB_GROUP_ID"}),
         @UniqueConstraint(name="UN_EMP_FACTSPERSONID", columnNames = {"FACTS_PERSON_ID"}),
+        @UniqueConstraint(name="UN_EMP_SHORTNAMELABGRP", columnNames = {"SHORT_NAME", "LAB_GROUP_ID"}),
     },
     indexes = {
         @Index(name = "IX_EMP_LABGROUPID", columnList = "LAB_GROUP_ID"),
@@ -24,6 +24,9 @@ public class Employee
     @Column(name = "FDA_EMAIL_ACCOUNT_NAME", nullable = false) @Size(max = 150) @NotBlank
     private String fdaEmailAccountName;
 
+    @Column(name = "FACTS_PERSON_ID") @NotNull
+    private Long factsPersonId;
+
     @Column(name = "SHORT_NAME", nullable = false) @Size(max = 10) @NotBlank
     private String shortName;
 
@@ -32,9 +35,6 @@ public class Employee
 
     @Column(name = "LAB_GROUP_ID", insertable = false, updatable = false, nullable = false)
     private Long labGroupId;
-
-    @Column(name = "FACTS_PERSON_ID")
-    private Long factsPersonId;
 
     @Size(max = 200)
     private String password;
@@ -70,7 +70,7 @@ public class Employee
             @Size(max = 150) @NotBlank String fdaEmailAccountName,
             @Size(max = 10) @NotBlank String shortName,
             @NotNull LabGroup labGroup,
-            Long factsPersonId,
+            @NotNull Long factsPersonId,
             @Size(max = 200) String password,
             @Size(max = 60) @NotBlank String lastName,
             @Size(max = 60) @NotBlank String firstName,

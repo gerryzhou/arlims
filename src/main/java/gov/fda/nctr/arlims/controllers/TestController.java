@@ -2,7 +2,6 @@ package gov.fda.nctr.arlims.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +56,7 @@ public class TestController extends ControllerBase
     @PostMapping("new")
     public CreatedTestMetadata createTest
         (
-            @RequestParam("sampleId") long sampleOpId,
+            @RequestParam("opId") long opId,
             @RequestParam("testTypeCode") LabTestTypeCode testTypeCode,
             @RequestParam("testBeginDate") String testBeginDate,
             Authentication authentication
@@ -65,9 +64,9 @@ public class TestController extends ControllerBase
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        long createdTestId = testDataService.createTest(sampleOpId, testTypeCode, testBeginDate, currentUser);
+        long createdTestId = testDataService.createTest(opId, testTypeCode, testBeginDate, currentUser);
 
-        return new CreatedTestMetadata(sampleOpId, createdTestId);
+        return new CreatedTestMetadata(opId, createdTestId);
     }
 
     @DeleteMapping("{testId:\\d+}")
@@ -218,8 +217,9 @@ public class TestController extends ControllerBase
         testDataService.deleteTestAttachedFile(testId, attachedFileId, currentUser);
     }
 
+    /*
     @GetMapping("search")
-    public List<SampleInTest> findTests
+    public List<SampleOpTest> findTests
         (
             @RequestParam(value="tq",  required=false) Optional<String>  searchText,
             @RequestParam(value="fts", required=false) Optional<Instant> fromTimestamp,
@@ -253,6 +253,7 @@ public class TestController extends ControllerBase
                 labTestTypeCodes
             );
     }
+    */
 
     @GetMapping("{testId:\\d+}/report/{reportName}")
     public ResponseEntity<InputStreamResource> getTestDataReport

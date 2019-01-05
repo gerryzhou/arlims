@@ -3,7 +3,6 @@ package gov.fda.nctr.arlims.models.dto;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +13,7 @@ public class AppUser
 {
     private final long employeeId;
     private final String username;
-    private final Optional<Long> factsPersonId;
+    private final long factsPersonId;
     private final String shortName;
     private final long labGroupId;
     private String labGroupName;
@@ -32,7 +31,7 @@ public class AppUser
         (
             long employeeId,
             String username,
-            Optional<Long> factsPersonId,
+            long factsPersonId,
             String shortName,
             long labGroupId,
             String labGroupName,
@@ -63,7 +62,7 @@ public class AppUser
 
     public String getUsername() { return username; }
 
-    public Optional<Long> getFactsPersonId() { return factsPersonId; }
+    public Long getFactsPersonId() { return factsPersonId; }
 
     public String getShortName() { return shortName; }
 

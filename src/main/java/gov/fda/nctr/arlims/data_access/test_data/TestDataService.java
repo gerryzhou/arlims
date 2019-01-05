@@ -11,7 +11,7 @@ import gov.fda.nctr.arlims.models.dto.*;
 
 public interface TestDataService
 {
-    long createTest(long sampleOpId, LabTestTypeCode testTypeCode, String testBeginDate, AppUser user);
+    long createTest(long opId, LabTestTypeCode testTypeCode, String testBeginDate, AppUser user);
 
     void deleteTest(long testId, AppUser deletingUser);
 
@@ -37,7 +37,8 @@ public interface TestDataService
 
     void deleteTestAttachedFile(long testId, long attachedFileId, AppUser user);
 
-    List<SampleInTest> findTests
+    /*
+    List<SampleOpTest> findTests
         (
             Optional<String> searchText,
             Optional<Instant> fromTimestamp,
@@ -46,4 +47,5 @@ public interface TestDataService
             Optional<List<String>> sampleOpStatusCodes,
             Optional<List<String>> labTestTypeCodes
         );
+    */
 }
