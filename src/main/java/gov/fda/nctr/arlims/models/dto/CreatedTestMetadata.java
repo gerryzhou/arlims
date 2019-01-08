@@ -2,16 +2,16 @@ package gov.fda.nctr.arlims.models.dto;
 
 public class CreatedTestMetadata
 {
-    private long sampleId;
+    private long sampleOpId;
     private long createdTestId;
 
-    public CreatedTestMetadata(long sampleId, long createdTestId)
+    public CreatedTestMetadata(long sampleOpId, long createdTestId)
     {
-        this.sampleId = sampleId;
+        this.sampleOpId = sampleOpId;
         this.createdTestId = createdTestId;
     }
 
-    public long getSampleId() { return sampleId; }
+    public long getSampleOpId() { return sampleOpId; }
 
     public long getCreatedTestId() { return createdTestId; }
 }

@@ -11,7 +11,9 @@ import {
    CreatedTestMetadata,
    DataModificationInfo,
    LabTestTypeCode,
-   OptimisticDataUpdateResult, SampleInTest, TestAttachedFileMetadata,
+   OptimisticDataUpdateResult,
+   SampleOpTest,
+   TestAttachedFileMetadata,
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
@@ -31,7 +33,7 @@ export class TestsService {
 
    createTest
       (
-         sampleId: number,
+         sampleOpId: number,
          testTypeCode: LabTestTypeCode,
          testBeginDate: string
       )
@@ -40,9 +42,9 @@ export class TestsService {
       const url = this.apiUrlsSvc.newTestUrl();
       const body =
          new HttpParams()
-         .set('sampleId', sampleId.toString())
-         .set('testTypeCode', testTypeCode)
-         .set('testBeginDate', testBeginDate);
+         .set('opId', sampleOpId.toString())
+         .set('typeCode', testTypeCode)
+         .set('beginDate', testBeginDate);
 
       return this.httpClient.post<CreatedTestMetadata>(url, body);
    }
@@ -241,7 +243,7 @@ export class TestsService {
          includeStatusCodes: SampleOpStatusCode[] | null,
          includeTestTypeCodes: LabTestTypeCode[] | null
       )
-      : Observable<SampleInTest[]>
+      : Observable<SampleOpTest[]>
    {
       const searchUrl =
          this.apiUrlsSvc.testsSearchUrl(
@@ -253,7 +255,7 @@ export class TestsService {
             includeTestTypeCodes
          );
 
-      return this.httpClient.get<SampleInTest[]>(searchUrl);
+      return this.httpClient.get<SampleOpTest[]>(searchUrl);
    }
 
    getTestModifyingEmployeeIds(testId: number): Observable<number[]>

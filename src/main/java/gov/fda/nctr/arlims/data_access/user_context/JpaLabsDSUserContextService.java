@@ -159,7 +159,6 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         }
         catch (InterruptedException | ExecutionException e)
         { throw new RuntimeException(e); }
-
     }
 
     @Transactional

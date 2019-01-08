@@ -57,8 +57,8 @@ public class TestController extends ControllerBase
     public CreatedTestMetadata createTest
         (
             @RequestParam("opId") long opId,
-            @RequestParam("testTypeCode") LabTestTypeCode testTypeCode,
-            @RequestParam("testBeginDate") String testBeginDate,
+            @RequestParam("typeCode") LabTestTypeCode testTypeCode,
+            @RequestParam("beginDate") String testBeginDate,
             Authentication authentication
         )
     {

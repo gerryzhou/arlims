@@ -6,7 +6,7 @@ import * as FileSaver from 'file-saver';
 import {TestsService} from '../../../../../shared/services';
 import {emptyTestData, TestData} from '../../test-data';
 import {LabGroupTestData} from '../../../../../shared/models/lab-group-test-data';
-import {SampleInTest, AuditLogEntry} from '../../../../../../generated/dto';
+import {SampleOpTest, AuditLogEntry} from '../../../../../../generated/dto';
 import {IMP_SLM_VIDAS_PDF_REPORT_NAME, makePdfReportData} from '../pdf-report-data';
 
 @Component({
@@ -16,7 +16,7 @@ import {IMP_SLM_VIDAS_PDF_REPORT_NAME, makePdfReportData} from '../pdf-report-da
 })
 export class TestReportsListingComponent
 {
-   sampleInTest: SampleInTest;
+   sampleOpTest: SampleOpTest;
    testData: TestData;
    auditLogEntries: AuditLogEntry[] | null;
 
@@ -27,7 +27,7 @@ export class TestReportsListingComponent
       )
    {
       const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
-      this.sampleInTest = labGroupTestData.sampleInTest;
+      this.sampleOpTest = labGroupTestData.sampleOpTest;
       const verTestData = labGroupTestData.versionedTestData;
       this.testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       this.auditLogEntries = labGroupTestData.auditLogEntries || null;
@@ -37,7 +37,7 @@ export class TestReportsListingComponent
    {
       const reportTestData = makePdfReportData(this.testData, this.auditLogEntries);
 
-      const testId = this.sampleInTest.testMetadata.testId;
+      const testId = this.sampleOpTest.testMetadata.testId;
 
       this.testsSvc.getTestReportBlobForPostedTestData(testId, IMP_SLM_VIDAS_PDF_REPORT_NAME, reportTestData)
          .pipe(

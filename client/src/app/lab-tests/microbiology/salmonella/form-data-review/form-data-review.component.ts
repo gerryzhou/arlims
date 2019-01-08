@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {LabResource, TestAttachedFileMetadata, SampleInTest} from '../../../../../generated/dto';
+import {LabResource, TestAttachedFileMetadata, SampleOpTest} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {emptyTestData, makeTestDataFormGroup} from '../test-data';
 import {TestConfig} from '../test-config';
@@ -30,7 +30,7 @@ export class FormDataReviewComponent implements OnInit {
 
    readonly attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
-   readonly sampleInTest: SampleInTest;
+   readonly sampleOpTest: SampleOpTest;
 
    readonly testConfig: TestConfig;
 
@@ -52,7 +52,7 @@ export class FormDataReviewComponent implements OnInit {
       const testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username);
       this.testDataForm.disable();
-      this.sampleInTest = labGroupTestData.sampleInTest;
+      this.sampleOpTest = labGroupTestData.sampleOpTest;
       this.testConfig = labGroupTestData.labGroupTestConfig;
 
       this.attachedFilesByTestPart = makeAttachedFilesByTestPartMap(labGroupTestData);

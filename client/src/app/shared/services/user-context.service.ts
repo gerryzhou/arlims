@@ -8,8 +8,8 @@ import {
    UserContext,
    LabGroupContents,
    AppUser,
-   Sample,
-   SampleInTest,
+   SampleOp,
+   SampleOpTest,
    LabTestType,
    LabResource,
    LabResourceType,
@@ -26,7 +26,7 @@ export class UserContextService {
    private labGroupContentsLastUpdated: Date | null = null;
 
    private labGroupContents$: ReplaySubject<LabGroupContents>;
-   private testIdToSampleInTest$: ReplaySubject<Map<number, SampleInTest>>;
+   private testIdToSampleOpTest$: ReplaySubject<Map<number, SampleOpTest>>;
    private testTypeCodeToLabGroupTestConfigJson$: ReplaySubject<Map<string, string>>;
    private labResourcesByType$: ReplaySubject<Map<string, LabResource[]>>;
 
@@ -108,12 +108,12 @@ export class UserContextService {
       return this.labGroupContents$;
    }
 
-   getSampleInTest(testId: number): Observable<SampleInTest | undefined>
+   getSampleOpTest(testId: number): Observable<SampleOpTest | undefined>
    {
       if ( !this.authenticatedUser.getValue() )
          return throwError('authenticated user required for this operation');
 
-      return this.testIdToSampleInTest$.pipe(map(m => m.get(testId)));
+      return this.testIdToSampleOpTest$.pipe(map(m => m.get(testId)));
    }
 
    getLabGroupTestConfigJson(testTypeCode: string): Observable<string | undefined>
@@ -144,13 +144,13 @@ export class UserContextService {
    private refreshLabGroupContentsVia(lgContents$: Observable<LabGroupContents>)
    {
       this.labGroupContents$ = new ReplaySubject(1);
-      this.testIdToSampleInTest$ = new ReplaySubject<Map<number, SampleInTest>>(1);
+      this.testIdToSampleOpTest$ = new ReplaySubject<Map<number, SampleOpTest>>(1);
       this.testTypeCodeToLabGroupTestConfigJson$ = new ReplaySubject<Map<string, string>>(1);
       this.labResourcesByType$ = new ReplaySubject<Map<string, LabResource[]>>(1);
 
       this.labGroupContents$
-         .pipe( map(lgContents => UserContextService.getSampleInTestsByTestId(lgContents.activeSamples)) )
-         .subscribe(this.testIdToSampleInTest$);
+         .pipe( map(lgContents => UserContextService.getSampleOpTestsByTestId(lgContents.activeSamples)) )
+         .subscribe(this.testIdToSampleOpTest$);
 
       this.labGroupContents$
          .pipe( map(lgContents => UserContextService.getLabGroupTestConfigJsonsByTestTypeCode(lgContents.supportedTestTypes)) )
@@ -181,14 +181,16 @@ export class UserContextService {
       );
    }
 
-   private static getSampleInTestsByTestId(samples: Sample[]): Map<number, SampleInTest>
+   private static getSampleOpTestsByTestId(samples: SampleOp[]): Map<number, SampleOpTest>
    {
-      const m = new Map<number, SampleInTest>();
+      const m = new Map<number, SampleOpTest>();
+
       for (const s of samples) {
          for (const t of s.tests) {
-            m.set(t.testId, { sample: s, testMetadata: t });
+            m.set(t.testId, { sampleOp: s, testMetadata: t });
          }
       }
+
       return m;
    }
 

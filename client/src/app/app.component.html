@@ -4,10 +4,10 @@
          <button mat-button routerLink="/samples" [routerLinkActive]="['active-route']">
             <mat-icon>home</mat-icon> ALIS
          </button>
-         <button mat-button routerLink="/tests-search" [routerLinkActive]="['active-route']">
-            <mat-icon>search</mat-icon> Search
-         </button>
-
+         <!-- TODO: Re-enable tests search here when backend is modified for api-based sample metadata. -->
+         <!--<button mat-button routerLink="/tests-search" [routerLinkActive]="['active-route']">-->
+            <!--<mat-icon>search</mat-icon> Search-->
+         <!--</button>-->
          <mat-menu #linksMenu="matMenu">
             <a *ngIf="authenticatedUserIsAdmin$ | async" mat-menu-item routerLink="/register-users">
                Register new users

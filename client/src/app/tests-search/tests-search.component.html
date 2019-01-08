@@ -11,12 +11,12 @@
 
 
 <div>
-   <app-sample *ngFor="let sample of resultSamples | async"
-      [sample]="sample"
+   <app-sample *ngFor="let sampleOp of resultSampleOps | async"
+      [sample]="sampleOp"
       [showAssociatedItems]="true"
       [showAssociatedItemsSummaryInSampleMetadata]="true"
       [showTestDeleteButtons]="false"
-      (headerClick)="toggleSampleExpanded(sample.id)">
+      (headerClick)="toggleSampleExpanded(sampleOp.opId)">
    </app-sample>
 </div>
 

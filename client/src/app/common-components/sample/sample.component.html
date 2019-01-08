@@ -8,8 +8,9 @@
 
          <div class="sample-pac-stack">
             <div>
-               <span class="field-label"></span>
-               <span class="field-value">{{sample.sampleNumber}}</span>
+               <span class="field-value">
+                  {{sample.sampleTrackingNum}}-{{sample.sampleTrackingSubNum}}
+               </span>
             </div>
             <div>
                <span class="field-label">pac: </span>
@@ -23,12 +24,13 @@
          </div>
 
          <div class="employee-assignments">
-            <span  class="assigned-employee" *ngFor="let assignment of sample.assignments">
-               <mat-icon>assignment_ind</mat-icon>
-               <span *ngIf="assignment.lead && sample.assignments.length > 1">*</span>
-               <span class="assigned-employee-name" [ngClass]="{'lead-employee-name': assignment.lead}">
-                  {{assignment.employeeShortName}}
-               </span>
+            <!-- NOTE Currently only the current user's assignment is displayed here.
+                 If the server eventually delivers assignments for other users in
+                 the samples within the lab contents, then add ui support for those
+                 assignments here.
+            -->
+            <span *ngIf="sample.assignments.length == 1">
+               {{sample.assignments[0].leadInd === 'Y' ? 'LEAD' : 'NOT LEAD'}}
             </span>
          </div>
 
@@ -37,14 +39,14 @@
             <span class="field-value">{{sample.opId}}</span>
          </div>
 
-         <!--<div *ngIf="sample.lid">-->
-            <!--<span class="field-label">lid: </span>-->
-            <!--<span class="field-value">{{sample.lid}}</span>-->
-         <!--</div>-->
-         <!--<div *ngIf="sample.paf">-->
-            <!--<span class="field-label">paf: </span>-->
-            <!--<span class="field-value">{{sample.paf}}</span>-->
-         <!--</div>-->
+         <div *ngIf="sample.lid">
+            <span class="field-label">lid: </span>
+            <span class="field-value">{{sample.lid}}</span>
+         </div>
+         <div *ngIf="sample.paf">
+            <span class="field-label">paf: </span>
+            <span class="field-value">{{sample.paf}}</span>
+         </div>
 
          <div class="sampling-org-stack">
             <div *ngIf="sample.samplingOrganization">

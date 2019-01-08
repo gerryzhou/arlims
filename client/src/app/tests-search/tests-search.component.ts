@@ -4,7 +4,7 @@ import {catchError, map} from 'rxjs/operators';
 
 import {AlertMessageService, TestsService} from '../shared/services';
 import {TestsSearchQuery} from './query/tests-search-query';
-import {Sample, SampleInTest} from '../../generated/dto';
+import {SampleOp, SampleOpTest} from '../../generated/dto';
 
 @Component({
    selector: 'app-tests-search',
@@ -15,9 +15,9 @@ export class TestsSearchComponent {
 
    query: TestsSearchQuery;
 
-   readonly resultSamples = new BehaviorSubject<Sample[]>([]); // result tests organized under their samples
+   readonly resultSampleOps = new BehaviorSubject<SampleOp[]>([]); // result tests organized under their samples
 
-   readonly expandedSampleIds = new Set<number>();
+   readonly expandedSampleOpIds = new Set<number>();
 
    readonly defaultQuery: TestsSearchQuery = {
       searchText: null,
@@ -60,44 +60,44 @@ export class TestsSearchComponent {
             return [];
          })
       )
-      .subscribe(results => this.resultSamples.next(results));
+      .subscribe(results => this.resultSampleOps.next(results));
    }
 
-   toggleSampleExpanded(sampleId: number)
+   toggleSampleExpanded(sampleOpId: number)
    {
-      if ( this.expandedSampleIds.has(sampleId) )
+      if ( this.expandedSampleOpIds.has(sampleOpId) )
       {
-         this.expandedSampleIds.delete(sampleId);
+         this.expandedSampleOpIds.delete(sampleOpId);
       }
       else
       {
-         this.expandedSampleIds.add(sampleId);
+         this.expandedSampleOpIds.add(sampleOpId);
       }
    }
 }
 
-function organizeTestsBySample(sampleInTests: SampleInTest[]): Sample[]
+function organizeTestsBySample(sampleOpTests: SampleOpTest[]): SampleOp[]
 {
-   const samplesById = new Map();
+   const samplesByOpId = new Map();
 
-   for ( const sampleInTest of sampleInTests )
+   for ( const sampleOpTest of sampleOpTests )
    {
-      let sample: Sample;
+      let sampleOp: SampleOp;
 
-      if ( samplesById.has(sampleInTest.sample.id) )
-         sample = samplesById.get(sampleInTest.sample.id);
+      if ( samplesByOpId.has(sampleOpTest.sampleOp.opId) )
+         sampleOp = samplesByOpId.get(sampleOpTest.sampleOp.opId);
       else
       {
-         sample = sampleInTest.sample;
-         samplesById.set(sample.id, sample);
+         sampleOp = sampleOpTest.sampleOp;
+         samplesByOpId.set(sampleOp.opId, sampleOp);
       }
-      if ( !sample.tests )
-         sample.tests = [sampleInTest.testMetadata];
+      if ( !sampleOp.tests )
+         sampleOp.tests = [sampleOpTest.testMetadata];
       else
-         sample.tests.push(sampleInTest.testMetadata);
+         sampleOp.tests.push(sampleOpTest.testMetadata);
    }
 
-   return Array.from(samplesById.values());
+   return Array.from(samplesByOpId.values());
 }
 
 

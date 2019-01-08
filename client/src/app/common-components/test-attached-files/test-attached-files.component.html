@@ -1,6 +1,6 @@
-<div class="sample-in-test-information" *ngIf="sampleInTest">
-   <app-sample [sample]="sampleInTest.sample"></app-sample>
-   <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
+<div class="sample-op-test-information" *ngIf="sampleOpTest">
+   <app-sample [sample]="sampleOpTest.sampleOp"></app-sample>
+   <div class="test-type">{{sampleOpTest.testMetadata.testTypeShortName}}</div>
 </div>
 
 <div class="content-stack">
@@ -68,7 +68,7 @@
       </table>
 
       <mat-paginator
-         #resultSetsPaginator
+         #attachedFilesPaginator
          [pageSize]="25"
          [pageSizeOptions]="[25, 50, 100, 1000]"
          [showFirstLastButtons]="true">

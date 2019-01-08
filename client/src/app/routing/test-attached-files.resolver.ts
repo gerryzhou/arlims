@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Observable, throwError, zip} from 'rxjs';
 import {TestsService, UserContextService} from '../shared/services';
-import {SampleInTest, TestAttachedFileMetadata} from '../../generated/dto';
+import {SampleOpTest, TestAttachedFileMetadata} from '../../generated/dto';
 import {map} from 'rxjs/operators';
 
 
@@ -21,17 +21,17 @@ export class TestAttachedFilesResolver implements Resolve<TestAttachedFiles> {
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
       const attachedFiles$ = this.testsService.getTestAttachedFilesMetadatas(testId);
-      const sampleInTest$ = this.usrCtxSvc.getSampleInTest(testId);
+      const sampleOpTest$ = this.usrCtxSvc.getSampleOpTest(testId);
 
-      return zip(attachedFiles$, sampleInTest$).pipe(
-         map(([attachedFiles, sampleInTest]) => (
-            { attachedFiles, sampleInTest }
+      return zip(attachedFiles$, sampleOpTest$).pipe(
+         map(([attachedFiles, sampleOpTest]) => (
+            { attachedFiles, sampleOpTest }
          ))
       );
    }
 }
 
 export interface TestAttachedFiles {
-   sampleInTest: SampleInTest;
+   sampleOpTest: SampleOpTest;
    attachedFiles: TestAttachedFileMetadata[];
 }

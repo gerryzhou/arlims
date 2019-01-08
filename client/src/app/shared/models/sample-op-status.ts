@@ -15,3 +15,19 @@ export const SAMPLE_OP_STATUSES: SampleOpStatus[] = [
    {code: 'C', displayName: 'Complete'},
 ];
 
+export function factsStatusTextFromCode(factsStatus: string)
+{
+   switch (factsStatus)
+   {
+      // most common, "active" codes
+      case 'S': return 'Assigned';          // assigned to individual analyst(s)
+      case 'I': return 'In Progress';       // analyst(s) work in progress
+      case 'O': return 'Original Completed'; // analyst work completed, ready for final review and sign-off
+      // less-used codes
+      case 'P': return 'Pending';  // initial status, prior to being received at lab facility
+      case 'A': return 'Accepted'; // received at facility but not yet assigned: ready for admin to assign to user
+      case 'C': return 'Complete'; // final status, all done
+      default: return factsStatus;
+   }
+}
+

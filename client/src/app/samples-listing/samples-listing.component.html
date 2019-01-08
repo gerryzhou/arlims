@@ -11,7 +11,7 @@
    </div>
 
    <button mat-button type="button" (click)="expandOrContractAllSamples()">
-      {{expandedSampleIds.size > 0 ? 'collapse samples' : 'expand samples'}}
+      {{expandedSampleOpIds.size > 0 ? 'collapse samples' : 'expand samples'}}
    </button>
 
    <app-samples-listing-options
@@ -23,12 +23,7 @@
       <mat-menu #refreshDataMenu="matMenu">
          <div class="menu-item" >
             <button mat-button type="button" (click)="reload()">
-               refresh from database
-            </button>
-         </div>
-         <div class="menu-item" >
-            <button class="menu-item" mat-button type="button" (click)="refreshFromFacts()">
-               update database from FACTS and refresh from database
+               refresh from FACTS
             </button>
          </div>
       </mat-menu>
@@ -41,11 +36,12 @@
 </div> <!-- control area -->
 
 <div>
-   <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
-      <mat-checkbox [(ngModel)]="selectableSamples[sampleIx].selected" (change)="clearSelectAllCheckbox()"></mat-checkbox>
+   <div class="sample-container" *ngFor="let sampleOpIx of visibleSampleOpIxs">
+      <mat-checkbox [(ngModel)]="selectableSampleOps[sampleOpIx].selected" (change)="clearSelectAllCheckbox()">
+      </mat-checkbox>
       <app-sample
-         [sample]="selectableSamples[sampleIx].sample"
-         [showAssociatedItems]="expandedSampleIds.has(selectableSamples[sampleIx].sample.id)"
+         [sample]="selectableSampleOps[sampleOpIx].sampleOp"
+         [showAssociatedItems]="expandedSampleOpIds.has(selectableSampleOps[sampleOpIx].sampleOp.opId)"
          [showAssociatedItemsSummaryInSampleMetadata]="true"
          [labGroupTestTypes]="labGroupTestTypes"
          [showTestDeleteButtons]="showTestDeleteButtons"
@@ -53,7 +49,7 @@
          (testDeleteFailed)="onTestDeleteFailed($event)"
          (testCreated)="onNewTestCreated($event)"
          (testCreationFailed)="onTestCreationFailed($event)"
-         (headerClick)="toggleSampleExpanded(selectableSamples[sampleIx].sample.id)">
+         (headerClick)="toggleSampleExpanded(selectableSampleOps[sampleOpIx].sampleOp.opId)">
       </app-sample>
    </div>
 </div>

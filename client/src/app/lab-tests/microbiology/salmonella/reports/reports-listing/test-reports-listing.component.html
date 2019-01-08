@@ -1,13 +1,13 @@
-<div class="sample-in-test-information">
-   <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
-   <app-sample [sample]="sampleInTest.sample"></app-sample>
+<div class="sample-op-test">
+   <div class="test-type">{{sampleOpTest.testMetadata.testTypeShortName}}</div>
+   <app-sample [sample]="sampleOpTest.sampleOp"></app-sample>
 </div>
 
 
 <div class="reports-stack">
 
    <mat-card class="report">
-      <a [routerLink]="['../../reports/form-data-review', sampleInTest.testMetadata.testId]">Form data review</a>
+      <a [routerLink]="['../../reports/form-data-review', sampleOpTest.testMetadata.testId]">Form data review</a>
 
       <p>
          This report provides a read-only view of the test data as entered in the data entry forms, with all test

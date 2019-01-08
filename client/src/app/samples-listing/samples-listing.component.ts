@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {flatMap, map, take} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
@@ -10,13 +10,10 @@ import {
    LabGroupContents,
    LabTestMetadata,
    LabTestType,
-   Sample,
-   SampleOpFailure, SampleOpIdent,
-   SampleOpsRefreshResults
+   SampleOp
 } from '../../generated/dto';
 import {AlertMessageService, UserContextService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
-import {LabGroupService} from '../shared/services/lab-group-service';
 import {SampleOpStatusCode} from '../shared/models/sample-op-status';
 
 @Component({
@@ -26,16 +23,16 @@ import {SampleOpStatusCode} from '../shared/models/sample-op-status';
 })
 export class SamplesListingComponent {
 
-   selectableSamples: SelectableSample[]; // all samples in context, before any filtering or sorting
+   selectableSampleOps: SelectableSample[]; // all samples in context, before any filtering or sorting
 
    // samples to be displayed, having survived filters and optionally undergone sorting
-   visibleSampleIxs: number[];
+   visibleSampleOpIxs: number[];
 
    limitSelectionToVisibleSamples: boolean;
 
    showTestDeleteButtons: boolean;
 
-   expandedSampleIds = new Set<number>();
+   expandedSampleOpIds = new Set<number>();
 
    hiddenSelectedCount = 0;
 
@@ -46,7 +43,6 @@ export class SamplesListingComponent {
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
    readonly defaultListingOptions: ListingOptions = {
-      includeSamplesAssignedOnlyToOtherUsers: false,
       limitSelectionToVisibleSamples: true,
       showTestDeleteButtons: false,
       includeStatuses: ['P', 'A', 'S', 'I', 'O'],
@@ -55,22 +51,21 @@ export class SamplesListingComponent {
    constructor
        (
           private usrCtxSvc: UserContextService,
-          private labGroupSvc: LabGroupService,
           private alertMsgSvc: AlertMessageService,
           private activatedRoute: ActivatedRoute,
           private router: Router,
        )
    {
       // TODO: This expanded samples state would be better transferred via service.
-      const expandedSampleIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
-      if (expandedSampleIdsStr)
+      const expandedSampleOpIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
+      if ( expandedSampleOpIdsStr )
       {
-         for (const sampleIdStr of expandedSampleIdsStr.split(','))
+         for (const sampleOpIdStr of expandedSampleOpIdsStr.split(','))
          {
-            const sampleId = +sampleIdStr;
-            if (sampleId)
+            const sampleOpId = +sampleOpIdStr;
+            if (sampleOpId)
             {
-               this.expandedSampleIds.add(sampleId);
+               this.expandedSampleOpIds.add(sampleOpId);
             }
          }
       }
@@ -82,7 +77,7 @@ export class SamplesListingComponent {
    refeshFromLabGroupContents(labGroupContents: LabGroupContents)
    {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
-      this.selectableSamples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
+      this.selectableSampleOps = labGroupContents.activeSamples.map(s => new SelectableSample(s));
       this.applyFilters(this.defaultListingOptions);
       this.contentsLastLoaded = moment();
    }
@@ -98,13 +93,12 @@ export class SamplesListingComponent {
    {
       this.hiddenSelectedCount = 0;
       const visibleIxs: number[] = [];
-      for (let i = 0; i < this.selectableSamples.length; ++i)
+      for (let i = 0; i < this.selectableSampleOps.length; ++i)
       {
-         const selectableSample = this.selectableSamples[i];
+         const selectableSampleOp = this.selectableSampleOps[i];
          const passesFilters =
-            this.sampleSatisfiesSearchTextRequirement(selectableSample.sample, listingOptions) &&
-            this.sampleSatisfiesUserAssignmentRequirement(selectableSample.sample, listingOptions) &&
-            this.sampleSatisfiesStatusCodeRequirement(selectableSample.sample, listingOptions);
+            this.sampleSatisfiesSearchTextRequirement(selectableSampleOp.sampleOp, listingOptions) &&
+            this.sampleSatisfiesStatusCodeRequirement(selectableSampleOp.sampleOp, listingOptions);
 
          if ( passesFilters )
          {
@@ -112,83 +106,87 @@ export class SamplesListingComponent {
          }
          else
          {
-            if (listingOptions.limitSelectionToVisibleSamples) { selectableSample.selected = false; }
-            else if (selectableSample.selected) { this.hiddenSelectedCount++; }
+            if (listingOptions.limitSelectionToVisibleSamples) { selectableSampleOp.selected = false; }
+            else if (selectableSampleOp.selected) { this.hiddenSelectedCount++; }
          }
       }
-      this.visibleSampleIxs = visibleIxs;
+      this.visibleSampleOpIxs = visibleIxs;
    }
 
-   toggleSampleExpanded(sampleId: number)
+   toggleSampleExpanded(sampleOpId: number)
    {
-      if (this.expandedSampleIds.has(sampleId))
+      if (this.expandedSampleOpIds.has(sampleOpId))
       {
-         this.expandedSampleIds.delete(sampleId);
+         this.expandedSampleOpIds.delete(sampleOpId);
       }
       else
       {
-         this.expandedSampleIds.add(sampleId);
+         this.expandedSampleOpIds.add(sampleOpId);
       }
    }
 
    expandOrContractAllSamples()
    {
-      if (this.expandedSampleIds.size > 0)
+      if (this.expandedSampleOpIds.size > 0)
       {
-         this.expandedSampleIds.clear();
+         this.expandedSampleOpIds.clear();
       }
       else
       {
-         this.visibleSampleIxs.forEach(sampleIx =>
-            this.expandedSampleIds.add(this.selectableSamples[sampleIx].sample.id)
+         this.visibleSampleOpIxs.forEach(sampleOpIx =>
+            this.expandedSampleOpIds.add(this.selectableSampleOps[sampleOpIx].sampleOp.opId)
          );
       }
    }
 
-   private sampleSatisfiesSearchTextRequirement(sample: Sample, listingOptions: ListingOptions): boolean
+   private sampleSatisfiesSearchTextRequirement
+      (
+         sample: SampleOp,
+         listingOptions: ListingOptions
+      )
+      : boolean
    {
       return !listingOptions.searchText || listingOptions.searchText.trim().length === 0 ||
          sample.productName.toLowerCase().includes(listingOptions.searchText.toLowerCase());
    }
 
-   private sampleSatisfiesUserAssignmentRequirement(sample: Sample, listingOptions: ListingOptions): boolean
-   {
-      const userShortName = this.usrCtxSvc.getAuthenticatedUser().getValue().shortName;
-
-      return listingOptions.includeSamplesAssignedOnlyToOtherUsers ||
-         sample.assignments.findIndex(a => a.employeeShortName === userShortName) !== -1;
-   }
-
-   private sampleSatisfiesStatusCodeRequirement(sample: Sample, listingOptions: ListingOptions): boolean
+   private sampleSatisfiesStatusCodeRequirement
+      (
+         sample: SampleOp,
+         listingOptions: ListingOptions
+      )
+      : boolean
    {
       const sampleStatus = sample.factsStatus as SampleOpStatusCode;
       return listingOptions.includeStatuses.includes(sampleStatus);
    }
 
-   get selectedVisibleSamples(): Sample[]
+   get selectedVisibleSamples(): SampleOp[]
    {
-      const selectedSamples: Sample[] = [];
-      for (const sampleIx of this.visibleSampleIxs)
+      const selectedSamples: SampleOp[] = [];
+      for (const sampleOpIx of this.visibleSampleOpIxs)
       {
-         const selectableSample = this.selectableSamples[sampleIx];
+         const selectableSample = this.selectableSampleOps[sampleOpIx];
          if (selectableSample.selected)
          {
-            selectedSamples.push(selectableSample.sample);
+            selectedSamples.push(selectableSample.sampleOp);
          }
       }
       return selectedSamples;
    }
 
-   get selectedSamples(): Sample[]
+   get selectedSamples(): SampleOp[]
    {
-      const selectedSamples: Sample[] = [];
-      for (const selectableSample of this.selectableSamples)
+      const selectedSamples: SampleOp[] = [];
+
+      for (const selectableSample of this.selectableSampleOps)
       {
          if (selectableSample.selected)
          {
-            selectedSamples.push(selectableSample.sample);
+            selectedSamples.push(selectableSample.sampleOp);
          }
       }
+
       return selectedSamples;
    }
 
@@ -206,18 +204,18 @@ export class SamplesListingComponent {
 
    selectAllVisible()
    {
-      for (const sampleIx of this.visibleSampleIxs)
+      for (const sampleIx of this.visibleSampleOpIxs)
       {
-         this.selectableSamples[sampleIx].selected = true;
+         this.selectableSampleOps[sampleIx].selected = true;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
 
    unselectAllVisible()
    {
-      for (const sampleIx of this.visibleSampleIxs)
+      for (const sampleIx of this.visibleSampleOpIxs)
       {
-         this.selectableSamples[sampleIx].selected = false;
+         this.selectableSampleOps[sampleIx].selected = false;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
@@ -233,7 +231,7 @@ export class SamplesListingComponent {
    countSelected(): number
    {
       let selectedCount = 0;
-      for (const selectableSample of this.selectableSamples)
+      for (const selectableSample of this.selectableSampleOps)
       {
          if (selectableSample.selected)
          {
@@ -278,58 +276,15 @@ export class SamplesListingComponent {
 
       return reload$;
    }
-
-   refreshFromFacts()
-   {
-      this.labGroupSvc.refreshSampleOpsInUserParentOrg()
-      .pipe(
-         flatMap(refreshRes => this.reload().pipe(
-            map(() => this.presentFactsRefreshResults(refreshRes))
-         )),
-         take(1),
-      )
-      .subscribe(
-         null,
-         err => this.alertMsgSvc.alertDanger('Failed to refresh from FACTS: ' + (err.message ? ': ' + err.message + '.' : '.'))
-      );
-   }
-
-   private presentFactsRefreshResults(res: SampleOpsRefreshResults)
-   {
-      const failed: SampleOpFailure[] =
-         [].concat(
-            res.creationResults.failedSampleOps,
-            res.updateResults.failedSampleOps,
-            res.unmatchedStatusUpdateResults.failedSampleOps
-         );
-
-      const successCount =
-         res.creationResults.succeededSampleOps.length +
-         res.updateResults.succeededSampleOps.length +
-         res.unmatchedStatusUpdateResults.succeededSampleOps.length;
-
-      if ( failed.length === 0 )
-         this.alertMsgSvc.alertSuccess('Refresh from FACTS succeeded with ' + successCount + ' samples affected.');
-      else
-      {
-         const detailLines = failed.map(failure => describeSampleOpIdent(failure.sampleOpIdent) + ': ' + failure.error);
-         this.alertMsgSvc.alertWarning('Refresh from FACTS completed with some errors:', detailLines);
-      }
-   }
-}
-
-function describeSampleOpIdent(sampleOpIdent: SampleOpIdent): string
-{
-   return sampleOpIdent.sampleNum + '-' + sampleOpIdent.sampleSubNum + ' (op=' + sampleOpIdent.opId + ')';
 }
 
 class SelectableSample {
-   sample: Sample;
+   sampleOp: SampleOp;
    selected: boolean;
 
-   constructor(sample: Sample)
+   constructor(sampleOp: SampleOp)
    {
-      this.sample = sample;
+      this.sampleOp = sampleOp;
       this.selected = false;
    }
 }

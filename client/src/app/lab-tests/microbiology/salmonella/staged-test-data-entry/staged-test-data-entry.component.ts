@@ -12,7 +12,7 @@ import {
    AppUser,
    LabResource,
    TestAttachedFileMetadata,
-   SampleInTest,
+   SampleOpTest,
    TestSaveData,
    MicrobiologySampleAnalysisSubmissionResponse, MicrobiologySampleAnalysisSubmission, MicrobiologyAnalysisFinding
 } from '../../../../../generated/dto';
@@ -54,7 +54,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    readonly attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
-   readonly sampleInTest: SampleInTest;
+   readonly sampleOpTest: SampleOpTest;
 
    readonly appUser: AppUser | null;
 
@@ -113,7 +113,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
       this.attachedFilesByTestPart = makeAttachedFilesByTestPartMap(labGroupTestData);
 
-      this.sampleInTest = labGroupTestData.sampleInTest;
+      this.sampleOpTest = labGroupTestData.sampleOpTest;
       this.appUser = labGroupTestData.appUser;
 
       const stageParamValue = activatedRoute.snapshot.paramMap.get('stage');
@@ -162,7 +162,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       const testData = this.testDataForm.value;
 
       this.testsSvc.saveTestData(
-         this.sampleInTest.testMetadata.testId,
+         this.sampleOpTest.testMetadata.testId,
          testData,
          this.originalTestData,
          this.originalTestDataMd5,
@@ -252,9 +252,9 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    promptSaveTestDataToFile()
    {
-      const s = this.sampleInTest.sample;
+      const s = this.sampleOpTest.sampleOp;
       const td = this.testDataForm.value;
-      const tmd = this.sampleInTest.testMetadata;
+      const tmd = this.sampleOpTest.testMetadata;
 
       const saveData: TestSaveData = {
          testId: tmd.testId,
@@ -266,7 +266,9 @@ export class StagedTestDataEntryComponent implements OnInit {
 
       const ts = moment().format('YYYY-MM-DD[@]HHmmss');
 
-      FileSaver.saveAs(blob, `${ts} ${s.sampleNumber} ${tmd.testTypeShortName}.json`, true);
+      const fileName = `${ts} ${s.sampleTrackingNum}-${s.sampleTrackingSubNum} ${tmd.testTypeShortName}.json`;
+
+      FileSaver.saveAs(blob, fileName, true);
    }
 
    restoreTestDataFromSaveFile(files: FileList)
@@ -289,7 +291,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.testDataForm.markAsPristine();
       // TODO: Set sample to expand as state in new context samples service instead of in the url.
       this.usrCtxSvc.refreshLabGroupContents();
-      this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleInTest.sample.id));
+      this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleOpTest.sampleOp.opId));
    }
 
    private shouldSubmitVidasAnalysisResults(testData: TestData): boolean
@@ -297,12 +299,12 @@ export class StagedTestDataEntryComponent implements OnInit {
       return vidasStatusCode(testData) === 'c';
    }
 
-   /* TODO
+   /* TODO: Move this out into a separate (test-specific) service and complete.
    private submitVidasAnalysisResults(testData: TestData): Observable<MicrobiologySampleAnalysisSubmissionResponse>
    {
       // TODO: Should check test data for completeness here as values are extracted.
 
-      const sample = this.sampleInTest.sample;
+      const sample = this.sampleOpTest.sample;
       const positivesCount = countValueOccurrences(testData.vidasData.testUnitDetections, true);
       const samplingMethod = testData.preEnrData.samplingMethod;
       if ( !samplingMethod.testUnitsType )

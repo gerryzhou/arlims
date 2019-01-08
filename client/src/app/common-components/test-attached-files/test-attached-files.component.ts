@@ -9,7 +9,7 @@ import * as FileSaver from 'file-saver';
 import {FilesSelectorComponent} from '../files-selector/files-selector.component';
 import {TestAttachedFiles} from '../../routing/test-attached-files.resolver';
 import {AlertMessageService, ApiUrlsService, TestsService, UserContextService} from '../../shared/services';
-import {CreatedTestAttachedFiles, TestAttachedFileMetadata, SampleInTest} from '../../../generated/dto';
+import {TestAttachedFileMetadata, SampleOpTest} from '../../../generated/dto';
 import {AttachedFileMetadataDialogComponent} from '../attached-file-metadata-dialog/attached-file-metadata-dialog.component';
 import {AttachedFileMetadataDialogData} from '../attached-file-metadata-dialog/attached-file-metadata-dialog-data';
 
@@ -35,7 +35,7 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
    @Output()
    attachedFilesChange = new EventEmitter<TestAttachedFileMetadata[]>();
 
-   readonly sampleInTest: SampleInTest | null;
+   readonly sampleOpTest: SampleOpTest | null;
 
    // table of currently attached files
    readonly attachedFilesTableDataSource: MatTableDataSource<TestAttachedFileMetadata>;
@@ -62,8 +62,8 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
    {
       const testAttachedFiles = <TestAttachedFiles>this.activatedRoute.snapshot.data['testAttachedFiles'];
       this.attachedFiles = testAttachedFiles ? testAttachedFiles.attachedFiles : [];
-      this.sampleInTest = testAttachedFiles ? testAttachedFiles.sampleInTest : null;
-      this.testId = testAttachedFiles ? testAttachedFiles.sampleInTest.testMetadata.testId : null;
+      this.sampleOpTest = testAttachedFiles ? testAttachedFiles.sampleOpTest : null;
+      this.testId = testAttachedFiles ? testAttachedFiles.sampleOpTest.testMetadata.testId : null;
       this.attachedFilesTableDataSource = new MatTableDataSource<TestAttachedFileMetadata>(this.attachedFiles);
    }
 
@@ -111,7 +111,7 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
          +this.newAttachmentsForm.get('ordering').value,
          this.testDataPart
       ).subscribe(
-         (res: CreatedTestAttachedFiles) => {
+         () => { // ignoring CreatedTestAttachedFiles result
             this.filesSelector.clearFiles();
             this.newAttachmentsForm.reset();
             this.refreshAttachedFiles();

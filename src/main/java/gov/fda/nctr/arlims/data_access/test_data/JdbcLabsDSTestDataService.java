@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,39 +22,46 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
+import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.*;
 
 
 @Service
-public class JdbcTestDataService extends ServiceBase implements TestDataService
+public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataService
 {
     private final JdbcTemplate jdbc;
+    private final FactsAccessService factsAccessService;
     private final AuditLogService auditLogSvc;
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
 
 
-    public JdbcTestDataService
+    public JdbcLabsDSTestDataService
         (
             JdbcTemplate jdbcTemplate,
+            FactsAccessService factsAccessService,
             AuditLogService auditLogSvc
         )
     {
         this.jdbc = jdbcTemplate;
+        this.factsAccessService = factsAccessService;
         this.auditLogSvc = auditLogSvc;
+
     }
 
     @Transactional
     @Override
     public long createTest
         (
-            long opId,
+            long sampleOpId,
             LabTestTypeCode testTypeCode,
             String testBeginDate,
             AppUser user
@@ -76,7 +84,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
         PreparedStatementCreator psc = conn -> {
             final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
-            ps.setLong(1, opId);
+            ps.setLong(1, sampleOpId);
             ps.setString(2, testTypeCode.toString());
             ps.setLong(3, user.getEmployeeId());
             ps.setString(4, testBeginDate);
@@ -326,12 +334,6 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
     @Override
     public LabTestMetadata getTestMetadata(long testId)
     {
-        // TODO: Need to fetch this basic sample/op metadata from modified WorkDetails (or new) LABSDS api endpoint.
-        long sampleTrackingNum = 1234567;
-        long sampleTrackingSubNum = 0;
-        String productName = "DUMMY PRODUCT";
-        String pac = "1234";
-
         String sql =
             "select " +
             "t.op_id, tt.code, tt.name, tt.short_name, t.created, " +
@@ -348,32 +350,44 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
             "left join employee fe on fe.id = t.last_saved_by_emp_id\n" +
             "where t.id = ?";
 
-        RowMapper<LabTestMetadata> rowMapper = (row, rowNum) ->
-            new LabTestMetadata(
-                testId,
-                row.getLong(1),
-                sampleTrackingNum,
-                sampleTrackingSubNum,
-                pac,
-                productName,
-                LabTestTypeCode.valueOf(row.getString(2)),
-                row.getString(3),
-                row.getString(4),
-                row.getTimestamp(5).toInstant(),
-                row.getString(6),
-                row.getTimestamp(7).toInstant(),
-                row.getString(8),
-                row.getInt(9),
-                Optional.ofNullable(row.getString(10)).map(LocalDate::parse),
-                Optional.ofNullable(row.getString(11)),
-                Optional.ofNullable(row.getString(12)),
-                Optional.ofNullable(row.getTimestamp(13)).map(Timestamp::toInstant),
-                Optional.ofNullable(row.getString(14)), // reviewed by emp
-                Optional.ofNullable(row.getTimestamp(15)).map(Timestamp::toInstant),
-                Optional.ofNullable(row.getString(16)) // saved to facts by emp
-            );
+        SqlRowSet rs = jdbc.queryForRowSet(sql, testId);
 
-        return jdbc.queryForObject(sql, rowMapper, testId);
+        if ( !rs.next() )
+            throw new RuntimeException("Test not found.");
+
+        long opId = rs.getLong(1);
+
+        try
+        {
+            SampleOpDetails sample = factsAccessService.getSampleOpDetails(opId).get();
+
+            return
+                new LabTestMetadata(
+                    testId,
+                    opId,
+                    sample.getSampleTrackingNum(),
+                    sample.getSampleTrackingSubNum(),
+                    sample.getPacCode(),
+                    sample.getCfsanProductDesc(),
+                    LabTestTypeCode.valueOf(rs.getString(2)),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getTimestamp(5).toInstant(),
+                    rs.getString(6),
+                    rs.getTimestamp(7).toInstant(),
+                    rs.getString(8),
+                    rs.getInt(9),
+                    Optional.ofNullable(rs.getString(10)).map(LocalDate::parse),
+                    Optional.ofNullable(rs.getString(11)),
+                    Optional.ofNullable(rs.getString(12)),
+                    Optional.ofNullable(rs.getTimestamp(13)).map(Timestamp::toInstant),
+                    Optional.ofNullable(rs.getString(14)), // reviewed by emp
+                    Optional.ofNullable(rs.getTimestamp(15)).map(Timestamp::toInstant),
+                    Optional.ofNullable(rs.getString(16)) // saved to facts by emp
+                );
+        }
+        catch (InterruptedException | ExecutionException e)
+        { throw new RuntimeException(e); }
     }
 
     @Override
@@ -824,7 +838,7 @@ public class JdbcTestDataService extends ServiceBase implements TestDataService
 
             Sample s =
                 new SampleOp(
-                    tmd.getSampleId(),
+                    tmd.getSampleOpId(),
                     tmd.getSampleNum(),
                     opId,
                     tmd.getPac(),

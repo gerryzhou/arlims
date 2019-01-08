@@ -1,10 +1,10 @@
 <form [formGroup]="testDataForm" (ngSubmit)="saveTestData()">
 
-   <div class="sample-in-test-information">
+   <div class="sample-op-test-info">
 
-      <app-sample [sample]="sampleInTest.sample"></app-sample>
+      <app-sample [sample]="sampleOpTest.sampleOp"></app-sample>
 
-      <div class="test-type">{{sampleInTest.testMetadata.testTypeShortName}}</div>
+      <div class="test-type">{{sampleOpTest.testMetadata.testTypeShortName}}</div>
 
       <button mat-button type="submit">Save</button>
 
@@ -58,7 +58,7 @@
       <mat-step label="VIDAS">
          <app-stage-vidas class="test-stage"
             [form]="testDataForm.get('vidasData')"
-            [testId]="sampleInTest.testMetadata.testId"
+            [testId]="sampleOpTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasInstruments]="vidasInstruments"
             [sampleTestUnitsCount]="sampleTestUnitsCount"
@@ -74,7 +74,7 @@
       <mat-step label="SLANT">
          <app-pos-cont class="test-stage"
             [form]="testDataForm.get('posContData')"
-            [testId]="sampleInTest.testMetadata.testId"
+            [testId]="sampleOpTest.testMetadata.testId"
             [stage]="'SLANT'"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
@@ -90,7 +90,7 @@
       <mat-step label="IDENT">
          <app-pos-cont class="test-stage"
             [form]="testDataForm.get('posContData')"
-            [testId]="sampleInTest.testMetadata.testId"
+            [testId]="sampleOpTest.testMetadata.testId"
             [stage]="'IDENT'"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"

@@ -1,9 +1,9 @@
-import {LabTestType, LabTestTypeCode, Sample} from '../../../generated/dto';
+import {LabTestType, LabTestTypeCode, SampleOp} from '../../../generated/dto';
 import {Moment} from 'moment';
 
 export interface NewTestInfo {
 
-   sample: Sample;
+   sampleOp: SampleOp;
    availableTestTypes: LabTestType[];
 
    selectedTestType: LabTestTypeCode;

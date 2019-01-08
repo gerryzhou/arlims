@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
@@ -54,6 +55,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     private static final String LAB_INBOX_RESOURCE = "LabsInbox";
     private static final String EMPLOYEE_INBOX_RESOURCE = "PersonInbox";
+    private static final String WORK_DETAILS_RESOURCE = "WorkDetails";
     private static final String SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE = "SampleAnalysesMicrobiology";
 
     private static final String UPPER_ALPHANUM ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -167,6 +169,27 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         List<LabInboxItem> inboxItems = Arrays.stream(resp.getBody()).collect(toList());
 
         return completedFuture(inboxItems);
+    }
+
+    @Override
+    @Async
+    // TODO: This won't work until LABS DS api supports the new fields requested here.
+    public CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId)
+    {
+        String includeFields = "workId,sampleTrackingNum,sampleTrackingSubNum,pacCode,cfsanProductDesc";
+
+        String uri =
+            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + WORK_DETAILS_RESOURCE)
+            .queryParam("workId", sampleOpId)
+            .queryParam("objectFilters", includeFields)
+            .build(false).encode().toUriString();
+
+        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
+
+        ResponseEntity<SampleOpDetails> resp =
+            restTemplate.exchange(uri, GET, reqEntity, SampleOpDetails.class);
+
+        return completedFuture(resp.getBody());
     }
 
     @Override

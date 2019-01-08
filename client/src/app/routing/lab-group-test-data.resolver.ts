@@ -26,10 +26,10 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       const testId = +route.paramMap.get('testId');
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
-      const sampleInTest$ = this.usrCtxSvc.getSampleInTest(testId);
-      const testConfig$ = sampleInTest$.pipe(
-         flatMap(sampleInTest =>
-            this.usrCtxSvc.getLabGroupTestConfigJson(sampleInTest.testMetadata.testTypeCode).pipe(
+      const sampleOpTest$ = this.usrCtxSvc.getSampleOpTest(testId);
+      const testConfig$ = sampleOpTest$.pipe(
+         flatMap(sampleOpTest =>
+            this.usrCtxSvc.getLabGroupTestConfigJson(sampleOpTest.testMetadata.testTypeCode).pipe(
                map(configJson => configJson ? JSON.parse(configJson) : null)
             )
          )
@@ -45,18 +45,18 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
             testConfig$,
             this.testsService.getVersionedTestData(testId),
             this.testsService.getTestAttachedFilesMetadatas(testId),
-            sampleInTest$,
+            sampleOpTest$,
             this.usrCtxSvc.getLabResourcesByType(),
             auditEntries$,
             this.usrCtxSvc.getAuthenticatedUser(),
          )
          .pipe(
-            map(([labGroupTestConfig, versionedTestData, attachedFiles, sampleInTest, labResourcesByType, auditLogEntries, appUser]) => (
+            map(([labGroupTestConfig, versionedTestData, attachedFiles, sampleOpTest, labResourcesByType, auditLogEntries, appUser]) => (
                {
                   labGroupTestConfig,
                   versionedTestData,
                   attachedFiles,
-                  sampleInTest,
+                  sampleOpTest,
                   labResourcesByType,
                   auditLogEntries,
                   appUser

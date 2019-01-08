@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import * as moment from 'moment';
 
-import {CreatedTestMetadata, LabTestMetadata, LabTestType, Sample} from '../../../generated/dto';
+import {CreatedTestMetadata, LabTestMetadata, LabTestType, SampleOp} from '../../../generated/dto';
 import {MatDialog} from '@angular/material';
 import {NewTestDialogComponent} from '../new-test-dialog/new-test-dialog.component';
 import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {factsStatusTextFromCode} from '../../shared/models/sample-op-status';
 
 
 @Component({
@@ -18,7 +19,7 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
 export class SampleComponent implements OnChanges {
 
    @Input()
-   sample: Sample;
+   sample: SampleOp;
 
    @Input()
    showAssociatedItems = false;
@@ -72,7 +73,7 @@ export class SampleComponent implements OnChanges {
       this.displayFactsStatusTimestamp =
          this.sample.factsStatusTimestamp ? moment(this.sample.factsStatusTimestamp).format('MMM D h:mm a')
          : '';
-      this.factsStatusText = this.factsStatusTextFromCode(this.sample.factsStatus);
+      this.factsStatusText = factsStatusTextFromCode(this.sample.factsStatus);
       this.factsStatusCssClass = this.factsStatusText.replace(/ /g, '-').toLowerCase();
 
       this.displayRefreshedFromFactsTimestamp =
@@ -101,7 +102,7 @@ export class SampleComponent implements OnChanges {
          if (t)
          {
             const beginDate = t.beginDate.format('YYYY-MM-DD');
-            this.testsSvc.createTest(t.sample.id, t.selectedTestType, beginDate).subscribe(
+            this.testsSvc.createTest(t.sampleOp.opId, t.selectedTestType, beginDate).subscribe(
                createdTestMd => {
                   this.testCreated.next(createdTestMd);
                },
@@ -139,21 +140,5 @@ export class SampleComponent implements OnChanges {
             );
          }
       });
-   }
-
-   private factsStatusTextFromCode(factsStatus: string)
-   {
-      switch (factsStatus)
-      {
-         // most common, "active" codes
-         case 'S': return 'Assigned';          // assigned to individual analyst(s)
-         case 'I': return 'In Progress';       // analyst(s) work in progress
-         case 'O': return 'Original Completed'; // analyst work completed, ready for final review and sign-off
-         // less-used codes
-         case 'P': return 'Pending';  // initial status, prior to being received at lab facility
-         case 'A': return 'Accepted'; // received at facility but not yet assigned: ready for admin to assign to user
-         case 'C': return 'Complete'; // final status, all done
-         default: return factsStatus;
-      }
    }
 }
