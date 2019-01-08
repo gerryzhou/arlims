@@ -105,7 +105,7 @@
             </app-conflicting-field-value>
          </div>
 
-         <div class="field-area" *ngIf="form.get(['samplingMethod', 'testUnitsType']).value === 'composite'"
+         <div class="field-area"
               [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
             <mat-form-field>
                <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
