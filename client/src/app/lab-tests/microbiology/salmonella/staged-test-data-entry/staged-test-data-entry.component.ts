@@ -36,8 +36,6 @@ import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {SampleTestUnits, TestUnitsType} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
-import {Observable} from 'rxjs';
-import {countValueOccurrences} from '../../../test-stages';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data-entry',
@@ -90,18 +88,19 @@ export class StagedTestDataEntryComponent implements OnInit {
    @ViewChild(StageSelEnrComponent)   selEnrComp: StageSelEnrComponent;
    @ViewChild(StageMBrothComponent)   mBrothComp: StageMBrothComponent;
    @ViewChild(StageVidasComponent)    vidasComp: StageVidasComponent;
-   @ViewChild(PosContComponent)       posContComp: PosContComponent; // TODO: This is now ambiguous, need to assign an id to each usage.
+   @ViewChild('slantPosContComp')     slantPosContComp: PosContComponent;
+   @ViewChild('identPosContComp')     identPosContComp: PosContComponent;
    @ViewChild(StageWrapupComponent)   wrapupComp: StageWrapupComponent;
    stageComps: any[];
 
    constructor
        (
-          private activatedRoute: ActivatedRoute,
-          private appUrlsSvc: AppInternalUrlsService,
           private testsSvc: TestsService,
-          private alertMsgSvc: AlertMessageService,
+          private usrCtxSvc: UserContextService,
+          private appUrlsSvc: AppInternalUrlsService,
           private router: Router,
-          private usrCtxSvc: UserContextService
+          private alertMsgSvc: AlertMessageService,
+          private activatedRoute: ActivatedRoute
        )
    {
       const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
@@ -150,7 +149,8 @@ export class StagedTestDataEntryComponent implements OnInit {
          this.selEnrComp,
          this.mBrothComp,
          this.vidasComp,
-         this.posContComp,
+         this.slantPosContComp,
+         this.identPosContComp,
          this.wrapupComp
       ];
    }
