@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
@@ -276,6 +277,28 @@ public class FakeFactsAccessService implements FactsAccessService
             ));
 
             return completedFuture(items);
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId)
+    {
+        try
+        {
+            SampleOpDetails sample = jsonObjectMapper.readValue(
+                "\"{workId\": 123456,\n" +
+                "\"sampleTrackingNum\": 804972,\n" +
+                "\"sampleTrackingSubNum\": 0,\n" +
+                "\"pacCode\": \"04019A\",\n" +
+                "\"cfsanProductDesc\": \"SMOKED TROUT\"}",
+                SampleOpDetails.class
+            );
+
+            return completedFuture(sample);
         }
         catch(Exception e)
         {

@@ -9,5 +9,7 @@ export interface TestConfig {
    positiveTestUnitsMinimumIsolatesPerSelectiveAgar?: number | null;
 
    positivesContinuationTestingSerologyRequired?: boolean | null;
+
+   aoacMethodCode?: string | null;
 }
 

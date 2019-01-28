@@ -164,6 +164,19 @@
 
       </div>
 
-   </div>
+      <div class="row">
+         <div class="field-area" [class.conflicted]="conflicts.methodRemarks !== undefined">
+            <mat-form-field class="remarks">
+               <input formControlName="methodRemarks" type="text" matInput placeholder="Method remarks">
+            </mat-form-field>
+            <app-conflicting-field-value
+               [conflictValue]="conflicts.methodRemarks"
+               [conflictWhoWhen]="conflictsWhoWhen"
+               (dismiss)="conflicts.methodRemarks = undefined">
+            </app-conflicting-field-value>
+         </div>
+      </div>
+
+   </div> <!-- content stack -->
 </form>
 

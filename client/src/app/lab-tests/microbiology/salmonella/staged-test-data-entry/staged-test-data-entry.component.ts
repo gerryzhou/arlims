@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import * as FileSaver from 'file-saver';
 
 import {copyWithMergedValuesFrom} from '../../../../shared/util/data-objects';
-import {AlertMessageService, defaultJsonFieldFormatter, TestsService, UserContextService} from '../../../../shared/services';
+import {AlertMessageService, defaultJsonFieldFormatter, SaveResult, TestsService, UserContextService} from '../../../../shared/services';
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
 import {
    AppUser,
@@ -14,7 +14,7 @@ import {
    TestAttachedFileMetadata,
    SampleOpTest,
    TestSaveData,
-   MicrobiologySampleAnalysisSubmissionResponse, MicrobiologySampleAnalysisSubmission, MicrobiologyAnalysisFinding
+   MicrobiologySampleAnalysisSubmissionResponse
 } from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
@@ -23,7 +23,7 @@ import {
    getTestStageStatuses, getVidasPositiveTestUnitNumbers,
    makeTestDataFormGroup,
    TEST_STAGES,
-   TestData, vidasStatusCode
+   TestData
 } from '../test-data';
 import {TestConfig} from '../test-config';
 import {StagePrepComponent} from '../stage-prep/stage-prep.component';
@@ -36,6 +36,7 @@ import {StageWrapupComponent} from '../stage-wrapup/stage-wrapup.component';
 import {SampleTestUnits, TestUnitsType} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
+import {FactsPostingService} from '../facts-posting.service';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data-entry',
@@ -46,11 +47,12 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    readonly testConfig: TestConfig | null;
 
-   // The original test data and its md5 are needed for detecting and merging concurrent updates to the same data.
+   // Original test data and md5 are for detecting and merging concurrent updates.
    originalTestData: TestData;
    originalTestDataMd5: string;
+   testIsNew: boolean;
 
-   readonly attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
+   readonly attachedFilesByTestPart: Map<string | null, TestAttachedFileMetadata[]>;
 
    readonly sampleOpTest: SampleOpTest;
 
@@ -64,6 +66,7 @@ export class StagedTestDataEntryComponent implements OnInit {
    conflictsTestData: TestData;
    conflictsEmployeeTimestamp: EmployeeTimestamp | null;
 
+   // Controls whether a null option is shown for some ui choice components.
    showUnsetAffordances = false;
 
    sampleTestUnitsType: TestUnitsType | null;
@@ -71,8 +74,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    vidasPositiveSampleTestUnitNumbers: number[] | null;
 
-   readonly stage: string | null;
-   readonly stageIndex: number | null;
+   readonly initialStageIndex: number | null;
 
    readonly balances: LabResource[] | undefined;
    readonly incubators: LabResource[] | undefined;
@@ -83,30 +85,34 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    // Keep component refs for individual test stages to dispatch hotkeys to functions on the currently selected component.
    @ViewChild('testStageStepper') testStageStepper: MatStepper;
-   @ViewChild(StagePrepComponent)     prepComp: StagePrepComponent;
-   @ViewChild(StagePreEnrComponent)   preEnrComp: StagePreEnrComponent;
-   @ViewChild(StageSelEnrComponent)   selEnrComp: StageSelEnrComponent;
-   @ViewChild(StageMBrothComponent)   mBrothComp: StageMBrothComponent;
-   @ViewChild(StageVidasComponent)    vidasComp: StageVidasComponent;
-   @ViewChild('slantPosContComp')     slantPosContComp: PosContComponent;
-   @ViewChild('identPosContComp')     identPosContComp: PosContComponent;
-   @ViewChild(StageWrapupComponent)   wrapupComp: StageWrapupComponent;
+   @ViewChild(StagePrepComponent) prepComp: StagePrepComponent;
+   @ViewChild(StagePreEnrComponent) preEnrComp: StagePreEnrComponent;
+   @ViewChild(StageSelEnrComponent) selEnrComp: StageSelEnrComponent;
+   @ViewChild(StageMBrothComponent) mBrothComp: StageMBrothComponent;
+   @ViewChild(StageVidasComponent) vidasComp: StageVidasComponent;
+   @ViewChild('slantPosContComp') slantPosContComp: PosContComponent;
+   @ViewChild('identPosContComp') identPosContComp: PosContComponent;
+   @ViewChild(StageWrapupComponent) wrapupComp: StageWrapupComponent;
    stageComps: any[];
 
+   readonly DEFAULT_AOAC_METHOD_CODE = 'T2004.03';
+
    constructor
-       (
-          private testsSvc: TestsService,
-          private usrCtxSvc: UserContextService,
-          private appUrlsSvc: AppInternalUrlsService,
-          private router: Router,
-          private alertMsgSvc: AlertMessageService,
-          private activatedRoute: ActivatedRoute
-       )
+   (
+      private factsPostingService: FactsPostingService,
+      private testsSvc: TestsService,
+      private usrCtxSvc: UserContextService,
+      private appUrlsSvc: AppInternalUrlsService,
+      private router: Router,
+      private alertMsgSvc: AlertMessageService,
+      private activatedRoute: ActivatedRoute
+   )
    {
       const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
       this.testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
 
       const verTestData = labGroupTestData.versionedTestData;
+      this.testIsNew = verTestData.testDataJson == null;
       this.originalTestData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
 
@@ -115,12 +121,12 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.sampleOpTest = labGroupTestData.sampleOpTest;
       this.appUser = labGroupTestData.appUser;
 
-      const stageParamValue = activatedRoute.snapshot.paramMap.get('stage');
-      this.stage =
-         stageParamValue ? stageParamValue
-         : (firstNonCompleteTestStageName(this.originalTestData, labGroupTestData.labGroupTestConfig) || 'WRAPUP');
-      const stageIx = TEST_STAGES.findIndex(ts => ts.name === this.stage);
-      this.stageIndex = stageIx !== -1 ? stageIx : null;
+      const initialStage =
+         activatedRoute.snapshot.paramMap.get('stage') ||
+         firstNonCompleteTestStageName(this.originalTestData, labGroupTestData.labGroupTestConfig) ||
+         'WRAPUP';
+      const stageIx = TEST_STAGES.findIndex(ts => ts.name === initialStage);
+      this.initialStageIndex = stageIx !== -1 ? stageIx : null;
 
       this.testDataForm = makeTestDataFormGroup(this.originalTestData, labGroupTestData.appUser.username);
 
@@ -157,9 +163,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    saveTestData()
    {
-      console.log('Saving test data: ', this.testDataForm.value);
-
-      const testData = this.testDataForm.value;
+      const testData = this.testDataForm.value as TestData;
 
       this.testsSvc.saveTestData(
          this.sampleOpTest.testMetadata.testId,
@@ -170,46 +174,183 @@ export class StagedTestDataEntryComponent implements OnInit {
          this.jsonFieldFormatter
       )
       .subscribe(
-         saveResults => {
-             if ( saveResults.saved )
-             {
-                this.alertMsgSvc.alertSuccess('Test data saved.', true);
-                /* TODO: Enable Vidas writing here when impl is finished.
-                if ( this.stage === 'VIDAS' && this.shouldSubmitVidasAnalysisResults(testData) )
-                {
-                   console.log('Saving Vidas analysis data to FACTS.');
-                   this.submitVidasAnalysisResults(testData).subscribe(factsSaveResponse => {
-                      console.log('FACTS response for Vidas submission: ', factsSaveResponse)
-                      this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
-                      this.doAfterSaveNavigation();
-                   });
-                }
-                else
-                */
-                this.doAfterSaveNavigation();
-             }
-             else
-             {
-                const conflicts = saveResults.mergeConflicts;
-                const modInfo = conflicts.dbModificationInfo;
-                const msg = `Changes were not saved due to conflicting changes made by ${modInfo.savedByUserShortName}, ` +
-                            'which should be highlighted below. Please adjust field values as necessary and save again.';
-                this.testDataForm.patchValue(conflicts.mergedTestData);
-                this.originalTestData = conflicts.dbTestData;
-                this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
-                this.conflictsTestData = copyWithMergedValuesFrom(emptyTestData(), conflicts.conflictingDbValues);
-                this.conflictsEmployeeTimestamp = {
-                   employeeShortName: modInfo.savedByUserShortName,
-                   timestamp: moment(modInfo.savedInstant, moment.ISO_8601).toDate(),
-                };
-                this.alertMsgSvc.alertWarning(msg);
-             }
+         (saveResult: SaveResult) => {
+            if ( saveResult.savedMd5 )
+               this.onTestDataSaveSuccess(testData, saveResult.savedMd5);
+            else
+               this.onTestDataSaveConflict(saveResult);
          },
-         err => {
-            console.log('Error occurred while trying to save test data, details below:');
-            console.log(err);
-            this.alertMsgSvc.alertDanger('An error occurred while trying to save test data. The test data may not have been saved.');
-         });
+         err => this.onTestDataSaveError(err)
+      );
+   }
+
+   private onTestDataSaveSuccess(testData: TestData, savedMd5: string)
+   {
+      this.originalTestData = testData;
+      this.originalTestDataMd5 = savedMd5;
+
+      if ( this.testIsNew )
+      {
+         // TODO: Change FACTS status to 'I' when proper LABSDS api to use is clarified.
+         this.testIsNew = false;
+      }
+
+      switch ( this.visibleStageName() )
+      {
+         case 'VIDAS':
+            if ( this.ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData) )
+               this.submitAOACDataToFactsAsync(testData);
+            break;
+         case 'WRAPUP':
+            if ( this.vidasPositiveSampleTestUnitNumbers.length > 0 )
+            {
+               if ( this.ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData) )
+                  this.submitBAMDataToFactsAsync(testData);
+            }
+            else
+            {
+               this.alertMsgSvc.alertSuccess(
+                  'Test data saved, no positive findings are present ' +
+                  'so no FACTS submission was done.', true
+               );
+               this.doAfterSaveNavigation();
+            }
+            break;
+         default:
+            this.alertMsgSvc.alertSuccess('Test data saved.', true);
+            this.doAfterSaveNavigation();
+      }
+   }
+
+   private submitAOACDataToFactsAsync(testData: TestData)
+   {
+      this.factsPostingService.submitAOACAnalysisResults(
+         testData,
+         this.sampleOpTest.sampleOp.opId,
+         this.testConfig.aoacMethodCode || this.DEFAULT_AOAC_METHOD_CODE,
+         this.appUser.labGroupFactsParentOrgName
+      )
+      .subscribe(
+         submResponse => this.onAOACFactsSubmitResponseReceived(submResponse),
+         err => this.onFactsSaveError(err)
+      );
+   }
+
+   private submitBAMDataToFactsAsync(testData: TestData)
+   {
+      this.factsPostingService.submitBAMAnalysisResults(
+         testData,
+         this.sampleOpTest.sampleOp.opId,
+         this.appUser.labGroupFactsParentOrgName
+      )
+      .subscribe(
+         submResponse => this.onBAMFactsSubmitResponseReceived(submResponse),
+         err => this.onFactsSaveError(err)
+      );
+   }
+
+   private onTestDataSaveConflict(saveResult: SaveResult)
+   {
+     this.testIsNew = false;
+
+     const conflicts = saveResult.mergeConflicts;
+     const modInfo = conflicts.dbModificationInfo;
+     const msg =
+        'Changes were not saved due to the conflicting changes made by ' +
+        modInfo.savedByUserShortName + ' highlighted below. Please adjust ' +
+        'field values as necessary and save again.';
+
+     this.testDataForm.patchValue(conflicts.mergedTestData);
+     this.originalTestData = conflicts.dbTestData;
+     this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
+     this.conflictsTestData = copyWithMergedValuesFrom(emptyTestData(), conflicts.conflictingDbValues);
+     this.conflictsEmployeeTimestamp = {
+        employeeShortName: modInfo.savedByUserShortName,
+        timestamp: moment(modInfo.savedInstant, moment.ISO_8601).toDate(),
+     };
+
+     this.alertMsgSvc.alertWarning(msg);
+   }
+
+   private onAOACFactsSubmitResponseReceived
+      (
+         factsResponse: MicrobiologySampleAnalysisSubmissionResponse
+      )
+   {
+      // TODO: Check success or error, report accordingly once error repr is determined.
+      console.log('FACTS response for AOAC submission: ', factsResponse);
+      this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
+      this.doAfterSaveNavigation();
+   }
+
+   private onBAMFactsSubmitResponseReceived
+   (
+      factsResponse: MicrobiologySampleAnalysisSubmissionResponse
+   )
+   {
+      // TODO: Check success or error, report accordingly once error repr is determined.
+      console.log('FACTS response for BAM submission: ', factsResponse);
+      this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
+      this.doAfterSaveNavigation();
+   }
+
+   private onTestDataSaveError(err)
+   {
+      console.log('Error occurred while trying to save test data, details below:');
+      console.log(err);
+
+      this.alertMsgSvc.alertDanger(
+         'An error occurred while trying to save test data. ' +
+         'The test data may not have been saved.'
+      );
+   }
+
+   private onFactsSaveError(err)
+   {
+      console.log('Error occurred while trying to post data to FACTS, details below:');
+      console.log(err);
+
+      this.alertMsgSvc.alertDanger(
+         'An error occurred while trying to post data to FACTS. ' +
+         'The data may not have been received properly by FACTS.'
+      );
+   }
+
+   private ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData: TestData): boolean
+   {
+      const sm = testData.preEnrData.samplingMethod;
+
+      if ( sm == null || sm.testUnitsType == null || sm.testUnitsCount <= 0 )
+      {
+         this.alertMsgSvc.alertWarning(
+            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
+            ['The sampling method data is incomplete.']
+         );
+
+         return false;
+      }
+
+      const vidas = testData.vidasData;
+
+      if ( vidas.testUnitDetections == null ||
+           vidas.testUnitDetections.length === 0 ||
+           vidas.testUnitDetections.some(v => v == null) )
+      {
+         this.alertMsgSvc.alertWarning(
+            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
+            ['The Vidas results data is incomplete.']
+         );
+
+         return false;
+      }
+
+      return true;
+   }
+
+   private ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData: TestData): boolean
+   {
+      // TODO
+      return true;
    }
 
    hasUnsavedChanges(): boolean
@@ -228,7 +369,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.vidasPositiveSampleTestUnitNumbers = positiveTestUnits;
    }
 
-   clearConflictsData()
+   private clearConflictsData()
    {
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;
@@ -289,58 +430,17 @@ export class StagedTestDataEntryComponent implements OnInit {
    {
       this.clearConflictsData();
       this.testDataForm.markAsPristine();
-      // TODO: Set sample to expand as state in new context samples service instead of in the url.
+      // TODO (minor): Set sample to expand as state in new context samples service instead of in the url.
       this.usrCtxSvc.refreshLabGroupContents();
-      this.router.navigate(this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleOpTest.sampleOp.opId));
+      this.router.navigate(
+         this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleOpTest.sampleOp.opId)
+      );
    }
 
-   private shouldSubmitVidasAnalysisResults(testData: TestData): boolean
+   private visibleStageName(): String | null
    {
-      return vidasStatusCode(testData) === 'c';
-   }
-
-   /* TODO: Move this out into a separate (test-specific) service and complete.
-   private submitVidasAnalysisResults(testData: TestData): Observable<MicrobiologySampleAnalysisSubmissionResponse>
-   {
-      // TODO: Should check test data for completeness here as values are extracted.
-
-      const sample = this.sampleOpTest.sample;
-      const positivesCount = countValueOccurrences(testData.vidasData.testUnitDetections, true);
-      const samplingMethod = testData.preEnrData.samplingMethod;
-      if ( !samplingMethod.testUnitsType )
-      {
-         this.alertMsgSvc.alertWarning('Cannot submit data to FACTS, the sampling method is incomplete in stage PRE-ENR.');
-         return;
-      }
-      const examinedType = samplingMethod.testUnitsType === 'composite' ? 'COMPOSITES' : 'SUBSAMPLES';
-      const examinedNumber = samplingMethod.testUnitsCount;
-      const subSamplesUsedCompositeNumber = samplingMethod.testUnitsType === 'composite' ? samplingMethod.numberOfSubsPerComposite : null;
-      const subSamplesDetectableFindingsNumber = samplingMethod.testUnitsType === 'subsample' ? positivesCount : null;
-      const findings: MicrobiologyAnalysisFinding[] = []; // TODO
-
-      const subm: MicrobiologySampleAnalysisSubmission = {
-         operationId: sample.opId,
-         accomplishingOrgName: this.appUser.labGroupFactsParentOrgName,
-         actionIndicator: positivesCount > 0 ? 'Y' : 'N',
-         problemCode: 'MICROID',
-         genusCode: 'SLML',
-         speciesCode: 'SLML998',
-         methodSourceCode: 'AOAC',
-         methodCode: 'T2004.03',
-         // methodModificationIndicator: 'N',
-         kitTestIndicator: 'N', // TODO: Y for spiking but then need to include kit test structure.
-         examinedType,
-         examinedNumber,
-         subSamplesUsedCompositeNumber,
-         subSamplesDetectableFindingsNumber,
-         quantifiedIndicator: 'N',
-         analysisResultsRemarksText: 'Posted from ALIS', // TODO
-         analysisMicFindings: findings,
-      };
-
-      // TODO: Post the submission.
-
+      if ( this.testStageStepper.selected )
+         return this.testStageStepper.selected.label;
       return null;
    }
-   */
 }

@@ -71,6 +71,7 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          positiveControlDetection: new FormControl(testData.vidasData.positiveControlDetection),
          mediumControlDetection: new FormControl(testData.vidasData.mediumControlDetection),
          spikeDetection: new FormControl(testData.vidasData.spikeDetection),
+         methodRemarks: new FormControl(testData.vidasData.methodRemarks),
       }),
       posContData: makePositivesContinuationDataFormGroup(testData.posContData, username),
       wrapupData: new FormGroup({
@@ -78,6 +79,7 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
          reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
          testTimeCharges: makeTestTimeChargesFormGroup(testData.wrapupData.testTimeCharges),
+         analysisResultsRemarksText: new FormControl(testData.wrapupData.analysisResultsRemarksText),
       }),
    });
 }
@@ -202,7 +204,6 @@ export function makeIsolateIdentificationFormGroup(isolateIdent: IsolateIdentifi
       identCode: new FormControl(isolateIdent && isolateIdent.identCode || null),
       identText: new FormControl(isolateIdent && isolateIdent.identText || null),
       attachmentLabel: new FormControl(isolateIdent && isolateIdent.attachmentLabel || null),
-      positive:  new FormControl(isolateIdent && isolateIdent.positive || null),
    });
 }
 

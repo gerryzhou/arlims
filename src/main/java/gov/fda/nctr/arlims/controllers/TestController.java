@@ -102,10 +102,17 @@ public class TestController extends ControllerBase
     {
         AppUser user = ((AppUserAuthentication)authentication).getAppUser();
 
-        boolean saved = testDataService.saveTestData(testId, testDataJson, stageStatusesJson, previousMd5, user);
+        Optional<String> savedMd5 =
+            testDataService.saveTestData(
+                testId,
+                testDataJson,
+                stageStatusesJson,
+                previousMd5,
+                user
+            );
 
-        if ( saved )
-            return new OptimisticDataUpdateResult(true, Optional.empty());
+        if ( savedMd5.isPresent() )
+            return new OptimisticDataUpdateResult(savedMd5, Optional.empty());
         else
         {
             Optional<DataModificationInfo> maybeMod = testDataService.getTestDataModificationInfo(testId);
@@ -113,7 +120,7 @@ public class TestController extends ControllerBase
             if ( !maybeMod.isPresent() )
                 throw new ResourceNotFoundException("test not found");
 
-            return new OptimisticDataUpdateResult(false, maybeMod);
+            return new OptimisticDataUpdateResult(Optional.empty(), maybeMod);
         }
     }
 

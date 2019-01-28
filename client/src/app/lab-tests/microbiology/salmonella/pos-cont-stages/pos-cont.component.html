@@ -24,7 +24,7 @@
                   [stage]="stage"
                   [showOtherStageDataAsContext]="showOtherStageDataAsContext"
                   [viewOnly]="viewOnly"
-                  [form]="this.form.get('testUnitsContinuationTests').get(testUnitNum.toString())"
+                  [form]="this.form.get(['testUnitsContinuationTests',testUnitNum.toString()])"
                   [testUnitNumber]="testUnitNum"
                   [showDisposeButton]="!viewOnly && stage==='SLANT'"
                   [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"

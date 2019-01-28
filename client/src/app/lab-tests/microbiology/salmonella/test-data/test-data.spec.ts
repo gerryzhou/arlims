@@ -68,6 +68,7 @@ describe('microbiology salmonella test data functions', () => {
             positiveControlDetection: true,
             mediumControlDetection: false,
             spikeDetection: false,
+            methodRemarks: 'x'
          },
          posContData: null, // TODO
          wrapupData: {

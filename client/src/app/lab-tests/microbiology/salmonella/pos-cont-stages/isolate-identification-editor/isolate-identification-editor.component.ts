@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {IdentificationMethod} from '../../test-data';
 
 @Component({
    selector: 'app-isolate-identification-editor',
@@ -23,7 +24,6 @@ export class IsolateIdentificationEditorComponent implements OnChanges {
 
    onMethodChanged(changeEvent: any)
    {
-      // TODO: Maybe store ident method as basis for method-dependent rendering in the view (helper button for API for example).
-      console.log('onMethodChanged', changeEvent);
+      // Could store identification method in member for method-dependent rendering here.
    }
 }

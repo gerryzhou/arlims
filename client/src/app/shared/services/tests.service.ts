@@ -150,9 +150,9 @@ export class TestsService {
 
       return this.httpClient.post<OptimisticDataUpdateResult>(url, formData).pipe( // optimistic update attempt
          flatMap(optUpdRes => {
-            if (optUpdRes.succeeded) {
-               return observable(new SaveResult(true, null));
-            }
+
+            if ( optUpdRes.savedMd5 )
+               return observable(new SaveResult(optUpdRes.savedMd5, null));
 
             // There was a concurrent modification of this data, attempt auto-merge.
 
@@ -160,7 +160,7 @@ export class TestsService {
                flatMap(mergeRes => {
                   return mergeRes.hasConflicts ?
                      // If conflicts exist, just report the conflicts without any further attempt to save.
-                     observable(new SaveResult(false, mergeRes)) :
+                     observable(new SaveResult(null, mergeRes)) :
                      // Latest db data merged cleanly onto local changes: attempt this process again with new db test data as baseline.
                      this.saveTestData(
                         testId,
@@ -268,7 +268,12 @@ export class TestsService {
 
 export class SaveResult {
 
-   constructor(public saved: boolean, public mergeConflicts: MergeResults|null) {}
+   constructor
+      (
+         public savedMd5: string | null,
+         public mergeConflicts: MergeResults | null
+      )
+   {}
 
 }
 

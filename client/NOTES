@@ -1,51 +1,29 @@
 
-POSTING Test Results to FACTS
------------------------------
-Post to FACTS from within microbiology module directly after saving, using api urls service.
-  Move this logic out of the controller into a test-specific service.
-
-Text for API - only 5 or so codes, can just use a dropdown.
-Remove +/- field.
-
-VIDAS
-  Add methodRemarks text field.
-
-See if it's possible to use the personal inbox to load data.
-  Determine if any necessary data is missing vs. lab inbox.
-  Time calls vs. lab inbox.
-
-
-Sample custodian in PREP stage
-  for sample received-from/date fields
-  Call api with sample num and person id (api doesn't exist yet as of Dec 13 2018).
-  Button next to field to do lookup live, for now.
-    Will get receipt date and person id. If more than one record, let user select.
+TEST DATA CHANGES
+-----------------
+Add second stage of FACTS writing launched by new button in WRAPUP.
 
 FACTS WRITING PROCESS
 ---------------------
-First test save - change status to I if not already.
+Questions and Problems
+  Spiking
+    - Need spiking (kit test) submission example, only have GET results as example currently.
+    - How is sub/comp # determined, need to add a field in test form?
+    - Genus/Species: how specified, as genus code and species/genus text both?
+  Staging
+    - Need to record somewhere what stages of FACTS writing have already been completed so
+      stages aren't repeated or executed without prerequisites.
 
-Grams per sub should go into remarks in FACTS.
-
-actionIndicator
-  ? Maybe Y if positives were detected.
-analysisResultsRemarksText
-  Add to ALIS ui in WRAPUP
-lowestDilutionTestedCode
-  ?
-methodModificationIndicator: N
-quantifiedIndicator: N
-sampleAnalysisId: From labs inbox.
-examinedType: COMPOSITES or SUBS
-
-
+[Process]
 Problem area = 'MICROID'
 Genus = 'SLML'
 Species = 'SLML998' ("Not Speciated")
 Method Source = 'AOAC' ("Association of Official Analytical Chemists")
   because using Vidas
 Method code = 'T2004.03' for ARL Vidas SLM tests, other labs may use other codes.
- Let use choose from selection obtained from 2.1.4.31	GET /LabsDataService/api/MicMethodCodes  (p.53 Leidos API docs)
+ John: Let user choose from selection obtained from:
+     2.1.4.31 GET /LabsDataService/api/MicMethodCodes  (p.53 Leidos API docs)
+ (sch:) But this seems it would be better as lab config item if it's constant within labs.
 
 If spiking was done:
   Kit Cmpr Test = Y
@@ -66,6 +44,8 @@ else (testing composites)
 In either case, also specify # positives detected in #Subs/Comp Detect Fnd.
 
 If # positives is 0, then the data entry is done and hours are entered.
+
+This completes the AOAC (Vidas) submission, the remainder is via another (BAM) submission.
 
 If # positives is > 0:
   Add new line under the sample for "Method Applied".
@@ -94,8 +74,7 @@ Accomplishment Hours Entry
   Assignment Status needed here per employee entry ("Completed" or "In Progress")?
 
 ------------------------------------------------------------------------------------------------
-
-FACTS writing
+FACTS writing misc notes
   FACTS Status Update
     Analyst should be able to change status from "Assigned" to "In Progress" from their inbox.
   Method source codes:
@@ -104,6 +83,21 @@ FACTS writing
     Y on spiking => Y on "kit comparison test?" field
       Plus some other kit comparison test data would then need to be supplied.
       S.Gaminara control is the spiking control, so it's data will be sent to FACTS.
+------------------------------------------------------------------------------------------------
+
+Sample received-from/date fields (PREP stage)
+  Fetch select list from SampleTransfers LABSDS api endpoint.
+  Call api with sample num and person id (api doesn't exist yet as of Dec 13 2018).
+  Button next to field to do lookup live, for now.
+    Will get receipt date and person id. If more than one record, let user select.
+
+Automatic change of FACTS status to In-Progress on first test save.
+  Through what LABSDS api?  LabAccomplishmentHours?
+    We don't have hours information at this point, just put 0?
+
+
+Text for API20E - only 5 or so codes, can just use a dropdown.
+
 
 ------------------------------------------------------------------------------------------------
 Done

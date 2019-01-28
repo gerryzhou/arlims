@@ -22,7 +22,8 @@ public class MicrobiologySampleAnalysisSubmission
     private Optional<Long> subSamplesDetectableFindingsNumber;
     private String quantifiedIndicator; // "Y" | "N"
     private Optional<String> analysisResultsRemarksText;
-    private List<MicrobiologyAnalysisFinding> analysisMicFindings;
+    private Optional<List<MicrobiologyAnalysisFinding>> analysisMicFindings;
+    private Optional<List<MicrobiologyKitTest>> analysisMicKitTests;
 
     public MicrobiologySampleAnalysisSubmission
         (
@@ -42,7 +43,8 @@ public class MicrobiologySampleAnalysisSubmission
             Optional<Long> subSamplesDetectableFindingsNumber,
             String quantifiedIndicator,
             Optional<String> analysisResultsRemarksText,
-            List<MicrobiologyAnalysisFinding> analysisMicFindings
+            Optional<List<MicrobiologyAnalysisFinding>> analysisMicFindings,
+            Optional<List<MicrobiologyKitTest>> analysisMicKitTests
         )
     {
         this.operationId = operationId;
@@ -62,6 +64,7 @@ public class MicrobiologySampleAnalysisSubmission
         this.quantifiedIndicator = quantifiedIndicator;
         this.analysisResultsRemarksText = analysisResultsRemarksText;
         this.analysisMicFindings = analysisMicFindings;
+        this.analysisMicKitTests = analysisMicKitTests;
     }
 
     protected MicrobiologySampleAnalysisSubmission() {}
@@ -82,7 +85,7 @@ public class MicrobiologySampleAnalysisSubmission
 
     public String getMethodCode() { return methodCode; }
 
-    public String getMethodModificdationIndicator() { return methodModificationIndicator; }
+    public String getMethodModificationIndicator() { return methodModificationIndicator; }
 
     public String getKitTestIndicator() { return kitTestIndicator; }
 
@@ -98,7 +101,9 @@ public class MicrobiologySampleAnalysisSubmission
 
     public Optional<String> getAnalysisResultsRemarksText() { return analysisResultsRemarksText; }
 
-    public List<MicrobiologyAnalysisFinding> getAnalysisMicFindings() { return analysisMicFindings; }
+    public Optional<List<MicrobiologyAnalysisFinding>> getAnalysisMicFindings() { return analysisMicFindings; }
+
+    public Optional<List<MicrobiologyKitTest>> getAnalysisMicKitTests() { return analysisMicKitTests; }
 }
 
 

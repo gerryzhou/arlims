@@ -64,6 +64,7 @@ export interface VidasData {
    positiveControlDetection?: boolean | null;
    mediumControlDetection?: boolean | null;
    spikeDetection?: boolean | null;
+   methodRemarks?: string | null;
 }
 
 export interface PositivesContinuationData
@@ -132,7 +133,6 @@ export interface IsolateIdentification
    identCode: string | null;
    identText: string | null;
    attachmentLabel: string | null;
-   positive: boolean | null;
 }
 
 export interface IsolateTestSequenceFailure {
@@ -146,6 +146,7 @@ export interface WrapupData {
    reserveSampleDestinations?: string | null;
    reserveSampleOtherDescription?: string | null;
    testTimeCharges: TestTimeCharges;
+   analysisResultsRemarksText?: string | null;
 }
 
 export type ColonyAppearance = 'T' | 'AT'| 'NT'| 'NG';
@@ -214,7 +215,6 @@ export function makeEmptyIsolateIdentification(): IsolateIdentification
       identCode: null,
       identText: null,
       attachmentLabel: null,
-      positive: null,
    };
 }
 

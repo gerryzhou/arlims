@@ -48,7 +48,7 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    // These allow the user to control how lab resources are entered, either via select field (when true) or else by free-form text input.
    selectBalance = true;
    selectIncubator = true;
-   allowTogglingSelects = true; // TODO: Retrieve from test configuration.
+   allowTogglingSelects = false; // Get this from test config if this option is useful.
 
    sampleTestUnitsChangeSubcription: Subscription;
 

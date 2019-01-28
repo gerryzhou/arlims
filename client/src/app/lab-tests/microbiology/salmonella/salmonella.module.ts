@@ -45,6 +45,7 @@ import {IsolateSlantTubeViewComponent} from './pos-cont-stages/isolate-slant-tub
 import {IsolateSlantTubeEditorComponent} from './pos-cont-stages/isolate-slant-tube-editor/isolate-slant-tube-editor.component';
 import {IsolateIdentificationViewComponent} from './pos-cont-stages/isolate-identification-view/isolate-identification-view.component';
 import {IsolateIdentificationEditorComponent} from './pos-cont-stages/isolate-identification-editor/isolate-identification-editor.component';
+import {FactsPostingService} from './facts-posting.service';
 
 @NgModule({
    imports: [
@@ -96,6 +97,7 @@ import {IsolateIdentificationEditorComponent} from './pos-cont-stages/isolate-id
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,
+      FactsPostingService,
    ],
    entryComponents: [
       IsolateTestsFailureDialogComponent,

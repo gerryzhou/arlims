@@ -218,6 +218,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
                 MicrobiologySampleAnalysisSubmissionResponse.class
             );
 
+        // TODO: Maybe check for error response and incorporate into sample anlaysis response structure.
         MicrobiologySampleAnalysisSubmissionResponse res = resp.getBody();
 
         log.info(

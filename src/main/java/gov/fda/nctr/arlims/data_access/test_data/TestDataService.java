@@ -16,7 +16,8 @@ public interface TestDataService
 
     VersionedTestData getVersionedTestData(long testId);
 
-    boolean saveTestData(long testId, String testDataJson, String stageStatusesJson, String previousMd5, AppUser user);
+    /// Return uppercase md5 hash of saved test data if the save was successful, else empty optional.
+    Optional<String> saveTestData(long testId, String testDataJson, String stageStatusesJson, String previousMd5, AppUser user);
 
     void restoreTestDatas(List<TestSaveData> saveDatas, AppUser user);
 

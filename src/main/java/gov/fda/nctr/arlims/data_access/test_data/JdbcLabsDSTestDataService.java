@@ -32,6 +32,7 @@ import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.*;
+import gov.fda.nctr.util.Md5;
 
 
 @Service
@@ -177,7 +178,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
 
     @Transactional
     @Override
-    public boolean saveTestData
+    public Optional<String> saveTestData
         (
             long testId,
             String testDataJson,
@@ -192,11 +193,12 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         // will need to be done.
         VersionedTestData origTestData = getVersionedTestData(testId);
 
-        String newMd5 = md5OfUtf8Bytes(testDataJson);
+        String md5 = md5OfUtf8Bytes(testDataJson);
 
         String sql =
             "update test\n" +
-            "set test_data_json = ?, stage_statuses_json = ?, last_saved = ?, last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
+            "set test_data_json = ?, stage_statuses_json = ?, last_saved = ?, " +
+                "last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
             "where id = ? and test_data_md5 = ?";
 
         int updateCount =
@@ -206,19 +208,18 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
                 stageStatusesJson,
                 new java.sql.Timestamp(Instant.now().toEpochMilli()),
                 user.getEmployeeId(),
-                newMd5,
+                md5,
                 testId,
                 previousMd5
             );
 
-        boolean saved = updateCount > 0; // optimistic update may have missed due to concurrent update
+        Optional<String> savedMd5 = updateCount > 0 ? Optional.of(md5) : Optional.empty();
 
-        if ( saved )
-        {
-            logTestDataSaved(testId, origTestData.getTestDataJson(), testDataJson, user);
-        }
+        savedMd5.ifPresent(_md5 ->
+            logTestDataSaved(testId, origTestData.getTestDataJson(), testDataJson, user)
+        );
 
-        return saved;
+        return savedMd5;
     }
 
     @Transactional

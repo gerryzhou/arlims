@@ -62,4 +62,19 @@
       </app-time-charges>
    </div>
 
+   <div class="remarks-area">
+      <div class="field-area"
+           [class.conflicted]="conflicts.analysisResultsRemarksText !== undefined">
+         <mat-form-field>
+            <input type="text" formControlName="analysisResultsRemarksText"
+                   matInput placeholder="Analysis results remarks">
+         </mat-form-field>
+         <app-conflicting-field-value
+            [conflictValue]="conflicts.analysisResultsRemarksText"
+            [conflictWhoWhen]="conflictsWhoWhen"
+            (dismiss)="conflicts.analysisResultsRemarksText = undefined">
+         </app-conflicting-field-value>
+      </div>
+   </div>
+
 </form>

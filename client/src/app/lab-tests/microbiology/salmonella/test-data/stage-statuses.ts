@@ -131,15 +131,21 @@ export function vidasStatusCode(testData: TestData): FieldValuesStatusCode
    const data = testData.vidasData;
    const spiking = spikingSpecified(testData);
 
-   return statusForRequiredFieldValues(
-      [
-         data.instrumentId,
-         data.kitIds,
-         data.testUnitDetections,
-         data.positiveControlDetection,
-         data.mediumControlDetection,
-      ].concat(spiking ? [data.spikeDetection] : [])
-   );
+   const reqFieldsStatus =
+       statusForRequiredFieldValues(
+          [
+             data.instrumentId,
+             data.kitIds,
+             data.testUnitDetections,
+             data.positiveControlDetection,
+             data.mediumControlDetection,
+          ].concat(spiking ? [data.spikeDetection] : [])
+       );
+
+   if ( reqFieldsStatus === 'e' && data.methodRemarks != null )
+      return 'i';
+   else
+      return reqFieldsStatus;
 }
 
 function slantStatusCode
@@ -399,9 +405,9 @@ function slantTubeTestStatus(slantTest: SlantTubeTest): FieldValuesStatusCode
 function isolateIdentificationStatus(ident: IsolateIdentification)
 {
    if ( ident == null ||
-        ident.positive == null && ident.identCode == null && ident.identText == null && ident.attachmentLabel == null )
+        ident.identCode == null && ident.identText == null && ident.attachmentLabel == null )
       return 'e';
-   else if ( ident.positive != null && ident.identCode != null && ident.identText != null )
+   else if ( ident.identCode != null && ident.identText != null )
       return 'c';
    else return 'i';
 }
@@ -421,16 +427,23 @@ function wrapupStatusCode(testData: TestData): FieldValuesStatusCode
 {
    const data = testData.wrapupData;
 
-   if (!data.reserveSampleDisposition)
-      return 'e';
+   let reqFieldsStatus;
 
-   if (data.reserveSampleDisposition === 'OTHER' && isEmptyString(data.reserveSampleOtherDescription))
-      return 'i';
+   if ( !data.reserveSampleDisposition )
+      reqFieldsStatus = 'e';
+   else if ( data.reserveSampleDisposition === 'OTHER' &&
+             isEmptyString(data.reserveSampleOtherDescription) )
+      reqFieldsStatus = 'i';
+   else if ( data.reserveSampleDisposition  === 'ISOLATES_SENT' &&
+             isEmptyString(data.reserveSampleDestinations) )
+      reqFieldsStatus = 'i';
+   else
+      reqFieldsStatus = 'c';
 
-   if (data.reserveSampleDisposition  === 'ISOLATES_SENT' && isEmptyString(data.reserveSampleDestinations))
-      return 'i';
-
-   return 'c';
+   if ( reqFieldsStatus === 'e' )
+      return data.analysisResultsRemarksText == null ? 'e' : 'i';
+   else
+      return reqFieldsStatus;
 }
 
 export function getTestStageStatuses
