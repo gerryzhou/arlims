@@ -6,15 +6,9 @@ create table AUDIT_ENTRY
   ACTING_USERNAME              VARCHAR2(150 char) not null,
   ACTION                       VARCHAR2(50 char)  not null,
   LAB_GROUP_ID                 NUMBER(19)         not null,
-  OBJECT_CONTEXT_METADATA_JSON CLOB
-    constraint CK_AUDENT_OBJMD_ISJSON
-      check (object_context_metadata_json is json format json strict),
-  OBJECT_FROM_VALUE_JSON       CLOB
-    constraint CK_AUDENT_OBJFROMVAL_ISJSON
-      check (object_from_value_json is json format json strict),
-  OBJECT_TO_VALUE_JSON         CLOB
-    constraint CK_AUDENT_OBJTOVAL_ISJSON
-      check (object_to_value_json is json format json strict),
+  OBJECT_CONTEXT_METADATA_JSON CLOB,
+  OBJECT_FROM_VALUE_JSON       CLOB,
+  OBJECT_TO_VALUE_JSON         CLOB,
   OBJECT_TYPE                  VARCHAR2(50 char)  not null,
   TEST_ID                      NUMBER(19),
   TIMESTAMP                    TIMESTAMP(6)       not null
@@ -63,7 +57,7 @@ create table EMPLOYEE
 (
   ID                     NUMBER(19) generated as identity
     primary key,
-  FACTS_PERSON_ID        NUMBER(19) not null
+  FACTS_PERSON_ID        NUMBER(19)         not null
     constraint UN_EMP_FACTSPERSONID
       unique,
   FDA_EMAIL_ACCOUNT_NAME VARCHAR2(150 char) not null
@@ -133,7 +127,6 @@ create index IX_EMPROLE_ROLEID
   on EMPLOYEE_ROLE (ROLE_ID)
 /
 
-
 create table TEST_TYPE
 (
   ID          NUMBER(19) generated as identity
@@ -156,9 +149,7 @@ create table LAB_GROUP_TEST_TYPE
   ID                      NUMBER(19) generated as identity
     primary key,
   REPORT_NAMES_BAR_SEP    VARCHAR2(4000 char),
-  TEST_CONFIGURATION_JSON CLOB
-    constraint CK_LGRPTSTT_TSTOPTSJSON_ISJSON
-      check (test_configuration_json is json format json strict),
+  TEST_CONFIGURATION_JSON CLOB,
   LAB_GROUP_ID            NUMBER(19) not null
     constraint FK_LGRPTSTT_LABGROUP
       references LAB_GROUP,
@@ -191,21 +182,17 @@ create table TEST
     constraint FK_TST_EMP_LASTSAVED
       references EMPLOYEE,
   NOTE                     VARCHAR2(200 char),
+  OP_ID                    NUMBER(19)        not null,
   REVIEWED                 TIMESTAMP(6),
   REVIEWED_BY_EMP_ID       NUMBER(19)
     constraint FK_TST_EMP_REVIEWED
       references EMPLOYEE,
-  OP_ID             NUMBER(19)        not null,
   SAVED_TO_FACTS           TIMESTAMP(6),
   SAVED_TO_FACTS_BY_EMP_ID NUMBER(19)
     constraint FK_TST_EMP_SAVEDTOFACTS
       references EMPLOYEE,
-  STAGE_STATUSES_JSON      VARCHAR2(4000 char)
-    constraint CK_TEST_STAGESTATUSJSON_ISJSON
-      check (stage_statuses_json is json format json strict),
-  TEST_DATA_JSON           CLOB
-    constraint CK_TEST_TESTDATAJSON_ISJSON
-      check (test_data_json is json format json strict),
+  STAGE_STATUSES_JSON      VARCHAR2(4000 char),
+  TEST_DATA_JSON           CLOB,
   TEST_DATA_MD5            VARCHAR2(32 char) not null,
   TEST_TYPE_ID             NUMBER(19)        not null
     constraint FK_TST_TSTT
@@ -261,24 +248,19 @@ create index IX_TST_TESTDATAMD5
   on TEST (TEST_DATA_MD5)
 /
 
-create index IX_TEST_TESTDATAJSON
-  on TEST (TEST_DATA_JSON)
-/
-
 create table TEST_FILE
 (
   ID             NUMBER(19) generated as identity
     primary key,
-  DATA           BLOB                 not null,
-  NAME           VARCHAR2(200 char)   not null,
-  ROLE           VARCHAR2(50 char),
-  TEST_ID        NUMBER(19)           not null
+  DATA           BLOB               not null,
+  LABEL          VARCHAR2(50 char),
+  NAME           VARCHAR2(200 char) not null,
+  ORDERING       NUMBER(19)         not null,
+  TEST_DATA_PART VARCHAR2(4000 char),
+  TEST_ID        NUMBER(19)         not null
     constraint FK_TSTFILE_TST
       references TEST,
-  UPLOADED       TIMESTAMP(6)         not null,
-  TEST_DATA_PART VARCHAR2(4000),
-  LABEL          VARCHAR2(50),
-  ORDERING       NUMBER(19) default 0 not null
+  UPLOADED       TIMESTAMP(6)       not null
 )
 /
 

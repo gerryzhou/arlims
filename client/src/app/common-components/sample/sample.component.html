@@ -4,17 +4,17 @@
 
       <div class="sample-metadata-row">
 
-         <div class="product-name">{{sample.productName}}</div>
+         <div class="product-name">{{sampleOp.productName}}</div>
 
          <div class="sample-pac-stack">
             <div>
                <span class="field-value">
-                  {{sample.sampleTrackingNum}}-{{sample.sampleTrackingSubNum}}
+                  {{sampleOp.sampleTrackingNum}}-{{sampleOp.sampleTrackingSubNum}}
                </span>
             </div>
             <div>
                <span class="field-label">pac: </span>
-               <span class="field-value">{{sample.pac}}</span>
+               <span class="field-value">{{sampleOp.pac}}</span>
             </div>
          </div>
 
@@ -29,36 +29,36 @@
                  the samples within the lab contents, then add ui support for those
                  assignments here.
             -->
-            <span *ngIf="sample.assignments.length == 1">
-               {{sample.assignments[0].leadInd === 'Y' ? 'LEAD' : 'NOT LEAD'}}
+            <span *ngIf="sampleOp.assignments.length == 1">
+               {{sampleOp.assignments[0].leadInd === 'Y' ? 'LEAD' : 'NOT LEAD'}}
             </span>
          </div>
 
          <div>
             <span class="field-label">op: </span>
-            <span class="field-value">{{sample.opId}}</span>
+            <span class="field-value">{{sampleOp.opId}}</span>
          </div>
 
-         <div *ngIf="sample.lid">
+         <div *ngIf="sampleOp.lid">
             <span class="field-label">lid: </span>
-            <span class="field-value">{{sample.lid}}</span>
+            <span class="field-value">{{sampleOp.lid}}</span>
          </div>
-         <div *ngIf="sample.paf">
+         <div *ngIf="sampleOp.paf">
             <span class="field-label">paf: </span>
-            <span class="field-value">{{sample.paf}}</span>
+            <span class="field-value">{{sampleOp.paf}}</span>
          </div>
 
          <div class="sampling-org-stack">
-            <div *ngIf="sample.samplingOrganization">
+            <div *ngIf="sampleOp.samplingOrganization">
                <span class="field-label">from: </span>
-               <span class="field-value">{{sample.samplingOrganization}}</span>
+               <span class="field-value">{{sampleOp.samplingOrganization}}</span>
             </div>
          </div>
 
          <div class="expanding-flex-space"></div>
 
          <div *ngIf="showAssociatedItemsSummaryInSampleMetadata" class="nums-associated-items-stack">
-            <span>{{sample.tests.length}} test{{sample.tests.length != 1 ? 's' : ''}}</span>
+            <span>{{sampleOp.tests.length}} test{{sampleOp.tests.length != 1 ? 's' : ''}}</span>
          </div>
 
          <div class="refreshed-from-facts-timestamp-stack">
@@ -72,9 +72,9 @@
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
       <div class="sample-metadata-row" *ngIf="hasExtendedSampleMetadata && (showAssociatedItems || showExtendedSampleMetadataAlways)">
-         <div *ngIf="sample.subject">
+         <div *ngIf="sampleOp.subject">
             <span class="field-label">subject: </span>
-            <span class="field-value">{{sample.subject}}</span>
+            <span class="field-value">{{sampleOp.subject}}</span>
          </div>
       </div>
    </div>
@@ -83,7 +83,7 @@
    <div *ngIf="showAssociatedItems">
 
       <div class="tests">
-         <div class="test-area" *ngFor="let test of sample.tests">
+         <div class="test-area" *ngFor="let test of sampleOp.tests">
             <button mat-icon-button *ngIf="showTestDeleteButtons"
                (click)="onDeleteTestClicked(test)">
                <mat-icon>remove_circle_outline</mat-icon>

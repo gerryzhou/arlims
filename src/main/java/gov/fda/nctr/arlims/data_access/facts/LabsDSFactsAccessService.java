@@ -11,7 +11,6 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
-import static org.springframework.http.HttpMethod.GET;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
@@ -24,6 +23,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import static org.springframework.http.HttpMethod.GET;
 import org.hobsoft.spring.resttemplatelogger.LoggingCustomizer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -95,7 +95,6 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         this.jsonWriter = jsonSerializer.writer();
     }
 
-
     @Override
     @Async
     public CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems
@@ -104,10 +103,10 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             List<String> statusCodes
         )
     {
+        // TODO: Add additional personal inbox fields here when supported by api: cfsanProductDesc, lid, paf, splitInd, samplingOrg.
         String includeFields =
-          "workId,analysisSample,collectionSample,tdSampleNumber,sampleTrackingSubNum,pacCode," +
-          "statusCode,statusDate,subjectText,remarksText,registerTargetCompletionDate," +
-          "personId,firstName,lastName,mdlIntlName,leadInd";
+          "workId,analysisSample,sampleTrackingSubNum,pacCode,statusCode,statusDate,subjectText,remarksText," +
+          "registerTargetCompletionDate,personId,firstName,lastName,mdlIntlName,leadInd";
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
@@ -229,6 +228,14 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         );
 
         return completedFuture(res);
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<Void> updateSampleOpStatus(long sampleOpId, String statusCode)
+    {
+        // TODO: Send http req to update sample op status here when api endpoint is available.
+        return completedFuture(null);
     }
 
     private HttpHeaders newRequestHeaders(boolean acceptJson, boolean contentTypeJson)

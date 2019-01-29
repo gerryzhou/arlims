@@ -6,9 +6,6 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import gov.fda.nctr.arlims.data_access.facts.JsonTimestampToLocalDateDeserializer;
 
 
 public class EmployeeInboxItem
@@ -16,8 +13,6 @@ public class EmployeeInboxItem
     private Long workId;
 
     private Long analysisSample;
-    private Long collectionSample;
-    private Long tdSampleNumber;
 
     private Long sampleTrackingSubNum;
 
@@ -37,7 +32,7 @@ public class EmployeeInboxItem
 
     private String statusCode;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ssZ", timezone="UTC")
     private Instant statusDate;
 
     private String subjectText;
@@ -50,9 +45,9 @@ public class EmployeeInboxItem
     private String mdlIntlName;
     private String leadInd;
 
-
-    // API provides completion date as timestamp with timezone for what is really just a date.
-    @JsonDeserialize(using = JsonTimestampToLocalDateDeserializer.class)
+//    TODO: Re-enable if api starts delivering more ISO-like timestamp (as in lab inbox "dates"), instead of format like '9/30/13 12:00 AM'.
+//    @JsonDeserialize(using = JsonTimestampToLocalDateDeserializer.class)
+    @JsonIgnore
     private LocalDate registerTargetCompletionDate;
 
 
@@ -62,10 +57,6 @@ public class EmployeeInboxItem
     public Long getWorkId() { return workId; }
 
     public Long getAnalysisSample() { return analysisSample; }
-
-    public Long getCollectionSample() { return collectionSample; }
-
-    public Long getTdSampleNumber() { return tdSampleNumber; }
 
     public Long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
 

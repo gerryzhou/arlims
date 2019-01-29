@@ -19,4 +19,6 @@ public interface FactsAccessService
     CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId);
 
     CompletableFuture<MicrobiologySampleAnalysisSubmissionResponse> submitMicrobiologySampleAnalysis(MicrobiologySampleAnalysisSubmission subm);
+
+    CompletableFuture<Void> updateSampleOpStatus(long sampleOpId, String statusCode);
 }

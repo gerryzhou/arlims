@@ -14,19 +14,8 @@ public class MicrobiologyAnalysisFinding
     private Optional<String> atypicalReactionRemarksText;
     private long isolatesSentNumber;
     private String isolatesSentIndicator;   // "Y" | "N" // why necessary when number sent is also specified?
-    private long fdaLabOrganizationId; // TODO: Not org name here as elsewhere in api?
+    private long fdaLabOrganizationId;
     private Optional<String> remarksText;
-
-    // TODO: Resolve discrepancies between api docs and examples.
-    // Present in examples but not documented:
-    //    genusCode
-    //    speciesCode
-    //    secondaryPafCode
-    //    sampleAnalysisMicrobes    " (don't know the what structure these array elements would be as well)
-    // Documented but not present in examples:
-    //    long levelCountNumber;
-    //    String levelUnitCode;
-    //    String levelQualifierIndicator; // "Y" | "N"
 
     protected MicrobiologyAnalysisFinding() {}
 

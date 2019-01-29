@@ -12,7 +12,7 @@
 
 <div>
    <app-sample *ngFor="let sampleOp of resultSampleOps | async"
-      [sample]="sampleOp"
+               [sampleOp]="sampleOp"
       [showAssociatedItems]="true"
       [showAssociatedItemsSummaryInSampleMetadata]="true"
       [showTestDeleteButtons]="false"

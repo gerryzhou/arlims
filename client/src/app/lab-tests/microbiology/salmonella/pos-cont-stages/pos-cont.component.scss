@@ -63,10 +63,18 @@
    margin-left: 10px;
 }
 
+.no-positives-message {
+   display: flex;
+   justify-content: center;
+   background: lightgray;
+   padding: 10px;
+}
+
 .stage-options-bottom-bar {
    display: flex;
    justify-content: center;
    align-items: center;
+   margin: 10px;
 }
 
 app-isolate-identification-editor {

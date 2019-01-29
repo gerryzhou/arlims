@@ -34,12 +34,6 @@
          </div>
       </div>
 
-      <div *ngIf="test.note" class="note">
-         <mat-icon>comment</mat-icon>
-         <!--TODO: Truncate the note if longer than ~10 chars, with clickable "..." button to view the full note. -->
-         {{test.note}}
-      </div>
-
       <div class="last-test-status-action" *ngIf="testStatusActions.length > 0">
          <div class="action-employee"><mat-icon>person</mat-icon>{{testStatusActions[0].employeeShortName}} {{testStatusActions[0].action}}</div>
          <div class="action-instant">{{testStatusActions[0].timestamp | date: 'MMM d h:mm a'}}</div>

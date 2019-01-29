@@ -32,7 +32,6 @@ import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.*;
-import gov.fda.nctr.util.Md5;
 
 
 @Service
@@ -727,7 +726,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
               "t.begin_date test_begin_date, tt.short_name test_type_short_name, " +
               "tt.name test_type_name, tt.code \"TEST_TYPE_CODE\"\n" +
             "from test t\n" +
-            "join lab_group lg on s.lab_group_id = lg.id\n" +
+            "join lab_group lg on t.lab_group_id = lg.id\n" +
             "join test_type tt on t.test_type_id = tt.id\n" +
             "where t.id = ?";
 

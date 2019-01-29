@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {PrepData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
@@ -7,7 +7,6 @@ import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
    selector: 'app-stage-prep',
    templateUrl: './stage-prep.component.html',
    styleUrls: ['./stage-prep.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StagePrepComponent implements OnChanges {
 

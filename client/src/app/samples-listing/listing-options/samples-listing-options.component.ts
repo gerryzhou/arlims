@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, OnChanges, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {Component, EventEmitter, Input, Output, OnChanges, OnDestroy} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
@@ -9,7 +9,6 @@ import {SAMPLE_OP_STATUSES, SampleOpStatus} from '../../shared/models/sample-op-
    selector: 'app-samples-listing-options',
    templateUrl: './samples-listing-options.component.html',
    styleUrls: ['./samples-listing-options.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
 

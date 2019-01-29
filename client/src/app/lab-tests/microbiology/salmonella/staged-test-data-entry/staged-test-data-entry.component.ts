@@ -191,7 +191,12 @@ export class StagedTestDataEntryComponent implements OnInit {
 
       if ( this.testIsNew )
       {
-         // TODO: Change FACTS status to 'I' when proper LABSDS api to use is clarified.
+         this.factsPostingService
+            .setSampleOperationStatus(this.sampleOpTest.sampleOp.opId, 'I')
+            .subscribe(
+               () => { console.log('FACTS status updated for new test.'); },
+               err => this.onFactsStatusUpdateError(err)
+            );
          this.testIsNew = false;
       }
 
@@ -316,6 +321,18 @@ export class StagedTestDataEntryComponent implements OnInit {
       );
    }
 
+   private onFactsStatusUpdateError(err)
+   {
+      console.log('Error occurred while trying to set FACTS status to in-progress, details below:');
+      console.log(err);
+
+      this.alertMsgSvc.alertDanger(
+         'An error occurred while trying to set FACTS status to in-progress. ' +
+         'The status update may not have been received properly by FACTS.'
+      );
+   }
+
+
    private ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData: TestData): boolean
    {
       const sm = testData.preEnrData.samplingMethod;
@@ -349,7 +366,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    private ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData: TestData): boolean
    {
-      // TODO
+      // TODO: Decide required items from test data for BAM submission and check here.
       return true;
    }
 
@@ -384,6 +401,8 @@ export class StagedTestDataEntryComponent implements OnInit {
          if (this.stageComps[selIx].promptAssignResources)
             this.stageComps[selIx].promptAssignResources();
       }
+
+      // TODO: Trigger angular changes check.
    }
 
    toggleShowUnsetAffordances()

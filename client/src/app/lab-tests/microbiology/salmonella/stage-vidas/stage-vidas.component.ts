@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 
 import {VidasData} from '../test-data';
@@ -11,7 +11,6 @@ import {TestUnitsType} from '../../sampling-methods';
    selector: 'app-stage-vidas',
    templateUrl: './stage-vidas.component.html',
    styleUrls: ['./stage-vidas.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StageVidasComponent implements OnChanges {
 

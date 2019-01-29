@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {MBrothData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
@@ -12,7 +12,6 @@ import {AlertMessageService} from '../../../../shared/services/alerts';
    selector: 'app-stage-m-broth',
    templateUrl: './stage-m-broth.component.html',
    styleUrls: ['./stage-m-broth.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StageMBrothComponent implements OnChanges {
 

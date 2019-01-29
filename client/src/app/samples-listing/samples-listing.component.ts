@@ -56,7 +56,7 @@ export class SamplesListingComponent {
           private router: Router,
        )
    {
-      // TODO: This expanded samples state would be better transferred via service.
+      // TODO (minor): This expanded samples state would be better transferred via service.
       const expandedSampleOpIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
       if ( expandedSampleOpIdsStr )
       {

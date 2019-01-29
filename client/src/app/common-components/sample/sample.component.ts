@@ -19,7 +19,7 @@ import {factsStatusTextFromCode} from '../../shared/models/sample-op-status';
 export class SampleComponent implements OnChanges {
 
    @Input()
-   sample: SampleOp;
+   sampleOp: SampleOp;
 
    @Input()
    showAssociatedItems = false;
@@ -68,16 +68,16 @@ export class SampleComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.hasExtendedSampleMetadata = !!this.sample.subject;
-      this.hasAssociatedItems = this.sample.tests.length > 0;
+      this.hasExtendedSampleMetadata = !!this.sampleOp.subject;
+      this.hasAssociatedItems = this.sampleOp.tests.length > 0;
       this.displayFactsStatusTimestamp =
-         this.sample.factsStatusTimestamp ? moment(this.sample.factsStatusTimestamp).format('MMM D h:mm a')
+         this.sampleOp.factsStatusTimestamp ? moment(this.sampleOp.factsStatusTimestamp).format('MMM D h:mm a')
          : '';
-      this.factsStatusText = factsStatusTextFromCode(this.sample.factsStatus);
+      this.factsStatusText = factsStatusTextFromCode(this.sampleOp.factsStatus);
       this.factsStatusCssClass = this.factsStatusText.replace(/ /g, '-').toLowerCase();
 
       this.displayRefreshedFromFactsTimestamp =
-         this.sample.lastRefreshedFromFactsInstant ? moment(this.sample.lastRefreshedFromFactsInstant).format('h:mm a MMM D')
+         this.sampleOp.lastRefreshedFromFactsInstant ? moment(this.sampleOp.lastRefreshedFromFactsInstant).format('h:mm a MMM D')
             : '';
    }
 
@@ -91,7 +91,7 @@ export class SampleComponent implements OnChanges {
       const dlg = this.dialogSvc.open(NewTestDialogComponent, {
          width: 'calc(75%)',
          data: {
-            sample: this.sample,
+            sampleOp: this.sampleOp,
             availableTestTypes: this.labGroupTestTypes,
             selectedTestType: null,
             beginDate: null,

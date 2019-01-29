@@ -157,6 +157,18 @@
 
       </mat-tab-group>
 
+      <div *ngIf="!vidasPositiveSampleTestUnitNumbers || vidasPositiveSampleTestUnitNumbers?.length === 0"
+           class="no-positives-message">
+         ( No positive test units in Vidas results. )
+      </div>
+
+      <div class="stage-options-bottom-bar">
+         <button class="link" type="button" *ngIf="vidasPositiveSampleTestUnitNumbers?.length > 0"
+                 (click)="toggleShowOtherStageDataAsContext()">
+            {{showOtherStageDataAsContext ? 'Hide' : 'Show'}} {{stage === 'IDENT' ? 'SLANT' : 'IDENT'}} isolate test data
+         </button>
+      </div>
+
    </div>
 
    <!-- attached files for IDENT stage -->
@@ -172,11 +184,5 @@
          (attachedFilesChange)="onIdentAttachedFilesChanged($event)">
       </app-test-attached-files>
    </mat-expansion-panel>
-
-   <div class="stage-options-bottom-bar">
-      <button class="link" type="button" (click)="toggleShowOtherStageDataAsContext()">
-         {{showOtherStageDataAsContext ? 'Hide' : 'Show'}} {{stage === 'IDENT' ? 'SLANT' : 'IDENT'}} isolate test data
-      </button>
-   </div>
 
 </div>

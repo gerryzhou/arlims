@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -12,7 +12,6 @@ import {UserContextService} from '../../../../shared/services';
    selector: 'app-stage-wrapup',
    templateUrl: './stage-wrapup.component.html',
    styleUrls: ['./stage-wrapup.component.scss'],
-   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StageWrapupComponent implements OnChanges {
 

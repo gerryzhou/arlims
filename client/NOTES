@@ -1,3 +1,6 @@
+SLM test
+  Implement actual validation function for each stage, returning list of complaints.
+
 
 TEST DATA CHANGES
 -----------------
@@ -8,8 +11,8 @@ FACTS WRITING PROCESS
 Questions and Problems
   Spiking
     - Need spiking (kit test) submission example, only have GET results as example currently.
-    - How is sub/comp # determined, need to add a field in test form?
-    - Genus/Species: how specified, as genus code and species/genus text both?
+    - How is sub/comp # determined? Need to add a field in test form?
+    - Genus/Species: how specified, as both genus code and species/genus text?
   Staging
     - Need to record somewhere what stages of FACTS writing have already been completed so
       stages aren't repeated or executed without prerequisites.

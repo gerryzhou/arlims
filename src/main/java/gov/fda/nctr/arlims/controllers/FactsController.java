@@ -2,10 +2,7 @@ package gov.fda.nctr.arlims.controllers;
 
 import java.util.concurrent.ExecutionException;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
@@ -16,16 +13,15 @@ import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnaly
 @RequestMapping("/api/facts")
 public class FactsController extends ControllerBase
 {
-    private FactsAccessService factsSvc;
+    private FactsAccessService factsService;
 
     public FactsController
         (
-            FactsAccessService factsSvc
+            FactsAccessService factsService
         )
     {
-        this.factsSvc = factsSvc;
+        this.factsService = factsService;
     }
-
 
     @PostMapping("/sample-analysis/micro")
     public MicrobiologySampleAnalysisSubmissionResponse submitMicrobiologySampleAnalysis
@@ -34,8 +30,20 @@ public class FactsController extends ControllerBase
         )
         throws ExecutionException, InterruptedException
     {
-        return factsSvc.submitMicrobiologySampleAnalysis(subm).get();
+        return factsService.submitMicrobiologySampleAnalysis(subm).get();
     }
+
+    @PostMapping("/sample-op/{opId:\\d+}/status")
+    public void updateSampleOpStatus
+        (
+            @PathVariable("opId") long opId,
+            @RequestBody String statusCode
+        )
+        throws ExecutionException, InterruptedException
+    {
+        factsService.updateSampleOpStatus(opId, statusCode).get();
+    }
+
 }
 
 

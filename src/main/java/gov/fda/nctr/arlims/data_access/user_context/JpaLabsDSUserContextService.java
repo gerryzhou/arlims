@@ -106,7 +106,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
         try
         {
-            List<SampleOp> userSampleOps = getUserActiveSamples(inboxItems$.get(), users);
+            List<SampleOp> userSampleOps = getUserActiveSampleOps(inboxItems$.get(), users);
 
             return
                 new UserContext(
@@ -145,7 +145,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
         try
         {
-            List<SampleOp> userSampleOps = getUserActiveSamples(inboxItems$.get(), users);
+            List<SampleOp> userSampleOps = getUserActiveSampleOps(inboxItems$.get(), users);
 
             return
                 new LabGroupContents(
@@ -264,13 +264,17 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         }
     }
 
-    private List<SampleOp> getUserActiveSamples
+    private List<SampleOp> getUserActiveSampleOps
         (
             List<EmployeeInboxItem> inboxItems,
             List<UserReference> labGroupUsers
         )
     {
-        List<Long> opIds = inboxItems.stream().map(EmployeeInboxItem::getWorkId).collect(toList());
+        // We only want the inbox items that represent sample operations.
+        List<EmployeeInboxItem> sampleOpInboxItems =
+            inboxItems.stream().filter(item -> item.getAnalysisSample() != null).collect(toList());
+
+        List<Long> opIds = sampleOpInboxItems.stream().map(EmployeeInboxItem::getWorkId).collect(toList());
 
         Map<Long, List<Test>> testsByOpId = opIds.isEmpty() ? emptyMap()
             : testRepo.findByOpIdIn(opIds).stream().collect(groupingBy(Test::getOpId));
@@ -282,7 +286,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             .collect(Collectors.toMap(UserReference::getEmployeeId, userRef -> userRef));
 
         return
-            inboxItems.stream()
+            sampleOpInboxItems.stream()
             .map(inboxItem -> {
                 long opId = inboxItem.getWorkId();
 
@@ -396,7 +400,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             new LabTestMetadata(
                 t.getId(),
                 inboxItem.getWorkId(),
-                inboxItem.getTdSampleNumber(),
+                inboxItem.getAnalysisSample(),
                 inboxItem.getSampleTrackingSubNum(),
                 inboxItem.getPacCode(),
                 inboxItem.getCfsanProductDesc(),
@@ -432,7 +436,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         return
             new SampleOp(
                 inboxItem.getWorkId(),
-                inboxItem.getTdSampleNumber(),
+                inboxItem.getAnalysisSample(),
                 inboxItem.getSampleTrackingSubNum(),
                 inboxItem.getPacCode(),
                 opt(inboxItem.getLid()),

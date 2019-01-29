@@ -74,8 +74,8 @@ export class FactsPostingService {
       if ( spiking )
       {
          /* TODO: Add kit test structure representing spiking results (need example or struct def).
-            Sub/Comp #: Which sub/comp was used for spiking (field name for this?)
-              Where to get this from?
+            Sub/Comp #: Which sub/comp was used for spiking
+              Field name for this? Where to get this from?
             Rapid Method Results (Vidas) = POS/NEG
             Conventional Method Results = NA (since Vidas is always done prior to conventional methods)
             Spike Results: POS/NEG
@@ -154,7 +154,6 @@ export class FactsPostingService {
            Should failed (negative or low confidence/unclear) identifications be reported?  How?
        */
 
-      // TODO: Iterate key/value pairs to build result array.
       for ( const testUnitNum of Object.keys(continuationTestsByTestUnitNum) )
       {
          // TODO: Can have multiple identifications here by source media(2) and selective agar(4), how to determine single identification?
@@ -163,6 +162,7 @@ export class FactsPostingService {
          const contTests = continuationTestsByTestUnitNum[testUnitNum];
          const rvTests = contTests.rvSourcedTests;
          const ttTests = contTests.ttSourcedTests;
+         // TODO: Add to result array when above problems are resolved.
       }
 
       return res;
@@ -182,5 +182,12 @@ export class FactsPostingService {
          //    'secondaryPafCode': 'SAL',
          //    // 'sampleAnalysisMicrobes': [] // TODO: What is this?
          // }
+   }
+
+   setSampleOperationStatus(sampleOpId: number, statusCode: string): Observable<void>
+   {
+      const url = this.apiUrlsSvc.factsSampleOpStatusUrl(sampleOpId);
+
+      return this.httpClient.post<void>(url, statusCode);
    }
 }

@@ -151,6 +151,11 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/audit-log/${testId}/modifying-employees`);
    }
 
+   factsSampleOpStatusUrl(opId: number)
+   {
+      return this.location.prepareExternalUrl(`/api/facts/sample-op/${opId}/status`);
+   }
+
    factsMicrobiologySampleAnalysisUrl()
    {
       return this.location.prepareExternalUrl('/api/facts/sample-analysis/micro');

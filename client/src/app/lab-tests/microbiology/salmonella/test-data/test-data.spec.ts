@@ -70,7 +70,7 @@ describe('microbiology salmonella test data functions', () => {
             spikeDetection: false,
             methodRemarks: 'x'
          },
-         posContData: null, // TODO
+         posContData: null,
          wrapupData: {
             reserveSampleDisposition: 'NO_RESERVE_SAMPLE',
             reserveSampleDestinations: 'x',

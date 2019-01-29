@@ -19,19 +19,9 @@
       (optionsChanged)="listingOptionsChanged($event)">
    </app-samples-listing-options>
 
-   <div class="refresh-panel">
-      <mat-menu #refreshDataMenu="matMenu">
-         <div class="menu-item" >
-            <button mat-button type="button" (click)="reload()">
-               refresh from FACTS
-            </button>
-         </div>
-      </mat-menu>
-      <button mat-button type="button" [matMenuTriggerFor]="refreshDataMenu">
-         <mat-icon>refresh</mat-icon>
-         <span class="last-loaded">last loaded at {{contentsLastLoaded.format('h:mm:ss a')}}</span>
-      </button>
-   </div>
+   <button mat-button type="button" matTooltip="refresh from FACTS" (click)="reload()">
+      <mat-icon>refresh</mat-icon>
+   </button>
 
 </div> <!-- control area -->
 
@@ -40,7 +30,7 @@
       <mat-checkbox [(ngModel)]="selectableSampleOps[sampleOpIx].selected" (change)="clearSelectAllCheckbox()">
       </mat-checkbox>
       <app-sample
-         [sample]="selectableSampleOps[sampleOpIx].sampleOp"
+         [sampleOp]="selectableSampleOps[sampleOpIx].sampleOp"
          [showAssociatedItems]="expandedSampleOpIds.has(selectableSampleOps[sampleOpIx].sampleOp.opId)"
          [showAssociatedItemsSummaryInSampleMetadata]="true"
          [labGroupTestTypes]="labGroupTestTypes"
