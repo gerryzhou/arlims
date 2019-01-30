@@ -24,7 +24,7 @@
          </div>
 
          <div class="employee-assignments">
-            <!-- NOTE Currently only the current user's assignment is displayed here.
+            <!-- NOTE: Currently only the current user's assignment is displayed here.
                  If the server eventually delivers assignments for other users in
                  the samples within the lab contents, then add ui support for those
                  assignments here.
@@ -32,27 +32,6 @@
             <span *ngIf="sampleOp.assignments.length == 1">
                {{sampleOp.assignments[0].leadInd === 'Y' ? 'LEAD' : 'NOT LEAD'}}
             </span>
-         </div>
-
-         <div>
-            <span class="field-label">op: </span>
-            <span class="field-value">{{sampleOp.opId}}</span>
-         </div>
-
-         <div *ngIf="sampleOp.lid">
-            <span class="field-label">lid: </span>
-            <span class="field-value">{{sampleOp.lid}}</span>
-         </div>
-         <div *ngIf="sampleOp.paf">
-            <span class="field-label">paf: </span>
-            <span class="field-value">{{sampleOp.paf}}</span>
-         </div>
-
-         <div class="sampling-org-stack">
-            <div *ngIf="sampleOp.samplingOrganization">
-               <span class="field-label">from: </span>
-               <span class="field-value">{{sampleOp.samplingOrganization}}</span>
-            </div>
          </div>
 
          <div class="expanding-flex-space"></div>
@@ -72,6 +51,26 @@
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
       <div class="sample-metadata-row" *ngIf="hasExtendedSampleMetadata && (showAssociatedItems || showExtendedSampleMetadataAlways)">
+         <div>
+            <span class="field-label">op: </span>
+            <span class="field-value">{{sampleOp.opId}}</span>
+         </div>
+
+         <div *ngIf="sampleOp.lid">
+            <span class="field-label">lid: </span>
+            <span class="field-value">{{sampleOp.lid}}</span>
+         </div>
+
+         <div *ngIf="sampleOp.paf">
+            <span class="field-label">paf: </span>
+            <span class="field-value">{{sampleOp.paf}}</span>
+         </div>
+
+         <div *ngIf="sampleOp.samplingOrganization">
+            <span class="field-label">from: </span>
+            <span class="field-value">{{sampleOp.samplingOrganization}}</span>
+         </div>
+
          <div *ngIf="sampleOp.subject">
             <span class="field-label">subject: </span>
             <span class="field-value">{{sampleOp.subject}}</span>

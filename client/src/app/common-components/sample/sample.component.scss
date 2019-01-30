@@ -76,30 +76,6 @@
    display: flex;
 }
 
-.assigned-employee {
-   display: inline-flex;
-   vertical-align: middle;
-   margin-right: 5px;
-}
-
-.lead-employee-name {
-   font-weight: bold;
-   font-size: 120%;
-}
-
-.assigned-employee-name {
-   margin-left: 3px;
-}
-
-.sampling-org-stack {
-   display: flex;
-   flex-flow: column nowrap;
-   justify-content: center;
-   align-items: flex-start;
-   margin-top: 0;
-   margin-bottom: 0;
-}
-
 
 .nums-associated-items-stack {
    display: flex;
