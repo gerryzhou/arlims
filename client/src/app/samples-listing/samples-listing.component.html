@@ -26,12 +26,12 @@
 </div> <!-- control area -->
 
 <div>
-   <div class="sample-container" *ngFor="let sampleOpIx of visibleSampleOpIxs">
-      <mat-checkbox [(ngModel)]="selectableSampleOps[sampleOpIx].selected" (change)="clearSelectAllCheckbox()">
+   <div class="sample-container" *ngFor="let sampleIx of visibleSampleIxs">
+      <mat-checkbox [(ngModel)]="samples[sampleIx].selected" (change)="clearSelectAllCheckbox()">
       </mat-checkbox>
       <app-sample
-         [sampleOp]="selectableSampleOps[sampleOpIx].sampleOp"
-         [showAssociatedItems]="expandedSampleOpIds.has(selectableSampleOps[sampleOpIx].sampleOp.opId)"
+         [sampleOp]="samples[sampleIx].sampleOp"
+         [showAssociatedItems]="expandedSampleOpIds.has(samples[sampleIx].sampleOp.opId)"
          [showAssociatedItemsSummaryInSampleMetadata]="true"
          [labGroupTestTypes]="labGroupTestTypes"
          [showTestDeleteButtons]="showTestDeleteButtons"
@@ -39,7 +39,7 @@
          (testDeleteFailed)="onTestDeleteFailed($event)"
          (testCreated)="onNewTestCreated($event)"
          (testCreationFailed)="onTestCreationFailed($event)"
-         (headerClick)="toggleSampleExpanded(selectableSampleOps[sampleOpIx].sampleOp.opId)">
+         (headerClick)="toggleSampleExpanded(samples[sampleIx].sampleOp.opId)">
       </app-sample>
    </div>
 </div>

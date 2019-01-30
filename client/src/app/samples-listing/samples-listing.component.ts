@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import * as moment from 'moment';
@@ -24,10 +24,10 @@ import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.s
 })
 export class SamplesListingComponent {
 
-   selectableSampleOps: SelectableSample[]; // all samples in context, before any filtering or sorting
+   samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
-   // samples to be displayed, having survived filters and optionally undergone sorting
-   visibleSampleOpIxs: number[];
+   // indexes of samples to be displayed in this.samples, having survived filters and optionally undergone sorting
+   visibleSampleIxs: number[];
 
    limitSelectionToVisibleSamples: boolean;
 
@@ -40,6 +40,8 @@ export class SamplesListingComponent {
    labGroupTestTypes: LabTestType[];
 
    contentsLastLoaded: Moment;
+
+   readonly maxAutoExpandSamples = 3;
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
@@ -58,16 +60,21 @@ export class SamplesListingComponent {
        )
    {
       const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
-      this.expandedSampleOpIds = new Set(selectedSampleOpIds);
 
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
       this.refeshFromLabGroupContents(labGroupContents);
+
+      // If there's no selection from the service and the number of samples visible is small enough then expand all.
+      if ( this.visibleSampleIxs.length <= this.maxAutoExpandSamples && selectedSampleOpIds.length === 0 )
+         this.expandedSampleOpIds = new Set(this.visibleSampleIxs.map(ix => this.samples[ix].sampleOp.opId));
+      else
+         this.expandedSampleOpIds = new Set(selectedSampleOpIds);
    }
 
    refeshFromLabGroupContents(labGroupContents: LabGroupContents)
    {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
-      this.selectableSampleOps = labGroupContents.activeSamples.map(s => new SelectableSample(s));
+      this.samples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
       this.applyFilters(this.defaultListingOptions);
       this.contentsLastLoaded = moment();
    }
@@ -83,9 +90,9 @@ export class SamplesListingComponent {
    {
       this.hiddenSelectedCount = 0;
       const visibleIxs: number[] = [];
-      for (let i = 0; i < this.selectableSampleOps.length; ++i)
+      for (let i = 0; i < this.samples.length; ++i)
       {
-         const selectableSampleOp = this.selectableSampleOps[i];
+         const selectableSampleOp = this.samples[i];
          const passesFilters =
             this.sampleSatisfiesSearchTextRequirement(selectableSampleOp.sampleOp, listingOptions) &&
             this.sampleSatisfiesStatusCodeRequirement(selectableSampleOp.sampleOp, listingOptions);
@@ -100,7 +107,7 @@ export class SamplesListingComponent {
             else if (selectableSampleOp.selected) { this.hiddenSelectedCount++; }
          }
       }
-      this.visibleSampleOpIxs = visibleIxs;
+      this.visibleSampleIxs = visibleIxs;
    }
 
    toggleSampleExpanded(sampleOpId: number)
@@ -123,8 +130,8 @@ export class SamplesListingComponent {
       }
       else
       {
-         this.visibleSampleOpIxs.forEach(sampleOpIx =>
-            this.expandedSampleOpIds.add(this.selectableSampleOps[sampleOpIx].sampleOp.opId)
+         this.visibleSampleIxs.forEach(sampleOpIx =>
+            this.expandedSampleOpIds.add(this.samples[sampleOpIx].sampleOp.opId)
          );
       }
    }
@@ -154,9 +161,9 @@ export class SamplesListingComponent {
    get selectedVisibleSamples(): SampleOp[]
    {
       const selectedSamples: SampleOp[] = [];
-      for (const sampleOpIx of this.visibleSampleOpIxs)
+      for (const sampleOpIx of this.visibleSampleIxs)
       {
-         const selectableSample = this.selectableSampleOps[sampleOpIx];
+         const selectableSample = this.samples[sampleOpIx];
          if (selectableSample.selected)
          {
             selectedSamples.push(selectableSample.sampleOp);
@@ -169,7 +176,7 @@ export class SamplesListingComponent {
    {
       const selectedSamples: SampleOp[] = [];
 
-      for (const selectableSample of this.selectableSampleOps)
+      for (const selectableSample of this.samples)
       {
          if (selectableSample.selected)
          {
@@ -194,18 +201,18 @@ export class SamplesListingComponent {
 
    selectAllVisible()
    {
-      for (const sampleIx of this.visibleSampleOpIxs)
+      for ( const sampleIx of this.visibleSampleIxs )
       {
-         this.selectableSampleOps[sampleIx].selected = true;
+         this.samples[sampleIx].selected = true;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
 
    unselectAllVisible()
    {
-      for (const sampleIx of this.visibleSampleOpIxs)
+      for ( const sampleIx of this.visibleSampleIxs )
       {
-         this.selectableSampleOps[sampleIx].selected = false;
+         this.samples[sampleIx].selected = false;
       }
       // (hiddenSelectedCount is unchanged by this operation.)
    }
@@ -221,7 +228,7 @@ export class SamplesListingComponent {
    countSelected(): number
    {
       let selectedCount = 0;
-      for (const selectableSample of this.selectableSampleOps)
+      for (const selectableSample of this.samples)
       {
          if (selectableSample.selected)
          {
