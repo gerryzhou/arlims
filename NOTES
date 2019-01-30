@@ -2,10 +2,6 @@ Test new person inbox based design using fake api.
 
 Remove unneeded tables from dev db and publish to dev server.
 
-DB MODS (when back on FDA network)
--------
-Just regenerate from jpa defs in devl and create ddl scripts from resulting schema.
-
 LABSDS API CHANGES NEEDED
 -------------------------
 Person inbox

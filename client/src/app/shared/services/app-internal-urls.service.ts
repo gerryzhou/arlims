@@ -16,9 +16,9 @@ export class AppInternalUrlsService {
       return [''];
    }
 
-   samplesListingWithSampleExpanded(expandSampleOpId: number): any[]
+   samplesListing(): any[]
    {
-      return ['/samples', {expsmp: `${expandSampleOpId}`}];
+      return ['/samples'];
    }
 
    testDataEntry(testTypeCode: LabTestTypeCode, testId: number): any[]

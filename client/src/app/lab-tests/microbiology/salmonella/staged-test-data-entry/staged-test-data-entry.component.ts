@@ -37,6 +37,7 @@ import {SampleTestUnits, TestUnitsType} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
 import {FactsPostingService} from '../facts-posting.service';
+import {SelectedSampleOpsService} from "../../../../shared/services/selected-sample-ops.service";
 
 @Component({
    selector: 'app-micro-slm-staged-test-data-entry',
@@ -102,6 +103,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       private factsPostingService: FactsPostingService,
       private testsSvc: TestsService,
       private usrCtxSvc: UserContextService,
+      private selectedSamplesSvc: SelectedSampleOpsService,
       private appUrlsSvc: AppInternalUrlsService,
       private router: Router,
       private alertMsgSvc: AlertMessageService,
@@ -401,8 +403,6 @@ export class StagedTestDataEntryComponent implements OnInit {
          if (this.stageComps[selIx].promptAssignResources)
             this.stageComps[selIx].promptAssignResources();
       }
-
-      // TODO: Trigger angular changes check.
    }
 
    toggleShowUnsetAffordances()
@@ -449,11 +449,9 @@ export class StagedTestDataEntryComponent implements OnInit {
    {
       this.clearConflictsData();
       this.testDataForm.markAsPristine();
-      // TODO (minor): Set sample to expand as state in new context samples service instead of in the url.
       this.usrCtxSvc.refreshLabGroupContents();
-      this.router.navigate(
-         this.appUrlsSvc.samplesListingWithSampleExpanded(this.sampleOpTest.sampleOp.opId)
-      );
+      this.selectedSamplesSvc.setSelectedSampleOps([this.sampleOpTest.sampleOp]);
+      this.router.navigate(this.appUrlsSvc.samplesListing());
    }
 
    private visibleStageName(): String | null

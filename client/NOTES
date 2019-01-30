@@ -2,10 +2,6 @@ SLM test
   Implement actual validation function for each stage, returning list of complaints.
 
 
-TEST DATA CHANGES
------------------
-Add second stage of FACTS writing launched by new button in WRAPUP.
-
 FACTS WRITING PROCESS
 ---------------------
 Questions and Problems

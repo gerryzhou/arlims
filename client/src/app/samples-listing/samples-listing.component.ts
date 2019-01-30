@@ -15,6 +15,7 @@ import {
 import {AlertMessageService, UserContextService} from '../shared/services';
 import {ListingOptions} from './listing-options/listing-options';
 import {SampleOpStatusCode} from '../shared/models/sample-op-status';
+import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.service';
 
 @Component({
    selector: 'app-samples-listing',
@@ -53,22 +54,11 @@ export class SamplesListingComponent {
           private usrCtxSvc: UserContextService,
           private alertMsgSvc: AlertMessageService,
           private activatedRoute: ActivatedRoute,
-          private router: Router,
+          private selectedSampleOps: SelectedSampleOpsService,
        )
    {
-      // TODO (minor): This expanded samples state would be better transferred via service.
-      const expandedSampleOpIdsStr = activatedRoute.snapshot.paramMap.get('expsmp');
-      if ( expandedSampleOpIdsStr )
-      {
-         for (const sampleOpIdStr of expandedSampleOpIdsStr.split(','))
-         {
-            const sampleOpId = +sampleOpIdStr;
-            if (sampleOpId)
-            {
-               this.expandedSampleOpIds.add(sampleOpId);
-            }
-         }
-      }
+      const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
+      this.expandedSampleOpIds = new Set(selectedSampleOpIds);
 
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
       this.refeshFromLabGroupContents(labGroupContents);
