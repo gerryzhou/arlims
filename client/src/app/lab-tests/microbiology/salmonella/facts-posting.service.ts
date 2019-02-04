@@ -61,15 +61,22 @@ export class FactsPostingService {
          kitTestIndicator: spiking ? 'Y' : 'N',
          quantifiedIndicator: 'N',
          examinedType: samplingMethod.testUnitsType.toUpperCase() + 'S',
-         examinedNumber: samplingMethod.testUnitsCount,
-         subSamplesDetectableFindingsNumber: positivesCount,
          analysisResultsRemarksText: JSON.stringify(structuredRemarks),
       };
 
       // Set any remaining fields having conditional presence.
 
       if ( samplingMethod.testUnitsType === 'composite' )
+      {
+         subm.compositesExaminedNumber = samplingMethod.testUnitsCount;
          subm.subSamplesUsedCompositeNumber = samplingMethod.numberOfSubsPerComposite;
+         subm.compositesDetectableFindingsNumber = positivesCount;
+      }
+      else
+      {
+         subm.subSamplesExaminedNumber = samplingMethod.testUnitsCount;
+         subm.subSamplesDetectableFindingsNumber = positivesCount;
+      }
 
       if ( spiking )
       {
@@ -106,10 +113,9 @@ export class FactsPostingService {
 
       const examinedNumber = countValueOccurrences(testData.vidasData.testUnitDetections, true);
 
-      const analysisMicFindings = this.makeBAMFindings(testData.posContData.testUnitsContinuationTests);
+      const bamFindings = this.makeBAMFindings(testData.posContData.testUnitsContinuationTests);
 
-      const subSamplesDetectableFindingsNumber =
-         analysisMicFindings.filter(finding => finding.presenceResultIndicator === 'POS').length;
+      const detectableFindingsNumber = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
 
       const subm: MicrobiologySampleAnalysisSubmission = {
          operationId: opId,
@@ -124,14 +130,23 @@ export class FactsPostingService {
          kitTestIndicator: 'N',
          quantifiedIndicator: 'N',
          examinedType: samplingMethod.testUnitsType.toUpperCase() + 'S',
-         examinedNumber,
-         subSamplesDetectableFindingsNumber,
-         analysisMicFindings,
+         analysisMicFindings: bamFindings,
          analysisResultsRemarksText: testData.wrapupData.analysisResultsRemarksText,
       };
 
+      // Set any remaining fields having conditional presence.
+
       if ( samplingMethod.testUnitsType === 'composite' )
+      {
+         subm.compositesExaminedNumber = examinedNumber;
          subm.subSamplesUsedCompositeNumber = samplingMethod.numberOfSubsPerComposite;
+         subm.compositesDetectableFindingsNumber = detectableFindingsNumber;
+      }
+      else
+      {
+         subm.subSamplesExaminedNumber = examinedNumber;
+         subm.subSamplesDetectableFindingsNumber = detectableFindingsNumber;
+      }
 
       return (
          this.httpClient.post<MicrobiologySampleAnalysisSubmissionResponse>(

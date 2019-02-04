@@ -110,6 +110,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
+            .queryParam("personId", employeeId)
             .queryParam("statusCodes", String.join(",", statusCodes))
             .queryParam("objectFilters", includeFields);
 
@@ -198,27 +199,30 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             MicrobiologySampleAnalysisSubmission subm
         )
     {
+        List<MicrobiologySampleAnalysisSubmission> singletonSubm = singletonList(subm);
+
+        String reqBody = toJson(singletonSubm);
+
         log.info(
             "Submitting microbiology sample analysis" +
-            ( apiConfig.getLogSampleAnalysisSubmissionDetails() ? ":\n  " + toJson(subm) : "." )
+            ( apiConfig.getLogSampleAnalysisSubmissionDetails() ? ":\n  " + reqBody : "." )
         );
 
-        HttpEntity<String> reqEntity =
-            new HttpEntity<>(
-                toJson(subm),
-                newRequestHeaders(true, true)
-            );
+        HttpEntity<String> reqEntity = new HttpEntity<>(reqBody, newRequestHeaders(true, true));
 
-        ResponseEntity<MicrobiologySampleAnalysisSubmissionResponse> resp =
+        ResponseEntity<MicrobiologySampleAnalysisSubmissionResponse[]> resp =
             restTemplate.exchange(
                 apiConfig.getBaseUrl() + SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE,
                 HttpMethod.POST,
                 reqEntity,
-                MicrobiologySampleAnalysisSubmissionResponse.class
+                MicrobiologySampleAnalysisSubmissionResponse[].class
             );
 
-        // TODO: Maybe check for error response and incorporate into sample anlaysis response structure.
-        MicrobiologySampleAnalysisSubmissionResponse res = resp.getBody();
+        // TODO: Maybe check for error response and incorporate into sample analysis response structure.
+        MicrobiologySampleAnalysisSubmissionResponse[] res = resp.getBody();
+
+        if ( res.length != 1 )
+            throw new RuntimeException("Expected singleton result for singleton submission.");
 
         log.info(
             "Microbiology sample analysis submitted successfully" +
@@ -227,7 +231,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
                 : "." )
         );
 
-        return completedFuture(res);
+        return completedFuture(res[0]);
     }
 
     @Override

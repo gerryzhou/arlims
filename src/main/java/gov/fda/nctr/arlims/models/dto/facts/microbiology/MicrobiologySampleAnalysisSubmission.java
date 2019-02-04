@@ -16,11 +16,13 @@ public class MicrobiologySampleAnalysisSubmission
     private String methodCode;
     private String methodModificationIndicator; // "Y" | "N"
     private String kitTestIndicator;
-    private String examinedType; // "SUBSAMPLES" | "COMPOSITES"
-    private long examinedNumber;
-    private Optional<Long> subSamplesUsedCompositeNumber;
-    private Optional<Long> subSamplesDetectableFindingsNumber;
     private String quantifiedIndicator; // "Y" | "N"
+    private String examinedType; // "SUBSAMPLES" | "COMPOSITES"
+    private Optional<Long> compositesExaminedNumber;
+    private Optional<Long> subSamplesUsedCompositeNumber;
+    private Optional<Long> compositesDetectableFindingsNumber;
+    private Optional<Long> subSamplesExaminedNumber;
+    private Optional<Long> subSamplesDetectableFindingsNumber;
     private Optional<String> analysisResultsRemarksText;
     private Optional<List<MicrobiologyAnalysisFinding>> analysisMicFindings;
     private Optional<List<MicrobiologyKitTest>> analysisMicKitTests;
@@ -37,11 +39,13 @@ public class MicrobiologySampleAnalysisSubmission
             String methodCode,
             String methodModificationIndicator,
             String kitTestIndicator,
-            String examinedType,
-            long examinedNumber,
-            Optional<Long> subSamplesUsedCompositeNumber,
-            Optional<Long> subSamplesDetectableFindingsNumber,
             String quantifiedIndicator,
+            String examinedType,
+            Optional<Long> compositesExaminedNumber,
+            Optional<Long> subSamplesUsedCompositeNumber,
+            Optional<Long> compositesDetectableFindingsNumber,
+            Optional<Long> subSamplesExaminedNumber,
+            Optional<Long> subSamplesDetectableFindingsNumber,
             Optional<String> analysisResultsRemarksText,
             Optional<List<MicrobiologyAnalysisFinding>> analysisMicFindings,
             Optional<List<MicrobiologyKitTest>> analysisMicKitTests
@@ -57,11 +61,13 @@ public class MicrobiologySampleAnalysisSubmission
         this.methodCode = methodCode;
         this.methodModificationIndicator = methodModificationIndicator;
         this.kitTestIndicator = kitTestIndicator;
-        this.examinedType = examinedType;
-        this.examinedNumber = examinedNumber;
-        this.subSamplesUsedCompositeNumber = subSamplesUsedCompositeNumber;
-        this.subSamplesDetectableFindingsNumber = subSamplesDetectableFindingsNumber;
         this.quantifiedIndicator = quantifiedIndicator;
+        this.examinedType = examinedType;
+        this.compositesExaminedNumber = compositesExaminedNumber;
+        this.subSamplesUsedCompositeNumber = subSamplesUsedCompositeNumber;
+        this.compositesDetectableFindingsNumber = compositesDetectableFindingsNumber;
+        this.subSamplesExaminedNumber= subSamplesExaminedNumber;
+        this.subSamplesDetectableFindingsNumber = subSamplesDetectableFindingsNumber;
         this.analysisResultsRemarksText = analysisResultsRemarksText;
         this.analysisMicFindings = analysisMicFindings;
         this.analysisMicKitTests = analysisMicKitTests;
@@ -89,15 +95,19 @@ public class MicrobiologySampleAnalysisSubmission
 
     public String getKitTestIndicator() { return kitTestIndicator; }
 
+    public String getQuantifiedIndicator() { return quantifiedIndicator; }
+
     public String getExaminedType() { return examinedType; }
 
-    public long getExaminedNumber() { return examinedNumber; }
+    public Optional<Long> getCompositesExaminedNumber() { return compositesExaminedNumber; }
 
     public Optional<Long> getSubSamplesUsedCompositeNumber() { return subSamplesUsedCompositeNumber; }
 
-    public Optional<Long> getSubSamplesDetectableFindingsNumber() { return subSamplesDetectableFindingsNumber; }
+    public Optional<Long> getCompositesDetectableFindingsNumber() { return compositesDetectableFindingsNumber; }
 
-    public String getQuantifiedIndicator() { return quantifiedIndicator; }
+    public Optional<Long> getSubSamplesExaminedNumber() { return subSamplesExaminedNumber; }
+
+    public Optional<Long> getSubSamplesDetectableFindingsNumber() { return subSamplesDetectableFindingsNumber; }
 
     public Optional<String> getAnalysisResultsRemarksText() { return analysisResultsRemarksText; }
 

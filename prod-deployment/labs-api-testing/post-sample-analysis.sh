@@ -1,32 +1,33 @@
 #!/bin/sh
-rand=$(((RANDOM % 10000)))
+rand=$((aRANDOM % 10000))
 curl -d @- \
   -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Basic ..." \
   -H "sourceApplicationId: 0757" \
   -H "sourceTransactionId: A3WDBHDA${rand}" \
-  "http://dih-svc.test.fda.gov/LabsDataService/api/SampleAnalysesMicrobiology" <<REQBODY
-{
-   "sampleTrackingNum": 848176,
-   "sampleTrackingSubNumber": 0,
-   "programAssignmentCode": "03819C",
-   "workId": 6888784,
-   "problemAreaFlag": "MICROID",
-   "actionIndicator": "N",
-   "analysisResultsRemarksText": "Analysis remarks text",
-   "compositesExaminedNumber": 2,
-   "createdBy": "454522",
-   "methodCode": "T2004.03",
-   "methodModificationIndicator": "N",
-   "methodSourceCode": "AOAC",
-   "problemCode": "SLML",
-   "speciesCode": "SLML998",
-   "quantifiedIndicator": "N",
-   "examinedType": "COMPOSITES",
-   "examinedNumber": 2,
-   "subSamplesDetectableFindingsNumber": 0,
-   "subSamplesUsedCompositeNumber": 1,
-   "accomplishingOrgName": "ARKL"
-}
+  "http://dih-svc.dev/LabsDataService/api/SampleAnalysesMicrobiology" <<REQBODY
+[
+  {
+     "operationId":8643036,
+     "accomplishingOrgName":"ARKL",
+     "actionIndicator":"Y",
+     "problemCode":"MICROID",
+     "genusCode":"SLML",
+     "speciesCode":"SLML998",
+     "methodSourceCode":"AOAC",
+     "methodCode":"T2004.03",
+     "methodModificationIndicator":"N",
+     "kitTestIndicator":"N",
+     "examinedType":"COMPOSITES",
+     "compositesExaminedNumber": 3,
+     "subSamplesUsedCompositeNumber":15,
+     "compositesDetectableFindingsNumber":1,
+     "quantifiedIndicator":"N",
+     "analysisResultsRemarksText":"{\"methodRemarks\":null,\"methodDetails\":{\"gramsPerSub\":25}}",
+     "analysisMicFindings": null,
+     "analysisMicKitTests": null
+  }
+]
 REQBODY
+~
