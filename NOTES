@@ -2,8 +2,10 @@ Remove unneeded tables from dev db and publish to dev server.
   Make new application.properties for dev and test servers.
 
 LABSDS API CHANGES NEEDED
--------------------------
+=========================
+
 Person inbox
+------------
   - Needs
       product name (cfsanProductDesc)
       paf
@@ -22,23 +24,22 @@ Person inbox
       analysisSample - looks like this is the one
       collectionSample - not present in api example data
       tdSampleNumber - example seems too long for a sample # (longer than 6 digits)
-  - [Minor] It would be helpful in each assignment record to get an indication (at least)
-    of whether any other users have also been assigned. Currently there's no
-    indication from the personal inbox and another api call to labs inbox would
-    be necessary for each fetch from the personal inbox to provide this info,
-    which is too expensive for this common functionality. Maybe add a field
-    containing a json array of {personId, leadInd} in each row.
+  - Need indicator of whether any other employees are assigned to the operation, or array of assigned
+    employee person ids.  [If ui should continue to support showing assigned employees for a sample (op).]
 
-Need endpoint to fetch sample metadata for a given work id.
-  WorkDetails takes work id but lacks:
-    sample tracking num
-    sample tracking sub num
-    pac
-    product name
-  For the future maybe also add lid, paf etc.
-  When available, review/modify implementation of getSampleOpDetails() in LabsDSFactsAccessService.
+Sample Metadata
+---------------
+  Need endpoint to fetch sample metadata for a given work id.
+    WorkDetails takes work id but lacks:
+      sample tracking num
+      sample tracking sub num
+      pac
+      product name
+    For the future maybe also add lid, paf etc.
+    When available, review/modify implementation of getSampleOpDetails() in LabsDSFactsAccessService.
 
 Microbiology Data Submission
+----------------------------
   Doc needs to be updated that submission structure now expects an array at top level, and returns an array of results.
   Kit test submission
     Need example of spiking/kit test data submission, only example is result of GET request.
@@ -46,20 +47,60 @@ Microbiology Data Submission
     How to determine pos/neg from identification text or codes? Recognize specific API/Vitek codes?  What if identifications are weak/uncertain?
       For each test unit with positive continuation tests, multiple identifications may have been made by media and selective agar.
       How to determine from these the single identification needed for the BAM submission for the test unit?
-  Array element structure in analysisMicFindings:
-     'subNumberCode': '1', // Original test unit num as in Vidas results? Or positives relative num? Really string not numeric?
-     'genusCode': 'SLML',      // Why necessary again here?
-     'speciesCode': 'SLML998', //
-     'presenceResultIndicator': 'POS', // How to determine? Would a negative be reported (with an array entry) at all?
-     'atypicalReactionCode': 'N',      // Where from?
-     'isolatesSentNumber': 1,          // Where from?
-     'fdaLabOrganizationId': 3004,     // Why not org name as elsewhere?
-     'isolatesSentIndicator': 'Y',     // Where from?
-     'remarksText': 'Remarks 1',       // Where from?
-     'sampleAnalysisMicrobes': []      // What is this?
-     ---
-     Fields in example which are not documented: genusCode, speciesCode, secondaryPafCode, sampleAnalysisMicrobes.
-     Documented fields not in example: levelCountNumber, levelUnitCode, levelQualifierIndicator.
+    Array element structure in analysisMicFindings:
+      'subNumberCode': '1', // Original test unit num as in Vidas results? Or positives relative num? Really string not numeric?
+      'genusCode': 'SLML',      // Why necessary again here?
+      'speciesCode': 'SLML998', //
+      'presenceResultIndicator': 'POS', // How to determine? Would a negative be reported (with an array entry) at all?
+      'atypicalReactionCode': 'N',      // Where from?
+      'isolatesSentNumber': 1,          // Where from?
+      'fdaLabOrganizationId': 3004,     // Why not org name as elsewhere?
+      'isolatesSentIndicator': 'Y',     // Where from?
+      'remarksText': 'Remarks 1',       // Where from?
+      'sampleAnalysisMicrobes': []      // What is this?
+      ---
+    Example from Leidos:
+      "analysisMicFindings":[
+         {
+           "actionIndicator": "Y",
+           "subNumberCode": "1",
+           "genusCode": "SLML",
+           "speciesCode": "SLML998",
+           "presenceResultIndicator": "POS",
+           "atypicalReactionCode": "Y",
+           "isolatesSentNumber": 1,
+           "fdaLabOrganizationId": 3004,
+           "isolatesSentIndicator": "Y",
+           "remarksText": "Findings Remarks",
+           "atypicalReactionRemarksText": "Atypical Remarks Required as 'Y' in Atypical Biochem React Field",
+           "secondaryPafCode": "SAL",
+           "sampleAnalysisMicrobes": []
+         }
+      ]
+      ---
+      Fields in example which are not documented: genusCode, speciesCode, secondaryPafCode, sampleAnalysisMicrobes.
+      Documented fields not in example: levelCountNumber, levelUnitCode, levelQualifierIndicator.
+
+FACTS Status Update
+-------------------
+  Need api endpoint to which to post status updates.
+
+
+TODO:
+  Complete BAM submission work, mostly involving generation of finding structures from identifications data.
+  Posting of lab accomplishment hours.
+  Lookup of received-from information in prep stage.
+  Status change (api endpoint still not available?)
+  Implement proper per-stage validation and problem reporting.
+  Stage completion sealing with signature.  Require admin override for further edits.
+  Configure to run in Docker for cloud deployment, Java 11 + latest Spring framework.
+  Implement proper reports according to Paul's package documentation.
+
+
+
+
+
+
 
 
 Add impl for POST to status update ap in FactsController:
