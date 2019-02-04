@@ -15,4 +15,4 @@ chown -R alis.alis alis/
 
 systemctl start alis
 
-echo "To monitor app startup: tail -f $LIMS_HOME/alis/logs/alis.log"
+tail -f "$LIMS_HOME/alis/logs/alis.log"
