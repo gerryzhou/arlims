@@ -3,6 +3,7 @@ package gov.fda.nctr.arlims.data_access.facts;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -70,8 +71,8 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         this.apiConfig = apiConfig;
         this.restTemplate =
             restTemplateBuilder
-            .setConnectTimeout(apiConfig.getConnectTimeout())
-            .setReadTimeout(apiConfig.getReadTimeout())
+            .setConnectTimeout(Duration.ofMillis(apiConfig.getConnectTimeout()))
+            .setReadTimeout(Duration.ofMillis(apiConfig.getReadTimeout()))
             .customizers(new LoggingCustomizer())
             .build();
         restTemplate.setErrorHandler(getResponseErrorHandler());
