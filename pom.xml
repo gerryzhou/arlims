@@ -14,30 +14,27 @@
    <parent>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-parent</artifactId>
-      <version>2.0.2.RELEASE</version>
+      <version>2.1.2.RELEASE</version>
       <relativePath/> <!-- lookup parent from repository -->
    </parent>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-      <java.version>1.8</java.version>
+      <!--<java.release>11</java.release>-->
       <nodejs.version>v8.11.1</nodejs.version>
       <!-- prod.context.name:
        Provides the final jar or war file name, and the context name (initial component of the resource
        part of the app's url) under which the client produced here will expect application services and
        static resources to be available. The client is always configured via this param to use this prefix
-       both in index.html as base href, and when building application urls for services. Normally when
-       just deploying the produced war to an external Tomcat instance without specially configuring a
-       context name, the context name is determined by the war file name, which comes from this setting,
-       and no other configuration is necessary.
+       both in index.html as base href, and when building application urls for services.
 
-       On the other hand when running an embedded container, for example via "mvn spring-boot:run" or via
-       "java -jar", this parameter does not determine the context name of the app's services in the
-       embedded server. Instead, in these cases the context is set via the "server.servlet.contextpath"
-       property in one of the application properties files. The client however is still configured to use
-       this prod.context.name parameter as described above, so the server.servlet.contextpath property
-       should be set to match the value of prod.context.name in this case.
+       On the other hand when running an embedded Tomcat container, for example via "mvn spring-boot:run"
+       or via "java -jar", the context is instead determined by the application property
+       "server.servlet.contextpath" which can be set in an application properties file. The client however
+       is still configured to use this prod.context.name parameter as described above, so the
+       server.servlet.contextpath property should be set to match the value of this maven property
+       in this case.
        -->
       <prod.context.name>alis</prod.context.name>
       <filtering.output.message>THIS FILE WAS PRODUCED FROM A TEMPLATE, DO NOT EDIT.</filtering.output.message>
@@ -91,17 +88,13 @@
       	<version>2.0.0</version>
       </dependency>
       <dependency>
-          <groupId>com.h2database</groupId>
-          <artifactId>h2</artifactId>
-      </dependency>
-      <dependency>
           <groupId>com.auth0</groupId>
           <artifactId>java-jwt</artifactId>
-          <version>3.4.0</version>
+          <version>3.7.0</version>
       </dependency><dependency>
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>pdfbox</artifactId>
-        <version>2.0.4</version>
+        <version>2.0.13</version>
       </dependency>
       <dependency>
          <groupId>gov.fda.nctr</groupId>
@@ -119,6 +112,13 @@
          <type>jar</type>
       </dependency>
 
+      <dependency>
+         <groupId>com.h2database</groupId>
+         <artifactId>h2</artifactId>
+         <version>1.4.197</version>
+         <scope>test</scope>
+      </dependency>
+
    </dependencies>
 
 
@@ -126,6 +126,41 @@
       <finalName>${prod.context.name}</finalName>
 
       <plugins>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>3.0.0-M2</version>
+            <executions>
+               <execution>
+                  <id>enforce-maven</id>
+                  <goals>
+                     <goal>enforce</goal>
+                  </goals>
+                  <configuration>
+                     <rules>
+                        <requireMavenVersion>
+                           <version>3.5</version>
+                        </requireMavenVersion>
+                     </rules>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <!-- Maven versions plugin to assist with managing version of plugins, dependencies etc in this pom file.
+                  mvn versions:display-plugin-updates
+                  mvn versions:display-dependency-updates
+           -->
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <version>2.7</version>
+            <configuration>
+               <generateBackupPoms>false</generateBackupPoms>
+            </configuration>
+         </plugin>
+
          <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
@@ -140,12 +175,13 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.0</version>
             <configuration>
                <source>1.8</source>
                <target>1.8</target>
                <testSource>1.8</testSource>
                <testTarget>1.8</testTarget>
+               <!--<release>${java.release}</release>-->
                <compilerArgs>
                   <arg>-parameters</arg>
                </compilerArgs>
@@ -157,7 +193,7 @@
          <plugin>
             <groupId>cz.habarta.typescript-generator</groupId>
             <artifactId>typescript-generator-maven-plugin</artifactId>
-            <version>2.1.406</version>
+            <version>2.12.476</version>
             <executions>
                <execution>
                   <id>generate</id>
@@ -189,7 +225,7 @@
               for the client router configuration. -->
          <plugin>
             <artifactId>maven-resources-plugin</artifactId>
-            <version>3.0.2</version>
+            <version>3.1.0</version>
             <executions>
                <execution>
                   <id>copy-resources</id>
@@ -214,7 +250,7 @@
          <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
-            <version>1.4</version>
+            <version>1.6</version>
             <configuration>
                <workingDirectory>client</workingDirectory>
                <installDirectory>.mvn-node</installDirectory>
@@ -261,7 +297,7 @@
 
          <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
             <configuration>
                <descriptors>
                   <descriptor>src/assembly/dist.xml</descriptor>
@@ -281,7 +317,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-clean-plugin</artifactId>
-            <version>2.4.1</version>
+            <version>3.1.0</version>
             <configuration>
                <filesets>
                   <fileset>
@@ -294,13 +330,6 @@
                </filesets>
             </configuration>
          </plugin>
-
-         <!--integration test support via failsafe plugin-->
-         <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-failsafe-plugin</artifactId>-->
-            <!--<version>2.21.0</version>-->
-         <!--</plugin>-->
 
       </plugins>
 
