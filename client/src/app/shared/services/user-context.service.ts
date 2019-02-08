@@ -70,11 +70,15 @@ export class UserContextService {
 
       return this.httpClient.post<void>(url, body, {observe: 'response'}).pipe(
          flatMap(httpRes => {
+            // If the auth token is in the Authorization header (as opposed to a cookie), then publish the extracted token value.
             const authHdr = httpRes.headers.get('authorization') || httpRes.headers.get('Authorization');
-            const authToken = this.extractAuthToken(authHdr);
-            if ( authToken == null )
-               return obsof(false);
-            this.authenticationToken.next(authToken);
+            if ( authHdr != null )
+            {
+               const authToken = this.extractAuthToken(authHdr);
+               if ( authToken != null )
+                  this.authenticationToken.next(authToken);
+            }
+
             return this.fetchUserContext().pipe(
                map(userContext => {
                   this.authenticatedUser.next(userContext.user);

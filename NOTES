@@ -1,5 +1,16 @@
-Remove unneeded tables from dev db and publish to dev server.
-  Make new application.properties for dev and test servers.
+Deploy cookie-based auth to dev server for John to try on iPad.
+
+On dev server, get example output for person inbox api, look for the new fields that are needed.
+
+Upgrade to SpringBoot 2.1.2 and Spring 5.1
+  https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.1-Release-Notes
+  https://winterbe.com/posts/2018/08/29/migrate-maven-projects-to-java-11-jigsaw/
+  Also investigate whether Java 11 can be used without disruption.
+
+
+After api changes are made by Leidos and code is updated here to match:
+  Remove unneeded tables from test db and publish to dev and test server.
+    Send new application.properties to test server (and maybe dev server).
 
 LABSDS API CHANGES NEEDED
 =========================
@@ -12,13 +23,10 @@ Person inbox
       lid
       splitInd
       samplingOrg
-  - registerCompletionDate has format inconsistent with other dates delivered by api ('9/30/13 12:00 AM')
+  - registerTargetCompletionDate has format inconsistent with other dates delivered by api ('9/30/13 12:00 AM')
     Please use actual date (not timestamp) or be consistent with lab api "dates" like:
        "scheduledCompletionDate": "2018-10-17 00:00:00.000-0400"
-    - Field registerCompletionDate has format inconsistent with other dates delivered by api ('9/30/13 12:00 AM').
-      Requesting to instead use actual date (preferably) or timestamp in ISO-like format consistent with lab api like:
-        "scheduledCompletionDate": "2018-10-17 00:00:00.000-0400".
-    - Field statusDate (really a timestamp) is being sent as unix epoch millis count ("1547477997000"), please change
+  - Field statusDate (really a timestamp) is being sent as unix epoch millis count ("1547477997000"), please change
       to a human-readable timestamp like "2019-01-12 14:45:02-0400".
   - It's unclear which sample number is needed among:
       analysisSample - looks like this is the one
@@ -29,8 +37,8 @@ Person inbox
 
 Sample Metadata
 ---------------
-  Need endpoint to fetch sample metadata for a given work id.
-    WorkDetails takes work id but lacks:
+  Need endpoint to fetch sample metadata for a given work id (just for reports, currently).
+    "WorkDetails" endpoint takes work id but lacks:
       sample tracking num
       sample tracking sub num
       pac
@@ -40,26 +48,24 @@ Sample Metadata
 
 Microbiology Data Submission
 ----------------------------
-  Doc needs to be updated that submission structure now expects an array at top level, and returns an array of results.
+  Doc for SampleAnalysesMicrobiology endpoint needs to be updated that submission structure now expects an array at top level, and returns an array of results.
   Kit test submission
     Need example of spiking/kit test data submission, only example is result of GET request.
-  BAM Findings
-    How to determine pos/neg from identification text or codes? Recognize specific API/Vitek codes?  What if identifications are weak/uncertain?
-      For each test unit with positive continuation tests, multiple identifications may have been made by media and selective agar.
-      How to determine from these the single identification needed for the BAM submission for the test unit?
+  BAM Findings questions
     Array element structure in analysisMicFindings:
-      'subNumberCode': '1', // Original test unit num as in Vidas results? Or positives relative num? Really string not numeric?
-      'genusCode': 'SLML',      // Why necessary again here?
+      'subNumberCode': '1',     // Meaning? Original test unit num as in Vidas results? Or positives relative num? Really string not numeric?
+         A: test unit number
+      'genusCode': 'SLML',      // Why are these two necessary again here since they're specified in outer structure?
       'speciesCode': 'SLML998', //
-      'presenceResultIndicator': 'POS', // How to determine? Would a negative be reported (with an array entry) at all?
-      'atypicalReactionCode': 'N',      // Where from?
-      'isolatesSentNumber': 1,          // Where from?
+      'presenceResultIndicator': 'POS', // (Q for John) How to determine? Would a negative be reported (with an array entry) at all?
+      'atypicalReactionCode': 'N',      // (Q for John) Where from?
+      'isolatesSentNumber': 1,          // (Q for John) Where from?
       'fdaLabOrganizationId': 3004,     // Why not org name as elsewhere?
-      'isolatesSentIndicator': 'Y',     // Where from?
-      'remarksText': 'Remarks 1',       // Where from?
+      'isolatesSentIndicator': 'Y',     // (Q for John) Where from?
+      'remarksText': 'Remarks 1',       // (Q for John) Where from?
       'sampleAnalysisMicrobes': []      // What is this?
       ---
-    Example from Leidos:
+    Example from Leidos email after John's visit:
       "analysisMicFindings":[
          {
            "actionIndicator": "Y",
@@ -78,22 +84,27 @@ Microbiology Data Submission
          }
       ]
       ---
-      Fields in example which are not documented: genusCode, speciesCode, secondaryPafCode, sampleAnalysisMicrobes.
+      Fields in email example which are not documented: secondaryPafCode, sampleAnalysisMicrobes.
       Documented fields not in example: levelCountNumber, levelUnitCode, levelQualifierIndicator.
 
 FACTS Status Update
 -------------------
   Need api endpoint to which to post status updates.
+  Just added by Leidos as a PATCH operation.
 
 
 TODO:
   Complete BAM submission work, mostly involving generation of finding structures from identifications data.
+    How to determine pos/neg from identification text or codes? Recognize specific API/Vitek codes?  What if identifications are weak/uncertain?
+      For each test unit with positive continuation tests, multiple identifications may have been made by media and selective agar.
+      How to determine from these the single identification needed for the BAM submission for the test unit?
   Posting of lab accomplishment hours.
   Lookup of received-from information in prep stage.
   Status change (api endpoint still not available?)
   Implement proper per-stage validation and problem reporting.
   Stage completion sealing with signature.  Require admin override for further edits.
   Configure to run in Docker for cloud deployment, Java 11 + latest Spring framework.
+    https://stackoverflow.com/questions/53669151/java-11-application-as-docker-image/53669152#53669152
   Implement proper reports according to Paul's package documentation.
 
 

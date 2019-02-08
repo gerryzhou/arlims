@@ -18,9 +18,23 @@ public class SecurityProperties
     @NotNull
     private long jwtExpirationMillis;
 
+    @NotNull
+    private SecurityProperties.JWTHeader jwtHeader = JWTHeader.Cookie;
+
+    @NotNull
+    private String jwtCookieName = "jwtc";
+
     public String getJwtSignatureSecret() { return jwtSignatureSecret; }
     public void setJwtSignatureSecret(String jwtSignatureSecret) { this.jwtSignatureSecret = jwtSignatureSecret; }
 
     public long getJwtExpirationMillis() { return jwtExpirationMillis; }
     public void setJwtExpirationMillis(long jwtExpirationMillis) { this.jwtExpirationMillis = jwtExpirationMillis; }
+
+    public JWTHeader getJwtHeader() { return jwtHeader; }
+    public void setJwtHeader(JWTHeader jwtHeader) { this.jwtHeader = jwtHeader; }
+
+    public String getJwtCookieName() { return jwtCookieName; }
+    public void setJwtCookieName(String jwtCookieName) { this.jwtCookieName = jwtCookieName; }
+
+    public enum JWTHeader { Cookie, Authorization }
 }

@@ -3,6 +3,7 @@ package gov.fda.nctr.arlims.security;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.servlet.FilterChain;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
-import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_NAME;
-import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_PREFIX;
+import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.AUTH_HEADER_NAME;
+import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.AUTH_TOKEN_PREFIX;
 
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter
@@ -36,6 +37,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.securityProperties = securityProperties;
         this.authenticationManager = authenticationManager;
         super.setAuthenticationManager(authenticationManager);
+        log.info("Using JWT authentication header mode: " + securityProperties.getJwtHeader());
     }
 
     @Override
@@ -74,6 +76,23 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .withExpiresAt(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationMillis()))
             .sign(HMAC512(securityProperties.getJwtSignatureSecret().getBytes()));
 
-        res.addHeader(JWT_HEADER_NAME, JWT_HEADER_PREFIX + token);
+        switch ( securityProperties.getJwtHeader() )
+        {
+            case Authorization:
+            {
+                res.addHeader(AUTH_HEADER_NAME, AUTH_TOKEN_PREFIX + token);
+                break;
+            }
+            case Cookie:
+            {
+                Cookie cookie = new Cookie(securityProperties.getJwtCookieName(), token);
+                cookie.setMaxAge((int)securityProperties.getJwtExpirationMillis()/1000);
+                cookie.setHttpOnly(true);
+                res.addCookie(cookie);
+                break;
+            }
+            default:
+                throw new RuntimeException("Unrecognized jwt token header type in security properties.");
+        }
     }
 }

@@ -1,8 +1,10 @@
 package gov.fda.nctr.arlims.security;
 
 import java.io.IOException;
+import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,11 +16,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.util.WebUtils;
 
 import gov.fda.nctr.arlims.data_access.user_context.UserContextService;
 import gov.fda.nctr.arlims.models.dto.AppUser;
-import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_NAME;
-import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.JWT_HEADER_PREFIX;
+import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.AUTH_HEADER_NAME;
+import static gov.fda.nctr.arlims.security.WebSecurityConfigurer.AUTH_TOKEN_PREFIX;
 
 
 public class JWTRecognitionFilter extends BasicAuthenticationFilter
@@ -50,30 +53,50 @@ public class JWTRecognitionFilter extends BasicAuthenticationFilter
         )
         throws IOException, ServletException
     {
-        String header = req.getHeader(JWT_HEADER_NAME);
+        Optional<String> jwt = getJWT(req);
 
-        if ( header == null || !header.startsWith(JWT_HEADER_PREFIX) )
-        {
-            chain.doFilter(req, res);
-            return;
-        }
-
-        SecurityContextHolder.getContext().setAuthentication(makeAuthentication(req));
+        jwt.ifPresent(tok -> SecurityContextHolder.getContext().setAuthentication(makeAuthentication(tok)));
 
         chain.doFilter(req, res);
     }
 
-    private Authentication makeAuthentication(HttpServletRequest req)
+    private Optional<String> getJWT(HttpServletRequest req)
     {
-        String authHeaderValue = req.getHeader(JWT_HEADER_NAME);
+        switch ( securityProperties.getJwtHeader() )
+        {
+            case Authorization:
+            {
+                String authHeaderValue = req.getHeader(AUTH_HEADER_NAME);
 
-        if ( authHeaderValue == null )
-            return null;
+                if ( authHeaderValue != null && authHeaderValue.length() > AUTH_TOKEN_PREFIX.length() )
+                    return Optional.of(authHeaderValue.substring(AUTH_TOKEN_PREFIX.length()));
+                else
+                    return Optional.empty();
+            }
+            case Cookie:
+            {
+                String cookieName = securityProperties.getJwtCookieName();
+                if ( cookieName == null )
+                    throw new RuntimeException("No cookie name is configured in security settings for JWT.");
 
+                Cookie jwtCookie = WebUtils.getCookie(req, cookieName);
+
+                if ( jwtCookie == null )
+                    return Optional.empty();
+
+                return Optional.ofNullable(jwtCookie.getValue());
+            }
+            default:
+                throw new RuntimeException("Unrecognized jwt header type in security properties.");
+        }
+    }
+
+    private Authentication makeAuthentication(String jwt)
+    {
         String username =
             JWT.require(Algorithm.HMAC512(securityProperties.getJwtSignatureSecret().getBytes()))
             .build()
-            .verify(authHeaderValue.substring(JWT_HEADER_PREFIX.length()))
+            .verify(jwt)
             .getSubject();
 
         if ( username == null )
