@@ -16,7 +16,7 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long>
     @Query(value = "SELECT e FROM Employee e JOIN FETCH e.labGroup where e.fdaEmailAccountName = :username")
     Optional<Employee> findWithLabGroupByFdaEmailAccountName(@Param("username") String username);
 
-    @Query(value = "SELECT e FROM Employee e JOIN FETCH e.roles where e.fdaEmailAccountName = :username")
+    @Query(value = "SELECT e FROM Employee e LEFT JOIN FETCH e.roles where e.fdaEmailAccountName = :username")
     Optional<Employee> findWithRolesByFdaEmailAccountName(@Param("username") String username);
 
     @Query(value = "SELECT e FROM Employee e JOIN FETCH e.labGroup where e.factsPersonId = :personId")
