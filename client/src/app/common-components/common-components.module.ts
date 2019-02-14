@@ -13,7 +13,12 @@ import {
    MatButtonModule,
    MatSelectModule,
    MatDialogModule,
-   MatInputModule, MatDatepickerModule, MatMenuModule, MatTableModule, MatPaginatorModule
+   MatInputModule,
+   MatDatepickerModule,
+   MatMenuModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatListModule,
 } from '@angular/material';
 import {MatIconModule} from '@angular/material/icon';
 import {DayNumberPipe} from './day-number.pipe';
@@ -31,6 +36,7 @@ import {TestAttachedFilesComponent} from './test-attached-files/test-attached-fi
 import {AttachedFileMetadataDialogComponent} from './attached-file-metadata-dialog/attached-file-metadata-dialog.component';
 import {TimeChargesComponent} from './time-charges/time-charges.component';
 import {UserTimeChargeDialogComponent} from './time-charges/time-charge-dialog/user-time-charge-dialog.component';
+import {ItemsSelectionDialogComponent} from './items-selection-dialog/items-selection-dialog.component';
 
 @NgModule({
    imports: [
@@ -50,6 +56,7 @@ import {UserTimeChargeDialogComponent} from './time-charges/time-charge-dialog/u
       MatMenuModule,
       MatTableModule,
       MatPaginatorModule,
+      MatListModule
    ],
    declarations: [
       SampleComponent,
@@ -70,6 +77,7 @@ import {UserTimeChargeDialogComponent} from './time-charges/time-charge-dialog/u
       AttachedFileMetadataDialogComponent,
       TimeChargesComponent,
       UserTimeChargeDialogComponent,
+      ItemsSelectionDialogComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
@@ -78,6 +86,7 @@ import {UserTimeChargeDialogComponent} from './time-charges/time-charge-dialog/u
       SimpleInputDialogComponent,
       AttachedFileMetadataDialogComponent,
       UserTimeChargeDialogComponent,
+      ItemsSelectionDialogComponent,
       // (dialog components here as well as in declarations)
    ],
    exports: [

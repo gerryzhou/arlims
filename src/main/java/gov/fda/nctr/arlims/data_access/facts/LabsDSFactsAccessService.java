@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
@@ -35,6 +36,7 @@ import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
+import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
@@ -57,6 +59,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     private static final String LAB_INBOX_RESOURCE = "LabsInbox";
     private static final String EMPLOYEE_INBOX_RESOURCE = "PersonInbox";
     private static final String WORK_DETAILS_RESOURCE = "WorkDetails";
+    private static final String SAMPLE_TRANSFERS_RESOURCE = "SampleTransfers";
     private static final String SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE = "SampleAnalysesMicrobiology";
 
     private static final String UPPER_ALPHANUM ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -117,10 +120,9 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         String uri = uriBldr.build(false).encode().toUriString();
 
-        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
+        HttpEntity req = new HttpEntity(newRequestHeaders(true, false));
 
-        ResponseEntity<EmployeeInboxItem[]> resp =
-            restTemplate.exchange(uri, GET, reqEntity, EmployeeInboxItem[].class);
+        ResponseEntity<EmployeeInboxItem[]> resp = restTemplate.exchange(uri, GET, req, EmployeeInboxItem[].class);
 
         List<EmployeeInboxItem> inboxItems = Arrays.stream(resp.getBody()).collect(toList());
 
@@ -160,12 +162,11 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         String uri = uriBldr.build(false).encode().toUriString();
 
-        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
+        HttpEntity req = new HttpEntity(newRequestHeaders(true, false));
 
         log.info("Retrieving inbox items for " + orgName + ".");
 
-        ResponseEntity<LabInboxItem[]> resp =
-            restTemplate.exchange(uri, GET, reqEntity, LabInboxItem[].class);
+        ResponseEntity<LabInboxItem[]> resp = restTemplate.exchange(uri, GET, req, LabInboxItem[].class);
 
         List<LabInboxItem> inboxItems = Arrays.stream(resp.getBody()).collect(toList());
 
@@ -185,12 +186,44 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             .queryParam("objectFilters", includeFields)
             .build(false).encode().toUriString();
 
-        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
+        HttpEntity req = new HttpEntity(newRequestHeaders(true, false));
 
-        ResponseEntity<SampleOpDetails> resp =
-            restTemplate.exchange(uri, GET, reqEntity, SampleOpDetails.class);
+        ResponseEntity<SampleOpDetails> resp = restTemplate.exchange(uri, GET, req, SampleOpDetails.class);
 
         return completedFuture(resp.getBody());
+    }
+
+
+    @Override
+    @Async
+    public CompletableFuture<List<SampleTransfer>> getSampleTransfers
+        (
+            long sampleTrackingNum,
+            Optional<Long> toPersonId
+        )
+    {
+        String includeFields = "sampleTrackingNum,sampleTrackingSubNum,receivedByPersonId,receivedByPersonFirstName," +
+            "receivedByPersonLastName,receivedDate,receiverConfirmationInd,sentByPersonId," +
+            "sentByPersonFirstName,sentByPersonLastName,sentByPersonMiddleName,sentDate,sentByOrgName,remarks," +
+            "receivedByPersonMIddleName"; // (with typo)
+
+        UriComponentsBuilder uriBuilder =
+            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + SAMPLE_TRANSFERS_RESOURCE)
+            .queryParam("sampleTrackingNum", sampleTrackingNum)
+            .queryParam("objectFilters", includeFields);
+
+        if ( toPersonId.isPresent() )
+            uriBuilder = uriBuilder.queryParam("personId", toPersonId.get());
+
+        String uri = uriBuilder.build(false).encode().toUriString();
+
+        HttpEntity reqEntity = new HttpEntity(newRequestHeaders(true, false));
+
+        ResponseEntity<SampleTransfer[]> resp = restTemplate.exchange(uri, GET, reqEntity, SampleTransfer[].class);
+
+        List<SampleTransfer> transfers = Arrays.stream(resp.getBody()).collect(toList());
+
+        return completedFuture(transfers);
     }
 
     @Override

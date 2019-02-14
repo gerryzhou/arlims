@@ -16,6 +16,19 @@
    }
 }
 
+.received-autofill {
+   display: flex;
+   align-items: center;
+   border: 1px dotted gray;
+   padding: 3px;
+   button {
+      margin: 5px;
+   }
+   mat-icon {
+      margin-right: 5px;
+   }
+}
+
 .cr-matching-grid {
    display: grid;
    grid-template-columns: 1fr 5fr;

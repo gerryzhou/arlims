@@ -1,6 +1,6 @@
-Client side auth configuration
-  Make sure that client behaves properly in both JWT auth modes, using Cookie and Authorization headers.
 
+PREP Stage
+  Implement autofill from FACTS for received fields.
 
 SLM test
   Implement actual validation function for each stage, returning list of complaints.

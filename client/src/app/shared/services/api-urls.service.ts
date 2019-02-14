@@ -98,23 +98,23 @@ export class ApiUrlsService {
       )
       : string
    {
-      let searchParams = new HttpParams();
+      let qryParams = new HttpParams();
 
       if ( textSearch )
-         searchParams = searchParams.append('tq', textSearch);
+         qryParams = qryParams.append('tq', textSearch);
       if ( fromTimestamp )
-         searchParams = searchParams.append('fts', fromTimestamp.toISOString());
+         qryParams = qryParams.append('fts', fromTimestamp.toISOString());
       if ( toTimestamp )
-         searchParams = searchParams.append('tts', toTimestamp.toISOString());
+         qryParams = qryParams.append('tts', toTimestamp.toISOString());
       if ( (fromTimestamp || toTimestamp) && timestampProperty )
-         searchParams = searchParams.append('tsp', timestampProperty);
+         qryParams = qryParams.append('tsp', timestampProperty);
       if ( includeStatusCodes )
-         searchParams = searchParams.append('ss', JSON.stringify(includeStatusCodes));
+         qryParams = qryParams.append('ss', JSON.stringify(includeStatusCodes));
       if ( includeTestTypeCodes )
-         searchParams = searchParams.append('ltt', JSON.stringify(includeTestTypeCodes));
+         qryParams = qryParams.append('ltt', JSON.stringify(includeTestTypeCodes));
 
 
-      return this.location.prepareExternalUrl(`/api/tests/search?${searchParams.toString()}`);
+      return this.location.prepareExternalUrl(`/api/tests/search?${qryParams.toString()}`);
    }
 
    auditLogEntriesQueryUrl
@@ -128,22 +128,22 @@ export class ApiUrlsService {
       )
       : string
    {
-      let searchParams = new HttpParams();
+      let qryParams = new HttpParams();
 
       if ( fromMoment )
-         searchParams = searchParams.append('from', fromMoment.toISOString());
+         qryParams = qryParams.append('from', fromMoment.toISOString());
       if ( toMoment )
-         searchParams = searchParams.append('to', toMoment.toISOString());
+         qryParams = qryParams.append('to', toMoment.toISOString());
       if ( testId )
-         searchParams = searchParams.append('test', testId.toString());
+         qryParams = qryParams.append('test', testId.toString());
       if ( username )
-         searchParams = searchParams.append('user', username);
-      searchParams =
-         searchParams
+         qryParams = qryParams.append('user', username);
+      qryParams =
+         qryParams
          .append('data', includeChangeDetailData ? '1' : '0')
          .append('unch', includeUnchangedSaves ? '1' : '0');
 
-      return this.location.prepareExternalUrl('/api/audit-log/entries') + '?' + searchParams.toString();
+      return this.location.prepareExternalUrl(`/api/audit-log/entries?${qryParams.toString()}`);
    }
 
    testModifyingEmployeeIdsUrl(testId: number)
@@ -154,6 +154,15 @@ export class ApiUrlsService {
    factsSampleOpStatusUrl(opId: number)
    {
       return this.location.prepareExternalUrl(`/api/facts/sample-op/${opId}/status`);
+   }
+
+   factsSampleTransfersUrl(sampleTrackingNum: number, toPersonId: number | null)
+   {
+      const params = toPersonId ? new HttpParams().append('to', toPersonId.toString()) : null;
+
+      return this.location.prepareExternalUrl(
+         `/api/facts/samples/${sampleTrackingNum}/transfers` + (params ? '?' + params.toString() : '')
+      );
    }
 
    factsMicrobiologySampleAnalysisUrl()

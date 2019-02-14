@@ -37,7 +37,7 @@ import {SampleTestUnits, TestUnitsType} from '../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../shared/services/app-internal-urls.service';
 import {makeAttachedFilesByTestPartMap} from '../../../../shared/util/lab-group-data-utils';
 import {FactsPostingService} from '../facts-posting.service';
-import {SelectedSampleOpsService} from "../../../../shared/services/selected-sample-ops.service";
+import {SelectedSampleOpsService} from '../../../../shared/services/selected-sample-ops.service';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data-entry',

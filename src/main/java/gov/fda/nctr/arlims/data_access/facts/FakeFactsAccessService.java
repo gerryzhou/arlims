@@ -2,8 +2,10 @@ package gov.fda.nctr.arlims.data_access.facts;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.stream.Collectors.toList;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
+import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
@@ -247,6 +250,59 @@ public class FakeFactsAccessService implements FactsAccessService
             );
 
             return completedFuture(sample);
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<List<SampleTransfer>> getSampleTransfers(long sampleTrackingNum, Optional<Long> toPersonId)
+    {
+        try
+        {
+            SampleTransfer[] transfers =
+                jsonObjectMapper.readValue(
+                    "[" +
+                        "{" +
+                        "\"sampleTrackingNum\":852325,\"sampleTrackingSubNum\":0," +
+                        "\"receivedByPersonId\":472629," +
+                        "\"receivedByPersonFirstName\":\"Tripti\"," +
+                        "\"receivedByPersonLastName\":\"Parajuli\"," +
+                        "\"receivedByPersonMIddleName\":\"T\"," +
+                        "\"receivedDate\":\"2018-09-19 00:00:00.000-0400\"," +
+                        "\"receiverConfirmationInd\":\"Y\"," +
+                        "\"remarks\":\"test\"," +
+                        "\"sentByOrgName\":\"BLT-DO\"," +
+                        "\"sentByPersonId\":472629," +
+                        "\"sentByPersonFirstName\":\"Tripti\"," +
+                        "\"sentByPersonLastName\":\"Parajuli\"," +
+                        "\"sentByPersonMiddleName\":\"T\"," +
+                        "\"sentDate\":\"2018-08-03T00:00:00.000-04:00\"" +
+                        "}," +
+                       "{" +
+                       "\"sampleTrackingNum\":852324,\"sampleTrackingSubNum\":0," +
+                       "\"receivedByPersonId\":472629," +
+                       "\"receivedByPersonFirstName\":\"John\"," +
+                       "\"receivedByPersonLastName\":\"Somebody\"," +
+                       "\"receivedByPersonMIddleName\":\"Q\"," +
+                       "\"receivedDate\":\"2018-09-18 00:00:00.000-0400\"," +
+                       "\"receiverConfirmationInd\":\"Y\"," +
+                       "\"remarks\":\"another test\"," +
+                       "\"sentByOrgName\":\"BLT-DO\"," +
+                       "\"sentByPersonId\":472629," +
+                       "\"sentByPersonFirstName\":\"Tripti\"," +
+                       "\"sentByPersonLastName\":\"Parajuli\"," +
+                       "\"sentByPersonMiddleName\":\"T\"," +
+                       "\"sentDate\":\"2018-08-02T00:00:00.000-04:00\"" +
+                       "}" +
+                    "]",
+                    SampleTransfer[].class
+                );
+
+            return completedFuture(Arrays.stream(transfers).collect(toList()));
         }
         catch(Exception e)
         {

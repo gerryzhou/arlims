@@ -1,3 +1,5 @@
+Replace workId with operationId everywhere in Leidos api calls.
+
 Upgrade to SpringBoot 2.1.2 and Spring 5.1
   https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.1-Release-Notes
   https://winterbe.com/posts/2018/08/29/migrate-maven-projects-to-java-11-jigsaw/
@@ -11,6 +13,14 @@ After api changes are made by Leidos and code is updated here to match:
 LABSDS API CHANGES NEEDED
 =========================
 
+
+SampleTransfers:
+  "sent/receivedDate" fields have values like "2018-08-02T00:00:00.000-04:00" and "2018-09-19 00:00:00.000-0400" (one has 'T' sep, one a space).
+    Can we have only the date part returned?
+  (sp) "I" -> "i" in "receivedByPersonMIddleName" field name.
+
+
+[Remaining were discussed in last api meeting]
 Person inbox
 ------------
   - Needs
@@ -44,7 +54,6 @@ Sample Metadata
 
 Microbiology Data Submission
 ----------------------------
-  Doc for SampleAnalysesMicrobiology endpoint needs to be updated that submission structure now expects an array at top level, and returns an array of results.
   Kit test submission
     Need example of spiking/kit test data submission, only example is result of GET request.
   BAM Findings questions
