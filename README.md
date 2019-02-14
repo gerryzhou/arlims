@@ -24,7 +24,7 @@ accessed in the browser at `localhost:4200`.
     # Get the application properties from somewhere, to provide db connect info etc.
     cp ~/Programming/etc/test-configs/alis/application-dev.properties target/application.properties
     cd target
-    java -jar alis
+    java -jar alis.jar
 
 
 # Building and deploying for production
@@ -33,7 +33,7 @@ accessed in the browser at `localhost:4200`.
 
 Build production jar file with default context name of "alis":
 
-    mvn package
+    mvn clean package
     
 This will produces a package target/alis-dist.tgz with everything
 needed for transfer to a server.
