@@ -46,7 +46,7 @@ public class EmployeeInboxItem
     private String leadInd;
 
 //    TODO: Re-enable if api starts delivering more ISO-like timestamp (as in lab inbox "dates"), instead of format like '9/30/13 12:00 AM'.
-//    @JsonDeserialize(using = JsonTimestampToLocalDateDeserializer.class)
+//    @JsonDeserialize(using = TimeIgnoringLocalDateDeserializer.class)
     @JsonIgnore
     private LocalDate registerTargetCompletionDate;
 

@@ -7,7 +7,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import gov.fda.nctr.arlims.data_access.facts.JsonTimestampToLocalDateDeserializer;
+import gov.fda.nctr.arlims.data_access.facts.TimeIgnoringLocalDateDeserializer;
 
 
 public class LabInboxItem
@@ -46,8 +46,8 @@ public class LabInboxItem
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
     private Instant requestDate;
 
-    // API provides completion date as timestamp with timezone for what is really just a date.
-    @JsonDeserialize(using = JsonTimestampToLocalDateDeserializer.class)
+    // API provides completion date as timestamp with timezone for what really should be just a date.
+    @JsonDeserialize(using = TimeIgnoringLocalDateDeserializer.class)
     private LocalDate scheduledCompletionDate;
 
     private String samplingOrg;
