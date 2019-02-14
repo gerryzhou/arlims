@@ -22,9 +22,9 @@ import {
    MatSnackBarModule,
    MatSlideToggleModule,
    MatDialogModule,
-   MatDatepickerModule
+   MatDatepickerModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS
 } from '@angular/material';
-import {MatMomentDateModule} from '@angular/material-moment-adapter';
+import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {TruncateModule} from '@yellowspot/ng-truncate';
@@ -105,7 +105,32 @@ import {TestsSearchQueryComponent} from './tests-search/query/tests-search-query
          deps: [UserContextService, ApiUrlsService]
       },
       UserContextService,
+      { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+      {
+         provide: MAT_DATE_FORMATS,
+         useValue: {
+            parse: { dateInput: 'YYYY/MM/DD' },
+            display: {
+               dateInput: 'YYYY/MM/DD',
+               monthYearLabel: 'MMM YYYY',
+               dateA11yLabel: 'YYYY/MM/DD',
+               monthYearA11yLabel: 'MMMM YYYY',
+            }
+         }
+      },
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+const AppDateFormats = {
+   parse: {
+      dateInput: 'LL',
+   },
+   display: {
+      dateInput: 'LL',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY',
+   },
+};
