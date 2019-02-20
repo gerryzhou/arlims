@@ -1,6 +1,6 @@
 #!/bin/sh
 rand=$((aRANDOM % 10000))
-curl -d @- \
+curl -i -d @- \
   -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Basic ..." \

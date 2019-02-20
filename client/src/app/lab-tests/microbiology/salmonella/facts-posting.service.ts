@@ -4,11 +4,11 @@ import {Observable, throwError} from 'rxjs';
 import {ContinuationTestssByTestUnitNum, TestData} from './test-data';
 import {
    MicrobiologyAnalysisFinding,
-   MicrobiologySampleAnalysisSubmission,
+   MicrobiologySampleAnalysis,
    MicrobiologySampleAnalysisSubmissionResponse
 } from '../../../../generated/dto';
 import {countValueOccurrences} from '../../test-stages';
-import {ApiUrlsService} from '../../../shared/services';
+import {ApiUrlsService, UserContextService} from '../../../shared/services';
 import {HttpClient} from '@angular/common/http';
 
 // FACTS posting service for the salmonella module.
@@ -17,6 +17,7 @@ export class FactsPostingService {
 
    constructor
       (
+         private usrCtxSvc: UserContextService,
          private apiUrlsSvc: ApiUrlsService,
          private httpClient: HttpClient
       )
@@ -48,7 +49,7 @@ export class FactsPostingService {
          },
       };
 
-      const subm: MicrobiologySampleAnalysisSubmission = {
+      const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
          accomplishingOrgName: labGroupFactsParentOrgName,
          actionIndicator: positivesCount > 0 ? 'Y' : 'N',
@@ -117,7 +118,7 @@ export class FactsPostingService {
 
       const detectableFindingsNumber = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
 
-      const subm: MicrobiologySampleAnalysisSubmission = {
+      const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
          accomplishingOrgName: labGroupFactsParentOrgName,
          actionIndicator: 'Y',
@@ -199,10 +200,9 @@ export class FactsPostingService {
          // }
    }
 
-   setSampleOperationStatus(sampleOpId: number, statusCode: string): Observable<void>
+   setSampleOperationWorkStatus(sampleOpId: number, statusCode: string, factsPersonId: number): Observable<void>
    {
-      const url = this.apiUrlsSvc.factsSampleOpStatusUrl(sampleOpId);
-
+      const url = this.apiUrlsSvc.factsSampleOpWorkStatusUrl(sampleOpId, factsPersonId);
       return this.httpClient.post<void>(url, statusCode);
    }
 }

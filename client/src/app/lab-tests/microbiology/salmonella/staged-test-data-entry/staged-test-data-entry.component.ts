@@ -57,7 +57,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    readonly sampleOpTest: SampleOpTest;
 
-   readonly appUser: AppUser | null;
+   readonly appUser: AppUser
 
 
    // The form group holds the edited state of the test data.
@@ -194,7 +194,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       if ( this.testIsNew )
       {
          this.factsPostingService
-            .setSampleOperationStatus(this.sampleOpTest.sampleOp.opId, 'I')
+            .setSampleOperationWorkStatus(this.sampleOpTest.sampleOp.opId, 'I', this.appUser.factsPersonId)
             .subscribe(
                () => { console.log('FACTS status updated for new test.'); },
                err => this.onFactsStatusUpdateError(err)

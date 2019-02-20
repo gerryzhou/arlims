@@ -1,6 +1,7 @@
 package gov.fda.nctr.arlims.data_access.facts;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
@@ -9,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
@@ -18,14 +18,14 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.DefaultResponseErrorHandler;
-import org.springframework.web.client.ResponseErrorHandler;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import static org.springframework.http.HttpMethod.GET;
+
 import org.hobsoft.spring.resttemplatelogger.LoggingCustomizer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,12 +33,11 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.*;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
-import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysesSubmission;
 
 
 @Service
@@ -61,6 +60,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     private static final String WORK_DETAILS_RESOURCE = "WorkDetails";
     private static final String SAMPLE_TRANSFERS_RESOURCE = "SampleTransfers";
     private static final String SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE = "SampleAnalysesMicrobiology";
+    private static final String SAMPLE_ANALYSES_RESOURCE = "SampleAnalyses";
 
     private static final String UPPER_ALPHANUM ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -74,6 +74,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         this.apiConfig = apiConfig;
         this.restTemplate =
             restTemplateBuilder
+            .requestFactory(HttpComponentsClientHttpRequestFactory.class) // required for PATCH method support
             .setConnectTimeout(Duration.ofMillis(apiConfig.getConnectTimeout()))
             .setReadTimeout(Duration.ofMillis(apiConfig.getReadTimeout()))
             .customizers(new LoggingCustomizer())
@@ -107,10 +108,10 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             List<String> statusCodes
         )
     {
-        // TODO: Add additional personal inbox fields here when supported by api: cfsanProductDesc, lid, paf, splitInd, samplingOrg.
         String includeFields =
-          "workId,analysisSample,sampleTrackingSubNum,pacCode,statusCode,statusDate,subjectText,remarksText," +
-          "registerTargetCompletionDate,personId,firstName,lastName,mdlIntlName,leadInd";
+          "operationId,sampleTrackingNum,sampleTrackingSubNumber,sampleAnalysisId,cfsanPrductDescription,lidCode," +
+          "problemAreaFlag,pacCode,statusCode,statusDate,subjectText,remarksText,personId,firstName,lastName," +
+          "mdlIntlName,leadInd";
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
@@ -143,12 +144,11 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             : Optional.empty();
 
         String includeFields =
-            "workId,sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject,pacCode," +
-            "problemAreaFlag,lidCode,splitInd,workRqstId,operationCode,sampleAnalysisId," +
-            "requestedOperationNum,requestDate,scheduledCompletionDate,samplingOrg,accomplishingOrg," +
-            "accomplishingOrgId,fdaOrganizationId,responsibleFirmCode,rvMeaning,assignedToLeadInd," +
-            "assignedToPersonId,assignedToFirstName,assignedToLastName,assignedToStatusCode,assignedToStatusDate," +
-            "assignedToWorkAssignmentDate";
+            "operationId,sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject," +
+            "pacCode,problemAreaFlag,workRqstId,operationCode,sampleAnalysisId,requestedOperationNum,requestDate," +
+            "scheduledCompletionDate,accomplishingOrg,accomplishingOrgId,fdaOrganizationId,responsibleFirmCode," +
+            "assignedToLeadInd,assignedToPersonId,assignedToFirstName,assignedToLastName,assignedToStatusCode," +
+            "assignedToStatusDate,assignedToWorkAssignmentDate";
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
@@ -175,24 +175,32 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     @Override
     @Async
-    // TODO: This won't work until LABS DS api supports the new fields requested here.
+    // TODO: Test when Leidos completes work to allow querying by op id alone instead of sample number and product descr added.
     public CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId)
     {
-        String includeFields = "workId,sampleTrackingNum,sampleTrackingSubNum,pacCode,cfsanProductDesc";
+        String includeFields =
+            "operationId,sampleTrackingNum,sampleTrackingSubNumber,programAssignmentCode,problemAreaFlag," +
+            "cfsanProductDesc";
 
         String uri =
-            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + WORK_DETAILS_RESOURCE)
-            .queryParam("workId", sampleOpId)
+            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + SAMPLE_ANALYSES_RESOURCE)
+            .queryParam("operationId", sampleOpId)
             .queryParam("objectFilters", includeFields)
             .build(false).encode().toUriString();
 
         HttpEntity req = new HttpEntity(newRequestHeaders(true, false));
 
-        ResponseEntity<SampleOpDetails> resp = restTemplate.exchange(uri, GET, req, SampleOpDetails.class);
+        ResponseEntity<SampleOpDetails[]> resp = restTemplate.exchange(uri, GET, req, SampleOpDetails[].class);
 
-        return completedFuture(resp.getBody());
+        SampleOpDetails[] res = resp.getBody();
+
+        if ( res.length != 1 )
+            throw new RuntimeException(
+                "Expected one result for sample op details for op " + sampleOpId + ", got " + res.length + "."
+            );
+
+        return completedFuture(res[0]);
     }
-
 
     @Override
     @Async
@@ -203,9 +211,8 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         )
     {
         String includeFields = "sampleTrackingNum,sampleTrackingSubNum,receivedByPersonId,receivedByPersonFirstName," +
-            "receivedByPersonLastName,receivedDate,receiverConfirmationInd,sentByPersonId," +
-            "sentByPersonFirstName,sentByPersonLastName,sentByPersonMiddleName,sentDate,sentByOrgName,remarks," +
-            "receivedByPersonMIddleName"; // (with typo)
+            "receivedByPersonLastName,receivedDate,receiverConfirmationInd,sentByPersonId,sentByPersonFirstName," +
+            "sentByPersonLastName,sentDate,sentByOrgName,remarks";
 
         UriComponentsBuilder uriBuilder =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + SAMPLE_TRANSFERS_RESOURCE)
@@ -230,12 +237,12 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     @Async
     public CompletableFuture<MicrobiologySampleAnalysisSubmissionResponse> submitMicrobiologySampleAnalysis
         (
-            MicrobiologySampleAnalysisSubmission subm
+            MicrobiologySampleAnalysis analysis
         )
     {
-        List<MicrobiologySampleAnalysisSubmission> singletonSubm = singletonList(subm);
+        MicrobiologySampleAnalysesSubmission subm = new MicrobiologySampleAnalysesSubmission(singletonList(analysis));
 
-        String reqBody = toJson(singletonSubm);
+        String reqBody = toJson(subm);
 
         log.info(
             "Submitting microbiology sample analysis" +
@@ -244,35 +251,46 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         HttpEntity<String> reqEntity = new HttpEntity<>(reqBody, newRequestHeaders(true, true));
 
-        ResponseEntity<MicrobiologySampleAnalysisSubmissionResponse[]> resp =
+        ResponseEntity<String> resp =
             restTemplate.exchange(
                 apiConfig.getBaseUrl() + SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE,
                 HttpMethod.POST,
                 reqEntity,
-                MicrobiologySampleAnalysisSubmissionResponse[].class
+                String.class
             );
-
-        // TODO: Maybe check for error response and incorporate into sample analysis response structure.
-        MicrobiologySampleAnalysisSubmissionResponse[] res = resp.getBody();
-
-        if ( res.length != 1 )
-            throw new RuntimeException("Expected singleton result for singleton submission.");
 
         log.info(
             "Microbiology sample analysis submitted successfully" +
-            ( apiConfig.getLogSampleAnalysisSubmissionDetails() ?
-                " with response:\n  " + toJson(res)
-                : "." )
+            (apiConfig.getLogSampleAnalysisSubmissionDetails() ? " with response:\n  " + toJson(resp.getBody()) : ".")
         );
 
-        return completedFuture(res[0]);
+        return completedFuture(new MicrobiologySampleAnalysisSubmissionResponse());
     }
 
     @Override
     @Async
-    public CompletableFuture<Void> updateSampleOpStatus(long sampleOpId, String statusCode)
+    public CompletableFuture<Void> updateWorkStatus
+        (
+            long sampleOpId,
+            long personId,
+            String statusCode
+        )
     {
-        // TODO: Send http req to update sample op status here when api endpoint is available.
+        String reqBody = toJson(new WorkDetailsStatusUpdateRequest(sampleOpId, personId, statusCode));
+
+        log.info("Submitting work status update " + reqBody + ".");
+
+        HttpEntity<String> reqEntity = new HttpEntity<>(reqBody, newRequestHeaders(true, true));
+
+        restTemplate.exchange(
+            apiConfig.getBaseUrl() + WORK_DETAILS_RESOURCE,
+            HttpMethod.PATCH,
+            reqEntity,
+            Void.class
+        );
+
+        log.info("Work status updated.");
+
         return completedFuture(null);
     }
 
@@ -314,12 +332,31 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     {
         return new DefaultResponseErrorHandler() {
             @Override
-            public void handleError(ClientHttpResponse response) throws IOException
+            public void handleError(ClientHttpResponse response, HttpStatus statusCode) throws IOException
             {
-                JsonNode errorNode = jsonReader.readTree(response.getBody());
-                log.info("LABS-DS api call resulted in error: " + errorNode.toString());
+                JsonNode errorNode = response.getBody() != null ? jsonReader.readTree(response.getBody()) : null;
+                byte[] message = errorNode != null && errorNode.has("message") ?
+                    errorNode.get("message").textValue().getBytes()
+                    : null;
 
-                super.handleError(response); // throws appropriate determined by status code
+                log.info(
+                    "LABS-DS api call resulted in error: " +
+                    (errorNode != null ? errorNode.toString() : "<no response body>")
+                );
+
+                String statusText = response.getStatusText();
+                HttpHeaders headers = response.getHeaders();
+                Charset charset = this.getCharset(response);
+
+                switch(statusCode.series())
+                {
+                    case CLIENT_ERROR:
+                        throw HttpClientErrorException.create(statusCode, statusText, headers, message, charset);
+                    case SERVER_ERROR:
+                        throw HttpServerErrorException.create(statusCode, statusText, headers, message, charset);
+                    default:
+                        throw new UnknownHttpStatusCodeException(statusCode.value(), statusText, headers, message, charset);
+                }
             }
         };
     }

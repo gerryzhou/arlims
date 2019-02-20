@@ -272,9 +272,9 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     {
         // We only want the inbox items that represent sample operations.
         List<EmployeeInboxItem> sampleOpInboxItems =
-            inboxItems.stream().filter(item -> item.getAnalysisSample() != null).collect(toList());
+            inboxItems.stream().filter(item -> item.getSampleTrackingNum() != null).collect(toList());
 
-        List<Long> opIds = sampleOpInboxItems.stream().map(EmployeeInboxItem::getWorkId).collect(toList());
+        List<Long> opIds = sampleOpInboxItems.stream().map(EmployeeInboxItem::getOperationId).collect(toList());
 
         Map<Long, List<Test>> testsByOpId = opIds.isEmpty() ? emptyMap()
             : testRepo.findByOpIdIn(opIds).stream().collect(groupingBy(Test::getOpId));
@@ -288,7 +288,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         return
             sampleOpInboxItems.stream()
             .map(inboxItem -> {
-                long opId = inboxItem.getWorkId();
+                long opId = inboxItem.getOperationId();
 
                 List<LabTestMetadata> tests =
                     testsByOpId.getOrDefault(opId, emptyList()).stream()
@@ -399,9 +399,9 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         return
             new LabTestMetadata(
                 t.getId(),
-                inboxItem.getWorkId(),
-                inboxItem.getAnalysisSample(),
-                inboxItem.getSampleTrackingSubNum(),
+                inboxItem.getOperationId(),
+                inboxItem.getSampleTrackingNum(),
+                inboxItem.getSampleTrackingSubNumber(),
                 inboxItem.getPacCode(),
                 inboxItem.getCfsanProductDesc(),
                 t.getTestType().getCode(),
@@ -435,18 +435,16 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
         return
             new SampleOp(
-                inboxItem.getWorkId(),
-                inboxItem.getAnalysisSample(),
-                inboxItem.getSampleTrackingSubNum(),
+                inboxItem.getOperationId(),
+                inboxItem.getSampleTrackingNum(),
+                inboxItem.getSampleTrackingSubNumber(),
                 inboxItem.getPacCode(),
-                opt(inboxItem.getLid()),
-                opt(inboxItem.getPaf()),
+                opt(inboxItem.getLidCode()),
+                opt(inboxItem.getProblemAreaFlag()),
                 inboxItem.getCfsanProductDesc(),
-                inboxItem.getSplitInd(),
                 inboxItem.getStatusCode(),
                 inboxItem.getStatusDate(),
                 Instant.now(),
-                opt(inboxItem.getSamplingOrg()),
                 opt(inboxItem.getSubjectText()),
                 opt(tests),
                 opt(singletonList(assignment))

@@ -91,8 +91,7 @@ export class StagePrepComponent implements OnChanges {
    fillReceivedFields(transfer: SampleTransfer)
    {
       this.form.get('sampleReceivedFrom').setValue(
-         transfer.receivedByPersonFirstName + ' ' + transfer.receivedByPersonLastName +
-         ' [' + transfer.receivedByPersonId + ']'
+         transfer.sentByPersonFirstName + ' ' + transfer.sentByPersonLastName + ' [' + transfer.sentByPersonId + ']'
       );
       this.form.get('sampleReceivedDate').setValue(transfer.receivedDate);
    }

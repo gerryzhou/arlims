@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class MicrobiologySampleAnalysisSubmission
+public class MicrobiologySampleAnalysis
 {
     private long operationId;
     private String accomplishingOrgName;
@@ -27,7 +27,7 @@ public class MicrobiologySampleAnalysisSubmission
     private Optional<List<MicrobiologyAnalysisFinding>> analysisMicFindings;
     private Optional<List<MicrobiologyKitTest>> analysisMicKitTests;
 
-    public MicrobiologySampleAnalysisSubmission
+    public MicrobiologySampleAnalysis
         (
             long operationId,
             String accomplishingOrgName,
@@ -73,7 +73,7 @@ public class MicrobiologySampleAnalysisSubmission
         this.analysisMicKitTests = analysisMicKitTests;
     }
 
-    protected MicrobiologySampleAnalysisSubmission() {}
+    protected MicrobiologySampleAnalysis() {}
 
     public long getOperationId() { return operationId; }
 

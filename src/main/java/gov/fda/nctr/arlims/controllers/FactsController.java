@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
-import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
 
@@ -41,24 +41,25 @@ public class FactsController extends ControllerBase
     @PostMapping("/sample-analysis/micro")
     public MicrobiologySampleAnalysisSubmissionResponse submitMicrobiologySampleAnalysis
         (
-            @RequestBody MicrobiologySampleAnalysisSubmission subm,
+            @RequestBody MicrobiologySampleAnalysis analysis,
             Authentication authentication
         )
         throws ExecutionException, InterruptedException
     {
-        return factsService.submitMicrobiologySampleAnalysis(subm).get();
+        return factsService.submitMicrobiologySampleAnalysis(analysis).get();
     }
 
-    @PostMapping("/sample-op/{opId:\\d+}/status")
+    @PostMapping("/sample-op/{opId:\\d+}/work-status/{personId:\\d+}")
     public void updateSampleOpStatus
         (
             @PathVariable("opId") long opId,
+            @PathVariable("personId") long personId,
             @RequestBody String statusCode,
             Authentication authentication
         )
         throws ExecutionException, InterruptedException
     {
-        factsService.updateSampleOpStatus(opId, statusCode).get();
+        factsService.updateWorkStatus(opId, personId, statusCode).get();
     }
 
 }

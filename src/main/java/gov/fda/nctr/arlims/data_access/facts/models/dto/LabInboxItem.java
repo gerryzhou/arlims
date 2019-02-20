@@ -5,14 +5,11 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import gov.fda.nctr.arlims.data_access.facts.TimeIgnoringLocalDateDeserializer;
 
 
 public class LabInboxItem
 {
-    private Long workId;
+    private Long operationId;
 
     private Long sampleTrackingNum;
 
@@ -22,7 +19,7 @@ public class LabInboxItem
 
     private String statusCode;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
     private Instant statusDate;
 
     private String subject;
@@ -30,10 +27,6 @@ public class LabInboxItem
     private String pacCode;
 
     private String problemAreaFlag;
-
-    private String lidCode;
-
-    private String splitInd;
 
     private Long workRqstId;
 
@@ -43,14 +36,9 @@ public class LabInboxItem
 
     private Long requestedOperationNum;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
-    private Instant requestDate;
+    private LocalDate requestDate;
 
-    // API provides completion date as timestamp with timezone for what really should be just a date.
-    @JsonDeserialize(using = TimeIgnoringLocalDateDeserializer.class)
     private LocalDate scheduledCompletionDate;
-
-    private String samplingOrg;
 
     private String accomplishingOrg;
 
@@ -59,8 +47,6 @@ public class LabInboxItem
     private Long fdaOrganizationId;
 
     private String responsibleFirmCode;
-
-    private String rvMeaning;
 
     private String assignedToLeadInd;
 
@@ -72,11 +58,11 @@ public class LabInboxItem
 
     private String assignedToStatusCode;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
     private Instant assignedToStatusDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone="UTC")
-    private Instant assignedToWorkAssignmentDate;
+    private LocalDate assignedToWorkAssignmentDate;
+
 
     protected LabInboxItem() {}
 
@@ -96,11 +82,7 @@ public class LabInboxItem
 
     public String getProblemAreaFlag() { return problemAreaFlag; }
 
-    public String getLidCode() { return lidCode; }
-
-    public String getSplitInd() { return splitInd; }
-
-    public Long getWorkId() { return workId; }
+    public Long getOperationId() { return operationId; }
 
     public Long getWorkRqstId() { return workRqstId; }
 
@@ -110,11 +92,9 @@ public class LabInboxItem
 
     public Long getRequestedOperationNum() { return requestedOperationNum; }
 
-    public Instant getRequestDate() { return requestDate; }
+    public LocalDate getRequestDate() { return requestDate; }
 
     public LocalDate getScheduledCompletionDate() { return scheduledCompletionDate; }
-
-    public String getSamplingOrg() { return samplingOrg; }
 
     public String getAccomplishingOrg() { return accomplishingOrg; }
 
@@ -123,8 +103,6 @@ public class LabInboxItem
     public Long getFdaOrganizationId() { return fdaOrganizationId; }
 
     public String getResponsibleFirmCode() { return responsibleFirmCode; }
-
-    public String getRvMeaning() { return rvMeaning; }
 
     public Long getAssignedToPersonId() { return assignedToPersonId; }
 
@@ -138,7 +116,7 @@ public class LabInboxItem
 
     public Instant getAssignedToStatusDate() { return assignedToStatusDate; }
 
-    public Instant getAssignedToWorkAssignmentDate() { return assignedToWorkAssignmentDate; }
+    public LocalDate getAssignedToWorkAssignmentDate() { return assignedToWorkAssignmentDate; }
 
     public boolean hasSameSampleAssignment(LabInboxItem item)
     {
@@ -160,21 +138,17 @@ public class LabInboxItem
         ", subject=" + subject +
         ", pacCode='" + pacCode + '\'' +
         ", problemAreaFlag='" + problemAreaFlag + '\'' +
-        ", lidCode=" + lidCode +
-        ", splitInd=" + splitInd +
-        ", workId=" + workId +
+        ", operationId=" + operationId +
         ", workRqstId=" + workRqstId +
         ", operationCode='" + operationCode + '\'' +
         ", sampleAnalysisId=" + sampleAnalysisId +
         ", requestedOperationNum=" + requestedOperationNum +
         ", requestDate=" + requestDate +
         ", scheduledCompletionDate=" + scheduledCompletionDate +
-        ", samplingOrg='" + samplingOrg + '\'' +
         ", accomplishingOrg='" + accomplishingOrg + '\'' +
         ", accomplishingOrgId=" + accomplishingOrgId +
         ", fdaOrganizationId=" + fdaOrganizationId +
         ", responsibleFirmCode='" + responsibleFirmCode + '\'' +
-        ", rvMeaning='" + rvMeaning + '\'' +
         ", assignedToPersonId=" + assignedToPersonId +
         ", assignedToLeadInd='" + assignedToLeadInd + '\'' +
         ", assignedToStatusCode='" + assignedToStatusCode + '\'' +

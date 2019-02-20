@@ -17,7 +17,7 @@ import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
-import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmission;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
 
@@ -39,46 +39,44 @@ public class FakeFactsAccessService implements FactsAccessService
         try
         {
             List<EmployeeInboxItem> items = Arrays.asList(jsonObjectMapper.readValue(
-                "[\n" +
-                "  {\n" +
-                "    \"analysisSample\": 848447,\n" +
-                "    \"leadInd\": \"N\",\n" +
-                "    \"operationCode\": \"41\",\n" +
-                "    \"personId\": 472629,\n" +
-                "    \"remarksText\": \"Check analyst update after complete\",\n" +
-                "    \"rvMeaning\": \"In Progress\",\n" +
-                "    \"sampleAnalysisId\": 893682,\n" +
-                "    \"sampleTrackingSubNum\": 0,\n" +
-                "    \"statusCode\": \"I\",\n" +
-                "    \"statusDate\": \"2019-01-12 14:45:02-0400\",\n" +
-                "    \"subjectText\": \"Adhoc Sample Analysis\",\n" +
-                "    \"workDetailId\": 8541235,\n" +
-                "    \"workId\": 6906100,\n" +
-                "    \"workRequestId\": 1717465,\n" +
-                "    \"workDetailRowId\": \"AAAEpNAAPAAFoMrAAB\",\n" +
-                "    \"firstName\": \"Steve\",\n" +
-                "    \"lastName\": \"Harris\",\n" +
-                "    \"pacCode\": \"71001\",\n" +
-                "    \"pacCodeDescription\": \"ANIMAL DRUG MANUFACTURING INSPECTIONS - GMP/NON GENERIC\"\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"leadInd\": \"Y\",\n" +
-                "    \"operationCode\": \"11\",\n" +
-                "    \"personId\": 472629,\n" +
-                "    \"reviewRequiredInd\": \"N\",\n" +
-                "    \"registerTargetCompletionDate\": \"9/30/13 12:00 AM\",\n" +
-                "    \"rvMeaning\": \"Assigned\",\n" +
-                "    \"statusCode\": \"S\",\n" +
-                "    \"statusDate\": 1544540699000,\n" +
-                "    \"subjectText\": \"Trip 2013-052F\",\n" +
-                "    \"workDetailId\": 8540981,\n" +
-                "    \"workId\": 6482481,\n" +
-                "    \"workRequestId\": 1474494,\n" +
-                "    \"workDetailRowId\": \"AAAEpNAAPAAFoNiAAM\",\n" +
-                "    \"firstName\": \"Steve\",\n" +
-                "    \"lastName\": \"Harris\",\n" +
-                "    \"pacCodeDescription\": \"DOMESTIC FOOD SAFETY PROGRAM INSPECTIONS\"\n" +
-                "  }\n" +
+                "[" +
+                "{" +
+                "\"sampleTrackingNum\":853317," +
+                "\"leadInd\":\"N\"," +
+                "\"personId\":472629," +
+                "\"sampleAnalysisId\":885106," +
+                "\"sampleTrackingSubNumber\":0," +
+                "\"statusCode\":\"I\"," +
+                "\"statusDate\":\"2019-02-14 12:05:22.000-0500\"," +
+                "\"subjectText\":\"Adhoc Sample Analysis\"," +
+                "\"operationId\":8646420," +
+                "\"firstName\":\"Stephen\"," +
+                "\"lastName\":\"Harris\"," +
+                "\"mdlIntlName\":\"C\"," +
+                "\"pacCode\":\"71003E\"," +
+                "\"pacCodeDescription\":\"MICROBIAL AGENTS\"," +
+                "\"cfsanPrductDescription\":\"Micro Product\"," +
+                "\"problemAreaFlag\":\"MIC\"," +
+                "\"lidCode\":\"M\"" +
+                "}," +
+                "{" +
+                "\"sampleTrackingNum\":852325," +
+                "\"personId\":472629," +
+                "\"remarksText\":\"Starting work on this sample\"," +
+                "\"sampleAnalysisId\":881828," +
+                "\"sampleTrackingSubNumber\":0," +
+                "\"statusCode\":\"I\"," +
+                "\"statusDate\":\"2019-01-07 13:47:06.000-0500\"," +
+                "\"operationId\":8643036," +
+                "\"firstName\":\"Tripti\"," +
+                "\"lastName\":\"Parajuli\"," +
+                "\"mdlIntlName\":\"T\"," +
+                "\"pacCode\":\"03844\"," +
+                "\"pacCodeDescription\":\"IMPORTED SEAFOOD PRODUCTS\"," +
+                "\"cfsanPrductDescription\":\"FROZEN RAW SHELL ON SHRIMP 16/20\"," +
+                "\"problemAreaFlag\":\"MIC\"," +
+                "\"lidCode\":\"M\"" +
+                "}" +
                 "]",
                 EmployeeInboxItem[].class
             ));
@@ -118,7 +116,7 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"statusCode\": \"I\",\n" +
                 "\"statusDate\": \"2018-04-17 11:08:59.000-0400\",\n" +
                 "\"subject\": null,\n" +
-                "\"workId\": 6687466,\n" +
+                "\"operationId\": 6687466,\n" +
                 "\"workRqstId\": 1508256,\n" +
                 "\"assignedToFirstName\": \"Lynda\",\n" +
                 "\"assignedToLastName\": \"Vidot\",\n" +
@@ -149,7 +147,7 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"statusCode\": \"I\",\n" +
                 "\"statusDate\": \"2018-03-16 11:08:59.000-0400\",\n" +
                 "\"subject\": null,\n" +
-                "\"workId\": 6587465,\n" +
+                "\"operationId\": 6587465,\n" +
                 "\"workRqstId\": 1408255,\n" +
                 "\"assignedToFirstName\": \"John\",\n" +
                 "\"assignedToLastName\": \"Doe\",\n" +
@@ -180,7 +178,7 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"statusCode\": \"I\",\n" +
                 "\"statusDate\": \"2018-03-16 11:08:59.000-0400\",\n" +
                 "\"subject\": null,\n" +
-                "\"workId\": 6587465,\n" +
+                "\"operationId\": 6587465,\n" +
                 "\"workRqstId\": 1408255,\n" +
                 "\"assignedToFirstName\": \"Lydia\",\n" +
                 "\"assignedToLastName\": \"Vinot\",\n" +
@@ -211,7 +209,7 @@ public class FakeFactsAccessService implements FactsAccessService
                 "\"statusCode\": \"P\",\n" +
                 "\"statusDate\": \"2018-03-15 10:07:59.000-0400\",\n" +
                 "\"subject\": null,\n" +
-                "\"workId\": 6487464,\n" +
+                "\"operationId\": 6487464,\n" +
                 "\"workRqstId\": 1308253,\n" +
                 "\"assignedToFirstName\": \"Yian\",\n" +
                 "\"assignedToLastName\": \"Shooster\",\n" +
@@ -241,7 +239,7 @@ public class FakeFactsAccessService implements FactsAccessService
         try
         {
             SampleOpDetails sample = jsonObjectMapper.readValue(
-                "\"{workId\": 123456,\n" +
+                "\"{opId\": 123456,\n" +
                 "\"sampleTrackingNum\": 804972,\n" +
                 "\"sampleTrackingSubNum\": 0,\n" +
                 "\"pacCode\": \"04019A\",\n" +
@@ -266,38 +264,36 @@ public class FakeFactsAccessService implements FactsAccessService
             SampleTransfer[] transfers =
                 jsonObjectMapper.readValue(
                     "[" +
-                        "{" +
-                        "\"sampleTrackingNum\":852325,\"sampleTrackingSubNum\":0," +
-                        "\"receivedByPersonId\":472629," +
-                        "\"receivedByPersonFirstName\":\"Tripti\"," +
-                        "\"receivedByPersonLastName\":\"Parajuli\"," +
-                        "\"receivedByPersonMIddleName\":\"T\"," +
-                        "\"receivedDate\":\"2018-09-19 00:00:00.000-0400\"," +
-                        "\"receiverConfirmationInd\":\"Y\"," +
-                        "\"remarks\":\"test\"," +
-                        "\"sentByOrgName\":\"BLT-DO\"," +
-                        "\"sentByPersonId\":472629," +
-                        "\"sentByPersonFirstName\":\"Tripti\"," +
-                        "\"sentByPersonLastName\":\"Parajuli\"," +
-                        "\"sentByPersonMiddleName\":\"T\"," +
-                        "\"sentDate\":\"2018-08-03T00:00:00.000-04:00\"" +
-                        "}," +
-                       "{" +
-                       "\"sampleTrackingNum\":852324,\"sampleTrackingSubNum\":0," +
-                       "\"receivedByPersonId\":472629," +
-                       "\"receivedByPersonFirstName\":\"John\"," +
-                       "\"receivedByPersonLastName\":\"Somebody\"," +
-                       "\"receivedByPersonMIddleName\":\"Q\"," +
-                       "\"receivedDate\":\"2018-09-18 00:00:00.000-0400\"," +
-                       "\"receiverConfirmationInd\":\"Y\"," +
-                       "\"remarks\":\"another test\"," +
-                       "\"sentByOrgName\":\"BLT-DO\"," +
-                       "\"sentByPersonId\":472629," +
-                       "\"sentByPersonFirstName\":\"Tripti\"," +
-                       "\"sentByPersonLastName\":\"Parajuli\"," +
-                       "\"sentByPersonMiddleName\":\"T\"," +
-                       "\"sentDate\":\"2018-08-02T00:00:00.000-04:00\"" +
-                       "}" +
+                    "{" +
+                    "\"sampleTrackingNum\":852325," +
+                    "\"sampleTrackingSubNum\":0," +
+                    "\"receivedByPersonId\":472629," +
+                    "\"receivedByPersonFirstName\":\"Stephen\"," +
+                    "\"receivedByPersonLastName\":\"Harris\"," +
+                    "\"receivedDate\":\"2019-02-19\"," +
+                    "\"receiverConfirmationInd\":\"Y\"," +
+                    "\"sentByPersonId\":472629," +
+                    "\"sentByPersonFirstName\":\"Tripti\"," +
+                    "\"sentByPersonLastName\":\"Parajuli\"," +
+                    "\"sentDate\":\"2019-02-05\"," +
+                    "\"sentByOrgName\":\"BLT-DO\"," +
+                    "\"remarks\":\"test\"" +
+                    "}," +
+                    "{" +
+                    "\"sampleTrackingNum\":853603," +
+                    "\"sampleTrackingSubNum\":0," +
+                    "\"receivedByPersonId\":472629," +
+                    "\"receivedByPersonFirstName\":\"Stephen\"," +
+                    "\"receivedByPersonLastName\":\"Harris\"," +
+                    "\"receivedDate\":\"2019-02-18\"," +
+                    "\"receiverConfirmationInd\":\"Y\"," +
+                    "\"sentByPersonId\":472629," +
+                    "\"sentByPersonFirstName\":\"Tripti\"," +
+                    "\"sentByPersonLastName\":\"Parajuli\"," +
+                    "\"sentDate\":\"2019-02-03\"," +
+                    "\"sentByOrgName\":\"BLT-DO\"," +
+                    "\"remarks\":\"test\"" +
+                    "}" +
                     "]",
                     SampleTransfer[].class
                 );
@@ -314,15 +310,15 @@ public class FakeFactsAccessService implements FactsAccessService
     @Async
     public CompletableFuture<MicrobiologySampleAnalysisSubmissionResponse> submitMicrobiologySampleAnalysis
         (
-            MicrobiologySampleAnalysisSubmission subm
+            MicrobiologySampleAnalysis subm
         )
     {
-        return completedFuture(new MicrobiologySampleAnalysisSubmissionResponse(1234));
+        return completedFuture(new MicrobiologySampleAnalysisSubmissionResponse());
     }
 
     @Override
     @Async
-    public CompletableFuture<Void> updateSampleOpStatus(long sampleOpId, String statusCode)
+    public CompletableFuture<Void> updateWorkStatus(long sampleOpId, long personId, String statusCode)
     {
         return completedFuture(null);
     }

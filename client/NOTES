@@ -1,10 +1,6 @@
 
-PREP Stage
-  Implement autofill from FACTS for received fields.
-
 SLM test
   Implement actual validation function for each stage, returning list of complaints.
-
 
 FACTS WRITING PROCESS
 ---------------------

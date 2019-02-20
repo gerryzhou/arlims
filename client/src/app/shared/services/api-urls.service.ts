@@ -151,9 +151,9 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/audit-log/${testId}/modifying-employees`);
    }
 
-   factsSampleOpStatusUrl(opId: number)
+   factsSampleOpWorkStatusUrl(opId: number, factsPersonId: number)
    {
-      return this.location.prepareExternalUrl(`/api/facts/sample-op/${opId}/status`);
+      return this.location.prepareExternalUrl(`/api/facts/sample-op/${opId}/work-status/${factsPersonId}`);
    }
 
    factsSampleTransfersUrl(sampleTrackingNum: number, toPersonId: number | null)

@@ -16,7 +16,7 @@
          <app-stage-prep class="test-stage"
             [form]="testDataForm.get('prepData')"
             [sampleOp]="sampleOpTest.sampleOp"
-            [currentUser]="usrCtxSvc.getAuthenticatedUser().getValue()"
+            [currentUser]="appUser"
             [conflicts]="conflictsTestData.prepData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances">
