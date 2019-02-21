@@ -57,7 +57,7 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    readonly sampleOpTest: SampleOpTest;
 
-   readonly appUser: AppUser
+   readonly appUser: AppUser;
 
 
    // The form group holds the edited state of the test data.
