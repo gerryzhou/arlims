@@ -5,6 +5,9 @@ insert into employee (facts_person_id, fda_email_account_name, short_name, lab_g
   values (472629, 'stephen.harris', 'SCH', 1, 'Harris', 'Stephen', 'C', '$2a$10$GuY.dmUtyra9IY.UQ8sUqe/sW7c94MSkMiXgYEjrB78R3OyfC2LOK');
 insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name, password)
   values (1234568, 'john.doe', 'jdoe', 1, 'Doe', 'John', null, '$2a$10$GuY.dmUtyra9IY.UQ8sUqe/sW7c94MSkMiXgYEjrB78R3OyfC2LOK');
+insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name, password)
+  values (454522, 'john.ho', 'jho', 1, 'Ho', 'John', null, '$2a$10$9ktSWmGyM8XKoD9Rpvk/JOUUZZ45FU40hmsMX5hpIr61PtKgME6P6');
+
 
 insert into role(name, description)
   values('USER', 'regular user');
