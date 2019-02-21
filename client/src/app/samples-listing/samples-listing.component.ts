@@ -29,10 +29,6 @@ export class SamplesListingComponent {
    // indexes of samples to be displayed in this.samples, having survived filters and optionally undergone sorting
    visibleSampleIxs: number[];
 
-   limitSelectionToVisibleSamples: boolean;
-
-   showTestDeleteButtons: boolean;
-
    expandedSampleOpIds = new Set<number>();
 
    hiddenSelectedCount = 0;
@@ -45,11 +41,7 @@ export class SamplesListingComponent {
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
-   readonly defaultListingOptions: ListingOptions = {
-      limitSelectionToVisibleSamples: true,
-      showTestDeleteButtons: false,
-      includeStatuses: ['P', 'A', 'S', 'I', 'O'],
-   };
+   listingOptions: ListingOptions;
 
    constructor
        (
@@ -62,31 +54,34 @@ export class SamplesListingComponent {
       const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
 
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
-      this.refeshFromLabGroupContents(labGroupContents);
 
-      // If there's no selection from the service and the number of samples visible is small enough then expand all.
-      if ( this.visibleSampleIxs.length <= this.maxAutoExpandSamples && selectedSampleOpIds.length === 0 )
-         this.expandedSampleOpIds = new Set(this.visibleSampleIxs.map(ix => this.samples[ix].sampleOp.opId));
-      else
-         this.expandedSampleOpIds = new Set(selectedSampleOpIds);
+      this.listingOptions = {
+         limitSelectionToVisibleSamples: true,
+         showTestDeleteButtons: false,
+         includeStatuses: ['P', 'A', 'S', 'I', 'O'],
+      };
+
+      this.expandedSampleOpIds = new Set(selectedSampleOpIds);
+      this.visibleSampleIxs = [];
+
+      this.refreshFromLabGroupContents(labGroupContents);
    }
 
-   refeshFromLabGroupContents(labGroupContents: LabGroupContents)
+   refreshFromLabGroupContents(labGroupContents: LabGroupContents)
    {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
       this.samples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
-      this.applyFilters(this.defaultListingOptions);
+      this.applyFilters();
       this.contentsLastLoaded = moment();
    }
 
    listingOptionsChanged(listingOptions: ListingOptions)
    {
-      this.limitSelectionToVisibleSamples = listingOptions.limitSelectionToVisibleSamples;
-      this.showTestDeleteButtons = listingOptions.showTestDeleteButtons;
-      this.applyFilters(listingOptions);
+      this.listingOptions = listingOptions;
+      this.applyFilters();
    }
 
-   applyFilters(listingOptions: ListingOptions)
+   applyFilters()
    {
       this.hiddenSelectedCount = 0;
       const visibleIxs: number[] = [];
@@ -94,8 +89,8 @@ export class SamplesListingComponent {
       {
          const selectableSampleOp = this.samples[i];
          const passesFilters =
-            this.sampleSatisfiesSearchTextRequirement(selectableSampleOp.sampleOp, listingOptions) &&
-            this.sampleSatisfiesStatusCodeRequirement(selectableSampleOp.sampleOp, listingOptions);
+            this.sampleSatisfiesSearchTextRequirement(selectableSampleOp.sampleOp, this.listingOptions) &&
+            this.sampleSatisfiesStatusCodeRequirement(selectableSampleOp.sampleOp, this.listingOptions);
 
          if ( passesFilters )
          {
@@ -103,8 +98,8 @@ export class SamplesListingComponent {
          }
          else
          {
-            if (listingOptions.limitSelectionToVisibleSamples) { selectableSampleOp.selected = false; }
-            else if (selectableSampleOp.selected) { this.hiddenSelectedCount++; }
+            if ( this.listingOptions.limitSelectionToVisibleSamples ) { selectableSampleOp.selected = false; }
+            else if ( selectableSampleOp.selected ) { this.hiddenSelectedCount++; }
          }
       }
       this.visibleSampleIxs = visibleIxs;
@@ -262,7 +257,7 @@ export class SamplesListingComponent {
    {
       const reload$: Observable<void> =
          this.usrCtxSvc.refreshLabGroupContents().pipe(
-            map(labGroupContents => this.refeshFromLabGroupContents(labGroupContents)),
+            map(labGroupContents => this.refreshFromLabGroupContents(labGroupContents)),
             take(1)
          );
 

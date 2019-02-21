@@ -15,7 +15,7 @@
    </button>
 
    <app-samples-listing-options
-      [initialOptions]="defaultListingOptions"
+      [initialOptions]="listingOptions"
       (optionsChanged)="listingOptionsChanged($event)">
    </app-samples-listing-options>
 
@@ -34,7 +34,7 @@
          [showAssociatedItems]="expandedSampleOpIds.has(samples[sampleIx].sampleOp.opId)"
          [showAssociatedItemsSummaryInSampleMetadata]="true"
          [labGroupTestTypes]="labGroupTestTypes"
-         [showTestDeleteButtons]="showTestDeleteButtons"
+         [showTestDeleteButtons]="listingOptions.showTestDeleteButtons"
          (testDeleted)="onTestDeleted($event)"
          (testDeleteFailed)="onTestDeleteFailed($event)"
          (testCreated)="onNewTestCreated($event)"
