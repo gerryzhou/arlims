@@ -17,6 +17,8 @@ public class ArlimsApplication
 {
     public static void main(String[] args)
     {
+        System.getProperties().setProperty("oracle.jdbc.J2EE13Compliant", "true");
+
         SpringApplication.run(ArlimsApplication.class, args);
     }
 

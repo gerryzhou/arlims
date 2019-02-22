@@ -175,7 +175,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     @Override
     @Async
-    // TODO: Test when Leidos completes work to allow querying by op id alone instead of sample number and product descr added.
+    // TODO: Test when Leidos adds product descr field in the result.
     public CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId)
     {
         String includeFields =
