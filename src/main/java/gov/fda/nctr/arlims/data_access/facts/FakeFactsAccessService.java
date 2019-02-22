@@ -239,11 +239,13 @@ public class FakeFactsAccessService implements FactsAccessService
         try
         {
             SampleOpDetails sample = jsonObjectMapper.readValue(
-                "\"{opId\": 123456,\n" +
-                "\"sampleTrackingNum\": 804972,\n" +
-                "\"sampleTrackingSubNum\": 0,\n" +
-                "\"pacCode\": \"04019A\",\n" +
-                "\"cfsanProductDesc\": \"SMOKED TROUT\"}",
+                "{" +
+                "\"operationId\": 123456," +
+                "\"sampleTrackingNum\": 804972," +
+                "\"sampleTrackingSubNumber\": 0," +
+                "\"programAssignmentCode\": \"04019A\"," +
+                "\"cfsanProductDesc\": \"SMOKED TROUT\"" +
+                "}",
                 SampleOpDetails.class
             );
 
