@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
 
@@ -17,8 +18,8 @@ import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
-import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
 
 @Service
@@ -310,12 +311,12 @@ public class FakeFactsAccessService implements FactsAccessService
 
     @Override
     @Async
-    public CompletableFuture<MicrobiologySampleAnalysisSubmissionResponse> submitMicrobiologySampleAnalysis
+    public CompletableFuture<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalysis
         (
             MicrobiologySampleAnalysis subm
         )
     {
-        return completedFuture(new MicrobiologySampleAnalysisSubmissionResponse());
+        return completedFuture(new CreatedSampleAnalysisMicrobiology(12345L));
     }
 
     @Override

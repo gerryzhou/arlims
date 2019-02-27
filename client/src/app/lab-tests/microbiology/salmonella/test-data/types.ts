@@ -30,6 +30,7 @@ export interface PreEnrData {
    blenderJarId?: string | null;
    bagId?: string | null;
    sampleSpike?: boolean | null;
+   spikeSpeciesText?: string | null;
    mediumBatchId?: string | null;
    mediumType?: string | null;
    incubatorId?: string | null;

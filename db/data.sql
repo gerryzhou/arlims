@@ -64,7 +64,8 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
         '"testUnitsCount": 2,' ||
         '"testUnitsType": "composite"' ||
         '}' ||
-      ']' ||
+      '],' ||
+      '"spikeSpeciesText": "S. cerro"' ||
     '}',
     'imp_slm_vidas.pdf'
   );

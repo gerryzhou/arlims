@@ -1,16 +1,29 @@
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 
+import {makeTestTimeChargesFormGroup} from '../../../../shared/models/time-charges';
 import {
    ContinuationControls,
    ContinuationTests,
-   ContinuationTestssByTestUnitNum, IsolateIdentification, IsolateTestSequence, IsolateTestSequenceFailure, IsolateTestSequencesByUid,
+   ContinuationTestssByTestUnitNum,
+   IsolateIdentification,
+   IsolateTestSequence,
+   IsolateTestSequenceFailure,
+   IsolateTestSequencesByUid,
    makeEmptyContinuationControls,
-   PositivesContinuationData, SelectiveAgarsTestSuite, SlantTubeTest,
+   PositivesContinuationData,
+   SelectiveAgarsTestSuite,
+   SlantTubeTest,
    TestData
 } from './types';
-import {makeTestTimeChargesFormGroup} from '../../../../shared/models/time-charges';
+import {TestConfig} from '../test-config';
 
-export function makeTestDataFormGroup(testData: TestData, username: string): FormGroup
+export function makeTestDataFormGroup
+   (
+      testData: TestData,
+      username: string,
+      testConfig: TestConfig | null
+   )
+   : FormGroup
 {
    return new FormGroup({
       prepData: new FormGroup({
@@ -40,6 +53,7 @@ export function makeTestDataFormGroup(testData: TestData, username: string): For
          mediumType: new FormControl(testData.preEnrData.mediumType),
          incubatorId: new FormControl(testData.preEnrData.incubatorId),
          sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
+         spikeSpeciesText: new FormControl(testConfig ? testConfig.spikeSpeciesText : null)
       }),
       selEnrData: new FormGroup({
          rvBatchId: new FormControl(testData.selEnrData.rvBatchId),

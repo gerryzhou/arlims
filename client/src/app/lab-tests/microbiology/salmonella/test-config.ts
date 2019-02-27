@@ -11,5 +11,7 @@ export interface TestConfig {
    positivesContinuationTestingSerologyRequired?: boolean | null;
 
    aoacMethodCode?: string | null;
+
+   spikeSpeciesText?: string | null;
 }
 

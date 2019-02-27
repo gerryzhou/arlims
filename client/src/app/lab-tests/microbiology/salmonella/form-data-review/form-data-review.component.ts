@@ -46,11 +46,13 @@ export class FormDataReviewComponent implements OnInit {
           private activatedRoute: ActivatedRoute,
        )
    {
-      const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
+      const labGroupTestData: LabGroupTestData = activatedRoute.snapshot.data['labGroupTestData'];
 
       const verTestData = labGroupTestData.versionedTestData;
       const testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
-      this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username);
+      const testConfig = labGroupTestData.labGroupTestConfig;
+      const username = labGroupTestData.appUser.username;
+      this.testDataForm = makeTestDataFormGroup(testData, username, testConfig);
       this.testDataForm.disable();
       this.sampleOpTest = labGroupTestData.sampleOpTest;
       this.testConfig = labGroupTestData.labGroupTestConfig;

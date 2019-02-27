@@ -1,22 +1,25 @@
-
-Try SampleAnalysis endpoint for supporting report metadata.
-
-Correct sample component styling so "from FACTS ..." appears on first row of sample as intended.
+Set spikeSpeciesText to lab config, extract when building spike data for FACTS submission.
+  Or set in pre-enr data since it may eventually be a choice.
 
 
-Handle labs-ds api errors assuming they have the following form:
-  [{"errorCode":"LABS-RUL-2711","message":"Analytical Assignment must be in [Assigned] status for this operation. Please resubmit when Analytical status is in valid status."}]
-  Need http status to be error type in error cases.
 
-After api changes are made by Leidos and code is updated here to match:
-  Remove unneeded tables from test db and publish to dev and test server.
-    Send new application.properties to test server (and maybe dev server).
+Data Submission Fields
+----------------------
+Where should lowestDilutionTestedCode come from?
+Spiking
+  Should choice of spikingGenusSpeciesText be added to entry forms?
+  Unknown fields (what are these, where to obtain values?)
+    subsampleNumberCode
+    selectiveAgarResultCode
+    selectiveAgarText
+  analysisMicrobiologyKitId
+    Needs to be provided (examples are just passing null)?
+  kitRemarksText
+    Should this be added to the ui/test data somewhere?
 
 LABSDS API
 ==========
-objectFilters items aren't being checked for validity.
-  Makes it hard to detect errors caused by failing to update field names vs api changes.
-
+Still need product description field added to SampleAnalyses endpoint results.
 Example microbiology submission request realistic?
   - Why is sampleTrackingSubNum sent in the doc example?
   - actionIndicator is "N" but detectable findings > 0 for first entry. In second entry actionIndicator is "Y" but
@@ -24,14 +27,6 @@ Example microbiology submission request realistic?
   - field "examinedType" removed?
   - subSamplesDetectableFindingsNumber should probably just be called "detectableFindings"?
 
-
-Person inbox
-------------
-  Leidos added the requested additional fields and corrected date/timestamp problems.
-
-Sample Metadata
----------------
-  Still waiting on changes to GET SampleAnalyses to accept op id and return product description in results.
 
 Microbiology Data Submission
 ----------------------------

@@ -5,7 +5,7 @@ import {ContinuationTestssByTestUnitNum, TestData} from './test-data';
 import {
    MicrobiologyAnalysisFinding,
    MicrobiologySampleAnalysis,
-   MicrobiologySampleAnalysisSubmissionResponse
+   CreatedSampleAnalysisMicrobiology, MicrobiologyKitTest
 } from '../../../../generated/dto';
 import {countValueOccurrences} from '../../test-stages';
 import {ApiUrlsService, UserContextService} from '../../../shared/services';
@@ -28,9 +28,10 @@ export class FactsPostingService {
          testData: TestData,
          opId: number,
          factsMethodCode: string,
+         labGroupFactsOrgName: string,
          labGroupFactsParentOrgName: string
       )
-      : Observable<MicrobiologySampleAnalysisSubmissionResponse>
+      : Observable<CreatedSampleAnalysisMicrobiology>
    {
       const vidasData = testData.vidasData;
       const samplingMethod = testData.preEnrData.samplingMethod;
@@ -41,6 +42,10 @@ export class FactsPostingService {
       const positivesCount = countValueOccurrences(vidasData.testUnitDetections, true);
 
       const spiking = vidasData.spikeDetection != null;
+      const spikeSpeciesText = spiking ? testData.preEnrData.spikeSpeciesText : null;
+      const analysisMicKitTests = spiking ?
+         this.makeSpikingKitTests(testData.vidasData.spikeDetection, spikeSpeciesText, positivesCount, 'NA')
+         : null;
 
       const structuredRemarks = {
          methodRemarks: vidasData.methodRemarks,
@@ -52,6 +57,7 @@ export class FactsPostingService {
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
          accomplishingOrgName: labGroupFactsParentOrgName,
+         performingOrgName: labGroupFactsOrgName,
          actionIndicator: positivesCount > 0 ? 'Y' : 'N',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -60,8 +66,10 @@ export class FactsPostingService {
          methodCode: factsMethodCode,
          methodModificationIndicator: 'N',
          kitTestIndicator: spiking ? 'Y' : 'N',
+         lowestDilutionTestedCode: '1', // TODO: Where should this come from?
          quantifiedIndicator: 'N',
-         examinedType: samplingMethod.testUnitsType.toUpperCase() + 'S',
+         subSamplesDetectableFindingsNumber: positivesCount,
+         analysisMicKitTests,
          analysisResultsRemarksText: JSON.stringify(structuredRemarks),
       };
 
@@ -71,44 +79,62 @@ export class FactsPostingService {
       {
          subm.compositesExaminedNumber = samplingMethod.testUnitsCount;
          subm.subSamplesUsedCompositeNumber = samplingMethod.numberOfSubsPerComposite;
-         subm.compositesDetectableFindingsNumber = positivesCount;
       }
       else
       {
          subm.subSamplesExaminedNumber = samplingMethod.testUnitsCount;
-         subm.subSamplesDetectableFindingsNumber = positivesCount;
-      }
-
-      if ( spiking )
-      {
-         /* TODO: Add kit test structure representing spiking results (need example or struct def).
-            Sub/Comp #: Which sub/comp was used for spiking
-              Field name for this? Where to get this from?
-            Rapid Method Results (Vidas) = POS/NEG
-            Conventional Method Results = NA (since Vidas is always done prior to conventional methods)
-            Spike Results: POS/NEG
-            Genus/Species Used for Spike: S. cerro for ARL, may vary by lab
-              Genus code good enough here or genus/species text (or both)?
-            Kit compare remarks: text describing results, for ARL something like "7 CFUs on blood agar"
-          */
-
       }
 
       return (
-         this.httpClient.post<MicrobiologySampleAnalysisSubmissionResponse>(
+         this.httpClient.post<CreatedSampleAnalysisMicrobiology>(
             this.apiUrlsSvc.factsMicrobiologySampleAnalysisUrl(),
             subm
          )
       );
    }
 
+   private makeSpikingKitTests
+      (
+         detection: boolean,
+         speciesText: string | null,
+         rapidMethodDetections,
+         conventionalMethodResultCode: string
+      )
+      : MicrobiologyKitTest[]
+   {
+      return [
+         {
+            conventionalMethodResultCode,
+
+            rapidMethodResultCode: rapidMethodDetections,
+
+            spikingGenusSpeciesText: speciesText,
+
+            spikingResultCode: detection ? 'POS' : 'NEG',
+
+            subsampleNumberCode: '1', // TODO: Where from?
+
+            selectiveAgarResultCode: '', // TODO: Where from? Really empty text when missing, not null or absence?
+
+            selectiveAgarText: '',       // TODO: "
+
+            analysisMicrobiologyKitId: null, // TODO: Necessary to include this (test via curl)?
+
+            kitRemarksText: null // TODO: Add to testdata and gui?
+         }
+      ];
+
+      return [];
+   }
+
    submitBAMAnalysisResults
       (
          testData: TestData,
          opId: number,
+         labGroupFactsOrgName: string,
          labGroupFactsParentOrgName: string
       )
-      : Observable<MicrobiologySampleAnalysisSubmissionResponse>
+      : Observable<CreatedSampleAnalysisMicrobiology>
    {
       const samplingMethod = testData.preEnrData.samplingMethod;
 
@@ -121,6 +147,7 @@ export class FactsPostingService {
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
          accomplishingOrgName: labGroupFactsParentOrgName,
+         performingOrgName: labGroupFactsOrgName,
          actionIndicator: 'Y',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -129,9 +156,10 @@ export class FactsPostingService {
          methodCode: 'B160',
          methodModificationIndicator: 'N',
          kitTestIndicator: 'N',
+         lowestDilutionTestedCode: '1',
          quantifiedIndicator: 'N',
-         examinedType: samplingMethod.testUnitsType.toUpperCase() + 'S',
          analysisMicFindings: bamFindings,
+         subSamplesDetectableFindingsNumber: detectableFindingsNumber,
          analysisResultsRemarksText: testData.wrapupData.analysisResultsRemarksText,
       };
 
@@ -141,16 +169,14 @@ export class FactsPostingService {
       {
          subm.compositesExaminedNumber = examinedNumber;
          subm.subSamplesUsedCompositeNumber = samplingMethod.numberOfSubsPerComposite;
-         subm.compositesDetectableFindingsNumber = detectableFindingsNumber;
       }
       else
       {
          subm.subSamplesExaminedNumber = examinedNumber;
-         subm.subSamplesDetectableFindingsNumber = detectableFindingsNumber;
       }
 
       return (
-         this.httpClient.post<MicrobiologySampleAnalysisSubmissionResponse>(
+         this.httpClient.post<CreatedSampleAnalysisMicrobiology>(
             this.apiUrlsSvc.factsMicrobiologySampleAnalysisUrl(),
             subm
          )

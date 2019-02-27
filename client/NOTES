@@ -1,14 +1,18 @@
+FACTS Data Submission
+---------------------
+Add spiking data to AOAC submission.
+  Add spikeSpeciesText to pre-enr stage data when empty test data is created?
+    Or if that's not practical, set it somewhere else, maybe during save if not already set.
+
+
+
+Set min size of sample num / pac stack so status boxes to the right are aligned properly.
 
 SLM test
   Implement actual validation function for each stage, returning list of complaints.
 
 FACTS WRITING PROCESS
 ---------------------
-Questions and Problems
-  Spiking
-    - Need spiking (kit test) submission example, only have GET results as example currently.
-    - How is sub/comp # determined? Need to add a field in test form?
-    - Genus/Species: how specified, as both genus code and species/genus text?
   Staging
     - Need to record somewhere what stages of FACTS writing have already been completed so
       stages aren't repeated or executed without prerequisites.

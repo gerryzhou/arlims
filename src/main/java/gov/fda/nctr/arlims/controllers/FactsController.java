@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
-import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
 
 
 @RestController
@@ -39,7 +39,7 @@ public class FactsController extends ControllerBase
     }
 
     @PostMapping("/sample-analysis/micro")
-    public MicrobiologySampleAnalysisSubmissionResponse submitMicrobiologySampleAnalysis
+    public CreatedSampleAnalysisMicrobiology submitMicrobiologySampleAnalysis
         (
             @RequestBody MicrobiologySampleAnalysis analysis,
             Authentication authentication

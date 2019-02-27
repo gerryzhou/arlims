@@ -14,7 +14,7 @@ import {
    TestAttachedFileMetadata,
    SampleOpTest,
    TestSaveData,
-   MicrobiologySampleAnalysisSubmissionResponse
+   CreatedSampleAnalysisMicrobiology
 } from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
@@ -99,23 +99,25 @@ export class StagedTestDataEntryComponent implements OnInit {
    readonly DEFAULT_AOAC_METHOD_CODE = 'T2004.03';
 
    constructor
-   (
-      private factsPostingService: FactsPostingService,
-      private testsSvc: TestsService,
-      private usrCtxSvc: UserContextService,
-      private selectedSamplesSvc: SelectedSampleOpsService,
-      private appUrlsSvc: AppInternalUrlsService,
-      private router: Router,
-      private alertMsgSvc: AlertMessageService,
-      private activatedRoute: ActivatedRoute
-   )
+      (
+         private factsPostingService: FactsPostingService,
+         private testsSvc: TestsService,
+         private usrCtxSvc: UserContextService,
+         private selectedSamplesSvc: SelectedSampleOpsService,
+         private appUrlsSvc: AppInternalUrlsService,
+         private router: Router,
+         private alertMsgSvc: AlertMessageService,
+         private activatedRoute: ActivatedRoute
+      )
    {
-      const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
-      this.testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
+      const labGroupTestData: LabGroupTestData = activatedRoute.snapshot.data['labGroupTestData'];
+      const testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
+      this.testConfig = testConfig;
 
       const verTestData = labGroupTestData.versionedTestData;
       this.testIsNew = verTestData.testDataJson == null;
-      this.originalTestData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
+      const testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
+      this.originalTestData = testData;
       this.originalTestDataMd5 = verTestData.modificationInfo.dataMd5;
 
       this.attachedFilesByTestPart = makeAttachedFilesByTestPartMap(labGroupTestData);
@@ -125,19 +127,18 @@ export class StagedTestDataEntryComponent implements OnInit {
 
       const initialStage =
          activatedRoute.snapshot.paramMap.get('stage') ||
-         firstNonCompleteTestStageName(this.originalTestData, labGroupTestData.labGroupTestConfig) ||
+         firstNonCompleteTestStageName(testData, testConfig) ||
          'WRAPUP';
       const stageIx = TEST_STAGES.findIndex(ts => ts.name === initialStage);
       this.initialStageIndex = stageIx !== -1 ? stageIx : null;
 
-      this.testDataForm = makeTestDataFormGroup(this.originalTestData, labGroupTestData.appUser.username);
+      this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username, testConfig);
 
-      const sm = this.originalTestData.preEnrData.samplingMethod;
+      const sm = testData.preEnrData.samplingMethod;
       this.sampleTestUnitsType = sm.testUnitsType;
       this.sampleTestUnitsCount = sm.testUnitsCount;
 
-      this.vidasPositiveSampleTestUnitNumbers =
-         this.originalTestData ? getVidasPositiveTestUnitNumbers(this.originalTestData.vidasData) : [];
+      this.vidasPositiveSampleTestUnitNumbers = testData ? getVidasPositiveTestUnitNumbers(testData.vidasData) : [];
 
       const labResources = labGroupTestData.labResourcesByType;
       this.balances = labResources.get(UserContextService.BALANCE_RESOURCE_TYPE);
@@ -235,6 +236,7 @@ export class StagedTestDataEntryComponent implements OnInit {
          testData,
          this.sampleOpTest.sampleOp.opId,
          this.testConfig.aoacMethodCode || this.DEFAULT_AOAC_METHOD_CODE,
+         this.appUser.labGroupFactsOrgName,
          this.appUser.labGroupFactsParentOrgName
       )
       .subscribe(
@@ -248,6 +250,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.factsPostingService.submitBAMAnalysisResults(
          testData,
          this.sampleOpTest.sampleOp.opId,
+         this.appUser.labGroupFactsOrgName,
          this.appUser.labGroupFactsParentOrgName
       )
       .subscribe(
@@ -281,21 +284,19 @@ export class StagedTestDataEntryComponent implements OnInit {
 
    private onAOACFactsSubmitResponseReceived
       (
-         factsResponse: MicrobiologySampleAnalysisSubmissionResponse
+         factsResponse: CreatedSampleAnalysisMicrobiology
       )
    {
-      // TODO: Check success or error, report accordingly once error repr is determined.
       console.log('FACTS response for AOAC submission: ', factsResponse);
       this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
       this.doAfterSaveNavigation();
    }
 
    private onBAMFactsSubmitResponseReceived
-   (
-      factsResponse: MicrobiologySampleAnalysisSubmissionResponse
-   )
+       (
+          factsResponse: CreatedSampleAnalysisMicrobiology
+       )
    {
-      // TODO: Check success or error, report accordingly once error repr is determined.
       console.log('FACTS response for BAM submission: ', factsResponse);
       this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
       this.doAfterSaveNavigation();

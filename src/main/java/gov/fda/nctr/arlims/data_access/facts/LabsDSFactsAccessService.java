@@ -35,8 +35,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.*;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
-import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysisSubmissionResponse;
+import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysesSubmissionResponse;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysesSubmission;
 
 
@@ -235,7 +236,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     @Override
     @Async
-    public CompletableFuture<MicrobiologySampleAnalysisSubmissionResponse> submitMicrobiologySampleAnalysis
+    public CompletableFuture<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalysis
         (
             MicrobiologySampleAnalysis analysis
         )
@@ -251,12 +252,12 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         HttpEntity<String> reqEntity = new HttpEntity<>(reqBody, newRequestHeaders(true, true));
 
-        ResponseEntity<String> resp =
+        ResponseEntity<MicrobiologySampleAnalysesSubmissionResponse> resp =
             restTemplate.exchange(
                 apiConfig.getBaseUrl() + SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE,
                 HttpMethod.POST,
                 reqEntity,
-                String.class
+                MicrobiologySampleAnalysesSubmissionResponse.class
             );
 
         log.info(
@@ -264,7 +265,15 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             (apiConfig.getLogSampleAnalysisSubmissionDetails() ? " with response:\n  " + toJson(resp.getBody()) : ".")
         );
 
-        return completedFuture(new MicrobiologySampleAnalysisSubmissionResponse());
+        int createdCount = resp.getBody().getSampleAnalysisMicrobiologyList().size();
+        if ( createdCount != 1 )
+        {
+            throw new RuntimeException(
+                "LABS-DS service returned " + createdCount + " result records for single " + "submission, expected 1."
+            );
+        }
+
+        return completedFuture(resp.getBody().getSampleAnalysisMicrobiologyList().get(0));
     }
 
     @Override
