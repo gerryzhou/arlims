@@ -42,9 +42,11 @@ export class StageWrapupComponent implements OnChanges {
       );
    }
 
-   updateControlEnablements() {
+   updateControlEnablements()
+   {
       const reserveSampleDispositionCtrl = this.form.get('reserveSampleDisposition');
-      if (reserveSampleDispositionCtrl) {
+      if (reserveSampleDispositionCtrl)
+      {
          this.destinationsEnabled = reserveSampleDispositionCtrl.value === 'ISOLATES_SENT';
          this.otherDescriptionEnabled = reserveSampleDispositionCtrl.value === 'OTHER';
 
@@ -56,11 +58,13 @@ export class StageWrapupComponent implements OnChanges {
       }
    }
 
-   ngOnChanges() {
+   ngOnChanges()
+   {
       this.updateControlEnablements();
    }
 
-   onReserveSampleDispositionChanged() {
+   onReserveSampleDispositionChanged()
+   {
       this.updateControlEnablements();
    }
 }
