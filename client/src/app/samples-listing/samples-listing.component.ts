@@ -26,6 +26,10 @@ export class SamplesListingComponent {
 
    samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
+   labGroupTestTypes: LabTestType[];
+
+   contentsLastLoaded: Moment;
+
    // indexes of samples to be displayed in this.samples, having survived filters and optionally undergone sorting
    visibleSampleIxs: number[];
 
@@ -33,11 +37,6 @@ export class SamplesListingComponent {
 
    hiddenSelectedCount = 0;
 
-   labGroupTestTypes: LabTestType[];
-
-   contentsLastLoaded: Moment;
-
-   readonly maxAutoExpandSamples = 3;
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
@@ -71,8 +70,8 @@ export class SamplesListingComponent {
    {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
       this.samples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
-      this.applyFilters();
       this.contentsLastLoaded = moment();
+      this.applyFilters();
    }
 
    listingOptionsChanged(listingOptions: ListingOptions)
@@ -151,35 +150,6 @@ export class SamplesListingComponent {
    {
       const sampleStatus = sample.factsStatus as SampleOpStatusCode;
       return listingOptions.includeStatuses.includes(sampleStatus);
-   }
-
-   get selectedVisibleSamples(): SampleOp[]
-   {
-      const selectedSamples: SampleOp[] = [];
-      for (const sampleOpIx of this.visibleSampleIxs)
-      {
-         const selectableSample = this.samples[sampleOpIx];
-         if (selectableSample.selected)
-         {
-            selectedSamples.push(selectableSample.sampleOp);
-         }
-      }
-      return selectedSamples;
-   }
-
-   get selectedSamples(): SampleOp[]
-   {
-      const selectedSamples: SampleOp[] = [];
-
-      for (const selectableSample of this.samples)
-      {
-         if (selectableSample.selected)
-         {
-            selectedSamples.push(selectableSample.sampleOp);
-         }
-      }
-
-      return selectedSamples;
    }
 
    selectOrUnselectVisible(select: boolean)
