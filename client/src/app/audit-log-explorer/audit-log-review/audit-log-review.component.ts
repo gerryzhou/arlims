@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject, from as obsFrom, Observable} from 'rxjs';
 
 import {UserContextService, AuditLogQueryService} from '../../shared/services';
 import {AuditLogDataOptions} from './audit-log-data-options';
@@ -37,8 +36,9 @@ export class AuditLogReviewComponent
 
       this.analyzedAuditLogEntries$ = new BehaviorSubject(entries.map(e => new AnalyzedAuditLogEntry(e)));
 
-      this.labGroupUsernames$ = userCtxSvc.getLabGroupContents().pipe(
-         map(lgc => lgc.memberUsers.map(uref => uref.username))
+      this.labGroupUsernames$ = obsFrom(
+         userCtxSvc.getLabGroupContents()
+         .then(lgc => lgc.memberUsers.map(uref => uref.username))
       );
 
       this.includeDataChangeDetails$ = new BehaviorSubject(dataOptions.includeChangeDetailData);

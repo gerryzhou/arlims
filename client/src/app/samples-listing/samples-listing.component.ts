@@ -1,7 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs';
-import {map, take} from 'rxjs/operators';
+import {Observable, from as obsFrom} from 'rxjs';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
@@ -226,9 +225,9 @@ export class SamplesListingComponent {
    reload(): Observable<void>
    {
       const reload$: Observable<void> =
-         this.usrCtxSvc.refreshLabGroupContents().pipe(
-            map(labGroupContents => this.refreshFromLabGroupContents(labGroupContents)),
-            take(1)
+         obsFrom(
+            this.usrCtxSvc.refreshLabGroupContents()
+            .then(lgc => this.refreshFromLabGroupContents(lgc))
          );
 
       reload$.subscribe(

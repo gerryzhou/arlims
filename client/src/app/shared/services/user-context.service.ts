@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {BehaviorSubject, EMPTY as emptyObs, Observable, of as obsof, ReplaySubject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of as obsOf, Subject} from 'rxjs';
 import {catchError, flatMap, map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
@@ -25,10 +25,11 @@ export class UserContextService {
    private readonly authenticationToken = new BehaviorSubject<string | null>(null);
    private labGroupContentsLastUpdated: Date | null = null;
 
-   private labGroupContents$: ReplaySubject<LabGroupContents>;
-   private testIdToSampleOpTest$: ReplaySubject<Map<number, SampleOpTest>>;
-   private testTypeCodeToLabGroupTestConfigJson$: ReplaySubject<Map<string, string>>;
-   private labResourcesByType$: ReplaySubject<Map<string, LabResource[]>>;
+   // These members are derived from lab group contents and are replaced at every refresh request.
+   private labGroupContents$: Promise<LabGroupContents>;
+   private testIdToSampleOpTest$: Promise<Map<number, SampleOpTest>>;
+   private testTypeCodeToLabGroupTestConfigJson$: Promise<Map<string, string>>;
+   private labResourcesByType$: Promise<Map<string, LabResource[]>>;
 
    static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
    static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
@@ -82,7 +83,7 @@ export class UserContextService {
             return this.fetchUserContext().pipe(
                map(userContext => {
                   this.authenticatedUser.next(userContext.user);
-                  this.refreshLabGroupContentsVia(obsof(userContext.labGroupContents));
+                  this.refreshLabGroupContentsMembersFrom(obsOf(userContext.labGroupContents));
                   return true;
                })
             );
@@ -90,7 +91,7 @@ export class UserContextService {
          catchError((err) => {
             console.log(err);
             this.authenticationToken.next(null);
-            return obsof(false);
+            return obsOf(false);
          })
       );
    }
@@ -99,76 +100,64 @@ export class UserContextService {
    {
       this.authenticatedUser.next(null);
       this.authenticationToken.next(null);
-      this.refreshLabGroupContentsVia(emptyObs);
       if ( navigateToLoginView )
          this.router.navigate(this.appUrlsSvc.login());
    }
 
-   getLabGroupContents(): Observable<LabGroupContents>
+   getLabGroupContents(): Promise<LabGroupContents>
    {
-      if ( !this.authenticatedUser.getValue() )
-         return throwError('authenticated user required for this operation');
-
       return this.labGroupContents$;
    }
 
-   getSampleOpTest(testId: number): Observable<SampleOpTest | undefined>
+   getSampleOpTest(testId: number): Promise<SampleOpTest | undefined>
    {
-      if ( !this.authenticatedUser.getValue() )
-         return throwError('authenticated user required for this operation');
-
-      return this.testIdToSampleOpTest$.pipe(map(m => m.get(testId)));
+      return this.testIdToSampleOpTest$.then(m => m.get(testId));
    }
 
-   getLabGroupTestConfigJson(testTypeCode: string): Observable<string | undefined>
+   getLabGroupTestConfigJson(testTypeCode: string): Promise<string | undefined>
    {
-      if ( !this.authenticatedUser.getValue() )
-         return throwError('authenticated user required for this operation');
-
-      return this.testTypeCodeToLabGroupTestConfigJson$.pipe(map(m => m.get(testTypeCode)));
+      return this.testTypeCodeToLabGroupTestConfigJson$.then(m => m.get(testTypeCode));
    }
 
-   getLabResourcesByType(): Observable<Map<string, LabResource[]>>
+   getLabResourcesByType(): Promise<Map<string, LabResource[]>>
    {
-      if ( !this.authenticatedUser.getValue() )
-         return throwError('authenticated user required for this operation');
-
       return this.labResourcesByType$;
    }
 
-   refreshLabGroupContents(): Observable<LabGroupContents>
+   refreshLabGroupContents(): Promise<LabGroupContents>
    {
-      if ( !this.authenticatedUser.getValue() )
-         return throwError('authenticated user required for this operation');
+      this.refreshLabGroupContentsMembersFrom(this.fetchLabGroupContents());
 
-      this.refreshLabGroupContentsVia(this.fetchLabGroupContents());
       return this.labGroupContents$;
    }
 
-   private refreshLabGroupContentsVia(lgContents$: Observable<LabGroupContents>)
+
+   private refreshLabGroupContentsMembersFrom(contentsSource: Observable<LabGroupContents>)
    {
-      this.labGroupContents$ = new ReplaySubject(1);
-      this.testIdToSampleOpTest$ = new ReplaySubject<Map<number, SampleOpTest>>(1);
-      this.testTypeCodeToLabGroupTestConfigJson$ = new ReplaySubject<Map<string, string>>(1);
-      this.labResourcesByType$ = new ReplaySubject<Map<string, LabResource[]>>(1);
+      const labGroupContents$ = new Subject<LabGroupContents>();
 
-      this.labGroupContents$
-         .pipe( map(lgContents => UserContextService.getSampleOpTestsByTestId(lgContents.activeSamples)) )
-         .subscribe(this.testIdToSampleOpTest$);
+      this.labGroupContents$ = labGroupContents$.toPromise();
 
-      this.labGroupContents$
-         .pipe( map(lgContents => UserContextService.getLabGroupTestConfigJsonsByTestTypeCode(lgContents.supportedTestTypes)) )
-         .subscribe(this.testTypeCodeToLabGroupTestConfigJson$);
+      this.testIdToSampleOpTest$ =
+         labGroupContents$
+         .pipe( map(lgc => UserContextService.getSampleOpTestsByTestId(lgc.activeSamples)) )
+         .toPromise();
 
-      this.labGroupContents$
-         .pipe( map(lgContents => UserContextService.groupLabResourcesByType(lgContents.managedResources)) )
-         .subscribe(this.labResourcesByType$);
+      this.testTypeCodeToLabGroupTestConfigJson$ =
+         labGroupContents$
+         .pipe( map(lgc => UserContextService.getLabGroupTestConfigJsonsByTestTypeCode(lgc.supportedTestTypes)) )
+         .toPromise();
 
-      this.labGroupContents$.subscribe(() => {
+      this.labResourcesByType$ =
+         labGroupContents$
+         .pipe( map(lgc => UserContextService.groupLabResourcesByType(lgc.managedResources)) )
+         .toPromise();
+
+      labGroupContents$.subscribe(() => {
          this.labGroupContentsLastUpdated = new Date();
       });
 
-      lgContents$.subscribe(this.labGroupContents$);
+      contentsSource.subscribe(labGroupContents$);
    }
 
    private fetchUserContext(): Observable<UserContext>

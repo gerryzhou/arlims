@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, OnChanges, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, from as obsFrom} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {UserContextService} from '../../shared/services';
@@ -33,7 +33,10 @@ export class TestsSearchQueryComponent implements OnChanges, OnDestroy {
 
    constructor(userCtxSvc: UserContextService)
    {
-      this.labTestTypes$ = userCtxSvc.getLabGroupContents().pipe(map(lgc => lgc.supportedTestTypes));
+      this.labTestTypes$ = obsFrom(
+         userCtxSvc.getLabGroupContents()
+         .then(lgc => lgc.supportedTestTypes)
+      );
    }
 
    ngOnChanges()

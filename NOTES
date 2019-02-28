@@ -1,11 +1,12 @@
-Set spikeSpeciesText to lab config, extract when building spike data for FACTS submission.
-  Or set in pre-enr data since it may eventually be a choice.
-
-
+Finish finalizing and testing AOAC submissions.
 
 Data Submission Fields
 ----------------------
 Where should lowestDilutionTestedCode come from?
+
+Changes required to example submission:
+  In kit test example, rapidMethodResultCode had to be changed from "1" to "POS".
+  performingOrgName [ARL-MICRO1] is invalid for the operationId [8646420]
 Spiking
   Should choice of spikingGenusSpeciesText be added to entry forms?
   Unknown fields (what are these, where to obtain values?)
@@ -13,12 +14,13 @@ Spiking
     selectiveAgarResultCode
     selectiveAgarText
   analysisMicrobiologyKitId
-    Needs to be provided (examples are just passing null)?
+    Necessary? Examples are just passing null.
   kitRemarksText
     Should this be added to the ui/test data somewhere?
 
 LABSDS API
 ==========
+Add sorting by assigned date to person inbox.
 Still need product description field added to SampleAnalyses endpoint results.
 Example microbiology submission request realistic?
   - Why is sampleTrackingSubNum sent in the doc example?

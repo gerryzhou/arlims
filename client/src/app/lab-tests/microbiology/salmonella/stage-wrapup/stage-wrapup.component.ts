@@ -1,7 +1,6 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, from as obsFrom} from 'rxjs';
 
 import {WrapupData} from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
@@ -37,8 +36,9 @@ export class StageWrapupComponent implements OnChanges {
           private userCtxSvc: UserContextService,
        )
    {
-      this.labGroupUsers$ = userCtxSvc.getLabGroupContents().pipe(
-         map(lgc => lgc.memberUsers)
+      this.labGroupUsers$ = obsFrom(
+         userCtxSvc.getLabGroupContents()
+         .then(lgc => lgc.memberUsers)
       );
    }
 
