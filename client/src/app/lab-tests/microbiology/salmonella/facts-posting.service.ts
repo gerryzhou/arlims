@@ -70,6 +70,7 @@ export class FactsPostingService {
          quantifiedIndicator: 'N',
          subSamplesDetectableFindingsNumber: positivesCount,
          analysisMicKitTests,
+         analysisMicFindings: [],
          analysisResultsRemarksText: JSON.stringify(structuredRemarks),
       };
 
@@ -97,7 +98,7 @@ export class FactsPostingService {
       (
          detection: boolean,
          speciesText: string | null,
-         rapidMethodDetections,
+         rapidMethodDetections: number,
          conventionalMethodResultCode: string
       )
       : MicrobiologyKitTest[]
@@ -106,7 +107,7 @@ export class FactsPostingService {
          {
             conventionalMethodResultCode,
 
-            rapidMethodResultCode: rapidMethodDetections,
+            rapidMethodResultCode: rapidMethodDetections > 0 ? 'POS' : 'NEG',
 
             spikingGenusSpeciesText: speciesText,
 
@@ -123,8 +124,6 @@ export class FactsPostingService {
             kitRemarksText: null // TODO: Add to testdata and gui?
          }
       ];
-
-      return [];
    }
 
    submitBAMAnalysisResults
