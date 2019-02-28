@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
@@ -24,9 +25,10 @@ import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnaly
 
 @Service
 @Profile({"dev"})
-public class FakeFactsAccessService implements FactsAccessService
+public class FakeFactsAccessService extends ServiceBase implements FactsAccessService
 {
     private final ObjectMapper jsonObjectMapper;
+
 
     FakeFactsAccessService()
     {
@@ -316,6 +318,8 @@ public class FakeFactsAccessService implements FactsAccessService
             MicrobiologySampleAnalysis subm
         )
     {
+        log.info("Received submission in fake FACTS access service: " + toJson(subm));
+
         return completedFuture(new CreatedSampleAnalysisMicrobiology(12345L));
     }
 
@@ -323,7 +327,24 @@ public class FakeFactsAccessService implements FactsAccessService
     @Async
     public CompletableFuture<Void> updateWorkStatus(long sampleOpId, long personId, String statusCode)
     {
+        log.info(
+            "Received request to update work status in fake FACTS access service for op = " + sampleOpId +
+            ", personId = " + personId + ", statusCode = " + statusCode
+        );
+
         return completedFuture(null);
+    }
+
+    private String toJson(Object o)
+    {
+        try
+        {
+            return jsonObjectMapper.writeValueAsString(o);
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 }
