@@ -53,7 +53,12 @@ export function makeTestDataFormGroup
          mediumType: new FormControl(testData.preEnrData.mediumType),
          incubatorId: new FormControl(testData.preEnrData.incubatorId),
          sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
-         spikeSpeciesText: new FormControl(testConfig ? testConfig.spikeSpeciesText : null)
+         spikeSpeciesText: new FormControl(
+            testData.preEnrData.spikeSpeciesText || testConfig.spikeSpeciesText || null
+         ),
+         spikeKitRemarksText: new FormControl(
+            testData.preEnrData.spikeKitRemarksText || testConfig.spikeKitRemarksText || null
+         )
       }),
       selEnrData: new FormGroup({
          rvBatchId: new FormControl(testData.selEnrData.rvBatchId),

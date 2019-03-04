@@ -42,9 +42,10 @@ export class FactsPostingService {
       const positivesCount = countValueOccurrences(vidasData.testUnitDetections, true);
 
       const spiking = vidasData.spikeDetection != null;
-      const spikeSpeciesText = spiking ? testData.preEnrData.spikeSpeciesText : null;
+      const spikeSpecies = spiking ? testData.preEnrData.spikeSpeciesText : null;
+      const kitRemarks = spiking ? testData.preEnrData.spikeKitRemarksText : null;
       const analysisMicKitTests = spiking ?
-         this.makeSpikingKitTests(testData.vidasData.spikeDetection, spikeSpeciesText, positivesCount, 'NA')
+         this.makeSpikingKitTests(testData.vidasData.spikeDetection, spikeSpecies, kitRemarks, positivesCount, 'NA')
          : null;
 
       const structuredRemarks = {
@@ -57,7 +58,7 @@ export class FactsPostingService {
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
          accomplishingOrgName: labGroupFactsParentOrgName,
-         performingOrgName: labGroupFactsOrgName,
+         performingOrgName: null, // TODO: Should be labGroupFactsOrgName here, but that is currently rejected.
          actionIndicator: positivesCount > 0 ? 'Y' : 'N',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -98,6 +99,7 @@ export class FactsPostingService {
       (
          detection: boolean,
          speciesText: string | null,
+         kitRemarks: string | null,
          rapidMethodDetections: number,
          conventionalMethodResultCode: string
       )
@@ -119,9 +121,7 @@ export class FactsPostingService {
 
             selectiveAgarText: '',       // TODO: "
 
-            analysisMicrobiologyKitId: null, // TODO: Necessary to include this (test via curl)?
-
-            kitRemarksText: null // TODO: Add to testdata and gui?
+            kitRemarksText: kitRemarks || 'NA'
          }
       ];
    }
@@ -146,7 +146,7 @@ export class FactsPostingService {
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
          accomplishingOrgName: labGroupFactsParentOrgName,
-         performingOrgName: labGroupFactsOrgName,
+         performingOrgName: null,  // TODO: Should be labGroupFactsOrgName here, but that is currently rejected.
          actionIndicator: 'Y',
          problemCode: 'MICROID',
          genusCode: 'SLML',

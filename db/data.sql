@@ -65,7 +65,8 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
         '"testUnitsType": "composite"' ||
         '}' ||
       '],' ||
-      '"spikeSpeciesText": "S. cerro"' ||
+      '"spikeSpeciesText": "S. cerro",' ||
+      '"spikeKitRemarksText": "7 CFUs on blood agar"' ||
     '}',
     'imp_slm_vidas.pdf'
   );

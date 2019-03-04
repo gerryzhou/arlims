@@ -1,39 +1,51 @@
+Add lab group test config for spikeKitRemarksText as was done for spikeSpeciesText.
+
+
+Done
+====
+Updates to match changes in LABS-DS api, date/timestamp parsing etc.
+Status update to in-progress on first save now working (required investigating api problem)
+Vidas stage AOAC data with spiking now submits to FACTS successfully.
+  Documented some remaining questions and issues regarding AOAC data.
+Looked for problems that might cause duplicated sample in the samples list.
+  Didn't find anything but cleaned up the async loading code to be more clear and readable.
+Add per-lab and test configuration for spike species, kit remarks etc.
+
+Find problem with pdf generation for John.
+
 Finish finalizing and testing AOAC submissions.
-
-Data Submission Fields
-----------------------
-Where should lowestDilutionTestedCode come from?
-
-Changes required to example submission:
-  In kit test example, rapidMethodResultCode had to be changed from "1" to "POS".
-  performingOrgName [ARL-MICRO1] is invalid for the operationId [8646420]
-Spiking
-  Should choice of spikingGenusSpeciesText be added to entry forms?
-  Unknown fields (what are these, where to obtain values?)
-    subsampleNumberCode
-    selectiveAgarResultCode
-    selectiveAgarText
-  analysisMicrobiologyKitId
-    Necessary? Examples are just passing null.
-  kitRemarksText
-    Should this be added to the ui/test data somewhere?
 
 LABSDS API
 ==========
-Add sorting by assigned date to person inbox.
+Data Submission Fields
+  performingOrg
+    Currently rejected (ARL-MICRO1) for the operations in my inbox in dev.
+    Is this a problem with the test data?
+  lowestDilutionTestedCode
+    Where to get this value?
+  Spiking
+    spikingGenusSpeciesText was added to config associated with the lab and test type.
+      Should it be added to the ui for user to select/enter?
+    Unknown fields (what are these, where to obtain values?)
+      subsampleNumberCode
+      selectiveAgarResultCode
+      selectiveAgarText
+    kitRemarksText
+      Value is required by api. Should this be added to the ui somewhere? Standardized per lab/test-type?
+
+[Requested] Add sorting by assigned date to person inbox.
 Still need product description field added to SampleAnalyses endpoint results.
-Example microbiology submission request realistic?
-  - Why is sampleTrackingSubNum sent in the doc example?
-  - actionIndicator is "N" but detectable findings > 0 for first entry. In second entry actionIndicator is "Y" but
-    detectable findings is 0.
-  - field "examinedType" removed?
-  - subSamplesDetectableFindingsNumber should probably just be called "detectableFindings"?
+
+Sample data problems
+  On test server:
+    Analytical assignment status for sample 848447-0 is not 'I' so AOAC submission cannot be made.
+    {"sampleAnalysisMicrobiologyList":[{"operationId":6906100,"accomplishingOrgName":"ARKL","performingOrgName":null,"actionIndicator":"Y","problemCode":"MICROID","genusCode":"SLML","speciesCode":"SLML998","methodSourceCode":"AOAC","methodCode":"T2004.03","methodModificationIndicator":"N","kitTestIndicator":"Y","lowestDilutionTestedCode":"1","quantifiedIndicator":"N","subSamplesDetectableFindingsNumber":1,"compositesExaminedNumber":2,"subSamplesUsedCompositeNumber":15,"subSamplesExaminedNumber":null,"analysisResultsRemarksText":"{\"methodRemarks\":\"one positive\",\"methodDetails\":{\"gramsPerSub\":25}}","analysisMicFindings":[],"analysisMicKitTests":[{"conventionalMethodResultCode":"NA","rapidMethodResultCode":"POS","spikingGenusSpeciesText":"S. cerro","spikingResultCode":"POS","subsampleNumberCode":"1","selectiveAgarResultCode":"","selectiveAgarText":"","analysisMicrobiologyKitId":null,"kitRemarksText":"?"}]}]}
+    01-03-2019 11:56:28.086 [http-nio-8000-exec-3] INFO  g.f.n.a.d.f.LabsDSFactsAccessService.handleError - LABS-DS api call resulted in error: [{"errorCode":"LABS-RUL-1060","message":"SampleAnalysisMicrobiology[0] : Unable to save [SampleAnalysisMicrobiology_POST]. The Analytical Assignment status is not [[I]] for operationId [6906100]. Please resubmit with valid data."}]
+
 
 
 Microbiology Data Submission
 ----------------------------
-  Kit test submission
-    Need example of spiking/kit test data submission, only example is result of GET request.
   BAM Findings questions
     Array element structure in analysisMicFindings:
       'subNumberCode': '1',     // Meaning? Original test unit num as in Vidas results? Or positives relative num? Really string not numeric?

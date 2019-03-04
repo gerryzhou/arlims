@@ -31,6 +31,7 @@ export interface PreEnrData {
    bagId?: string | null;
    sampleSpike?: boolean | null;
    spikeSpeciesText?: string | null;
+   spikeKitRemarksText?: string | null;
    mediumBatchId?: string | null;
    mediumType?: string | null;
    incubatorId?: string | null;

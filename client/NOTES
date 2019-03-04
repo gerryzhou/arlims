@@ -1,3 +1,10 @@
+Form data review component
+  In prep stage, hide the "Select from FACTS/" label.
+  In pre enr stage, hide the lock/unlock and "Select sampling method" buttons.
+  In Vidas stage, hide the attached files component.
+  In slant and ident stages, hide "No positive test units in Vidas results" when positives exist in Vidas results.
+  In slant stage, hide attached files component.
+  In wrapup, in the work hours table, hide the edit, delete, and "Add User Time" buttons.
 
 Set min size of sample num / pac stack so status boxes to the right are aligned properly.
 

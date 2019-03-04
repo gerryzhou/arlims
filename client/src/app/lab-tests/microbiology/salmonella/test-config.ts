@@ -13,5 +13,7 @@ export interface TestConfig {
    aoacMethodCode?: string | null;
 
    spikeSpeciesText?: string | null;
+
+   spikeKitRemarksText?: string | null;
 }
 
