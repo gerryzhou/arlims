@@ -1,3 +1,30 @@
+Within-test search
+  Add sample num and product description to test table.
+    Use as basis for test search.
+    Clicking one would bring test data form and audit trail.
+
+Don't auto-push after Vidas stage.
+  Add button at sample level leading to page to push to FACTS (under # files).
+  Post AOAC and BAM at once.
+    But this is test-specific, so need standard way of instantiating a test and
+    telling it to post itself (?).
+
+New test type
+ default to todays date with bigger cal icon (everywhere datepicker is used)
+ test type less wide
+
+
+waterbath date
+
+Sorting of samples list
+  Put in-progress at top.
+  Filters in "PASIO" selection should stick between page navigations.
+  State should be savable to user preferences.
+
+Remove FACTS person id from tranfers text.
+
+End of April deadline (week of 22nd).
+
 
 Done
 ====
@@ -25,6 +52,7 @@ Data Submission Problems
       Should it be added to the ui for user to select/enter?
     kitRemarksText
       Value is required by api. Should this be added to the ui somewhere? Standardized per lab/test-type?
+      Currently sending "7 CFUs on blood agar".
     Unknown fields (what are these, where to obtain values?)
       subsampleNumberCode
       selectiveAgarResultCode
