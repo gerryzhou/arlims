@@ -1,5 +1,3 @@
-Add lab group test config for spikeKitRemarksText as was done for spikeSpeciesText.
-
 
 Done
 ====
@@ -12,26 +10,25 @@ Looked for problems that might cause duplicated sample in the samples list.
 Add per-lab and test configuration for spike species, kit remarks etc.
 
 Find problem with pdf generation for John.
-
-Finish finalizing and testing AOAC submissions.
+  Have not been able to reproduce with new tests.
 
 LABSDS API
 ==========
-Data Submission Fields
-  performingOrg
-    Currently rejected (ARL-MICRO1) for the operations in my inbox in dev.
-    Is this a problem with the test data?
+Data Submission Problems
+  Test data
+    My performingOrg not valid for the test data ops, has to be sent as null.
+    Analytical assignment status is not 'I' for test ops I tried, so cannot submit AOAC data.
   lowestDilutionTestedCode
     Where to get this value?
   Spiking
     spikingGenusSpeciesText was added to config associated with the lab and test type.
       Should it be added to the ui for user to select/enter?
+    kitRemarksText
+      Value is required by api. Should this be added to the ui somewhere? Standardized per lab/test-type?
     Unknown fields (what are these, where to obtain values?)
       subsampleNumberCode
       selectiveAgarResultCode
       selectiveAgarText
-    kitRemarksText
-      Value is required by api. Should this be added to the ui somewhere? Standardized per lab/test-type?
 
 [Requested] Add sorting by assigned date to person inbox.
 Still need product description field added to SampleAnalyses endpoint results.
