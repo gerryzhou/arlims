@@ -2,18 +2,12 @@ Done
 ====
 - Tweak layout in new test dialog and default to current date.
 - Make date pickers easier to user for touchscreen devices.
-  Date picker dialog now centered and larger, no longer under text field.
   Click anywhere on text field opens picker dialog.
+  Date picker dialog now centered and larger, no longer under text field.
+- For prep stage received fields auto-fill feature, combine "transfers to me" and "transfers to anyone" buttons.
+  In resulting dialog, transfers to the current user are displayed above transfers to others.
+- For waterbath start timestamp in M-broth stage, separate format to right with subdued font.
 
-Prep stage
-  For received fields auto-fill, combine "transfers to me" and "transfers to anyone" into single button.
-    Dialog will show transfers to anyone, with transfers to current user at top.
-
-New test dialog
-  Make calendar icon bigger for all date pickers.
-
-waterbath date
-  move format text to placeholder text
 
 Sorting of samples list
   Filters in "PASIO" selection should stick between page navigations.

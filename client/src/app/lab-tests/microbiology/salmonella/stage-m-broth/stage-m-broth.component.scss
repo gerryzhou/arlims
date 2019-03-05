@@ -3,16 +3,27 @@
 .row {
    display: flex;
    flex-flow: row wrap;
+}
 
-   .now-time {
-      margin-left: 10px;
-   }
+.started-helpers {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: flex-start;
+}
 
-   .start-timestamp {
-      mat-form-field {
-         width: 350px;
-      }
-   }
+.start-now {
+   display:flex;
+   align-items: center;
+}
+
+.now-time {
+   margin-left: 10px;
+}
+
+.format-msg {
+   margin-left: 10px;
+   color: lightgray;
+   font-size: smaller;
 }
 
 .apply-resources-btn {

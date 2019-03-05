@@ -49,13 +49,19 @@
          </app-conflicting-field-value>
       </div>
 
-      <div class="field-area start-timestamp" [class.conflicted]="conflicts.waterBathStarted !== undefined">
-         <span>
+      <div class="field-area" [class.conflicted]="conflicts.waterBathStarted !== undefined">
+         <div class="row">
             <mat-form-field>
-               <input formControlName="waterBathStarted" type="text" matInput placeholder="Water bath started (YYYY-MM-DD HH:mm[:ss])">
+               <input formControlName="waterBathStarted" type="text" matInput placeholder="Water bath started">
             </mat-form-field>
-            <button class="link now-time" (click)="setStartTimeNow()" *ngIf="!form.disabled">now</button>
-         </span>
+            <span class="started-helpers">
+                <span class="start-now">
+                   <mat-icon>arrow_back</mat-icon>
+                   <button class="link now-time" (click)="setStartTimeNow()" *ngIf="!form.disabled">now</button>
+                </span>
+                <span class="format-msg">YYYY-MM-DD HH:mm[:ss]</span>
+            </span>
+         </div>
          <app-conflicting-field-value
             [conflictValue]="conflicts.waterBathStarted"
             [conflictWhoWhen]="conflictsWhoWhen"
