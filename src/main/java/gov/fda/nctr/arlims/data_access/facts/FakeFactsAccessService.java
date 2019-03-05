@@ -298,6 +298,21 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                     "\"sentDate\":\"2019-02-03\"," +
                     "\"sentByOrgName\":\"BLT-DO\"," +
                     "\"remarks\":\"test\"" +
+                    "}," +
+                    "{" +
+                    "\"sampleTrackingNum\":852285," +
+                    "\"sampleTrackingSubNum\":0," +
+                    "\"receivedByPersonId\":123456," +
+                    "\"receivedByPersonFirstName\":\"Sam\"," +
+                    "\"receivedByPersonLastName\":\"Wise\"," +
+                    "\"receivedDate\":\"2019-01-29\"," +
+                    "\"receiverConfirmationInd\":\"Y\"," +
+                    "\"sentByPersonId\":472628," +
+                    "\"sentByPersonFirstName\":\"Les\"," +
+                    "\"sentByPersonLastName\":\"Paul\"," +
+                    "\"sentDate\":\"2019-02-05\"," +
+                    "\"sentByOrgName\":\"BLT-DO\"," +
+                    "\"remarks\":\"test\"" +
                     "}" +
                     "]",
                     SampleTransfer[].class

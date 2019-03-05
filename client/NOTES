@@ -1,13 +1,13 @@
 Done
 ====
 - Tweak layout in new test dialog and default to current date.
-- Make datepickers touch friendly
+- Make date pickers easier to user for touchscreen devices.
   Date picker dialog now centered and larger, no longer under text field.
   Click anywhere on text field opens picker dialog.
 
 Prep stage
   For received fields auto-fill, combine "transfers to me" and "transfers to anyone" into single button.
-    Dialog will show transfers to anyone, with tranfers to current user at top.
+    Dialog will show transfers to anyone, with transfers to current user at top.
 
 New test dialog
   Make calendar icon bigger for all date pickers.

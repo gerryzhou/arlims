@@ -30,13 +30,9 @@
 
       <span class="received-autofill">
           <mat-icon>arrow_back</mat-icon>
-          Select from FACTS
-          <button class="link" (click)="promptGetReceivedFieldsFromFacts(currentUser.factsPersonId)" *ngIf="!form.disabled">
-             transfers to me
-          </button>
-          /
-          <button class="link" (click)="promptGetReceivedFieldsFromFacts(null)" *ngIf="!form.disabled">
-             transfers to anyone
+          Select from
+          <button class="link" (click)="promptGetReceivedFieldsFromFacts()" *ngIf="!form.disabled">
+             FACTS transfers
           </button>
       </span>
 

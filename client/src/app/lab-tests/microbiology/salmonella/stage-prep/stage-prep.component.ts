@@ -45,24 +45,19 @@ export class StagePrepComponent implements OnChanges {
 
    ngOnChanges() {}
 
-   promptGetReceivedFieldsFromFacts(receivingPersonId: number|null)
+   promptGetReceivedFieldsFromFacts()
    {
-      this.generalFactsService.getSampleTransfers(this.sampleOp.sampleTrackingNum, receivingPersonId).subscribe(
+      this.generalFactsService.getSampleTransfers(this.sampleOp.sampleTrackingNum, null).subscribe(
          sampleTransfers => {
             switch ( sampleTransfers.length )
             {
                case 0:
-                  this.alertMsgSvc.alertInfo(
-                     'No FACTS transfers found for this sample' + (receivingPersonId ? ' for the current user.' : '.')
-                  );
-                  break;
-               case 1:
-                  this.fillReceivedFields(sampleTransfers[0]);
+                  this.alertMsgSvc.alertInfo('No FACTS transfers found for this sample.');
                   break;
                default:
-                  this.promptSelectSampleTransfer(sampleTransfers).subscribe(selectedSampleTransfers => {
-                     if ( selectedSampleTransfers )
-                        this.fillReceivedFields(selectedSampleTransfers[0]);
+                  this.promptSelectSampleTransfer(sampleTransfers).subscribe(selectedTransfers => {
+                     if ( selectedTransfers )
+                        this.fillReceivedFields(selectedTransfers[0]);
                   });
             }
          },
@@ -70,14 +65,27 @@ export class StagePrepComponent implements OnChanges {
       );
    }
 
-   promptSelectSampleTransfer(sampleTransferChoices: SampleTransfer[]): Observable<SampleTransfer|undefined>
+   promptSelectSampleTransfer(sampleTransfers: SampleTransfer[]): Observable<SampleTransfer|undefined>
    {
+      function compare(s1: string, s2: string): number {
+         if (!s1) return s2 ? -1 : 0;
+         if (!s2) return 1;
+         else return s1.localeCompare(s2);
+      }
+
+      const dateSortedTransfers = sampleTransfers.sort((a, b) => compare(b.receivedDate, a.receivedDate));
+      const userFactsId = this.currentUser.factsPersonId;
+      const transferChoices =
+         dateSortedTransfers
+         .filter(t => t.receivedByPersonId === userFactsId)
+         .concat(dateSortedTransfers.filter(t => t.receivedByPersonId !== userFactsId));
+
       const dlg = this.dialogSvc.open(ItemsSelectionDialogComponent, {
          width: 'calc(75%)',
          data: {
             title: 'Select a Sample Transfer',
             message: 'Select one sample transfer below from which to fill received fields.',
-            choiceItems: sampleTransferChoices,
+            choiceItems: transferChoices,
             itemText: (st: SampleTransfer) => `from ${st.sentByPersonFirstName} ${st.sentByPersonLastName} to ` +
                `${st.receivedByPersonFirstName} ${st.receivedByPersonLastName} (${st.receivedDate})`,
             minSelectionCount: 1,
@@ -91,8 +99,7 @@ export class StagePrepComponent implements OnChanges {
    fillReceivedFields(transfer: SampleTransfer)
    {
       const receivedFrom =
-         ((transfer.sentByPersonFirstName || '') + ' ' + (transfer.sentByPersonLastName || '')).trim() +
-         (transfer.sentByPersonId ? ' [' + transfer.sentByPersonId + ']' : '');
+         ((transfer.sentByPersonFirstName || '') + ' ' + (transfer.sentByPersonLastName || '')).trim();
       this.form.get('sampleReceivedFrom').setValue(receivedFrom);
 
       this.form.get('sampleReceivedDate').setValue(transfer.receivedDate || '');
