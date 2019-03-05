@@ -1,43 +1,6 @@
-Within-test search
-  Add sample num and product description to test table.
-    Use as basis for test search.
-    Clicking one would bring test data form and audit trail.
-
-Don't auto-push after Vidas stage.
-  Add button at sample level leading to page to push to FACTS (under # files).
-  Post AOAC and BAM at once.
-    But this is test-specific, so need standard way of instantiating a test and
-    telling it to post itself (?).
-
-New test type
- default to todays date with bigger cal icon (everywhere datepicker is used)
- test type less wide
-
-
-waterbath date
-
-Sorting of samples list
-  Put in-progress at top.
-  Filters in "PASIO" selection should stick between page navigations.
-  State should be savable to user preferences.
-
-Remove FACTS person id from tranfers text.
 
 End of April deadline (week of 22nd).
 
-
-Done
-====
-Updates to match changes in LABS-DS api, date/timestamp parsing etc.
-Status update to in-progress on first save now working (required investigating api problem)
-Vidas stage AOAC data with spiking now submits to FACTS successfully.
-  Documented some remaining questions and issues regarding AOAC data.
-Looked for problems that might cause duplicated sample in the samples list.
-  Didn't find anything but cleaned up the async loading code to be more clear and readable.
-Add per-lab and test configuration for spike species, kit remarks etc.
-
-Find problem with pdf generation for John.
-  Have not been able to reproduce with new tests.
 
 LABSDS API
 ==========

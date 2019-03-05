@@ -94,7 +94,7 @@ export class SampleComponent implements OnChanges {
             sampleOp: this.sampleOp,
             availableTestTypes: this.labGroupTestTypes,
             selectedTestType: null,
-            beginDate: null,
+            beginDate: moment(),
          }
       });
 

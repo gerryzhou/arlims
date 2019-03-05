@@ -3,19 +3,19 @@
 
       <div class="option">
          <mat-form-field>
-            <input formControlName="fromMoment" [matDatepicker]="fromDatepicker"
+            <input formControlName="fromMoment" [matDatepicker]="fromDatepicker" (click)="fromDatepicker.open()"
                    matInput placeholder="From date">
             <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
-            <mat-datepicker #fromDatepicker></mat-datepicker>
+            <mat-datepicker touchUi #fromDatepicker></mat-datepicker>
          </mat-form-field>
       </div>
 
       <div class="option">
          <mat-form-field>
-            <input formControlName="toMoment" [matDatepicker]="toDatepicker"
+            <input formControlName="toMoment" [matDatepicker]="toDatepicker" (click)="toDatepicker.open()"
                    matInput placeholder="To date">
             <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
-            <mat-datepicker #toDatepicker></mat-datepicker>
+            <mat-datepicker touchUi #toDatepicker></mat-datepicker>
          </mat-form-field>
       </div>
 

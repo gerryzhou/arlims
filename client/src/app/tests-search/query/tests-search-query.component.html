@@ -11,17 +11,21 @@
 
       <div class="criteria-group">
          <mat-form-field>
-            <input matInput formControlName="fromTimestamp" [matDatepicker]="fromDatepicker" placeholder="from date">
+            <input matInput formControlName="fromTimestamp" [matDatepicker]="fromDatepicker"
+                   (click)="fromDatepicker.open()"
+                   placeholder="from date">
             <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
-            <mat-datepicker #fromDatepicker></mat-datepicker>
+            <mat-datepicker touchUi #fromDatepicker></mat-datepicker>
          </mat-form-field>
       </div>
 
       <div class="criteria-group">
          <mat-form-field>
-            <input matInput formControlName="toTimestamp" [matDatepicker]="toDatepicker" placeholder="to date">
+            <input matInput formControlName="toTimestamp" [matDatepicker]="toDatepicker"
+                   (click)="toDatepicker.open()"
+                   placeholder="to date">
             <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
-            <mat-datepicker #toDatepicker></mat-datepicker>
+            <mat-datepicker touchUi #toDatepicker></mat-datepicker>
          </mat-form-field>
       </div>
 

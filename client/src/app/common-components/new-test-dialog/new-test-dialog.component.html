@@ -17,9 +17,10 @@
 
    <div class="begin-date">
       <mat-form-field>
-         <input matInput [(ngModel)]="data.beginDate" [matDatepicker]="datepicker" placeholder="Test begin date">
+         <input matInput [(ngModel)]="data.beginDate" [matDatepicker]="datepicker" (click)="datepicker.open()"
+                placeholder="Test begin date">
          <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-         <mat-datepicker #datepicker></mat-datepicker>
+         <mat-datepicker touchUi #datepicker></mat-datepicker>
       </mat-form-field>
    </div>
 

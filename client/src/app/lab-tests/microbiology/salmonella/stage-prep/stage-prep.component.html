@@ -4,10 +4,11 @@
 
       <span class="field-area" [class.conflicted]="conflicts.sampleReceivedDate !== undefined">
          <mat-form-field>
-            <input matInput formControlName="sampleReceivedDate" [matDatepicker]="datepicker"
+            <input matInput formControlName="sampleReceivedDate" [matDatepicker]="rcvdDatepicker"
+                   (click)="rcvdDatepicker.open()"
                    placeholder="Sample received date">
-            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-            <mat-datepicker #datepicker></mat-datepicker>
+            <mat-datepicker-toggle matSuffix [for]="rcvdDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #rcvdDatepicker></mat-datepicker>
          </mat-form-field>
          <app-conflicting-field-value
             [conflictValue]="conflicts.sampleReceivedDate"

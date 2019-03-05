@@ -1,3 +1,38 @@
+Done
+====
+- Tweak layout in new test dialog and default to current date.
+- Make datepickers touch friendly
+  Date picker dialog now centered and larger, no longer under text field.
+  Click anywhere on text field opens picker dialog.
+
+Prep stage
+  For received fields auto-fill, combine "transfers to me" and "transfers to anyone" into single button.
+    Dialog will show transfers to anyone, with tranfers to current user at top.
+
+New test dialog
+  Make calendar icon bigger for all date pickers.
+
+waterbath date
+  move format text to placeholder text
+
+Sorting of samples list
+  Filters in "PASIO" selection should stick between page navigations.
+  State should be savable to user preferences.
+
+Don't auto-push after Vidas stage.
+  Add button at sample level leading to page to push to FACTS (under # files).
+  Post AOAC and BAM at once.
+    But this is test-specific, so need standard way of instantiating a test and
+    telling it to post itself (?).
+
+Within-test search
+  Add sample num and product description to test table.
+    Use as basis for test search.
+    Clicking one would bring test data form and audit trail.
+
+Remove FACTS person id from transfers text.
+
+
 Form data review component
   In prep stage, hide the "Select from FACTS/" label.
   In pre enr stage, hide the lock/unlock and "Select sampling method" buttons.
