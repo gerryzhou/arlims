@@ -5,24 +5,27 @@ import {Injectable} from '@angular/core';
 })
 export class LocalStorageService {
 
-   public readonly storageAvailable: boolean;
+   public readonly readWriteStorageAvailable: boolean;
 
-   private storage: Storage | null = null;
+   private readonly storage: Storage;
 
    constructor()
    {
-      this.storageAvailable = checkStorageAvailable('localStorage');
-      this.storage = window['localStorage'];
+      this.readWriteStorageAvailable = checkStorageAvailable('localStorage');
+      this.storage = window['localStorage'] || null;
    }
 
    store(key: string, value: string)
    {
+      if ( !this.readWriteStorageAvailable )
+         throw new Error('Writable local storage is not available in this environment.');
       this.storage.setItem(key, value);
    }
 
    get(key: string): string | null
    {
-      return this.storage.getItem(key);
+      if ( this.storage != null ) return this.storage.getItem(key);
+      return null;
    }
 }
 

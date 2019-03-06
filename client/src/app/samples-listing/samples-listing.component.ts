@@ -4,6 +4,7 @@ import {Observable, from as obsFrom} from 'rxjs';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
+import {arraysEqual} from '../shared/util/data-objects';
 import {
    CreatedTestMetadata,
    LabGroupContents,
@@ -16,7 +17,6 @@ import {LocalStorageService} from '../shared/services/local-storage.service';
 import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.service';
 import {ListingOptions} from './listing-options/listing-options';
 import {SampleOpStatusCode} from '../shared/models/sample-op-status';
-import {arraysEqual} from "../shared/util/data-objects";
 
 @Component({
    selector: 'app-samples-listing',
@@ -88,7 +88,7 @@ export class SamplesListingComponent {
       const includeStatusesChanged = this.listingOptions == null ||
          !arraysEqual(listingOptions.includeStatuses, this.listingOptions.includeStatuses);
 
-      if ( includeStatusesChanged )
+      if ( includeStatusesChanged && this.localStorageSvc.readWriteStorageAvailable )
          this.localStorageSvc.store(this.PREF_INCLUDE_STATUSES, JSON.stringify(listingOptions.includeStatuses));
 
       this.listingOptions = listingOptions;
