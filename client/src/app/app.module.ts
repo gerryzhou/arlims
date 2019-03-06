@@ -22,7 +22,8 @@ import {
    MatSnackBarModule,
    MatSlideToggleModule,
    MatDialogModule,
-   MatDatepickerModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS
+   MatDatepickerModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS,
+   MatButtonToggleModule,
 } from '@angular/material';
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {MatButtonModule} from '@angular/material/button';
@@ -82,6 +83,7 @@ import {TestsSearchQueryComponent} from './tests-search/query/tests-search-query
       MatDialogModule,
       MatDatepickerModule,
       MatMomentDateModule,
+      MatButtonToggleModule,
       TruncateModule,
       // app modules which are NOT LOADED LAZILY
       CommonComponentsModule,

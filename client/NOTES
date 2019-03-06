@@ -6,12 +6,17 @@ Done
   Date picker dialog now centered and larger, no longer under text field.
 - For prep stage received fields auto-fill feature, combine "transfers to me" and "transfers to anyone" buttons.
   In resulting dialog, transfers to the current user are displayed above transfers to others.
-- For waterbath start timestamp in M-broth stage, separate format to right with subdued font.
+- For water bath start timestamp in M-broth stage, separate format to right with subdued font.
+- In samples listing, show visible statuses inline as row of toggle buttons.
 
-
-Sorting of samples list
+samples listing status filter
   Filters in "PASIO" selection should stick between page navigations.
-  State should be savable to user preferences.
+    Just use local storage. Later maybe user can have some way of saving to server but only by explicit choice.
+      Make LocalStorage service which tests for local storage usability at service construction time.
+
+Make sample statuses boxes line up properly
+   Set min size of sample num / pac stack.
+
 
 Don't auto-push after Vidas stage.
   Add button at sample level leading to page to push to FACTS (under # files).
@@ -34,8 +39,6 @@ Form data review component
   In slant and ident stages, hide "No positive test units in Vidas results" when positives exist in Vidas results.
   In slant stage, hide attached files component.
   In wrapup, in the work hours table, hide the edit, delete, and "Add User Time" buttons.
-
-Set min size of sample num / pac stack so status boxes to the right are aligned properly.
 
 SLM test
   Implement actual validation function for each stage, returning list of complaints.

@@ -36,6 +36,7 @@ export class SamplesListingComponent {
 
    hiddenSelectedCount = 0;
 
+   readonly DEFAULT_INCLUDE_STATUSES: SampleOpStatusCode[] = ['S', 'I'];
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
@@ -53,10 +54,12 @@ export class SamplesListingComponent {
 
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
 
+      // TODO: Get user's saved visible statuses preferences here via new user preferences service.
+
       this.listingOptions = {
          limitSelectionToVisibleSamples: true,
          showTestDeleteButtons: false,
-         includeStatuses: ['P', 'A', 'S', 'I', 'O'],
+         includeStatuses: this.DEFAULT_INCLUDE_STATUSES
       };
 
       this.expandedSampleOpIds = new Set(selectedSampleOpIds);
