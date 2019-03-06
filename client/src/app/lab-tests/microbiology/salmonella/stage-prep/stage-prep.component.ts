@@ -86,8 +86,7 @@ export class StagePrepComponent implements OnChanges {
             title: 'Select a Sample Transfer',
             message: 'Select one sample transfer below from which to fill received fields.',
             choiceItems: transferChoices,
-            itemText: (st: SampleTransfer) => `from ${st.sentByPersonFirstName} ${st.sentByPersonLastName} to ` +
-               `${st.receivedByPersonFirstName} ${st.receivedByPersonLastName} (${st.receivedDate})`,
+            itemText: st => this.sampleTransferDescription(st),
             minSelectionCount: 1,
             maxSelectionCount: 1
          }
@@ -103,5 +102,19 @@ export class StagePrepComponent implements OnChanges {
       this.form.get('sampleReceivedFrom').setValue(receivedFrom);
 
       this.form.get('sampleReceivedDate').setValue(transfer.receivedDate || '');
+   }
+
+   private sampleTransferDescription(st: SampleTransfer): string
+   {
+      const fromDescr =
+         st.sentByPersonFirstName != null || st.sentByPersonLastName != null ?
+            `${st.sentByPersonFirstName || ''} ${st.sentByPersonLastName || ''}`.trim()
+            : st.sentByPersonId != null ? `person id ${st.sentByPersonId}` : '<N/A>';
+      const toDescr =
+         st.receivedByPersonFirstName != null || st.receivedByPersonLastName != null ?
+            `${st.receivedByPersonFirstName || ''} ${st.receivedByPersonLastName || ''}`.trim()
+            : st.receivedByPersonId != null ? `person id ${st.receivedByPersonId}` : '<N/A>';
+
+      return `from ${fromDescr} to ${toDescr} (${st.receivedDate})`;
    }
 }
