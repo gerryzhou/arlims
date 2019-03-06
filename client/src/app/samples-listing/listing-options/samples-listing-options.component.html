@@ -10,8 +10,11 @@
 
       <div class="criteria-group statuses">
          <div class="statuses-label-stack">
-            <span>Include</span>
-            <span>Statuses</span>
+            <span>include</span>
+            <span>statuses</span>
+            <button *ngIf="showSaveIncludeStatuses" class="link" (click)="emitSaveIncludeStatusesEvent()">
+               save
+            </button>
          </div>
          <mat-button-toggle-group [formControl]="includeStatusesCtl" multiple>
             <mat-button-toggle *ngFor="let status of allIncompleteSampleOpStatuses" [value]="status.code"

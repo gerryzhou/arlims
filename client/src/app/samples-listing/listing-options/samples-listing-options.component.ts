@@ -15,7 +15,14 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
    @Input()
    initialOptions: ListingOptions;
 
-   @Output() optionsChanged = new EventEmitter<ListingOptions>();
+   @Input()
+   showSaveIncludeStatuses = false;
+
+   @Output()
+   optionsChanged = new EventEmitter<ListingOptions>();
+
+   @Output()
+   saveIncludeStatuses = new EventEmitter<void>();
 
    form: FormGroup;
 
@@ -53,8 +60,14 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
       this.optionsChanged.emit(data);
    }
 
+   emitSaveIncludeStatusesEvent()
+   {
+      this.saveIncludeStatuses.emit(null);
+   }
+
    onFormChange(data: ListingOptions)
    {
       this.emitChangeEvent(data);
    }
+
 }

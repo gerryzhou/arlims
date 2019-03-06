@@ -12,9 +12,11 @@ import {
    SampleOp
 } from '../../generated/dto';
 import {AlertMessageService, UserContextService} from '../shared/services';
+import {LocalStorageService} from '../shared/services/local-storage.service';
+import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.service';
 import {ListingOptions} from './listing-options/listing-options';
 import {SampleOpStatusCode} from '../shared/models/sample-op-status';
-import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.service';
+import {arraysEqual} from "../shared/util/data-objects";
 
 @Component({
    selector: 'app-samples-listing',
@@ -37,6 +39,7 @@ export class SamplesListingComponent {
    hiddenSelectedCount = 0;
 
    readonly DEFAULT_INCLUDE_STATUSES: SampleOpStatusCode[] = ['S', 'I'];
+   readonly PREF_INCLUDE_STATUSES = 'include-statuses';
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
@@ -48,18 +51,21 @@ export class SamplesListingComponent {
           private alertMsgSvc: AlertMessageService,
           private activatedRoute: ActivatedRoute,
           private selectedSampleOps: SelectedSampleOpsService,
+          private localStorageSvc: LocalStorageService
        )
    {
       const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
 
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
 
-      // TODO: Get user's saved visible statuses preferences here via new user preferences service.
+      const prefIncludeStatuses: SampleOpStatusCode[] | null =
+         JSON.parse(localStorageSvc.get(this.PREF_INCLUDE_STATUSES));
+      const includeStatuses = prefIncludeStatuses || this.DEFAULT_INCLUDE_STATUSES;
 
       this.listingOptions = {
          limitSelectionToVisibleSamples: true,
          showTestDeleteButtons: false,
-         includeStatuses: this.DEFAULT_INCLUDE_STATUSES
+         includeStatuses
       };
 
       this.expandedSampleOpIds = new Set(selectedSampleOpIds);
@@ -78,7 +84,15 @@ export class SamplesListingComponent {
 
    listingOptionsChanged(listingOptions: ListingOptions)
    {
+      // Save the include statuses to local storage whenever they are changed.
+      const includeStatusesChanged = this.listingOptions == null ||
+         !arraysEqual(listingOptions.includeStatuses, this.listingOptions.includeStatuses);
+
+      if ( includeStatusesChanged )
+         this.localStorageSvc.store(this.PREF_INCLUDE_STATUSES, JSON.stringify(listingOptions.includeStatuses));
+
       this.listingOptions = listingOptions;
+
       this.applyFilters();
    }
 
