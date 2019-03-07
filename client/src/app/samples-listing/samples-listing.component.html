@@ -6,8 +6,11 @@
    </mat-checkbox>
 
    <div class="selected-count-message">
-      {{countSelected()}} selected
-      <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
+      <div>{{visibleSampleIxs.length}} samples</div>
+      <div>
+         {{countSelected()}} selected
+         <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
+      </div>
    </div>
 
    <app-samples-listing-options

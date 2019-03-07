@@ -5,6 +5,8 @@
 }
 
 .selected-count-message {
+   display: flex;
+   flex-flow: column nowrap;
    margin-left: 20px;
    font-size: small;
 }
