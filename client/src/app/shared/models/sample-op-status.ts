@@ -3,7 +3,7 @@ export interface SampleOpStatus {
    displayName: string;
 }
 
-export type SampleOpStatusCode = 'P' | 'A' |'S' | 'I' | 'O' |  'C';
+export type SampleOpStatusCode = 'P' | 'A' |'S' | 'I' | 'T' | 'O' |  'C';
 
 
 export const SAMPLE_OP_STATUSES: SampleOpStatus[] = [
@@ -11,6 +11,7 @@ export const SAMPLE_OP_STATUSES: SampleOpStatus[] = [
    {code: 'A', displayName: 'Accepted'},
    {code: 'S', displayName: 'Assigned'},
    {code: 'I', displayName: 'In Progress'},
+   {code: 'T', displayName: 'Returned to Assignee'},
    {code: 'O', displayName: 'Original Completed'},
    {code: 'C', displayName: 'Complete'},
 ];
@@ -26,6 +27,7 @@ export function factsStatusTextFromCode(factsStatus: string)
       // less-used codes
       case 'P': return 'Pending';  // initial status, prior to being received at lab facility
       case 'A': return 'Accepted'; // received at facility but not yet assigned: ready for admin to assign to user
+      case 'T': return 'Returned to Assignee';
       case 'C': return 'Complete'; // final status, all done
       default: return factsStatus;
    }

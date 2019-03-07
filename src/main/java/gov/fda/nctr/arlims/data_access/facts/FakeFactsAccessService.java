@@ -37,7 +37,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
 
     @Override
     @Async
-    public CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems(long empId, List<String> statusCodes)
+    public CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems(long empId, Optional<List<String>> statusCodes)
     {
         try
         {

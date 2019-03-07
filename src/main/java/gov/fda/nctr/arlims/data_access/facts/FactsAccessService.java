@@ -14,7 +14,7 @@ import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnaly
 
 public interface FactsAccessService
 {
-    CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems(long employeeId, List<String> statusCodes);
+    CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems(long employeeId, Optional<List<String>> statusCodes);
 
     CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, List<String> statusCodes);
 

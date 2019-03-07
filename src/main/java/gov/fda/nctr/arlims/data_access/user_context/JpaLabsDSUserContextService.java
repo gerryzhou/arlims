@@ -50,8 +50,6 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
     private final Pattern barPattern = Pattern.compile("\\|");
 
-    private static List<String> EMPLOYEE_INBOX_ACTIVE_STATUSES = Arrays.asList("S", "I", "T");
-
     public JpaLabsDSUserContextService
         (
             FactsAccessService factsAccessService,
@@ -91,7 +89,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
             factsAccessService.getEmployeeInboxItems(
                 emp.getFactsPersonId(),
-                EMPLOYEE_INBOX_ACTIVE_STATUSES
+                Optional.empty()
             );
 
         LabGroup labGroup = emp.getLabGroup();
@@ -134,7 +132,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     public LabGroupContents getLabGroupContents(long factsPersonId)
     {
         CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
-            factsAccessService.getEmployeeInboxItems(factsPersonId, EMPLOYEE_INBOX_ACTIVE_STATUSES);
+            factsAccessService.getEmployeeInboxItems(factsPersonId, Optional.empty());
 
         LabGroup labGroup = this.labGroupRepo.findByFactsPersonId(factsPersonId).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")

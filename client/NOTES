@@ -11,8 +11,7 @@ Done
   - Show visible statuses inline as row of toggle buttons.
   - Sync selected statuses to and from local storage via new Angular service.
 - Add application version dialog with information provided by version control system as part of build process.
-- Fix alignment of items within sample component.
-
+- Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
 
 Don't auto-push after Vidas stage.
   Add button at sample level leading to page to push to FACTS (under # files).
@@ -25,6 +24,7 @@ Within-test search
     Use as basis for test search.
     Clicking one would bring test data form and audit trail.
 
+Login dialog is misaligned vs. progress spinner.
 
 
 Form data review component

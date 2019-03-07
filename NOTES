@@ -14,6 +14,11 @@ End of April deadline (week of 22nd).
 
 LABSDS API
 ==========
+What are the full list of possible statuses for the person inbox?
+  S,I,T?
+  Meaning of 'T'?
+
+
 Data Submission Problems
   Test data
     My performingOrg not valid for the test data ops, has to be sent as null.

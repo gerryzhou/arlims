@@ -106,7 +106,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     public CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems
         (
             long employeeId,
-            List<String> statusCodes
+            Optional<List<String>> statusCodes
         )
     {
         String includeFields =
@@ -117,8 +117,10 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
             .queryParam("personId", employeeId)
-            .queryParam("statusCodes", String.join(",", statusCodes))
             .queryParam("objectFilters", includeFields);
+
+        if ( statusCodes.isPresent() )
+            uriBldr = uriBldr.queryParam("statusCodes", String.join(",", statusCodes.get()));
 
         String uri = uriBldr.build(false).encode().toUriString();
 
