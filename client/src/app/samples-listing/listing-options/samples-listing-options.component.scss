@@ -18,6 +18,7 @@
    flex-flow: column nowrap;
    align-items: flex-start;
    font-size: small;
+   color: lightgray;
 }
 
 .statuses {
@@ -27,6 +28,15 @@
 
 .mat-button-toggle-group {
    margin-left: 5px;
+}
+
+mat-button-toggle.mat-button-toggle-checked {
+   background: darkblue;
+   color: white;
+}
+mat-button-toggle {
+   background: #eee;
+   color: #ccc;
 }
 
 .menu-item {
