@@ -18,7 +18,7 @@ public class AppVersion
    @JsonAlias("git.build.user.name")
    private String buildUserName;
 
-   @JsonAlias("git.commit.id")
+   @JsonAlias("git.commit.id.abbrev")
    private String commitId;
 
    @JsonAlias("git.commit.time")

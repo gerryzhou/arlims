@@ -70,9 +70,11 @@ export class AppComponent implements OnInit {
       const ver = this.appVersion$.getValue();
       if ( ver == null ) return;
 
+      const builtTimestamp = ver.buildTimestamp.replace('T', ' ').replace('+0000', ' (UTC)');
+
       const message = 'Build Information';
       const detailLines = [
-         `Built ${ver.buildTimestamp.replace('T', ' ')} (${ver.buildUserEmail})`,
+         `Built ${builtTimestamp} by ${ver.buildUserEmail}`,
          `Source code commit: ${ver.commitId}`
       ];
 
