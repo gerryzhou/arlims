@@ -121,6 +121,8 @@ export class SampleComponent implements OnChanges {
             data: {
                titleSubject: 'Delete',
                confirmMessage: 'Are you sure you want to delete this test?',
+               confirmButtonText: 'Delete Test',
+               showCancelButton: true
             },
             disableClose: false
          }

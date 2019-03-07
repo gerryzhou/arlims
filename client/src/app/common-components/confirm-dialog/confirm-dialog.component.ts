@@ -12,6 +12,10 @@ export class ConfirmDialogComponent {
 
    confirmMessage: string;
 
+   confirmButtonText: string;
+
+   showCancelButton: boolean;
+
    constructor
       (
          public dialogRef: MatDialogRef<ConfirmDialogComponent, boolean>,
@@ -20,6 +24,8 @@ export class ConfirmDialogComponent {
    {
       this.titleSubject = data.titleSubject;
       this.confirmMessage = data.confirmMessage;
+      this.confirmButtonText = data.confirmButtonText || 'OK';
+      this.showCancelButton = data.showCancelButton != null ? data.showCancelButton : true;
    }
 
 
