@@ -8,7 +8,7 @@ Done
   Remove FACTS person id from received-from text.
 - For water bath start timestamp in M-broth stage, separate format to right with subdued font.
 - In samples listing:
-  - Show visible statuses inline as row of toggle buttons.
+  - Show visible statuses inline as row of toggle buttons, add 'T' status choice.
   - Sync selected statuses to and from local storage via new Angular service.
 - Add application version dialog with information provided by version control system as part of build process.
 - Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
