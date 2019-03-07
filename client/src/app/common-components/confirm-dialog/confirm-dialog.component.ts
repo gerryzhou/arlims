@@ -8,9 +8,11 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 })
 export class ConfirmDialogComponent {
 
-   titleSubject: string;
+   title: string;
 
-   confirmMessage: string;
+   message: string;
+
+   detailLines: string[];
 
    confirmButtonText: string;
 
@@ -22,8 +24,9 @@ export class ConfirmDialogComponent {
          @Inject(MAT_DIALOG_DATA) public data: any
       )
    {
-      this.titleSubject = data.titleSubject;
-      this.confirmMessage = data.confirmMessage;
+      this.title = data.title;
+      this.message = data.message;
+      this.detailLines = data.detailLines || [];
       this.confirmButtonText = data.confirmButtonText || 'OK';
       this.showCancelButton = data.showCancelButton != null ? data.showCancelButton : true;
    }

@@ -163,7 +163,7 @@
             </executions>
          </plugin>
 
-         <!-- Maven versions plugin to assist with managing version of plugins, dependencies etc in this pom file.
+         <!-- Maven versions plugin to assist with managing versions of plugins, dependencies etc in this pom file.
                   mvn versions:display-plugin-updates
                   mvn versions:display-dependency-updates
            -->
@@ -344,6 +344,34 @@
                   </fileset>
                </filesets>
             </configuration>
+         </plugin>
+
+         <!-- Create information about the source code revision into the build artifact. -->
+         <plugin>
+           <groupId>pl.project13.maven</groupId>
+           <artifactId>git-commit-id-plugin</artifactId>
+           <version>2.2.6</version>
+           <executions>
+             <execution>
+               <id>get-git-info</id>
+               <goals>
+                 <goal>revision</goal>
+               </goals>
+             </execution>
+           </executions>
+           <configuration>
+             <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+             <prefix>git</prefix>
+             <verbose>false</verbose>
+             <generateGitPropertiesFile>true</generateGitPropertiesFile>
+             <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+             <format>json</format>
+             <gitDescribe>
+               <skip>false</skip>
+               <always>false</always>
+               <dirty>-dirty</dirty>
+             </gitDescribe>
+           </configuration>
          </plugin>
 
       </plugins>

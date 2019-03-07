@@ -27,7 +27,7 @@ public class EmployeeInboxItem
 
     private String statusCode;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ", timezone = "UTC")
     private Instant statusDate;
 
     private String subjectText;

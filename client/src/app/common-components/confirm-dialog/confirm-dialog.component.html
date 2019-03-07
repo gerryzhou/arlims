@@ -1,5 +1,11 @@
-<h1 mat-dialog-title>Confirm {{titleSubject}}</h1>
-<div mat-dialog-content>{{confirmMessage}}</div>
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content>
+   <div>{{message}}</div>
+   <hr/>
+   <div *ngFor="let line of detailLines">
+      {{line}}
+   </div>
+</div>
 <div mat-dialog-actions>
    <button mat-button color="primary" (click)="dialogRef.close(true)">{{confirmButtonText}}</button>
    <button *ngIf="showCancelButton" mat-button color="accent" (click)="dialogRef.close(false)">Cancel</button>

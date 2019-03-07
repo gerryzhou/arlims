@@ -1,19 +1,15 @@
 Done
 ====
 - Tweak layout in new test dialog and default to current date.
-- Make date pickers easier to user for touchscreen devices.
-  Click anywhere on text field opens picker dialog.
-  Date picker dialog now centered and larger, no longer under text field.
+- Make date pickers easier to use for touchscreen devices.
+  Clicking anywhere on text field opens date picker dialog, and dialog now centered and larger.
 - For prep stage received fields auto-fill feature, combine "transfers to me" and "transfers to anyone" buttons.
   In resulting dialog, transfers to the current user are displayed above transfers to others.
+  Remove FACTS person id from received-from text.
 - For water bath start timestamp in M-broth stage, separate format to right with subdued font.
 - In samples listing:
   - Show visible statuses inline as row of toggle buttons.
   - Sync selected statuses to and from local storage via new Angular service.
-
-
-Make sample statuses boxes line up properly
-   Set min size of sample num / pac stack.
 
 
 Don't auto-push after Vidas stage.
@@ -27,7 +23,8 @@ Within-test search
     Use as basis for test search.
     Clicking one would bring test data form and audit trail.
 
-Remove FACTS person id from transfers text.
+Make sample statuses boxes line up properly
+   Set min size of sample num / pac stack.
 
 
 Form data review component

@@ -63,8 +63,12 @@ export class SampleComponent implements OnChanges {
 
    displayRefreshedFromFactsTimestamp: string;
 
-   constructor(private testsSvc: TestsService,
-               private dialogSvc: MatDialog) {}
+   constructor
+      (
+         private testsSvc: TestsService,
+         private dialogSvc: MatDialog
+      )
+   {}
 
    ngOnChanges()
    {
@@ -119,8 +123,8 @@ export class SampleComponent implements OnChanges {
       const confirmDlg = this.dialogSvc.open(ConfirmDialogComponent,
          {
             data: {
-               titleSubject: 'Delete',
-               confirmMessage: 'Are you sure you want to delete this test?',
+               title: 'Confirm Delete',
+               message: 'Are you sure you want to delete this test?',
                confirmButtonText: 'Delete Test',
                showCancelButton: true
             },

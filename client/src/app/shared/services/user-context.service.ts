@@ -13,7 +13,7 @@ import {
    LabTestType,
    LabResource,
    LabResourceType,
-   UserRegistration,
+   UserRegistration, AppVersion,
 } from '../../../generated/dto';
 import {AppInternalUrlsService} from './app-internal-urls.service';
 import {Router} from '@angular/router';
@@ -21,8 +21,9 @@ import {Router} from '@angular/router';
 @Injectable()
 export class UserContextService {
 
-   private readonly authenticatedUser = new BehaviorSubject<AppUser | null>(null);
-   private readonly authenticationToken = new BehaviorSubject<string | null>(null);
+   private readonly authenticatedUser$ = new BehaviorSubject<AppUser | null>(null);
+   private readonly authenticationToken$ = new BehaviorSubject<string | null>(null);
+   private readonly applicationVersion$ = new BehaviorSubject<AppVersion | null>(null);
    private labGroupContentsLastUpdated: Date | null = null;
 
    // These members are derived from lab group contents and are replaced at every refresh request.
@@ -47,12 +48,17 @@ export class UserContextService {
 
    getAuthenticatedUser(): BehaviorSubject<AppUser | null>
    {
-      return this.authenticatedUser;
+      return this.authenticatedUser$;
    }
 
    getAuthenticationToken(): BehaviorSubject<string | null>
    {
-      return this.authenticationToken;
+      return this.authenticationToken$;
+   }
+
+   getApplicationVersion(): BehaviorSubject<AppVersion | null>
+   {
+      return this.applicationVersion$;
    }
 
    registerNewUser(userRegistration: UserRegistration): Observable<void>
@@ -77,12 +83,13 @@ export class UserContextService {
             {
                const authToken = this.extractAuthToken(authHdr);
                if ( authToken != null )
-                  this.authenticationToken.next(authToken);
+                  this.authenticationToken$.next(authToken);
             }
 
             return this.fetchUserContext().pipe(
                map(userContext => {
-                  this.authenticatedUser.next(userContext.user);
+                  this.authenticatedUser$.next(userContext.user);
+                  this.applicationVersion$.next(userContext.applicationVersion || null);
                   this.refreshLabGroupContentsMembersFrom(obsOf(userContext.labGroupContents));
                   return true;
                })
@@ -90,7 +97,7 @@ export class UserContextService {
          }),
          catchError((err) => {
             console.log(err);
-            this.authenticationToken.next(null);
+            this.authenticationToken$.next(null);
             return obsOf(false);
          })
       );
@@ -98,8 +105,8 @@ export class UserContextService {
 
    logout(navigateToLoginView: boolean = true)
    {
-      this.authenticatedUser.next(null);
-      this.authenticationToken.next(null);
+      this.authenticatedUser$.next(null);
+      this.authenticationToken$.next(null);
       if ( navigateToLoginView )
          this.router.navigate(this.appUrlsSvc.login());
    }

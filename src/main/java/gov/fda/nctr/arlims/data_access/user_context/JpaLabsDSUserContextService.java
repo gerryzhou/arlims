@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -26,6 +25,7 @@ import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
+import gov.fda.nctr.arlims.data_access.version_info.AppVersionService;
 import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
@@ -44,6 +44,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bcryptEncoder;
     private final AuditLogService dataChangeAuditingSvc;
+    private final AppVersionService appVersionService;
 
     private Map<String, AppUser> usersByUsername;
 
@@ -62,7 +63,8 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             RoleRepository roleRepo,
             AuditLogService dataChangeAuditingSvc,
             NamedParameterJdbcTemplate jdbcTemplate,
-            BCryptPasswordEncoder bcryptEncoder
+            BCryptPasswordEncoder bcryptEncoder,
+            AppVersionService appVersionService
         )
     {
         this.factsAccessService = factsAccessService;
@@ -74,6 +76,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         this.dataChangeAuditingSvc = dataChangeAuditingSvc;
         this.jdbcTemplate = jdbcTemplate;
         this.bcryptEncoder = bcryptEncoder;
+        this.appVersionService = appVersionService;
 
         this.usersByUsername = new ConcurrentHashMap<>(500);
     }
@@ -118,7 +121,8 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                         users,
                         userSampleOps,
                         labResources
-                    )
+                    ),
+                    appVersionService.getAppVersion()
                 );
         }
         catch (InterruptedException | ExecutionException e)

@@ -1,3 +1,13 @@
+Try to find example of sample in 'I' status that won't accept AOAC submission with "sample analysis id is not 'I'" message.
+
+May need to get performing org from the sample not current user when submitting.
+  Bring this up for discussion in the next api meeting.
+
+David Lau
+  Paul's helper: negative results have to be included in analysisMicFindings also (BAM stage).
+
+Add app version info (app build and publication timestamp) into user context.
+
 
 End of April deadline (week of 22nd).
 
@@ -11,15 +21,16 @@ Data Submission Problems
   lowestDilutionTestedCode
     Where to get this value?
   Spiking
+    Unknown fields (what are these, where to obtain values?)
+      subsampleNumberCode ("sp")
+      selectiveAgarResultCode ("")
+      selectiveAgarText       ("")
+  Done
     spikingGenusSpeciesText was added to config associated with the lab and test type.
       Should it be added to the ui for user to select/enter?
     kitRemarksText
       Value is required by api. Should this be added to the ui somewhere? Standardized per lab/test-type?
       Currently sending "7 CFUs on blood agar".
-    Unknown fields (what are these, where to obtain values?)
-      subsampleNumberCode
-      selectiveAgarResultCode
-      selectiveAgarText
 
 [Requested] Add sorting by assigned date to person inbox.
 Still need product description field added to SampleAnalyses endpoint results.
