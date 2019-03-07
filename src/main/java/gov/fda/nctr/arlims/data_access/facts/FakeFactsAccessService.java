@@ -79,6 +79,24 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"cfsanPrductDescription\":\"FROZEN RAW SHELL ON SHRIMP 16/20\"," +
                 "\"problemAreaFlag\":\"MIC\"," +
                 "\"lidCode\":\"M\"" +
+                "}," +
+                "{" +
+                "\"sampleTrackingNum\":852301," +
+                "\"personId\":472629," +
+                "\"remarksText\":\"Please work on this sample\"," +
+                "\"sampleAnalysisId\":881427," +
+                "\"sampleTrackingSubNumber\":0," +
+                "\"statusCode\":\"O\"," +
+                "\"statusDate\":\"2019-01-07 13:47:06.000-0500\"," +
+                "\"operationId\":8623636," +
+                "\"firstName\":\"Tripti\"," +
+                "\"lastName\":\"Parajuli\"," +
+                "\"mdlIntlName\":\"T\"," +
+                "\"pacCode\":\"03844\"," +
+                "\"pacCodeDescription\":\"IMPORTED SEAFOOD PRODUCTS\"," +
+                "\"cfsanPrductDescription\":\"FROZEN SCALLOPS 10/15\"," +
+                "\"problemAreaFlag\":\"MIC\"," +
+                "\"lidCode\":\"M\"" +
                 "}" +
                 "]",
                 EmployeeInboxItem[].class
