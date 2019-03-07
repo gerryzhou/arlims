@@ -10,10 +10,6 @@
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
 
-   <button class="expand-collapse-samples-btn" mat-button type="button" (click)="expandOrContractAllSamples()">
-      {{expandedSampleOpIds.size > 0 ? 'collapse samples' : 'expand samples'}}
-   </button>
-
    <app-samples-listing-options
       [initialOptions]="listingOptions"
       (optionsChanged)="listingOptionsChanged($event)">
@@ -21,6 +17,12 @@
 
    <button mat-button type="button" matTooltip="refresh from FACTS" (click)="reload()">
       <mat-icon>refresh</mat-icon>
+   </button>
+
+   <div class="expanding-flex-space"></div>
+
+   <button class="expand-collapse-samples-btn" mat-button type="button" (click)="expandOrContractAllSamples()">
+      {{expandedSampleOpIds.size > 0 ? 'collapse samples' : 'expand samples'}}
    </button>
 
 </div> <!-- control area -->
