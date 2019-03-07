@@ -10,7 +10,7 @@
       <span *ngIf="hiddenSelectedCount > 0">({{hiddenSelectedCount}} hidden)</span>
    </div>
 
-   <button mat-button type="button" (click)="expandOrContractAllSamples()">
+   <button class="expand-collapse-samples-btn" mat-button type="button" (click)="expandOrContractAllSamples()">
       {{expandedSampleOpIds.size > 0 ? 'collapse samples' : 'expand samples'}}
    </button>
 

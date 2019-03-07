@@ -45,7 +45,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "[" +
                 "{" +
                 "\"sampleTrackingNum\":853317," +
-                "\"leadInd\":\"N\"," +
+                "\"leadInd\":\"Y\"," +
                 "\"personId\":472629," +
                 "\"sampleAnalysisId\":885106," +
                 "\"sampleTrackingSubNumber\":0," +

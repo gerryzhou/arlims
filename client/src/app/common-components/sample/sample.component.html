@@ -23,15 +23,14 @@
             <span class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</span>
          </div>
 
-         <div class="employee-assignments">
+         <div class="employee-assignments" *ngIf="sampleOp.assignments.length == 1">
             <!-- NOTE: Currently only the current user's assignment is displayed here.
                  If the server eventually delivers assignments for other users in
                  the samples within the lab contents, then add ui support for those
                  assignments here.
             -->
-            <span *ngIf="sampleOp.assignments.length == 1">
-               {{sampleOp.assignments[0].leadInd === 'Y' ? 'LEAD' : 'NOT LEAD'}}
-            </span>
+            <mat-icon>person_outline</mat-icon>
+            {{sampleOp.assignments[0].leadInd === 'Y' ? 'LEAD' : 'AUX'}}
          </div>
 
          <div class="expanding-flex-space"></div>

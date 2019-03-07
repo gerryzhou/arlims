@@ -14,6 +14,7 @@
    margin: 0 5px;
    text-align: center;
    border: 2px solid gray;
+   min-width: 140px;
 
    // Color the FACTS status.
    &.accepted {
@@ -67,19 +68,20 @@
    flex-flow: column nowrap;
    justify-content: center;
    align-items: center;
-   margin-top: 0;
-   margin-bottom: 0;
+   min-width: 105px;
 }
 
 
 .employee-assignments {
    display: flex;
+   align-items: center;
 }
 
 
 .nums-associated-items-stack {
    display: flex;
    flex-flow: column nowrap;
+   min-width: 65px;
 }
 
 .facts-status-timestamp {
