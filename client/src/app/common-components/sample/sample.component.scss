@@ -108,7 +108,7 @@
 .test-area {
    display: flex;
    flex-flow: row nowrap;
-   button {
+   button.delete {
       flex-grow: 0;
       color: red;
    }

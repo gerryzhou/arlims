@@ -23,13 +23,14 @@ const routes: Routes = [
    {
       path: 'register-users',
       component: RegistrationComponent,
+      data: {title: 'Register New User'},
       canActivate: [AdminUserGuard],
    },
    {
       path: 'samples',
       component: SamplesListingComponent,
       resolve: { labGroupContents: LabGroupContentsResolver },
-      data: {title: 'Samples Listing'},
+      data: {title: 'Samples Listing', allowDataChanges: true},
       canActivate: [AuthenticatedUserGuard],
    },
    {
@@ -42,7 +43,7 @@ const routes: Routes = [
       path: 'test/:testId/attached-files',
       component: TestAttachedFilesComponent,
       resolve: { testAttachedFiles: TestAttachedFilesResolver },
-      data: {title: 'Test-Attached Files'},
+      data: {title: 'Test-Attached Files', allowDataChanges: false},
       canActivate: [AuthenticatedUserGuard],
    },
    {

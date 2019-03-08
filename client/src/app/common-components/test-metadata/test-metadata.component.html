@@ -17,7 +17,7 @@
       <div *ngIf="stageStatuses" class="stage-statuses">
          <app-test-stage-status *ngFor="let status of stageStatuses"
             [status]="status"
-            (click)="onEditStageClicked(status.stageName)">
+            (click)="onStageClicked(status.stageName)">
          </app-test-stage-status>
       </div>
 
@@ -30,13 +30,18 @@
          </div>
          <div class="files">
             <mat-icon>attach_file</mat-icon>
-            <a [routerLink]="appUrlsSvc.testAttachedFiles(test.testId)">{{test.attachedFilesCount}} files</a>
+            <button class="link" (click)="onAttachedFilesClicked()">{{test.attachedFilesCount}} files</button>
          </div>
       </div>
 
       <div class="last-test-status-action" *ngIf="testStatusActions.length > 0">
-         <div class="action-employee"><mat-icon>person</mat-icon>{{testStatusActions[0].employeeShortName}} {{testStatusActions[0].action}}</div>
-         <div class="action-instant">{{testStatusActions[0].timestamp | date: 'MMM d h:mm a'}}</div>
+         <div class="action-employee">
+            <mat-icon>person</mat-icon>
+            {{testStatusActions[0].employeeShortName}} {{testStatusActions[0].action}}
+         </div>
+         <div class="action-instant">
+            {{testStatusActions[0].timestamp | date: 'MMM d h:mm a'}}
+         </div>
       </div>
 
    </div>

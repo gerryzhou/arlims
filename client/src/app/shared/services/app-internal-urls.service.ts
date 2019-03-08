@@ -26,14 +26,24 @@ export class AppInternalUrlsService {
       return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId];
    }
 
-   testStageDataEntry(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
+   testStageDataEditor(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
    {
       return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName];
    }
 
-   testAttachedFiles(testId: number): any[]
+   testStageDataView(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
    {
-      return ['/test', testId, 'attached-files'];
+      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId, 'stage', stageName];
+   }
+
+   testAttachedFilesEditor(testId: number): any[]
+   {
+      return ['/test', testId, 'attached-files-editor'];
+   }
+
+   testAttachedFilesView(testId: number): any[]
+   {
+      return ['/test', testId, 'attached-files-view'];
    }
 
    testReportsListing(testTypeCode: LabTestTypeCode, testId: number): any[]

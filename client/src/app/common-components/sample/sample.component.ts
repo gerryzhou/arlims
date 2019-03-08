@@ -8,6 +8,7 @@ import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {factsStatusTextFromCode} from '../../shared/models/sample-op-status';
+import {AttachedFilesClickEvent, TestStageClickEvent} from "../test-metadata/events";
 
 
 @Component({
@@ -34,7 +35,16 @@ export class SampleComponent implements OnChanges {
    labGroupTestTypes: LabTestType[] = [];
 
    @Input()
-   showTestDeleteButtons = true;
+   allowDataChanges = false;
+
+   @Input()
+   allowTestDeletion = false; // ignored if !allowDataChanges
+
+   @Input()
+   allowTestCreation = false; // "
+
+   @Input()
+   showEmployeeAssignments = false;
 
    @Output()
    headerClick = new EventEmitter<void>();
@@ -53,6 +63,12 @@ export class SampleComponent implements OnChanges {
 
    @Output()
    testDeletionFailed = new EventEmitter<string>();
+
+   @Output()
+   testStageClick = new EventEmitter<TestStageClickEvent>();
+
+   @Output()
+   attachedFilesClick = new EventEmitter<AttachedFilesClickEvent>();
 
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasAssociatedItems: boolean;
@@ -90,8 +106,24 @@ export class SampleComponent implements OnChanges {
       this.headerClick.next();
    }
 
-   promptCreateNewTest()
+   onTestStageClicked(e: TestStageClickEvent)
    {
+      this.testStageClick.emit(e);
+   }
+
+   onAttachedFilesClicked(e: AttachedFilesClickEvent)
+   {
+      this.attachedFilesClick.emit(e);
+   }
+
+   promptCreateTest()
+   {
+      if ( !this.allowDataChanges )
+      {
+         console.error('Ignoring attempt to prompt to create new test with allowDataChanges == false');
+         return;
+      }
+
       const dlg = this.dialogSvc.open(NewTestDialogComponent, {
          width: 'calc(75%)',
          data: {
@@ -118,8 +150,14 @@ export class SampleComponent implements OnChanges {
       });
    }
 
-   onDeleteTestClicked(test: LabTestMetadata)
+   promptDeleteTest(test: LabTestMetadata)
    {
+      if ( !this.allowDataChanges )
+      {
+         console.error('Ignoring attempt to delete test with allowDataChanges == false');
+         return;
+      }
+
       const confirmDlg = this.dialogSvc.open(ConfirmDialogComponent,
          {
             data: {

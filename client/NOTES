@@ -13,27 +13,66 @@ Done
 - Add application version dialog with information provided by version control system as part of build process.
 - Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
 
-Don't auto-push after Vidas stage.
-  Add button at sample level leading to page to push to FACTS (under # files).
-  Post AOAC and BAM at once.
-    But this is test-specific, so need standard way of instantiating a test and
-    telling it to post itself (?).
+Read Only Stage Test Data Mode
+------------------------------
+Test metadata should not do it's own routing, bubble up events to samples listing instead and let it do all navigation.
+  See onTestStageClicked(), onAttachedFilesClicked().
+  Add same event emitters to test metadata component.
+  Move handler logic from test metadata component to samples listing component.
+In test attached files component, retrieve allowDataChanges from route data as was done in samples listing, make changes accordingly.
+Within slm test module, add new route to test-data-view where no data changes are allowed.
+Rename staged test data entry items to reflect that they can be used for just viewing as well.
+  Just drop "entry" part of the name.
+Add allowDataChanges input to all test stage components, replacing any references to form disabled stage.
+Modify top level route to staged test data to accept an allowDataChanges parameter.
+  Or consider what we be needed to prevent a user from force-browsing into editing form data for an arbitrary test.
 
-Within-test search
-  Add sample num and product description to test table.
-    Use as basis for test search.
-    Clicking one would bring test data form and audit trail.
+Add Facts status and its timestamp in test table?
+  Or can the status be obtained efficiently by api for a batch of samples?
 
-Login dialog is misaligned vs. progress spinner.
+TODO
+====
+- Add allowDataChanges input param to Sample component.
+- Add a proper read-only input param to test metadata and staged data entry component and each test stage, don't rely on form disabled state.
 
 
-Form data review component
+
+Sample/Samples Listing Component Changes
+----------------------------------------
+- Support opening staged data entry in read-only mode via routing data or some other way.
+- Add link to test audit data in the test metadata component if user is admin.
+  Deliver via event to sample and then samples listing ancestor, or just execute routing directly?
+- Form data problems in read-only mode
   In prep stage, hide the "Select from FACTS/" label.
   In pre enr stage, hide the lock/unlock and "Select sampling method" buttons.
   In Vidas stage, hide the attached files component.
   In slant and ident stages, hide "No positive test units in Vidas results" when positives exist in Vidas results.
   In slant stage, hide attached files component.
   In wrapup, in the work hours table, hide the edit, delete, and "Add User Time" buttons.
+
+Within-test search
+  Add sample num and product description pac,paf,lid to test table.
+    What about sample-op status? That is subject to change but user will want to see this.
+  Revive page for text searches within test data.
+  Re-implement results method to fetch sample metadata from test record instead of via api.
+  Allow opening test data forms (staged test data entry component) in read-only mode and also to show audit data.
+
+Don't auto-push after Vidas stage.
+  Add button at sample level leading to page to push to FACTS (under # files).
+  Post AOAC and BAM at once.
+    But this is test-specific, so need standard way of instantiating a test and
+    telling it to post itself (?).
+
+Add lab inbox page based on sample listing.
+  For lab admins only.
+  Just route to samples listing component but add route data to specify lab inbox is wanted.
+    Modify resolver and samples listing component to load/refresh from the proper source in each case.
+
+Login dialog is misaligned vs. progress spinner.
+
+
+Try to reduce the angular/webpack's package size, see notes on ipad.
+
 
 SLM test
   Implement actual validation function for each stage, returning list of complaints.

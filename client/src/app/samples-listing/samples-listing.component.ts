@@ -25,6 +25,8 @@ import {SampleOpStatusCode} from '../shared/models/sample-op-status';
 })
 export class SamplesListingComponent {
 
+   allowDataChanges: boolean;
+
    samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
    labGroupTestTypes: LabTestType[];
@@ -54,9 +56,10 @@ export class SamplesListingComponent {
           private localStorageSvc: LocalStorageService
        )
    {
-      const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
-
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
+      this.allowDataChanges = activatedRoute.data && activatedRoute.data['allowDataChanges'] || false;
+
+      const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
 
       const prefIncludeStatuses: SampleOpStatusCode[] | null =
          JSON.parse(localStorageSvc.get(this.PREF_INCLUDE_STATUSES));

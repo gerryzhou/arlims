@@ -23,7 +23,7 @@
             <span class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</span>
          </div>
 
-         <div class="employee-assignments" *ngIf="sampleOp.assignments.length == 1">
+         <div class="employee-assignments" *ngIf="showEmployeeAssignments && sampleOp.assignments.length == 1">
             <!-- NOTE: Currently only the current user's assignment is displayed here.
                  If the server eventually delivers assignments for other users in
                  the samples within the lab contents, then add ui support for those
@@ -65,11 +65,6 @@
             <span class="field-value">{{sampleOp.paf}}</span>
          </div>
 
-         <div *ngIf="sampleOp.samplingOrganization">
-            <span class="field-label">from: </span>
-            <span class="field-value">{{sampleOp.samplingOrganization}}</span>
-         </div>
-
          <div *ngIf="sampleOp.subject">
             <span class="field-label">subject: </span>
             <span class="field-value">{{sampleOp.subject}}</span>
@@ -81,25 +76,31 @@
    <div *ngIf="showAssociatedItems">
 
       <div class="tests">
+
          <div class="test-area" *ngFor="let test of sampleOp.tests">
-            <button mat-icon-button *ngIf="showTestDeleteButtons"
-               (click)="onDeleteTestClicked(test)">
+
+            <button class="delete" mat-icon-button *ngIf="allowDataChanges && allowTestDeletion"
+                    (click)="promptDeleteTest(test)">
                <mat-icon>remove_circle_outline</mat-icon>
             </button>
+
             <app-test-metadata
                [test]="test"
-               [labGroupTestTypes]="labGroupTestTypes">
+               [allowDataChanges]="allowDataChanges"
+               [labGroupTestTypes]="labGroupTestTypes"
+               (testStageClick)="onTestStageClicked($event)">
             </app-test-metadata>
+
          </div>
+
       </div>
 
       <div class="sample-actions">
-         <span>
-            <button mat-mini-fab *ngIf="labGroupTestTypes.length > 0" (click)="promptCreateNewTest()">
+            <button mat-button *ngIf="allowDataChanges && allowTestCreation && labGroupTestTypes.length > 0"
+                    (click)="promptCreateTest()">
                <mat-icon>add</mat-icon>
+               Create a new test
             </button>
-            Create a new test
-         </span>
       </div>
 
    </div>
