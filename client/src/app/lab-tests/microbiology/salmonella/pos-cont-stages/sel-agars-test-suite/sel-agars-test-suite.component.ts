@@ -29,7 +29,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    showOtherStageDataAsContext;
 
    @Input()
-   viewOnly = false;
+   allowDataChanges: boolean;
 
    @Input()
    form: FormGroup;
@@ -86,6 +86,11 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
          this.refreshDisplayOrderedIsolateTestSeqUids();
          this.changeDetectorRef.markForCheck();
       });
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    removeIsolateTestSequence(selAgar: string, testSeqUid: string)

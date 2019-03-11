@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
-import {StagedTestDataEntryComponent} from '../staged-test-data-entry/staged-test-data-entry.component';
+import {StagedTestDataComponent} from '../staged-test-data/staged-test-data.component';
 import {LabGroupTestDataResolver} from '../../../../routing/lab-group-test-data.resolver';
 import {FormDataReviewComponent} from '../form-data-review/form-data-review.component';
 import {TestDataEntryConfirmDeactivateGuard} from './test-data-entry-confirm-deactivate-guard';
@@ -10,17 +10,29 @@ import {TestReportsListingComponent} from '../reports/reports-listing/test-repor
 const routes: Routes = [
    {
       path: 'test-data-entry/:testId',
-      component: StagedTestDataEntryComponent,
+      component: StagedTestDataComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
-      data: {title: 'Salmonella Test Data Entry'},
+      data: {title: 'Edit Salmonella Test Data', allowDataChanges: true},
       canDeactivate: [TestDataEntryConfirmDeactivateGuard],
    },
    {
-      path: 'test-data-entry/:testId/stage/:stage',
-      component: StagedTestDataEntryComponent,
+      path: 'test-data-view/:testId',
+      component: StagedTestDataComponent,
       resolve: { labGroupTestData: LabGroupTestDataResolver },
-      data: {title: 'Salmonella Test Data Entry'},
+      data: {title: 'View Salmonella Test Data', allowDataChanges: false},
+   },
+   {
+      path: 'test-data-entry/:testId/stage/:stage',
+      component: StagedTestDataComponent,
+      resolve: { labGroupTestData: LabGroupTestDataResolver },
+      data: {title: 'Edit Salmonella Test Data', allowDataChanges: true},
       canDeactivate: [TestDataEntryConfirmDeactivateGuard],
+   },
+   {
+      path: 'test-data-view/:testId/stage/:stage',
+      component: StagedTestDataComponent,
+      resolve: { labGroupTestData: LabGroupTestDataResolver },
+      data: {title: 'View Salmonella Test Data', allowDataChanges: false},
    },
    {
       path: 'reports-listing/:testId',

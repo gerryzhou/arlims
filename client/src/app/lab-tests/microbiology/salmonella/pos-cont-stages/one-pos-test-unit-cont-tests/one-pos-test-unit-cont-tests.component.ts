@@ -17,7 +17,7 @@ export class OnePosTestUnitContTestsComponent implements OnChanges {
    showOtherStageDataAsContext;
 
    @Input()
-   viewOnly = false;
+   allowDataChanges: boolean;
 
    @Input()
    form: FormGroup;
@@ -44,6 +44,10 @@ export class OnePosTestUnitContTestsComponent implements OnChanges {
 
    ngOnChanges()
    {
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    onDisposeRequested()

@@ -1,11 +1,12 @@
 <div [formGroup]="form">
 
-   <div class="diffs-vs-vidas-positives-area" *ngIf="stage==='SLANT' && !viewOnly && testUnitNumbersDiffMessage">
+   <div class="diffs-vs-vidas-positives-area" *ngIf="stage==='SLANT' && testUnitNumbersDiffMessage">
       <div class="message"
            [ngClass]="{'warn': testUnitNumbersDiffMessageIsWarning, 'ok': !testUnitNumbersDiffMessageIsWarning}">
          {{testUnitNumbersDiffMessage}}
          <span *ngIf="testUnitNumbersDiff && testUnitNumbersDiff.unrepresentedVidasPositives.length > 0">
-            <button class="link" (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()">
+            <button class="link" *ngIf="allowDataChanges"
+                    (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()">
                Add Vidas positives.
             </button>
          </span>
@@ -21,12 +22,12 @@
             <div class="test-units-area">
 
                <app-one-pos-test-unit-cont-tests *ngFor="let testUnitNum of sortedTestUnitNums"
+                  [form]="this.form.get(['testUnitsContinuationTests',testUnitNum.toString()])"
+                  [allowDataChanges]="allowDataChanges"
                   [stage]="stage"
                   [showOtherStageDataAsContext]="showOtherStageDataAsContext"
-                  [viewOnly]="viewOnly"
-                  [form]="this.form.get(['testUnitsContinuationTests',testUnitNum.toString()])"
                   [testUnitNumber]="testUnitNum"
-                  [showDisposeButton]="!viewOnly && stage==='SLANT'"
+                  [showDisposeButton]="allowDataChanges && stage==='SLANT'"
                   [sampleTestUnitsTypeAbrev]="sampleTestUnitsTypeAbrev"
                   [appUser]="appUser"
                   [showUnsetAffordances]="showUnsetAffordances"
@@ -60,10 +61,10 @@
                <div class="control">
                   <div class="control-name">Salmonella Gaminara</div>
                   <app-sel-agars-test-suite
+                     [form]="form.get(['continuationControls', 'salmonellaGaminara'])"
+                     [allowDataChanges]="allowDataChanges"
                      [stage]="stage"
                      [showOtherStageDataAsContext]="showOtherStageDataAsContext"
-                     [viewOnly]="viewOnly"
-                     [form]="form.get(['continuationControls', 'salmonellaGaminara'])"
                      [testUnitDescription]="'Salmonella Gaminara control'"
                      [medium]="'RV&TT'"
                      [appUser]="appUser"
@@ -83,10 +84,10 @@
                   <div class="control-name">Salmonella Diarizonae</div>
                   <ng-container *ngIf="stage === 'SLANT'">
                      <app-sel-agars-test-suite
+                        [form]="form.get(['continuationControls', 'salmonellaDiarizonae'])"
+                        [allowDataChanges]="allowDataChanges"
                         [stage]="stage"
                         [showOtherStageDataAsContext]="false"
-                        [viewOnly]="viewOnly"
-                        [form]="form.get(['continuationControls', 'salmonellaDiarizonae'])"
                         [includeOxidase]="false"
                         [testUnitDescription]="'Salmonella Diarizonae control'"
                         [medium]="'RV&TT'"
@@ -119,7 +120,8 @@
                      </span>
                   </div>
                   <app-isolate-identification-editor *ngIf="stage === 'IDENT'"
-                     [form]="form.get(['continuationControls', 'pVulgarisIdentification'])">
+                     [form]="form.get(['continuationControls', 'pVulgarisIdentification'])"
+                     [allowDataChanges]="allowDataChanges">
                   </app-isolate-identification-editor>
                   <mat-radio-group formControlName="pVulgarisSatisfactory" *ngIf="stage === 'IDENT'">
                      <span>control satisfactory</span>
@@ -163,7 +165,7 @@
       </div>
 
       <div class="stage-options-bottom-bar">
-         <button class="link" type="button" *ngIf="vidasPositiveSampleTestUnitNumbers?.length > 0"
+         <button class="link" type="button" *ngIf="allowDataChanges && vidasPositiveSampleTestUnitNumbers?.length > 0"
                  (click)="toggleShowOtherStageDataAsContext()">
             {{showOtherStageDataAsContext ? 'Hide' : 'Show'}} {{stage === 'IDENT' ? 'SLANT' : 'IDENT'}} isolate test data
          </button>
@@ -176,11 +178,11 @@
       <mat-expansion-panel-header>
          {{identAttachedFiles.length}} attached file{{identAttachedFiles.length == 1 ? '': 's'}}
       </mat-expansion-panel-header>
-      <app-test-attached-files *ngIf="!viewOnly"
+      <app-test-attached-files
          [testId]="testId"
          [testDataPart]="IDENT_ATTACHED_FILES_KEY"
          [attachedFiles]="identAttachedFiles"
-         [modificationsEnabled]="true"
+         [allowDataChanges]="allowDataChanges"
          (attachedFilesChange)="onIdentAttachedFilesChanged($event)">
       </app-test-attached-files>
    </mat-expansion-panel>

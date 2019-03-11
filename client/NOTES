@@ -13,19 +13,15 @@ Done
 - Add application version dialog with information provided by version control system as part of build process.
 - Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
 
+
+Commit Notes
+------------
+
+
 Read Only Stage Test Data Mode
 ------------------------------
-Test metadata should not do it's own routing, bubble up events to samples listing instead and let it do all navigation.
-  See onTestStageClicked(), onAttachedFilesClicked().
-  Add same event emitters to test metadata component.
-  Move handler logic from test metadata component to samples listing component.
-In test attached files component, retrieve allowDataChanges from route data as was done in samples listing, make changes accordingly.
-Within slm test module, add new route to test-data-view where no data changes are allowed.
-Rename staged test data entry items to reflect that they can be used for just viewing as well.
-  Just drop "entry" part of the name.
-Add allowDataChanges input to all test stage components, replacing any references to form disabled stage.
-Modify top level route to staged test data to accept an allowDataChanges parameter.
-  Or consider what we be needed to prevent a user from force-browsing into editing form data for an arbitrary test.
+- Add allowDataChanges input to stage test data component to replace references to form.disabled.
+- In test attached files component, retrieve allowDataChanges from route data as was done in samples listing, make changes accordingly.
 
 Add Facts status and its timestamp in test table?
   Or can the status be obtained efficiently by api for a batch of samples?

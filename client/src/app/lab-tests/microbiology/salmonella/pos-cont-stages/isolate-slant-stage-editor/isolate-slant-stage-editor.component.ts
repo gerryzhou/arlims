@@ -13,6 +13,9 @@ export class IsolateSlantStageEditorComponent implements OnChanges {
    form: FormGroup; // isolate test sequence form group
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    includeOxidase = true;
 
    @Input()
@@ -37,6 +40,11 @@ export class IsolateSlantStageEditorComponent implements OnChanges {
       this.isolateNumber = this.form.get('isolateNumber').value;
       this.isolateDescription = 'isolate ' + this.isolateNumber + ' in ' + this.testUnitDescription + ' / ' +
          this.medium + ' / ' + this.selectiveAgarDisplayName;
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
 }

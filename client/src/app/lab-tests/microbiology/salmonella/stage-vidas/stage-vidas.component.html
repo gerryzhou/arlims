@@ -66,7 +66,7 @@
          <div class="detection-controls-warning" *ngIf="excessSampleTestUnitControlsCount">
             Too many detection choices exist here vs. the <b></b> sample test units specified in
             the pre-enrichment stage. Please
-            <button class="link" *ngIf="!form.disabled"
+            <button class="link" *ngIf="allowDataChanges"
                     (click)="removeSampleDetectionControls(excessSampleTestUnitControlsCount)">
                delete
             </button>
@@ -90,8 +90,8 @@
                   <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
                </mat-radio-group>
                <button class="close"
+                  *ngIf="allowDataChanges && excessSampleTestUnitControlsCount && excessSampleTestUnitControlsCount > 0"
                   (click)="removeTestUnitControlAtIndex(i)"
-                  *ngIf="excessSampleTestUnitControlsCount && excessSampleTestUnitControlsCount > 0 && !form.disabled"
                   mat-icon-button>
                   <mat-icon>close</mat-icon>
                </button>
@@ -111,11 +111,11 @@
          <mat-expansion-panel-header>
             {{resultsFiles.length}} attached Vidas file{{resultsFiles.length == 1 ? '': 's'}}
          </mat-expansion-panel-header>
-         <app-test-attached-files *ngIf="!form.disabled"
+         <app-test-attached-files
             [testId]="testId"
             [testDataPart]="RESULTS_ATTACHED_FILES_KEY"
             [attachedFiles]="resultsFiles"
-            [modificationsEnabled]="true"
+            [allowDataChanges]="allowDataChanges"
             (attachedFilesChange)="onAttachedFilesChanged($event)">
          </app-test-attached-files>
       </mat-expansion-panel>

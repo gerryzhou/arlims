@@ -1,7 +1,9 @@
 <mat-expansion-panel [formGroup]="form">
 
    <mat-expansion-panel-header>
-      <app-isolate-slant-stage-view [form]="form" [includeOxidase]="includeOxidase">
+      <app-isolate-slant-stage-view
+         [form]="form"
+         [includeOxidase]="includeOxidase">
       </app-isolate-slant-stage-view>
    </mat-expansion-panel-header>
 
@@ -26,6 +28,7 @@
             <div class="section-label">TSI</div>
             <app-isolate-slant-tube-editor
                [form]="form.get('tsiTubeTest')"
+               [allowDataChanges]="allowDataChanges"
                [tubeType]="'TSI'"
                [isolateDescription]="isolateDescription"
                [showUnsetAffordances]="showUnsetAffordances">
@@ -36,6 +39,7 @@
             <div class="section-label">LIA</div>
             <app-isolate-slant-tube-editor
                [form]="form.controls['liaTubeTest']"
+               [allowDataChanges]="allowDataChanges"
                [tubeType]="'LIA'"
                [isolateDescription]="isolateDescription"
                [showUnsetAffordances]="showUnsetAffordances">

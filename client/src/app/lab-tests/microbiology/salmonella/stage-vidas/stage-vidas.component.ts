@@ -18,6 +18,9 @@ export class StageVidasComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    testId: number;
 
    @Input()
@@ -86,6 +89,11 @@ export class StageVidasComponent implements OnChanges {
       const spikeDetectionCtrl = this.form.get('spikeDetection');
       if ( this.spiking ) spikeDetectionCtrl.enable();
       else spikeDetectionCtrl.disable();
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    private addSampleDetectionControls(numControls: number)

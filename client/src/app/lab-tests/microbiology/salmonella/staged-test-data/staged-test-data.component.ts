@@ -40,11 +40,13 @@ import {FactsPostingService} from '../facts-posting.service';
 import {SelectedSampleOpsService} from '../../../../shared/services/selected-sample-ops.service';
 
 @Component({
-   selector: 'app-micro-slm-staged-test-data-entry',
-   templateUrl: './staged-test-data-entry.component.html',
-   styleUrls: ['./staged-test-data-entry.component.scss'],
+   selector: 'app-micro-slm-staged-test-data',
+   templateUrl: './staged-test-data.component.html',
+   styleUrls: ['./staged-test-data.component.scss'],
 })
-export class StagedTestDataEntryComponent implements OnInit {
+export class StagedTestDataComponent implements OnInit {
+
+   readonly allowDataChanges: boolean;
 
    readonly testConfig: TestConfig | null;
 
@@ -111,6 +113,7 @@ export class StagedTestDataEntryComponent implements OnInit {
       )
    {
       const labGroupTestData: LabGroupTestData = activatedRoute.snapshot.data['labGroupTestData'];
+      this.allowDataChanges = activatedRoute.snapshot.data && activatedRoute.snapshot.data['allowDataChanges'] || false;
       const testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
       this.testConfig = testConfig;
 
@@ -133,6 +136,8 @@ export class StagedTestDataEntryComponent implements OnInit {
       this.initialStageIndex = stageIx !== -1 ? stageIx : null;
 
       this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username, testConfig);
+      if ( !this.allowDataChanges )
+         this.testDataForm.disable();
 
       const sm = testData.preEnrData.samplingMethod;
       this.sampleTestUnitsType = sm.testUnitsType;

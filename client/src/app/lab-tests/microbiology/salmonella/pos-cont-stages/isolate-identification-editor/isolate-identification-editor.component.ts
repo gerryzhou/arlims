@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {IdentificationMethod} from '../../test-data';
 
 @Component({
    selector: 'app-isolate-identification-editor',
@@ -14,12 +13,16 @@ export class IsolateIdentificationEditorComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
-   viewOnly = false;
+   allowDataChanges: boolean;
 
    constructor() { }
 
    ngOnChanges()
    {
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    onMethodChanged(changeEvent: any)

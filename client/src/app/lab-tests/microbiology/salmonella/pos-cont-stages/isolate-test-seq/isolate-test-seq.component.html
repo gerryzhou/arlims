@@ -3,8 +3,9 @@
    <div class="isolate-num" matTooltip="isolate number" *ngIf="showIsolateNumber">{{isolateNumber}}</div>
 
    <!-- SLANT stage editing -->
-   <app-isolate-slant-stage-editor *ngIf="stage === 'SLANT' && !viewOnly"
+   <app-isolate-slant-stage-editor *ngIf="stage === 'SLANT' && allowDataChanges"
       [form]="form"
+      [allowDataChanges]="allowDataChanges"
       [testUnitDescription]="testUnitDescription"
       [medium]="medium"
       [selectiveAgarDisplayName]="selectiveAgarDisplayName"
@@ -13,23 +14,23 @@
    </app-isolate-slant-stage-editor>
 
    <!-- read-only SLANT data view as context in IDENT stage -->
-   <app-isolate-slant-stage-view *ngIf="stage === 'IDENT' && viewContextData || stage === 'SLANT' && viewOnly"
+   <app-isolate-slant-stage-view *ngIf="stage === 'IDENT' && viewContextData || stage === 'SLANT' && !allowDataChanges"
      [form]="form"
      [includeOxidase]="includeOxidase">
    </app-isolate-slant-stage-view>
 
    <!-- IDENT stage editing -->
-   <div class="ident-editing-area" *ngIf="stage === 'IDENT' && !viewOnly">
+   <div class="ident-editing-area" *ngIf="stage === 'IDENT' && allowDataChanges">
       <app-isolate-identification-editor *ngIf="form.get('identification') != null"
          [form]="form.get('identification')"
-         [viewOnly]="viewOnly">
+         [allowDataChanges]="allowDataChanges">
       </app-isolate-identification-editor>
    </div>
 
    <!-- IDENT data read-only view as context -->
    <app-isolate-identification-view
       *ngIf="form.get('identification') != null &&
-         ( stage === 'SLANT' && viewContextData || stage == 'IDENT' && viewOnly )"
+         ( stage === 'SLANT' && viewContextData || stage == 'IDENT' && !allowDataChanges )"
       [form]="form">
    </app-isolate-identification-view>
 
@@ -40,7 +41,7 @@
       <mat-icon>arrow_forward</mat-icon>
    </div>
 
-   <div class="isolate-actions" *ngIf="!viewOnly">
+   <div class="isolate-actions" *ngIf="allowDataChanges">
       <mat-menu #actionsMenu="matMenu">
          <span class="menu-header">Actions for {{isolateDescription}}</span>
          <hr>
@@ -70,13 +71,13 @@
             </button>
          </div>
          <div class="menu-item" *ngIf="stage === 'SLANT' && form.get('identification') == null">
-            <button mat-button *ngIf="!viewOnly && form.get('identification') == null" type="button"
+            <button mat-button *ngIf="form.get('identification') == null" type="button"
                (click)="createIdentificationFormGroup()">
                mark isolate for identification via API20E/Vitek
             </button>
          </div>
          <div class="menu-item" *ngIf="stage === 'SLANT' && form.get('identification') != null">
-            <button mat-button *ngIf="!viewOnly" (click)="removeIdentificationFormGroup()" type="button">
+            <button mat-button (click)="removeIdentificationFormGroup()" type="button">
                unmark isolate for identification (removes API20E/Vitek data)
             </button>
          </div>
@@ -85,6 +86,6 @@
       <button class="hover-link row-actions" [matMenuTriggerFor]="actionsMenu" type="button">
          <mat-icon>more_vert</mat-icon>
       </button>
-   </div>
+   </div> <!-- isolate actions -->
 
 </div>

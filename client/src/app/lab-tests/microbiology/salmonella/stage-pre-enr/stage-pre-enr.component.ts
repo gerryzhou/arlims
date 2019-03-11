@@ -22,6 +22,9 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    form: FormGroup;
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    conflicts: PreEnrData;
 
    @Input()
@@ -74,6 +77,11 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
       this.subscribeToSampleTestUnitChanges();
       this.onSampleTestUnitsFieldChanged();
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    private subscribeToSampleTestUnitChanges()

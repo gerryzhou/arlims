@@ -1,9 +1,9 @@
 import {CanDeactivate} from '@angular/router';
-import {StagedTestDataEntryComponent} from '../staged-test-data-entry/staged-test-data-entry.component';
+import {StagedTestDataComponent} from '../staged-test-data/staged-test-data.component';
 
-export class TestDataEntryConfirmDeactivateGuard implements CanDeactivate<StagedTestDataEntryComponent> {
+export class TestDataEntryConfirmDeactivateGuard implements CanDeactivate<StagedTestDataComponent> {
 
-   canDeactivate(target: StagedTestDataEntryComponent)
+   canDeactivate(target: StagedTestDataComponent)
    {
       if ( target.hasUnsavedChanges() )
       {

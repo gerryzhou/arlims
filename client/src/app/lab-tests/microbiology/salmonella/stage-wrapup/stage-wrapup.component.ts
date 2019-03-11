@@ -18,6 +18,9 @@ export class StageWrapupComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    conflicts: WrapupData;
 
    @Input()
@@ -60,7 +63,13 @@ export class StageWrapupComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.updateControlEnablements();
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
+
+      if ( this.allowDataChanges )
+         this.updateControlEnablements();
    }
 
    onReserveSampleDispositionChanged()

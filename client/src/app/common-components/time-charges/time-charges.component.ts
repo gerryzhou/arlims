@@ -22,7 +22,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
    availableUsers: UserReference[];
 
    @Input()
-   viewOnly = false;
+   allowDataChanges: boolean;
 
    formChangesSubscription: Subscription;
 

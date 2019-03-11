@@ -8,7 +8,7 @@
          <mat-form-field>
             <input formControlName="mBrothBatchId" type="text" matInput placeholder="M broth batch">
          </mat-form-field>
-         <app-field-assigned-resources
+         <app-field-assigned-resources *ngIf="allowDataChanges"
             [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('mBrothBatchId')"
             (select)="resourceAssignments.applyAssignedResourceToControl($event, 'mBrothBatchId')"
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'mBrothBatchId')"
@@ -21,7 +21,8 @@
          </app-conflicting-field-value>
       </div>
 
-      <button class="apply-resources-btn" (click)="promptApplyResources()" *ngIf="!form.disabled"
+      <button class="apply-resources-btn" *ngIf="allowDataChanges"
+              (click)="promptApplyResources()"
               mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>
       </button>
@@ -54,10 +55,13 @@
             <mat-form-field>
                <input formControlName="waterBathStarted" type="text" matInput placeholder="Water bath started">
             </mat-form-field>
-            <span class="started-helpers">
+            <span class="started-helpers" *ngIf="allowDataChanges">
                 <span class="start-now">
                    <mat-icon>arrow_back</mat-icon>
-                   <button class="link now-time" (click)="setStartTimeNow()" *ngIf="!form.disabled">now</button>
+                   <button class="link now-time"
+                           (click)="setStartTimeNow()">
+                      now
+                   </button>
                 </span>
                 <span class="format-msg">YYYY-MM-DD HH:mm[:ss]</span>
             </span>

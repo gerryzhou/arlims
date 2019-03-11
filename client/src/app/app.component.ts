@@ -46,6 +46,7 @@ export class AppComponent implements OnInit {
 
    ngOnInit()
    {
+      // At end of navigations, set page title from route data if available.
       // (Derived from https://toddmotto.com/dynamic-page-titles-angular-2-router-events)
       this.router.events.pipe(
          filter((event) => event instanceof NavigationEnd),

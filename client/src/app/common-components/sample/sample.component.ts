@@ -8,7 +8,7 @@ import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {factsStatusTextFromCode} from '../../shared/models/sample-op-status';
-import {AttachedFilesClickEvent, TestStageClickEvent} from "../test-metadata/events";
+import {TestClickEvent, TestStageClickEvent} from "../test-metadata/events";
 
 
 @Component({
@@ -65,10 +65,16 @@ export class SampleComponent implements OnChanges {
    testDeletionFailed = new EventEmitter<string>();
 
    @Output()
+   testClick = new EventEmitter<TestClickEvent>();
+
+   @Output()
    testStageClick = new EventEmitter<TestStageClickEvent>();
 
    @Output()
-   attachedFilesClick = new EventEmitter<AttachedFilesClickEvent>();
+   attachedFilesClick = new EventEmitter<TestClickEvent>();
+
+   @Output()
+   testReportsClick = new EventEmitter<TestClickEvent>();
 
    hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasAssociatedItems: boolean;
@@ -106,14 +112,24 @@ export class SampleComponent implements OnChanges {
       this.headerClick.next();
    }
 
+   onTestClicked(e: TestClickEvent)
+   {
+      this.testClick.emit(e);
+   }
+
    onTestStageClicked(e: TestStageClickEvent)
    {
       this.testStageClick.emit(e);
    }
 
-   onAttachedFilesClicked(e: AttachedFilesClickEvent)
+   onAttachedFilesClicked(e: TestClickEvent)
    {
       this.attachedFilesClick.emit(e);
+   }
+
+   onTestReportsClicked(e: TestClickEvent)
+   {
+      this.testReportsClick.emit(e);
    }
 
    promptCreateTest()

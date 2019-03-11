@@ -47,7 +47,11 @@
          (testDeleteFailed)="onTestDeleteFailed($event)"
          (testCreated)="onNewTestCreated($event)"
          (testCreationFailed)="onTestCreationFailed($event)"
-         (headerClick)="toggleSampleExpanded(samples[sampleIx].sampleOp.opId)">
+         (headerClick)="toggleSampleExpanded(samples[sampleIx].sampleOp.opId)"
+         (testClick)="onTestClicked($event)"
+         (testStageClick)="onTestStageClicked($event)"
+         (attachedFilesClick)="onTestAttachedFilesClicked($event)"
+         (testReportsClick)="onTestReportsClicked($event)">
       </app-sample>
    </div>
 </div>

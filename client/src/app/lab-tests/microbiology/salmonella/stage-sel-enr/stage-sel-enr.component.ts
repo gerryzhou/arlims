@@ -18,6 +18,9 @@ export class StageSelEnrComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    conflicts: SelEnrData;
 
    @Input()
@@ -62,6 +65,11 @@ export class StageSelEnrComponent implements OnChanges {
       this.collectorControlsGrowthControl = this.form.get('collectorControlsGrowth');
       this.onSystemControlsGrowthChanged();
       this.onCollectorControlsGrowthChanged();
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    onSystemControlsGrowthChanged()

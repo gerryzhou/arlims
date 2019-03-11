@@ -6,7 +6,7 @@
 
       <div class="test-type">{{sampleOpTest.testMetadata.testTypeShortName}}</div>
 
-      <button mat-button type="submit">Save</button>
+      <button mat-button type="submit" *ngIf="allowDataChanges">Save</button>
 
    </div>
 
@@ -15,6 +15,7 @@
       <mat-step label="PREP">
          <app-stage-prep class="test-stage"
             [form]="testDataForm.get('prepData')"
+            [allowDataChanges]="allowDataChanges"
             [sampleOp]="sampleOpTest.sampleOp"
             [currentUser]="appUser"
             [conflicts]="conflictsTestData.prepData"
@@ -26,6 +27,7 @@
       <mat-step label="PRE-ENR">
          <app-stage-pre-enr class="test-stage"
             [form]="testDataForm.get('preEnrData')"
+            [allowDataChanges]="allowDataChanges"
             [balances]="balances"
             [incubators]="incubators"
             [samplingMethodChoices]="testConfig.samplingMethodChoices"
@@ -39,6 +41,7 @@
       <mat-step label="SEL-ENR">
          <app-stage-sel-enr class="test-stage"
             [form]="testDataForm.get('selEnrData')"
+            [allowDataChanges]="allowDataChanges"
             [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
             [waterBaths]="waterBaths"
             [conflicts]="conflictsTestData.selEnrData"
@@ -50,6 +53,7 @@
       <mat-step label="M-BROTH">
          <app-stage-m-broth class="test-stage"
             [form]="testDataForm.get('mBrothData')"
+            [allowDataChanges]="allowDataChanges"
             [waterBaths]="waterBaths"
             [conflicts]="conflictsTestData.mBrothData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
@@ -60,6 +64,7 @@
       <mat-step label="VIDAS">
          <app-stage-vidas class="test-stage"
             [form]="testDataForm.get('vidasData')"
+            [allowDataChanges]="allowDataChanges"
             [testId]="sampleOpTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasInstruments]="vidasInstruments"
@@ -76,6 +81,7 @@
       <mat-step label="SLANT">
          <app-pos-cont #slantPosContComp class="test-stage"
             [form]="testDataForm.get('posContData')"
+            [allowDataChanges]="allowDataChanges"
             [testId]="sampleOpTest.testMetadata.testId"
             [stage]="'SLANT'"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
@@ -92,6 +98,7 @@
       <mat-step label="IDENT">
          <app-pos-cont #identPosContComp class="test-stage"
             [form]="testDataForm.get('posContData')"
+            [allowDataChanges]="allowDataChanges"
             [testId]="sampleOpTest.testMetadata.testId"
             [stage]="'IDENT'"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
@@ -108,6 +115,7 @@
       <mat-step label="WRAPUP">
          <app-stage-wrapup class="test-stage"
             [form]="testDataForm.get('wrapupData')"
+            [allowDataChanges]="allowDataChanges"
             [conflicts]="conflictsTestData.wrapupData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances">
@@ -121,7 +129,7 @@
       <div class="expanding-flex-space"></div>
       <div>
          <mat-menu #optionsMenu="matMenu">
-            <button type="button" mat-menu-item
+            <button mat-menu-item type="button" *ngIf="allowDataChanges"
                     (click)="toggleShowUnsetAffordances()">
                Toggle showing 'unset' option for supporting fields
             </button>
@@ -133,7 +141,8 @@
             </button>
             <input type="file" #restoreFilesInput style="display:none"
                    (change)="restoreTestDataFromSaveFile($event.target.files)">
-            <button type="button" mat-menu-item (click)="restoreFilesInput.click()">
+            <button type="button" mat-menu-item *ngIf="allowDataChanges"
+                    (click)="restoreFilesInput.click()">
                <mat-icon class="compound-icon-left">save</mat-icon>
                <mat-icon>arrow_forward</mat-icon>
                Restore test data from file
@@ -144,7 +153,9 @@
             <mat-icon>settings</mat-icon>
          </button>
       </div>
-      <button mat-button type="submit" color="primary">Save</button>
+      <button mat-button *ngIf="allowDataChanges" type="submit" color="primary">
+         Save
+      </button>
    </div>
 
 </form>

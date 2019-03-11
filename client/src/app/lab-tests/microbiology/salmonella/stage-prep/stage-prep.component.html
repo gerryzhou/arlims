@@ -28,10 +28,11 @@
          </app-conflicting-field-value>
       </span>
 
-      <span class="received-autofill">
+      <span class="received-autofill" *ngIf="allowDataChanges">
           <mat-icon>arrow_back</mat-icon>
           Select from
-          <button class="link" (click)="promptGetReceivedFieldsFromFacts()" *ngIf="!form.disabled">
+          <button class="link"
+                  (click)="promptGetReceivedFieldsFromFacts()">
              FACTS transfers
           </button>
       </span>
@@ -55,7 +56,6 @@
          (dismiss)="conflicts.labelAttachmentType = undefined">
       </app-conflicting-field-value>
    </div>
-
 
 
    <div class="cr-matching-grid">

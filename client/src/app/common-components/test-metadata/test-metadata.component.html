@@ -3,7 +3,7 @@
    <div class="test-overview">
 
       <div class="test-type">
-         <a [routerLink]="appUrlsSvc.testDataEntry(test.testTypeCode, test.testId)">{{test.testTypeShortName}}</a>
+         <button class="link" (click)="onTypeClicked()">{{test.testTypeShortName}}</button>
       </div>
 
       <div class="elapsed">
@@ -26,7 +26,7 @@
       <div class="reports-and-files-stack">
          <div class="reports">
             <mat-icon>visibility</mat-icon>
-            <a [routerLink]="appUrlsSvc.testReportsListing(test.testTypeCode, test.testId)">Reports</a>
+            <button class="link" (click)="onReportsClicked()">Reports</button>
          </div>
          <div class="files">
             <mat-icon>attach_file</mat-icon>

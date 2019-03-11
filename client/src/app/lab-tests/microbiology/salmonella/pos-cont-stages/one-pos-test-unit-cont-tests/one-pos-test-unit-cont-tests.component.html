@@ -12,11 +12,11 @@
       </div>
 
       <app-sel-agars-test-suite
+         [form]="form.controls['rvSourcedTests']"
+         [allowDataChanges]="allowDataChanges"
          [stage]="stage"
          [showOtherStageDataAsContext]="showOtherStageDataAsContext"
-         [showAddIsolatesButton]="!viewOnly && stage === 'SLANT'"
-         [viewOnly]="viewOnly"
-         [form]="form.controls['rvSourcedTests']"
+         [showAddIsolatesButton]="allowDataChanges && stage === 'SLANT'"
          [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
          [medium]="'RV'"
          [appUser]="appUser"
@@ -30,11 +30,11 @@
       <span class="medium-label tt">TT</span>
 
       <app-sel-agars-test-suite
+         [form]="form.controls['ttSourcedTests']"
+         [allowDataChanges]="allowDataChanges"
          [stage]="stage"
          [showOtherStageDataAsContext]="showOtherStageDataAsContext"
-         [showAddIsolatesButton]="!viewOnly && stage === 'SLANT'"
-         [viewOnly]="viewOnly"
-         [form]="form.controls['ttSourcedTests']"
+         [showAddIsolatesButton]="allowDataChanges && stage === 'SLANT'"
          [testUnitDescription]="sampleTestUnitsTypeAbrev + ' # ' + testUnitNumber"
          [medium]="'TT'"
          [appUser]="appUser"
@@ -45,7 +45,9 @@
 
    <div class="expanding-flex-space"></div>
 
-   <button type="button" class="close" mat-icon-button *ngIf="showDisposeButton" (click)="onDisposeRequested()">
+   <button class="close" *ngIf="allowDataChanges && showDisposeButton"
+           (click)="onDisposeRequested()"
+           type="button" mat-icon-button>
       <mat-icon>close</mat-icon>
    </button>
 

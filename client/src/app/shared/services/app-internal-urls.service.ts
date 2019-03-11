@@ -21,21 +21,6 @@ export class AppInternalUrlsService {
       return ['/samples'];
    }
 
-   testDataEntry(testTypeCode: LabTestTypeCode, testId: number): any[]
-   {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId];
-   }
-
-   testStageDataEditor(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
-   {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName];
-   }
-
-   testStageDataView(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
-   {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId, 'stage', stageName];
-   }
-
    testAttachedFilesEditor(testId: number): any[]
    {
       return ['/test', testId, 'attached-files-editor'];
@@ -45,6 +30,31 @@ export class AppInternalUrlsService {
    {
       return ['/test', testId, 'attached-files-view'];
    }
+
+   // The below are routed to the routers within the modules for each test type.
+   // Each test type module should handle routes for the trailing parts of the
+   // url below after the "/test-types/<type-code>" prefix.
+
+   testDataEntry(testTypeCode: LabTestTypeCode, testId: number): any[]
+   {
+      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId];
+   }
+
+   testDataView(testTypeCode: LabTestTypeCode, testId: number): any[]
+   {
+      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId];
+   }
+
+   testStageDataEntry(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
+   {
+      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName];
+   }
+
+   testStageDataView(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
+   {
+      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId, 'stage', stageName];
+   }
+
 
    testReportsListing(testTypeCode: LabTestTypeCode, testId: number): any[]
    {

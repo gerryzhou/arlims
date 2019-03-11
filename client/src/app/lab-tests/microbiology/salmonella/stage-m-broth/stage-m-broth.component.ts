@@ -19,6 +19,9 @@ export class StageMBrothComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    conflicts: MBrothData;
 
    @Input()
@@ -41,6 +44,11 @@ export class StageMBrothComponent implements OnChanges {
          new Map()
             .set('mBrothBatchId', ['MB'])
       );
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    setStartTimeNow()

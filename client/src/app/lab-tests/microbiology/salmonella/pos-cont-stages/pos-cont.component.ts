@@ -32,7 +32,7 @@ export class PosContComponent implements OnChanges {
    showOtherStageDataAsContext = false;
 
    @Input()
-   viewOnly = false;
+   allowDataChanges: boolean;
 
    @Input()
    vidasPositiveSampleTestUnitNumbers: number[] | null = null;
@@ -97,6 +97,11 @@ export class PosContComponent implements OnChanges {
             this.refreshTestUnitNumbersDependents();
          }
       });
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    addUnrepresentedVidasPositivesContinuationTestsFormGroups()

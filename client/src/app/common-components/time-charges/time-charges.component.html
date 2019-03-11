@@ -6,7 +6,8 @@
       <ng-container matColumnDef="edit">
          <th mat-header-cell *matHeaderCellDef></th>
          <td mat-cell *matCellDef="let utc">
-            <button mat-icon-button (click)="promptUpdateUserTimeCharge(utc)" type="button">
+            <button mat-icon-button type="button" *ngIf="allowDataChanges"
+                    (click)="promptUpdateUserTimeCharge(utc)">
                <mat-icon>edit</mat-icon>
             </button>
          </td>
@@ -44,7 +45,8 @@
       <ng-container matColumnDef="delete">
          <th mat-header-cell *matHeaderCellDef></th>
          <td mat-cell *matCellDef="let utc">
-            <button mat-icon-button (click)="removeUserTimeCharge(utc)" type="button">
+            <button mat-icon-button type="button" *ngIf="allowDataChanges"
+                    (click)="removeUserTimeCharge(utc)">
                <mat-icon>delete_forever</mat-icon>
             </button>
          </td>
@@ -63,6 +65,7 @@
    </div>
 </ng-template>
 
-<button mat-button type="button" (click)="promptCreateUserTimeCharge()">
+<button mat-button type="button" *ngIf="allowDataChanges"
+        (click)="promptCreateUserTimeCharge()">
    Add User Time
 </button>

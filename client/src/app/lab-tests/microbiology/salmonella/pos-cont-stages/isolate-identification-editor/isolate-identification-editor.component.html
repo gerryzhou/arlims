@@ -1,7 +1,8 @@
 <div class="sections-row" [formGroup]="form">
 
    <div class="field-area method">
-      <mat-select formControlName="method" placeholder="method" (valueChange)="onMethodChanged($event)"
+      <mat-select formControlName="method" placeholder="method"
+                  (valueChange)="onMethodChanged($event)"
          matTooltip="identification method">
          <mat-option [value]="null"></mat-option>
          <mat-option [value]="'API20E'">API20E</mat-option>

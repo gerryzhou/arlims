@@ -58,7 +58,7 @@
       <app-time-charges
          [form]="form.get('testTimeCharges')"
          [availableUsers]="labGroupUsers$ | async"
-         [viewOnly]="form.disabled">
+         [allowDataChanges]="allowDataChanges">
       </app-time-charges>
    </div>
 

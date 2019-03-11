@@ -21,7 +21,7 @@ import {AttachedFileMetadataDialogData} from '../attached-file-metadata-dialog/a
 export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
 
    @Input()
-   modificationsEnabled = true;
+   allowDataChanges: boolean;
 
    @Input()
    testId: number = null;
@@ -39,7 +39,9 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
 
    // table of currently attached files
    readonly attachedFilesTableDataSource: MatTableDataSource<TestAttachedFileMetadata>;
-   readonly attachedFilesDisplayColumns = ['edit', 'name', 'label', 'ordering', 'uploaded', 'size', 'delete'];
+   readonly allDisplayColumns = ['edit', 'name', 'label', 'ordering', 'uploaded', 'size', 'delete'];
+   readonly noDataChangesDisplayColumns = ['name', 'label', 'ordering', 'uploaded', 'size'];
+
    @ViewChild('attachedFilesPaginator') readonly attachedFilesPaginator: MatPaginator;
 
    @ViewChild('filesSelector') readonly filesSelector: FilesSelectorComponent;

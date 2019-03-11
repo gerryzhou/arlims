@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {LabTestMetadata, LabTestType} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
-import {AppInternalUrlsService} from '../../shared/services/app-internal-urls.service';
 import {Router} from '@angular/router';
+import {TestClickEvent, TestStageClickEvent} from './events';
 
 @Component({
    selector: 'app-test-metadata',
@@ -21,6 +21,18 @@ export class TestMetadataComponent implements OnChanges {
    @Input()
    labGroupTestTypes: LabTestType[] = [];
 
+   @Output()
+   testClick = new EventEmitter<TestClickEvent>();
+
+   @Output()
+   testStageClick = new EventEmitter<TestStageClickEvent>();
+
+   @Output()
+   attachedFilesClick = new EventEmitter<TestClickEvent>();
+
+   @Output()
+   reportsClick = new EventEmitter<TestClickEvent>();
+
    testType: LabTestType;
 
    stageStatuses: TestStageStatus[];
@@ -29,7 +41,6 @@ export class TestMetadataComponent implements OnChanges {
 
    constructor
       (
-         public appUrlsSvc: AppInternalUrlsService,
          public router: Router,
       )
    {}
@@ -42,21 +53,26 @@ export class TestMetadataComponent implements OnChanges {
       this.testType = this.labGroupTestTypes.find(tt => tt.code === this.test.testTypeCode);
    }
 
+   onTypeClicked()
+   {
+      this.testClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode});
+   }
+
    onStageClicked(stageName: string)
    {
-      if ( this.allowDataChanges )
-         this.router.navigate(this.appUrlsSvc.testStageDataEditor(this.test.testTypeCode, this.test.testId, stageName));
-      else
-         this.router.navigate(this.appUrlsSvc.testStageDataView(this.test.testTypeCode, this.test.testId, stageName));
+      this.testStageClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode, stageName});
    }
 
    onAttachedFilesClicked()
    {
-      if ( this.allowDataChanges )
-         this.router.navigate(this.appUrlsSvc.testAttachedFilesEditor(this.test.testId));
-      else
-         this.router.navigate(this.appUrlsSvc.testAttachedFilesView(this.test.testId));
+      this.attachedFilesClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode});
    }
+
+   onReportsClicked()
+   {
+      this.reportsClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode});
+   }
+
 }
 
 

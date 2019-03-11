@@ -21,6 +21,9 @@ export class StagePrepComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    conflicts: PrepData;
 
    @Input()
@@ -43,7 +46,13 @@ export class StagePrepComponent implements OnChanges {
       )
    {}
 
-   ngOnChanges() {}
+   ngOnChanges()
+   {
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
+   }
 
    promptGetReceivedFieldsFromFacts()
    {

@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, from as obsFrom} from 'rxjs';
 import * as moment from 'moment';
 import {Moment} from 'moment';
@@ -17,6 +17,8 @@ import {LocalStorageService} from '../shared/services/local-storage.service';
 import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.service';
 import {ListingOptions} from './listing-options/listing-options';
 import {SampleOpStatusCode} from '../shared/models/sample-op-status';
+import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
+import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 
 @Component({
    selector: 'app-samples-listing',
@@ -25,7 +27,7 @@ import {SampleOpStatusCode} from '../shared/models/sample-op-status';
 })
 export class SamplesListingComponent {
 
-   allowDataChanges: boolean;
+   readonly allowDataChanges: boolean;
 
    samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
@@ -50,14 +52,16 @@ export class SamplesListingComponent {
    constructor
        (
           private usrCtxSvc: UserContextService,
-          private alertMsgSvc: AlertMessageService,
-          private activatedRoute: ActivatedRoute,
           private selectedSampleOps: SelectedSampleOpsService,
-          private localStorageSvc: LocalStorageService
+          private localStorageSvc: LocalStorageService,
+          private appUrlsSvc: AppInternalUrlsService,
+          private router: Router,
+          private alertMsgSvc: AlertMessageService,
+          private activatedRoute: ActivatedRoute
        )
    {
       const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
-      this.allowDataChanges = activatedRoute.data && activatedRoute.data['allowDataChanges'] || false;
+      this.allowDataChanges = activatedRoute.snapshot.data && activatedRoute.snapshot.data['allowDataChanges'] || false;
 
       const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
 
@@ -257,6 +261,46 @@ export class SamplesListingComponent {
 
       return reload$;
    }
+
+   onTestStageClicked(e: TestStageClickEvent)
+   {
+      if ( this.allowDataChanges )
+         this.router.navigate(
+            this.appUrlsSvc.testStageDataEntry(e.testTypeCode, e.testId, e.stageName)
+         );
+      else
+         this.router.navigate(
+            this.appUrlsSvc.testStageDataView(e.testTypeCode, e.testId, e.stageName)
+         );
+   }
+
+   onTestClicked(e: TestClickEvent)
+   {
+      if ( this.allowDataChanges )
+         this.router.navigate(
+            this.appUrlsSvc.testDataEntry(e.testTypeCode, e.testId)
+         );
+      else
+         this.router.navigate(
+            this.appUrlsSvc.testDataView(e.testTypeCode, e.testId)
+         );
+   }
+
+   onTestAttachedFilesClicked(e: TestClickEvent)
+   {
+      if ( this.allowDataChanges )
+         this.router.navigate(this.appUrlsSvc.testAttachedFilesEditor(e.testId));
+      else
+         this.router.navigate(this.appUrlsSvc.testAttachedFilesView(e.testId));
+   }
+
+   onTestReportsClicked(e: TestClickEvent)
+   {
+      this.router.navigate(
+         this.appUrlsSvc.testReportsListing(e.testTypeCode, e.testId)
+      );
+   }
+
 }
 
 class SelectableSample {

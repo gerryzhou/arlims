@@ -62,8 +62,8 @@
             </td>
          </ng-container>
 
-         <tr mat-header-row *matHeaderRowDef="attachedFilesDisplayColumns"></tr>
-         <tr mat-row *matRowDef="let row; columns: attachedFilesDisplayColumns"></tr>
+         <tr mat-header-row *matHeaderRowDef="allowDataChanges ? allDisplayColumns : noDataChangesDisplayColumns"></tr>
+         <tr mat-row *matRowDef="let row; columns: allDisplayColumns"></tr>
 
       </table>
 
@@ -77,10 +77,10 @@
    </div> <!-- table container -->
 
    <ng-template #noFiles>
-      <div class="no-files-message"><span>No files attached.</span></div>
+      <div class="no-files-message"><span>< No files are attached. ></span></div>
    </ng-template>
 
-   <div class="new-attachments-area" *ngIf="modificationsEnabled">
+   <div class="new-attachments-area" *ngIf="allowDataChanges">
 
       <form [formGroup]="newAttachmentsForm">
 
@@ -104,6 +104,6 @@
 
       <app-files-selector class="files-selector" #filesSelector></app-files-selector>
 
-   </div>
+   </div> <!-- new attachments area -->
 
 </div>

@@ -22,7 +22,7 @@ export class IsolateTestSeqComponent implements OnChanges {
    viewContextData: boolean;
 
    @Input()
-   viewOnly = false;
+   allowDataChanges: boolean;
 
    @Input()
    form: FormGroup;
@@ -76,6 +76,11 @@ export class IsolateTestSeqComponent implements OnChanges {
       this.formChangesSubscription = this.form.valueChanges.subscribe(() => {
          this.changeDetectorRef.markForCheck();
       });
+
+      if ( this.allowDataChanges && this.form.disabled )
+         this.form.enable();
+      else if ( !this.allowDataChanges && !this.form.disabled )
+         this.form.disable();
    }
 
    onDisposeRequested()

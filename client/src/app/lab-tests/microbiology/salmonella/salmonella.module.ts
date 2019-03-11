@@ -25,7 +25,7 @@ import {
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
 import {SalmonellaRoutingModule} from './routing/salmonella-routing.module';
 import {StagePrepComponent} from './stage-prep/stage-prep.component';
-import {StagedTestDataEntryComponent} from './staged-test-data-entry/staged-test-data-entry.component';
+import {StagedTestDataComponent} from './staged-test-data/staged-test-data.component';
 import {StagePreEnrComponent} from './stage-pre-enr/stage-pre-enr.component';
 import {StageSelEnrComponent} from './stage-sel-enr/stage-sel-enr.component';
 import {StageMBrothComponent} from './stage-m-broth/stage-m-broth.component';
@@ -74,7 +74,7 @@ import {FactsPostingService} from './facts-posting.service';
       SalmonellaRoutingModule,
    ],
    declarations: [
-      StagedTestDataEntryComponent,
+      StagedTestDataComponent,
       FormDataReviewComponent,
       StagePrepComponent,
       StagePreEnrComponent,

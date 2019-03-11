@@ -8,7 +8,7 @@
          <mat-form-field>
             <input formControlName="rvBatchId" type="text" matInput placeholder="RV batch">
          </mat-form-field>
-         <app-field-assigned-resources
+         <app-field-assigned-resources *ngIf="allowDataChanges"
             [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('rvBatchId')"
             (select)="resourceAssignments.applyAssignedResourceToControl($event, 'rvBatchId')"
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'rvBatchId')"
@@ -27,7 +27,7 @@
          <mat-form-field>
             <input formControlName="ttBatchId" type="text" matInput placeholder="TT batch">
          </mat-form-field>
-         <app-field-assigned-resources
+         <app-field-assigned-resources *ngIf="allowDataChanges"
             [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('ttBatchId')"
             (select)="resourceAssignments.applyAssignedResourceToControl($event, 'ttBatchId')"
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'ttBatchId')"
@@ -46,7 +46,7 @@
          <mat-form-field>
             <input formControlName="bgBatchId" type="text" matInput placeholder="BG batch">
          </mat-form-field>
-         <app-field-assigned-resources
+         <app-field-assigned-resources *ngIf="allowDataChanges"
             [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('bgBatchId')"
             (select)="resourceAssignments.applyAssignedResourceToControl($event, 'bgBatchId')"
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'bgBatchId')"
@@ -65,7 +65,7 @@
          <mat-form-field>
             <input formControlName="i2kiBatchId" type="text" matInput placeholder="I2KI batch">
          </mat-form-field>
-         <app-field-assigned-resources
+         <app-field-assigned-resources *ngIf="allowDataChanges"
             [resourceCodes]="resourceAssignments.getAssignedResourceCodesForControl('i2kiBatchId')"
             (select)="resourceAssignments.applyAssignedResourceToControl($event, 'i2kiBatchId')"
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'i2kiBatchId')"
@@ -78,8 +78,9 @@
          </app-conflicting-field-value>
       </div>
 
-      <button class="apply-resources-btn" mat-icon-button color="accent"
-              (click)="promptApplyResources()" *ngIf="!form.disabled">
+      <button class="apply-resources-btn" *ngIf="allowDataChanges"
+              (click)="promptApplyResources()"
+               mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>
       </button>
 
@@ -207,7 +208,7 @@
             <mat-form-field>
                <input formControlName="systemControlTypes" type="text" matInput placeholder="System control types">
             </mat-form-field>
-            <div class="ctrl-types-predefined-inputs" *ngIf="!form.disabled">
+            <div class="ctrl-types-predefined-inputs" *ngIf="allowDataChanges">
                <button class="link" (click)="appendSystemControlType('none')">none</button>
                <button class="link" (click)="appendSystemControlType('knife')">knife</button>
                <button class="link" (click)="appendSystemControlType('spoon')">spoon</button>
@@ -249,7 +250,7 @@
             <mat-form-field>
                <input formControlName="collectorControlTypes" type="text" matInput placeholder="Collector control types">
             </mat-form-field>
-            <div class="ctrl-types-predefined-inputs" *ngIf="!form.disabled">
+            <div class="ctrl-types-predefined-inputs" *ngIf="allowDataChanges">
                <button class="link" (click)="appendCollectorControlType('none')">none</button>
             </div>
          </div>
