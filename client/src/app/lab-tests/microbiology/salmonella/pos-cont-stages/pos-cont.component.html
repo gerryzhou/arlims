@@ -159,7 +159,7 @@
 
       </mat-tab-group>
 
-      <div *ngIf="!vidasPositiveSampleTestUnitNumbers || vidasPositiveSampleTestUnitNumbers?.length === 0"
+      <div *ngIf="vidasPositiveSampleTestUnitNumbers == null || vidasPositiveSampleTestUnitNumbers?.length === 0"
            class="no-positives-message">
          ( No positive test units in Vidas results. )
       </div>

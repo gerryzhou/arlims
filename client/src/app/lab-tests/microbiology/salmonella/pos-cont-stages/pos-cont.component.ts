@@ -23,6 +23,9 @@ export class PosContComponent implements OnChanges {
    form: FormGroup; // May be empty of controls until user chooses to initiate positives continuation tests.
 
    @Input()
+   allowDataChanges: boolean;
+
+   @Input()
    testId: number;
 
    @Input()
@@ -30,9 +33,6 @@ export class PosContComponent implements OnChanges {
 
    @Input()
    showOtherStageDataAsContext = false;
-
-   @Input()
-   allowDataChanges: boolean;
 
    @Input()
    vidasPositiveSampleTestUnitNumbers: number[] | null = null;
