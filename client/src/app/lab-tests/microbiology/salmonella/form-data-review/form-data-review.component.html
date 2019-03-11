@@ -9,8 +9,12 @@
       <h3>PREPARATION</h3>
       <app-stage-prep class="test-stage"
          [form]="testDataForm.get('prepData')"
+         [allowDataChanges]="false"
+         [sampleOp]="sampleOpTest.sampleOp"
+         [currentUser]="appUser"
          [conflicts]="conflictsTestData.prepData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-prep>
    </div>
 
@@ -18,11 +22,13 @@
       <h3>PRE-ENRICHMENT</h3>
       <app-stage-pre-enr class="test-stage"
          [form]="testDataForm.get('preEnrData')"
-         [conflicts]="conflictsTestData.preEnrData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [allowDataChanges]="false"
          [balances]="balances"
          [incubators]="incubators"
-         [samplingMethodChoices]="testConfig.samplingMethodChoices">
+         [samplingMethodChoices]="[]"
+         [conflicts]="conflictsTestData.preEnrData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-pre-enr>
    </div>
 
@@ -30,9 +36,12 @@
       <h3>SELECTIVE-ENRICHMENT</h3>
       <app-stage-sel-enr class="test-stage"
          [form]="testDataForm.get('selEnrData')"
+         [allowDataChanges]="false"
+         [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
+         [waterBaths]="waterBaths"
          [conflicts]="conflictsTestData.selEnrData"
          [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-         [waterBaths]="waterBaths">
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-sel-enr>
    </div>
 
@@ -40,9 +49,11 @@
       <h3>M-BROTH</h3>
       <app-stage-m-broth class="test-stage"
          [form]="testDataForm.get('mBrothData')"
+         [allowDataChanges]="false"
+         [waterBaths]="waterBaths"
          [conflicts]="conflictsTestData.mBrothData"
          [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-         [waterBaths]="waterBaths">
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-m-broth>
    </div>
 
@@ -50,13 +61,16 @@
       <h3>VIDAS</h3>
       <app-stage-vidas class="test-stage"
          [form]="testDataForm.get('vidasData')"
+         [allowDataChanges]="false"
          [testId]="sampleOpTest.testMetadata.testId"
          [attachedFilesByTestPart]="attachedFilesByTestPart"
-         [conflicts]="conflictsTestData.vidasData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [vidasInstruments]="vidasInstruments"
          [sampleTestUnitsCount]="sampleTestUnitsCount"
-         [sampleTestUnitsType]="sampleTestUnitsType">
+         [sampleTestUnitsType]="sampleTestUnitsType"
+         [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
+         [conflicts]="conflictsTestData.vidasData"
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-vidas>
    </div>
 
@@ -64,12 +78,17 @@
       <h3>SLANT</h3>
       <app-pos-cont class="test-stage"
          [form]="testDataForm.get('posContData')"
+         [allowDataChanges]="false"
          [testId]="sampleOpTest.testMetadata.testId"
          stage="SLANT"
          [attachedFilesByTestPart]="attachedFilesByTestPart"
-         [allowDataChanges]="false"
+         [sampleTestUnitsType]="sampleTestUnitsType"
+         [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
+         [testConfig]="testConfig"
+         [appUser]="appUser"
          [conflicts]="conflictsTestData.posContData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-pos-cont>
    </div>
 
@@ -77,12 +96,17 @@
       <h3>IDENT</h3>
       <app-pos-cont class="test-stage"
          [form]="testDataForm.get('posContData')"
+         [allowDataChanges]="false"
          [testId]="sampleOpTest.testMetadata.testId"
          stage="IDENT"
          [attachedFilesByTestPart]="attachedFilesByTestPart"
-         [allowDataChanges]="false"
+         [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
+         [sampleTestUnitsType]="sampleTestUnitsType"
+         [testConfig]="testConfig"
+         [appUser]="appUser"
          [conflicts]="conflictsTestData.posContData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-pos-cont>
    </div>
 
@@ -90,8 +114,10 @@
       <h3>WRAPUP</h3>
       <app-stage-wrapup class="test-stage"
          [form]="testDataForm.get('wrapupData')"
+         [allowDataChanges]="false"
          [conflicts]="conflictsTestData.wrapupData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp">
+         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-wrapup>
    </div>
 
@@ -111,16 +137,6 @@
 
    <div class="form-bottom-toolbar">
       <a href="https://www.fda.gov/Food/FoodScienceResearch/LaboratoryMethods/ucm070149.htm" target="_blank">BAM</a>
-      <div class="expanding-flex-space"></div>
-      <div>
-         <mat-menu #optionsMenu="matMenu">
-            <!--TODO: Add report generation/save actions here.-->
-            <!--<button type="button" mat-menu-item  >Toggle showing 'unset' option for supporting fields</button>-->
-         </mat-menu>
-         <button mat-button type="button" [matMenuTriggerFor]="optionsMenu">
-            Options <mat-icon>more_vert</mat-icon>
-         </button>
-      </div>
    </div>
 
 </form>

@@ -3,9 +3,9 @@ import {ActivatedRoute} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 
 import {LabGroupTestData} from '../../../../shared/models/lab-group-test-data';
-import {LabResource, TestAttachedFileMetadata, SampleOpTest} from '../../../../../generated/dto';
+import {LabResource, TestAttachedFileMetadata, SampleOpTest, AppUser} from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
-import {emptyTestData, makeTestDataFormGroup} from '../test-data';
+import {emptyTestData, getVidasPositiveTestUnitNumbers, makeTestDataFormGroup} from '../test-data';
 import {TestConfig} from '../test-config';
 import {UserContextService} from '../../../../shared/services';
 import {AnalyzedAuditLogEntry} from '../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
@@ -25,12 +25,19 @@ export class FormDataReviewComponent implements OnInit {
    readonly conflictsTestData = emptyTestData();
    readonly conflictsEmployeeTimestamp: EmployeeTimestamp | null;
 
-   sampleTestUnitsCount: number | null;
-   sampleTestUnitsType: TestUnitsType | null;
+   // Controls whether a null option is shown for some ui choice components.
+   readonly showUnsetAffordances = false;
+
+   readonly sampleTestUnitsCount: number | null;
+   readonly sampleTestUnitsType: TestUnitsType | null;
+
+   readonly vidasPositiveSampleTestUnitNumbers: number[] | null;
 
    readonly attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
    readonly sampleOpTest: SampleOpTest;
+
+   readonly appUser: AppUser;
 
    readonly testConfig: TestConfig;
 
@@ -51,10 +58,10 @@ export class FormDataReviewComponent implements OnInit {
       const verTestData = labGroupTestData.versionedTestData;
       const testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
       const testConfig = labGroupTestData.labGroupTestConfig;
-      const username = labGroupTestData.appUser.username;
-      this.testDataForm = makeTestDataFormGroup(testData, username, testConfig);
+      this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username, testConfig);
       this.testDataForm.disable();
       this.sampleOpTest = labGroupTestData.sampleOpTest;
+      this.appUser = labGroupTestData.appUser;
       this.testConfig = labGroupTestData.labGroupTestConfig;
 
       this.attachedFilesByTestPart = makeAttachedFilesByTestPartMap(labGroupTestData);
@@ -63,6 +70,8 @@ export class FormDataReviewComponent implements OnInit {
       const sampleTestUnits = {testUnitsType: sm.testUnitsType, testUnitsCount: sm.testUnitsCount};
       this.sampleTestUnitsCount = sampleTestUnits.testUnitsCount;
       this.sampleTestUnitsType = sampleTestUnits.testUnitsType;
+
+      this.vidasPositiveSampleTestUnitNumbers = testData ? getVidasPositiveTestUnitNumbers(testData.vidasData) : [];
 
       const labResources = labGroupTestData.labResourcesByType;
       this.balances = labResources.get(UserContextService.BALANCE_RESOURCE_TYPE);
