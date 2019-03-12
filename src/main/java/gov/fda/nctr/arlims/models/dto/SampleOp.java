@@ -21,9 +21,9 @@ public class SampleOp
 
     private final String productName;
 
-    private final String factsStatus; // (code)
+    private final Optional<String> factsStatus; // (code)
 
-    private final Instant factsStatusTimestamp;
+    private final Optional<Instant> factsStatusTimestamp;
 
     private final Instant lastRefreshedFromFactsInstant;
 
@@ -42,8 +42,8 @@ public class SampleOp
             Optional<String> lid,
             Optional<String> paf,
             String productName,
-            String factsStatus,
-            Instant factsStatusTimestamp,
+            Optional<String> factsStatus,
+            Optional<Instant> factsStatusTimestamp,
             Instant lastRefreshedFromFactsInstant,
             Optional<String> subject,
             Optional<List<LabTestMetadata>> tests,
@@ -79,9 +79,9 @@ public class SampleOp
 
     public String getProductName() { return productName; }
 
-    public String getFactsStatus() { return factsStatus; }
+    public Optional<String> getFactsStatus() { return factsStatus; }
 
-    public Instant getFactsStatusTimestamp() { return factsStatusTimestamp; }
+    public Optional<Instant> getFactsStatusTimestamp() { return factsStatusTimestamp; }
 
     public Instant getLastRefreshedFromFactsInstant() { return lastRefreshedFromFactsInstant; }
 

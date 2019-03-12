@@ -8,7 +8,7 @@ import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {factsStatusTextFromCode} from '../../shared/models/sample-op-status';
-import {TestClickEvent, TestStageClickEvent} from "../test-metadata/events";
+import {TestClickEvent, TestStageClickEvent} from '../test-metadata/events';
 
 
 @Component({
@@ -99,12 +99,11 @@ export class SampleComponent implements OnChanges {
       this.displayFactsStatusTimestamp =
          this.sampleOp.factsStatusTimestamp ? moment(this.sampleOp.factsStatusTimestamp).format('MMM D h:mm a')
          : '';
-      this.factsStatusText = factsStatusTextFromCode(this.sampleOp.factsStatus);
+      this.factsStatusText = this.sampleOp.factsStatus ? factsStatusTextFromCode(this.sampleOp.factsStatus) : '';
       this.factsStatusCssClass = this.factsStatusText.replace(/ /g, '-').toLowerCase();
-
       this.displayRefreshedFromFactsTimestamp =
          this.sampleOp.lastRefreshedFromFactsInstant ? moment(this.sampleOp.lastRefreshedFromFactsInstant).format('h:mm a MMM D')
-            : '';
+         : '';
    }
 
    onHeaderClick()
