@@ -160,17 +160,14 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    private setSamplingMethodFieldEnablements(testUnitsType: TestUnitsType | null)
    {
       const numSubsPerCompCtl = this.form.get(['samplingMethod', 'numberOfSubsPerComposite']);
-      const extractedGramsPerSub = this.form.get(['samplingMethod', 'extractedGramsPerSub']);
 
       switch ( testUnitsType )
       {
          case 'subsample':
             numSubsPerCompCtl.disable();
-            extractedGramsPerSub.disable();
             break;
          default:
             numSubsPerCompCtl.enable();
-            extractedGramsPerSub.enable();
             break;
       }
    }

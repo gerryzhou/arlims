@@ -70,12 +70,13 @@ function preEnrStatusCode(testData: TestData): FieldValuesStatusCode
    // Check nested sampling method fields.
    const samplingMethodFieldsStatus =
       !data.samplingMethod ? 'e' :
+         data.samplingMethod.testUnitsType === 'composite' && !data.samplingMethod.numberOfSubsPerComposite ? 'i' :
          statusForRequiredFieldValues([
             data.samplingMethod.testUnitsType,
             data.samplingMethod.testUnitsCount,
-            data.samplingMethod.numberOfSubsPerComposite,
             data.samplingMethod.extractedGramsPerSub,
          ]);
+
 
    return (
       uncondTopLevelFieldsStatus === 'i' || samplingMethodFieldsStatus === 'i' ? 'i'

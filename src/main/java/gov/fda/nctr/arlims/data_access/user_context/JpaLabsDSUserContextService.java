@@ -445,7 +445,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                 inboxItem.getCfsanProductDesc(),
                 opt(inboxItem.getStatusCode()),
                 opt(inboxItem.getStatusDate()),
-                Instant.now(),
+                opt(Instant.now()),
                 opt(inboxItem.getSubjectText()),
                 opt(tests),
                 opt(singletonList(assignment))

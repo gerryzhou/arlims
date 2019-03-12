@@ -2,9 +2,11 @@ package gov.fda.nctr.arlims.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import static java.util.stream.Collectors.toList;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,19 +19,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
-import gov.fda.nctr.arlims.data_access.test_data.TestAttachedFileContents;
-import gov.fda.nctr.arlims.data_access.test_data.TestDataService;
 import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
-import gov.fda.nctr.arlims.reports.Report;
+import gov.fda.nctr.arlims.data_access.test_data.TestAttachedFileContents;
+import gov.fda.nctr.arlims.data_access.test_data.TestDataService;
 import gov.fda.nctr.arlims.reports.TestDataReportService;
 import gov.fda.nctr.arlims.security.AppUserAuthentication;
-import static java.util.stream.Collectors.toList;
+import gov.fda.nctr.arlims.reports.Report;
 
 
 @RestController
@@ -244,7 +244,6 @@ public class TestController extends ControllerBase
         testDataService.deleteTestAttachedFile(testId, attachedFileId, currentUser);
     }
 
-    /*
     @GetMapping("search")
     public List<SampleOpTest> findTests
         (
@@ -270,8 +269,7 @@ public class TestController extends ControllerBase
 
         Optional<String> prepdTextQuery = searchText.map(this::prepareTextQuery);
 
-        return
-            testDataService.findTests(
+        return testDataService.findTests(
                 prepdTextQuery,
                 fromTimestamp,
                 toTimestamp,
@@ -280,7 +278,6 @@ public class TestController extends ControllerBase
                 labTestTypeCodes
             );
     }
-    */
 
     @GetMapping("{testId:\\d+}/report/{reportName}")
     public ResponseEntity<InputStreamResource> getTestDataReport

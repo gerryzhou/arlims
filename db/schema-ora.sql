@@ -20,13 +20,17 @@ create or replace view test_v as
   select
     t.id test_id,
     t.op_id,
+    t.sample_tracking_num,
+    t.sample_tracking_sub_num,
+    t.pac,
+    t.product_name,
     tt.code type_code,
     tt.name type_name,
     tt.short_name type_short_name,
     t.created created,
     ce.short_name created_by_emp,
     t.last_saved last_saved,
-    se.short_name last_saved_emp,
+    se.short_name last_saved_by_emp,
     (select count(*) from test_file tf where tf.test_id = t.id) attached_files_count,
     TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date,
     t.note,
@@ -35,6 +39,9 @@ create or replace view test_v as
     re.short_name reviewed_by_emp,
     t.saved_to_facts,
     fe.short_name saved_to_facts_by_emp,
+    t.lid,
+    t.paf,
+    t.subject,
     t.test_data_json
   from test t
   join test_type tt on t.test_type_id = tt.id

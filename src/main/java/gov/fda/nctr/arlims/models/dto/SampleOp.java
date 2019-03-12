@@ -25,7 +25,7 @@ public class SampleOp
 
     private final Optional<Instant> factsStatusTimestamp;
 
-    private final Instant lastRefreshedFromFactsInstant;
+    private final Optional<Instant> lastRefreshedFromFactsInstant;
 
     private final Optional<String> subject;
 
@@ -44,7 +44,7 @@ public class SampleOp
             String productName,
             Optional<String> factsStatus,
             Optional<Instant> factsStatusTimestamp,
-            Instant lastRefreshedFromFactsInstant,
+            Optional<Instant> lastRefreshedFromFactsInstant,
             Optional<String> subject,
             Optional<List<LabTestMetadata>> tests,
             Optional<List<SampleOpAssignment>> assignments
@@ -83,7 +83,7 @@ public class SampleOp
 
     public Optional<Instant> getFactsStatusTimestamp() { return factsStatusTimestamp; }
 
-    public Instant getLastRefreshedFromFactsInstant() { return lastRefreshedFromFactsInstant; }
+    public Optional<Instant> getLastRefreshedFromFactsInstant() { return lastRefreshedFromFactsInstant; }
 
     public Optional<String> getSubject() { return subject; }
 

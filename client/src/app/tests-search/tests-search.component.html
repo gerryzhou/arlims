@@ -9,7 +9,6 @@
 
 </div>
 
-
 <div>
    <app-sample *ngFor="let sampleOp of resultSampleOps | async"
       [sampleOp]="sampleOp"
@@ -17,8 +16,10 @@
       [showAssociatedItemsSummaryInSampleMetadata]="true"
       [allowDataChanges]="false"
       [showEmployeeAssignments]="false"
-      (headerClick)="toggleSampleExpanded(sampleOp.opId)">
+      (headerClick)="toggleSampleExpanded(sampleOp.opId)"
+      (testClick)="onTestClicked($event)"
+      (testStageClick)="onTestStageClicked($event)"
+      (attachedFilesClick)="onTestAttachedFilesClicked($event)"
+      (testReportsClick)="onTestReportsClicked($event)">
    </app-sample>
 </div>
-
-

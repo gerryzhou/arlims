@@ -186,7 +186,7 @@ export class SampleComponent implements OnChanges {
       );
 
       confirmDlg.afterClosed().subscribe(accepted => {
-         if (accepted)
+         if ( accepted )
          {
             this.testsSvc.deleteTest(test.testId).subscribe(
                () => {
@@ -194,7 +194,7 @@ export class SampleComponent implements OnChanges {
                },
                err => {
                   console.log(err);
-                  this.testDeleteFailed.next(err);
+                  this.testDeletionFailed.next(err);
                }
             );
          }

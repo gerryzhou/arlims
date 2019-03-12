@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output, OnChanges, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Observable, Subscription, from as obsFrom} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 import {UserContextService} from '../../shared/services';
 import {LabTestType} from '../../../generated/dto';
@@ -19,7 +18,8 @@ export class TestsSearchQueryComponent implements OnChanges, OnDestroy {
    @Input()
    initialQuery: TestsSearchQuery;
 
-   @Output() queryChanged = new EventEmitter<TestsSearchQuery>();
+   @Output()
+   queryChanged = new EventEmitter<TestsSearchQuery>();
 
    form: FormGroup;
 

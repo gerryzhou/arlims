@@ -1,3 +1,28 @@
+pre-enr sampling method
+  When selecting to enter subs numbers (manual entry), "extracted grams per sub" is disabled.
+  Data is complete but shows as incomplete, update stage status to consider that fewer fields are needed when testing subs.
+
+
+Within-test search
+  - tests-search-query-component shouldn't do its own query for test types, should just accept this as an input.
+    From parent | async?
+  - test search component needs to handle test/stage and report events from sample component children.
+    Make sure any new properties are supplied as well.
+  - Allow opening test data forms (staged test data entry component) in read-only mode and also to show audit data.
+
+Received auto-fill: if only one option, just auto-fill without dialog.
+
+Identify problem in pre-enr sampling method panel (demoed on Chrome) where some fields are enabled/disabled when they shouldn't be.
+
+Maybe disable or remove slant/ident stage icons if there are no positives.
+
+In M-broth stage, populate timestamp automatically when water bath is selected.
+
+Slant and ident stages
+  Should be empty at least until there are Vidas positives.
+    Preferably should remain empty until test suites are created for the Vidas positives within these stages.
+  Maybe disable or hide the stage tabs when there are no Vidas positives.
+
 Done
 ====
 - Tweak layout in new test dialog and default to current date.
@@ -14,50 +39,15 @@ Done
 - Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
 
 
-Commit Notes
-------------
-
-
-Read Only Stage Test Data Mode
-------------------------------
-- Add allowDataChanges input to stage test data component to replace references to form.disabled.
-- In test attached files component, retrieve allowDataChanges from route data as was done in samples listing, make changes accordingly.
-
-Add Facts status and its timestamp in test table?
-  Or can the status be obtained efficiently by api for a batch of samples?
-
-TODO
-====
-- Add allowDataChanges input param to Sample component.
-- Add a proper read-only input param to test metadata and staged data entry component and each test stage, don't rely on form disabled state.
-
-
-
-Sample/Samples Listing Component Changes
-----------------------------------------
-- Support opening staged data entry in read-only mode via routing data or some other way.
-- Add link to test audit data in the test metadata component if user is admin.
-  Deliver via event to sample and then samples listing ancestor, or just execute routing directly?
-- Form data problems in read-only mode
-  In prep stage, hide the "Select from FACTS/" label.
-  In pre enr stage, hide the lock/unlock and "Select sampling method" buttons.
-  In Vidas stage, hide the attached files component.
-  In slant and ident stages, hide "No positive test units in Vidas results" when positives exist in Vidas results.
-  In slant stage, hide attached files component.
-  In wrapup, in the work hours table, hide the edit, delete, and "Add User Time" buttons.
-
-Within-test search
-  Add sample num and product description pac,paf,lid to test table.
-    What about sample-op status? That is subject to change but user will want to see this.
-  Revive page for text searches within test data.
-  Re-implement results method to fetch sample metadata from test record instead of via api.
-  Allow opening test data forms (staged test data entry component) in read-only mode and also to show audit data.
-
 Don't auto-push after Vidas stage.
-  Add button at sample level leading to page to push to FACTS (under # files).
+  Just single-submit FACTS for now at WRAPUP stage.
+    Show both AOAC and BAM submissions and any errors.
+    Add button at sample level leading to page to push to FACTS (under # files).
   Post AOAC and BAM at once.
     But this is test-specific, so need standard way of instantiating a test and
     telling it to post itself (?).
+
+Identify isolates by their number not by creation timestamp.
 
 Add lab inbox page based on sample listing.
   For lab admins only.

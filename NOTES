@@ -1,13 +1,8 @@
+
 Try to find example of sample in 'I' status that won't accept AOAC submission with "sample analysis id is not 'I'" message.
 
 May need to get performing org from the sample not current user when submitting.
   Bring this up for discussion in the next api meeting.
-
-David Lau
-  Paul's helper: negative results have to be included in analysisMicFindings also (BAM stage).
-
-Add app version info (app build and publication timestamp) into user context.
-
 
 End of April deadline (week of 22nd).
 

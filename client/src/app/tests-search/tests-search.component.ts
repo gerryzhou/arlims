@@ -5,6 +5,9 @@ import {catchError, map} from 'rxjs/operators';
 import {AlertMessageService, TestsService} from '../shared/services';
 import {TestsSearchQuery} from './query/tests-search-query';
 import {SampleOp, SampleOpTest} from '../../generated/dto';
+import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
+import {Router} from '@angular/router';
+import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 
 @Component({
    selector: 'app-tests-search',
@@ -24,7 +27,7 @@ export class TestsSearchComponent {
       fromTimestamp: null,
       toTimestamp: null,
       timestampPropertyName: 'created',
-      includeStatusCodes: ['P', 'A', 'S', 'I', 'O', 'C'],
+      includeStatusCodes: ['P', 'A', 'S', 'I', 'T', 'O', 'C'],
       testTypeCode: null,
    };
 
@@ -32,6 +35,8 @@ export class TestsSearchComponent {
       (
          private testsSvc: TestsService,
          private alertMsgSvc: AlertMessageService,
+         private appUrlsSvc: AppInternalUrlsService,
+         private router: Router
       )
    {
       this.query = this.defaultQuery;
@@ -73,6 +78,26 @@ export class TestsSearchComponent {
       {
          this.expandedSampleOpIds.add(sampleOpId);
       }
+   }
+
+   onTestStageClicked(e: TestStageClickEvent)
+   {
+      this.router.navigate(this.appUrlsSvc.testStageDataView(e.testTypeCode, e.testId, e.stageName));
+   }
+
+   onTestClicked(e: TestClickEvent)
+   {
+      this.router.navigate(this.appUrlsSvc.testDataView(e.testTypeCode, e.testId));
+   }
+
+   onTestAttachedFilesClicked(e: TestClickEvent)
+   {
+      this.router.navigate(this.appUrlsSvc.testAttachedFilesView(e.testId));
+   }
+
+   onTestReportsClicked(e: TestClickEvent)
+   {
+      this.router.navigate(this.appUrlsSvc.testReportsListing(e.testTypeCode, e.testId));
    }
 }
 

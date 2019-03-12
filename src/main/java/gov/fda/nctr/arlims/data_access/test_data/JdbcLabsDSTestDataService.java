@@ -13,12 +13,15 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import static java.lang.String.join;
 import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
@@ -43,6 +46,35 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
 
+    private static final List<String> TESTV_SAMPLE_OP_TEST_MAPPED_COLS =
+        Arrays.asList(
+            "TEST_ID",
+            "OP_ID",
+            "SAMPLE_TRACKING_NUM",
+            "SAMPLE_TRACKING_SUB_NUM",
+            "PAC",
+            "PRODUCT_NAME",
+            "TYPE_CODE",
+            "TYPE_NAME",
+            "TYPE_SHORT_NAME",
+            "CREATED",
+            "CREATED_BY_EMP",
+            "LAST_SAVED",
+            "LAST_SAVED_BY_EMP",
+            "ATTACHED_FILES_COUNT",
+            "BEGIN_DATE",
+            "NOTE",
+            "STAGE_STATUSES_JSON",
+            "REVIEWED",
+            "REVIEWED_BY_EMP",
+            "SAVED_TO_FACTS",
+            "SAVED_TO_FACTS_BY_EMP",
+            "LID",
+            "PAF",
+            "SUBJECT"
+        );
+
+    private static final String TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR = join(",", TESTV_SAMPLE_OP_TEST_MAPPED_COLS);
 
     public JdbcLabsDSTestDataService
         (
@@ -756,7 +788,6 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         return new TestAuditInfo(testTypeCode, testRow, contextRow);
     }
 
-    /* TODO
     @Override
     public List<SampleOpTest> findTests
         (
@@ -807,75 +838,67 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         });
 
         String sql =
-            "select " + TESTV_SAMPLE_IN_TEST_MAPPED_COLS_STR + " from test_v\n" +
+            "select " + TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR + " from test_v\n" +
             (!whereCriteria.isEmpty() ? "where " + join("\nand\n", whereCriteria): "");
 
-        RowMapper<SampleOpTest> rowMapper = getTestVSampleInTestRowMapper();
+        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper();
 
         return new NamedParameterJdbcTemplate(jdbc).query(sql, params, rowMapper);
     }
 
-    // RowMapper creating SampleInTests from TEST_V rows, assuming column order specified in TESTV_SAMPLE_IN_TEST_MAPPED_COLS.
-    private RowMapper<SampleOpTest> getTestVSampleInTestRowMapper()
+    // RowMapper creating SampleOpTests from TEST_V rows, assuming column order specified in TESTV_SAMPLE_OP_TEST_MAPPED_COLS.
+    private RowMapper<SampleOpTest> getTestVSampleOpTestRowMapper()
     {
         return (row, rowNum) -> {
             LabTestMetadata tmd =
                 new LabTestMetadata(
                     row.getLong(1),
                     row.getLong(2),
-                    row.getString(3),
-                    row.getString(4),
+                    row.getLong(3),
+                    row.getLong(4),
                     row.getString(5),
-                    LabTestTypeCode.valueOf(row.getString(6)),
-                    row.getString(7),
+                    row.getString(6),
+                    LabTestTypeCode.valueOf(row.getString(7)),
                     row.getString(8),
-                    row.getTimestamp(9).toInstant(),
-                    row.getString(10),
-                    row.getTimestamp(11).toInstant(),
-                    row.getString(12),
-                    row.getInt(13),
-                    Optional.ofNullable(row.getString(14)).map(LocalDate::parse),
-                    Optional.ofNullable(row.getString(15)),
+                    row.getString(9),
+                    row.getTimestamp(10).toInstant(),
+                    row.getString(11),
+                    row.getTimestamp(12).toInstant(),
+                    row.getString(13),
+                    row.getInt(14),
+                    Optional.ofNullable(row.getString(15)).map(LocalDate::parse),
                     Optional.ofNullable(row.getString(16)),
-                    Optional.ofNullable(row.getTimestamp(17)).map(Timestamp::toInstant),
-                    Optional.ofNullable(row.getString(18)), // reviewed by emp
-                    Optional.ofNullable(row.getTimestamp(19)).map(Timestamp::toInstant),
-                    Optional.ofNullable(row.getString(20)) // saved to facts by emp
+                    Optional.ofNullable(row.getString(17)),
+                    Optional.ofNullable(row.getTimestamp(18)).map(Timestamp::toInstant),
+                    Optional.ofNullable(row.getString(19)), // reviewed by emp
+                    Optional.ofNullable(row.getTimestamp(20)).map(Timestamp::toInstant),
+                    Optional.ofNullable(row.getString(21)) // saved to facts by emp
                 );
 
-            Optional<String> lid = Optional.ofNullable(row.getString(21));
-            Optional<String> paf = Optional.ofNullable(row.getString(22));
-            Optional<String> splitInd = Optional.ofNullable(row.getString(23));
-            String factsStatus = row.getString(24);
-            Instant factsStatusTimestamp = row.getTimestamp(25).toInstant();
-            Instant lastRefreshedFromFactsTimestamp = row.getTimestamp(26).toInstant();
-            Optional<String> samplingOrg = Optional.ofNullable(row.getString(27));
-            Optional<String> subject = Optional.ofNullable(row.getString(28));
-            long opId = row.getLong(29);
+            Optional<String> lid = Optional.ofNullable(row.getString(22));
+            Optional<String> paf = Optional.ofNullable(row.getString(23));
+            Optional<String> subject = Optional.ofNullable(row.getString(24));
 
-            Sample s =
+            SampleOp s =
                 new SampleOp(
-                    tmd.getSampleOpId(),
-                    tmd.getSampleNum(),
-                    opId,
+                    tmd.getOpId(),
+                    tmd.getSampleTrackingNum(),
+                    tmd.getSampleTrackingSubNum(),
                     tmd.getPac(),
                     lid,
                     paf,
                     tmd.getProductName(),
-                    splitInd,
-                    factsStatus,
-                    factsStatusTimestamp,
-                    lastRefreshedFromFactsTimestamp,
-                    samplingOrg,
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(), // last refreshed from FACTS not available when sample metadata comes from test record
                     subject,
-                    Optional.empty(), // assignments omitted
-                    Optional.empty()  // tests omitted
+                    Optional.empty(), // tests omitted
+                    Optional.empty()  // assignments omitted
                 );
 
             return new SampleOpTest(s, tmd);
         };
     }
-    */
 
     private static String md5(byte[] data)
     {

@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.data_access.test_data;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +51,6 @@ public interface TestDataService
 
     void deleteTestAttachedFile(long testId, long attachedFileId, AppUser user);
 
-    /*
     List<SampleOpTest> findTests
         (
             Optional<String> searchText,
@@ -60,5 +60,4 @@ public interface TestDataService
             Optional<List<String>> sampleOpStatusCodes,
             Optional<List<String>> labTestTypeCodes
         );
-    */
 }
