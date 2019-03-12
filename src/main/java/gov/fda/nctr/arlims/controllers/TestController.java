@@ -56,15 +56,35 @@ public class TestController extends ControllerBase
     @PostMapping("new")
     public CreatedTestMetadata createTest
         (
-            @RequestParam("opId") long opId,
-            @RequestParam("typeCode") LabTestTypeCode testTypeCode,
-            @RequestParam("beginDate") String testBeginDate,
+            @RequestParam("op") long opId,
+            @RequestParam("tc") LabTestTypeCode testTypeCode,
+            @RequestParam("bd") String testBeginDate,
+            @RequestParam("stn") long sampleTrackingNum,
+            @RequestParam("stsn") long sampleTrackingSubNum,
+            @RequestParam("pac") String pac,
+            @RequestParam("pn") String productName,
+            @RequestParam("lid") Optional<String> lid,
+            @RequestParam("paf") Optional<String> paf,
+            @RequestParam("s") Optional<String> subject,
             Authentication authentication
         )
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        long createdTestId = testDataService.createTest(opId, testTypeCode, testBeginDate, currentUser);
+        long createdTestId =
+            testDataService.createTest(
+                opId,
+                testTypeCode,
+                testBeginDate,
+                sampleTrackingNum,
+                sampleTrackingSubNum,
+                pac,
+                productName,
+                lid,
+                paf,
+                subject,
+                currentUser
+            );
 
         return new CreatedTestMetadata(opId, createdTestId);
     }

@@ -14,8 +14,7 @@ alter table audit_entry
 alter table audit_entry
   add constraint ck_audent_objtoval_isjson check (object_to_value_json is json format json strict);
 
--- TODO: Uncomment when test search is re-enabled.
---create index ix_test_testdatajson on test(test_data_json) indextype is ctxsys.context parameters('sync (on commit)');
+create index ix_tst_testdatajson on test(test_data_json) indextype is ctxsys.context parameters('sync (on commit)');
 
 create or replace view test_v as
   select

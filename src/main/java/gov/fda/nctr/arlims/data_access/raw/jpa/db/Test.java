@@ -78,6 +78,32 @@ public class Test
     @Column(length = 4000)
     private String stageStatusesJson;
 
+
+    // Sample metadata
+
+    @Column(name = "sample_tracking_num") @NotNull
+    private Long sampleTrackingNum;
+
+    @Column(name = "sample_tracking_sub_num") @NotNull
+    private Long sampleTrackingSubNum;
+
+    @Size(max = 20) @NotNull
+    private String pac;
+
+    @Size(max = 500) @NotNull
+    private String productName;
+
+    @Size(max = 20)
+    private String lid;
+
+    @Size(max = 20)
+    private String paf;
+
+
+    @Size(max = 500)
+    private String subject;
+
+
     private Instant reviewed;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -97,6 +123,7 @@ public class Test
     @Column(name = "SAVED_TO_FACTS_BY_EMP_ID", insertable = false, updatable = false)
     private Long savedToFactsByEmpId;
 
+
     protected Test() {}
 
     public Test
@@ -110,7 +137,14 @@ public class Test
             @Size(max = 200) String note,
             String testDataJson,
             String testDataMd5,
-            String stageStatusesJson
+            String stageStatusesJson,
+            @NotNull Long sampleTrackingNum,
+            @NotNull Long sampleTrackingSubNum,
+            String pac,
+            String lid,
+            String paf,
+            String productName,
+            String subject
         )
     {
         this.opId = opId;
@@ -128,6 +162,13 @@ public class Test
         this.testDataJson = testDataJson;
         this.testDataMd5 = testDataMd5;
         this.stageStatusesJson = stageStatusesJson;
+        this.sampleTrackingNum = sampleTrackingNum;
+        this.sampleTrackingSubNum = sampleTrackingSubNum;
+        this.pac = pac;
+        this.lid = lid;
+        this.paf = paf;
+        this.productName = productName;
+        this.subject = subject;
         this.reviewed = null;
         this.reviewedByEmployee = null;
         this.reviewedByEmpId = null;
@@ -177,6 +218,27 @@ public class Test
 
     public String getStageStatusesJson() { return stageStatusesJson; }
     public void setStageStatusesJson(String stageStatusesJson) { this.stageStatusesJson = stageStatusesJson; }
+
+    public Long getSampleTrackingNum() { return sampleTrackingNum; }
+    public void setSampleTrackingNum(Long sampleTrackingNum) { this.sampleTrackingNum = sampleTrackingNum; }
+
+    public Long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
+    public void setSampleTrackingSubNum(Long sampleTrackingSubNum) { this.sampleTrackingSubNum = sampleTrackingSubNum; }
+
+    public String getPac() { return pac; }
+    public void setPac(String pac) { this.pac = pac; }
+
+    public String getLid() { return lid; }
+    public void setLid(String lid) { this.lid = lid; }
+
+    public String getPaf() { return paf; }
+    public void setPaf(String paf) { this.paf = paf; }
+
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
+
+    public String getSubject() { return subject; }
+    public void setSubject(String subject) { this.subject = subject; }
 
     public Instant getReviewed() { return reviewed; }
     public void setReviewed(Instant reviewed) { this.reviewed = reviewed; }

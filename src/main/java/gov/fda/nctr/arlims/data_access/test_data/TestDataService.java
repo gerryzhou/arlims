@@ -10,7 +10,20 @@ import gov.fda.nctr.arlims.models.dto.*;
 
 public interface TestDataService
 {
-    long createTest(long sampleOpId, LabTestTypeCode testTypeCode, String testBeginDate, AppUser user);
+    long createTest
+        (
+            long sampleOpId,
+            LabTestTypeCode testTypeCode,
+            String testBeginDate,
+            long sampleTrackingNum,
+            long sampleTrackingSubNum,
+            String pac,
+            String productName,
+            Optional<String> lid,
+            Optional<String> paf,
+            Optional<String> subject,
+            AppUser user
+        );
 
     void deleteTest(long testId, AppUser deletingUser);
 

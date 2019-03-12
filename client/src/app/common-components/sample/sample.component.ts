@@ -154,7 +154,7 @@ export class SampleComponent implements OnChanges {
          if (t)
          {
             const beginDate = t.beginDate.format('YYYY-MM-DD');
-            this.testsSvc.createTest(t.sampleOp.opId, t.selectedTestType, beginDate).subscribe(
+            this.testsSvc.createTest(t.sampleOp, t.selectedTestType, beginDate).subscribe(
                createdTestMd => {
                   this.testCreated.next(createdTestMd);
                },

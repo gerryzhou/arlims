@@ -64,22 +64,32 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             long sampleOpId,
             LabTestTypeCode testTypeCode,
             String testBeginDate,
+            long sampleTrackingNum,
+            long sampleTrackingSubNum,
+            String pac,
+            String productName,
+            Optional<String> lid,
+            Optional<String> paf,
+            Optional<String> subject,
             AppUser user
         )
     {
         java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
 
         String sql =
-            "insert into test " +
-                "(op_id, test_type_id, lab_group_id, begin_date, test_data_md5," +
-                "created, created_by_emp_id, last_saved, last_saved_by_emp_id)\n" +
+            "insert into test (" +
+                "op_id, test_type_id, lab_group_id, begin_date, test_data_md5," +
+                "created, created_by_emp_id, last_saved, last_saved_by_emp_id," +
+                "sample_tracking_num, sample_tracking_sub_num, pac, product_name,lid, paf, subject" +
+            ")\n" + // sample md
             "values(" +
                 "?," +
                 "(select id from test_type where code = ?)," +
                 "(select lab_group_id from employee where id = ?)," +
                 "TO_DATE(?, 'YYYY-MM-DD')," + // begin_date
                 "'" + EMPTY_STRING_MD5 + "'," +
-                "?,?,?,?" + // created* and last_saved* fields
+                "?,?,?,?," + // created* and last_saved* fields
+                "?,?,?,?,?,?,?" + // sample metadata
             ")";
 
         PreparedStatementCreator psc = conn -> {
@@ -92,6 +102,13 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             ps.setLong(6, user.getEmployeeId());
             ps.setTimestamp(7, now);
             ps.setLong(8, user.getEmployeeId());
+            ps.setLong(9, sampleTrackingNum);
+            ps.setLong(10, sampleTrackingSubNum);
+            ps.setString(11, pac);
+            ps.setString(12, productName);
+            ps.setString(13, lid.orElse(null));
+            ps.setString(14, paf.orElse(null));
+            ps.setString(15, subject.orElse(null));
             return ps;
         };
 
@@ -739,7 +756,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         return new TestAuditInfo(testTypeCode, testRow, contextRow);
     }
 
-    /*
+    /* TODO
     @Override
     public List<SampleOpTest> findTests
         (

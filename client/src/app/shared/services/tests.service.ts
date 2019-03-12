@@ -11,7 +11,7 @@ import {
    CreatedTestMetadata,
    DataModificationInfo,
    LabTestTypeCode,
-   OptimisticDataUpdateResult,
+   OptimisticDataUpdateResult, SampleOp,
    SampleOpTest,
    TestAttachedFileMetadata,
    VersionedTestData
@@ -33,18 +33,27 @@ export class TestsService {
 
    createTest
       (
-         sampleOpId: number,
+         sampleOp: SampleOp,
          testTypeCode: LabTestTypeCode,
          testBeginDate: string
       )
       : Observable<CreatedTestMetadata>
    {
       const url = this.apiUrlsSvc.newTestUrl();
+
       const body =
          new HttpParams()
-         .set('opId', sampleOpId.toString())
-         .set('typeCode', testTypeCode)
-         .set('beginDate', testBeginDate);
+         .set('op', sampleOp.opId.toString())
+         .set('tc', testTypeCode)
+         .set('bd', testBeginDate)
+         .set('stn', sampleOp.sampleTrackingNum.toString())
+         .set('stsn', sampleOp.sampleTrackingSubNum.toString())
+         .set('pac', sampleOp.pac)
+         .set('pn', sampleOp.productName)
+         .set('lid', sampleOp.lid)
+         .set('paf', sampleOp.paf)
+         .set('s', sampleOp.subject)
+      ;
 
       return this.httpClient.post<CreatedTestMetadata>(url, body);
    }

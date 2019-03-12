@@ -170,31 +170,38 @@ create table TEST
   ID                       NUMBER(19) generated as identity
     primary key,
   BEGIN_DATE               DATE,
-  CREATED                  TIMESTAMP(6)      not null,
-  CREATED_BY_EMP_ID        NUMBER(19)        not null
+  CREATED                  TIMESTAMP(6)       not null,
+  CREATED_BY_EMP_ID        NUMBER(19)         not null
     constraint FK_TST_EMP_CREATED
       references EMPLOYEE,
-  LAB_GROUP_ID             NUMBER(19)        not null
+  LAB_GROUP_ID             NUMBER(19)         not null
     constraint FK_TST_LABGRP
       references LAB_GROUP,
-  LAST_SAVED               TIMESTAMP(6)      not null,
-  LAST_SAVED_BY_EMP_ID     NUMBER(19)        not null
+  LAST_SAVED               TIMESTAMP(6)       not null,
+  LAST_SAVED_BY_EMP_ID     NUMBER(19)         not null
     constraint FK_TST_EMP_LASTSAVED
       references EMPLOYEE,
+  LID                      VARCHAR2(20 char),
   NOTE                     VARCHAR2(200 char),
-  OP_ID                    NUMBER(19)        not null,
+  OP_ID                    NUMBER(19)         not null,
+  PAC                      VARCHAR2(20 char)  not null,
+  PAF                      VARCHAR2(20 char),
+  PRODUCT_NAME             VARCHAR2(500 char) not null,
   REVIEWED                 TIMESTAMP(6),
   REVIEWED_BY_EMP_ID       NUMBER(19)
     constraint FK_TST_EMP_REVIEWED
       references EMPLOYEE,
+  SAMPLE_TRACKING_NUM      NUMBER(19)         not null,
+  SAMPLE_TRACKING_SUB_NUM  NUMBER(19)         not null,
   SAVED_TO_FACTS           TIMESTAMP(6),
   SAVED_TO_FACTS_BY_EMP_ID NUMBER(19)
     constraint FK_TST_EMP_SAVEDTOFACTS
       references EMPLOYEE,
   STAGE_STATUSES_JSON      VARCHAR2(4000 char),
+  SUBJECT                  VARCHAR2(500 char),
   TEST_DATA_JSON           CLOB,
-  TEST_DATA_MD5            VARCHAR2(32 char) not null,
-  TEST_TYPE_ID             NUMBER(19)        not null
+  TEST_DATA_MD5            VARCHAR2(32 char)  not null,
+  TEST_TYPE_ID             NUMBER(19)         not null
     constraint FK_TST_TSTT
       references TEST_TYPE
 )
@@ -270,5 +277,32 @@ create index IX_TSTFILE_TSTID
 
 create index IX_TSTFILE_TESTDATAPART
   on TEST_FILE (TEST_DATA_PART)
+/
+
+create view TEST_V as
+select t.id                                                        test_id,
+       t.op_id,
+       tt.code                                                     type_code,
+       tt.name                                                     type_name,
+       tt.short_name                                               type_short_name,
+       t.created                                                   created,
+       ce.short_name                                               created_by_emp,
+       t.last_saved                                                last_saved,
+       se.short_name                                               last_saved_emp,
+       (select count(*) from test_file tf where tf.test_id = t.id) attached_files_count,
+       TO_CHAR(t.begin_date, 'YYYY-MM-DD')                         begin_date,
+       t.note,
+       t.stage_statuses_json,
+       t.reviewed,
+       re.short_name                                               reviewed_by_emp,
+       t.saved_to_facts,
+       fe.short_name                                               saved_to_facts_by_emp,
+       t.test_data_json
+from test t
+       join test_type tt on t.test_type_id = tt.id
+       join employee ce on ce.id = t.created_by_emp_id
+       join employee se on se.id = t.last_saved_by_emp_id
+       left join employee re on re.id = t.reviewed_by_emp_id
+       left join employee fe on fe.id = t.last_saved_by_emp_id
 /
 
