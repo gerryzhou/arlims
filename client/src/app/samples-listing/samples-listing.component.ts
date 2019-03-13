@@ -78,13 +78,25 @@ export class SamplesListingComponent {
       this.expandedSampleOpIds = new Set(selectedSampleOpIds);
       this.visibleSampleIxs = [];
 
-      this.refreshFromLabGroupContents(labGroupContents);
+      this.refreshFromLabGroupContents(labGroupContents, this.expandedSampleOpIds);
    }
 
-   refreshFromLabGroupContents(labGroupContents: LabGroupContents)
+   refreshFromLabGroupContents
+      (
+         labGroupContents: LabGroupContents,
+         topPositionSampleOpIds: Set<number> | null // show these sample ops above others
+      )
    {
       this.labGroupTestTypes = labGroupContents.supportedTestTypes;
-      this.samples = labGroupContents.activeSamples.map(s => new SelectableSample(s));
+
+      const orderedSampleOps =
+         topPositionSampleOpIds ?
+            labGroupContents.activeSamples.filter(s => topPositionSampleOpIds.has(s.opId))
+               .concat(labGroupContents.activeSamples.filter(s => !topPositionSampleOpIds.has(s.opId)))
+            : labGroupContents.activeSamples;
+
+      this.samples = orderedSampleOps.map(s => new SelectableSample(s));
+
       this.contentsLastLoaded = moment();
       this.applyFilters();
    }
@@ -251,7 +263,7 @@ export class SamplesListingComponent {
       const reload$: Observable<void> =
          obsFrom(
             this.usrCtxSvc.refreshLabGroupContents()
-            .then(lgc => this.refreshFromLabGroupContents(lgc))
+            .then(lgc => this.refreshFromLabGroupContents(lgc, null))
          );
 
       reload$.subscribe(

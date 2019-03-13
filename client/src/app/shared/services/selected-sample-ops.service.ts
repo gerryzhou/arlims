@@ -8,7 +8,7 @@ import {SampleOp} from '../../../generated/dto';
 })
 export class SelectedSampleOpsService {
 
-   private readonly sampleOps;
+   private readonly sampleOps: BehaviorSubject<SampleOp[]>;
 
    constructor()
    {
