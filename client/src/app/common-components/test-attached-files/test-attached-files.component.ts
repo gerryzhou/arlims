@@ -63,6 +63,8 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
       )
    {
       const testAttachedFiles = <TestAttachedFiles>this.activatedRoute.snapshot.data['testAttachedFiles'];
+      this.allowDataChanges = activatedRoute.snapshot.data && activatedRoute.snapshot.data['allowDataChanges'] || false;
+
       this.attachedFiles = testAttachedFiles ? testAttachedFiles.attachedFiles : [];
       this.sampleOpTest = testAttachedFiles ? testAttachedFiles.sampleOpTest : null;
       this.testId = testAttachedFiles ? testAttachedFiles.sampleOpTest.testMetadata.testId : null;

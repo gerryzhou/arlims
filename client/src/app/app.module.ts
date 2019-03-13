@@ -38,10 +38,10 @@ import {UserContextService, LoadingStatusService, LoadingStatusInterceptor, ApiU
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
 import {TestsSearchComponent} from './tests-search/tests-search.component';
+import {TestsSearchQueryComponent} from './tests-search/query/tests-search-query.component';
 import {LoginComponent} from './login/login.component';
 import {RegistrationComponent} from './registration/registration.component';
 import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interceptor';
-import {TestsSearchQueryComponent} from './tests-search/query/tests-search-query.component';
 
 @NgModule({
    declarations: [

@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {BehaviorSubject, from as obsFrom, Observable} from 'rxjs';
+import {catchError, map, take} from 'rxjs/operators';
 
-import {AlertMessageService, TestsService} from '../shared/services';
-import {TestsSearchQuery} from './query/tests-search-query';
-import {SampleOp, SampleOpTest} from '../../generated/dto';
-import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
 import {Router} from '@angular/router';
+import {AlertMessageService, TestsService, UserContextService} from '../shared/services';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
+import {LabTestType, SampleOp, SampleOpTest} from '../../generated/dto';
+import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
+import {emptyTestsSearchQuery, TestsSearchQuery} from './query/tests-search-query';
 
 @Component({
    selector: 'app-tests-search',
@@ -16,56 +16,59 @@ import {AppInternalUrlsService} from '../shared/services/app-internal-urls.servi
 })
 export class TestsSearchComponent {
 
-   query: TestsSearchQuery;
+   readonly labTestTypes$: Observable<LabTestType[]>;
 
    readonly resultSampleOps = new BehaviorSubject<SampleOp[]>([]); // result tests organized under their samples
 
    readonly expandedSampleOpIds = new Set<number>();
 
-   readonly defaultQuery: TestsSearchQuery = {
-      searchText: null,
-      fromTimestamp: null,
-      toTimestamp: null,
-      timestampPropertyName: 'created',
-      includeStatusCodes: ['P', 'A', 'S', 'I', 'T', 'O', 'C'],
-      testTypeCode: null,
-   };
+   readonly defaultQuery: TestsSearchQuery;
+
+   numTestsInResults: number | null;
+   numSamplesInResults: number | null;
 
    constructor
       (
          private testsSvc: TestsService,
-         private alertMsgSvc: AlertMessageService,
+         private userCtxSvc: UserContextService,
          private appUrlsSvc: AppInternalUrlsService,
+         private alertMsgSvc: AlertMessageService,
          private router: Router
       )
    {
-      this.query = this.defaultQuery;
+      this.labTestTypes$ = obsFrom(userCtxSvc.getLabGroupContents().then(lgc => lgc.supportedTestTypes));
+      this.defaultQuery = emptyTestsSearchQuery();
    }
 
-   queryChanged(query: TestsSearchQuery)
-   {
-      this.query = query;
-   }
-
-   doQuery()
+   doQuery(query: TestsSearchQuery)
    {
       this.testsSvc.findTests(
-         this.query.searchText,
-         this.query.fromTimestamp,
-         this.query.toTimestamp,
-         this.query.timestampPropertyName,
-         this.query.includeStatusCodes,
-         this.query.testTypeCode ? [this.query.testTypeCode] : null,
+         query.searchText,
+         query.fromTimestamp,
+         query.toTimestamp,
+         query.timestampPropertyName,
+         query.testTypeCode ? [query.testTypeCode] : null,
       )
       .pipe(
-         map(organizeTestsBySample),
          catchError(err => {
             console.log(err);
             this.alertMsgSvc.alertDanger('Could not fetch results due to error.');
             return [];
-         })
+         }),
+         take(1),
       )
-      .subscribe(results => this.resultSampleOps.next(results));
+      .subscribe(results => this.onQueryResultsArrived(results));
+   }
+
+   private onQueryResultsArrived(results: SampleOpTest[])
+   {
+      this.numTestsInResults = results.length;
+
+      const organizedSampleOps = organizeTestsBySample(results);
+
+      this.numSamplesInResults = organizedSampleOps.length;
+
+      this.resultSampleOps.next(organizedSampleOps);
    }
 
    toggleSampleExpanded(sampleOpId: number)

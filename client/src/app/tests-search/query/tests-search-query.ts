@@ -1,6 +1,5 @@
 import {Moment} from 'moment';
 
-import {SampleOpStatusCode} from '../../shared/models/sample-op-status';
 import {TestTimestampProperty} from '../../shared/models/test-timestamp-properties';
 import {LabTestTypeCode} from '../../../generated/dto';
 
@@ -14,7 +13,16 @@ export interface TestsSearchQuery {
 
    timestampPropertyName: TestTimestampProperty;
 
-   includeStatusCodes: SampleOpStatusCode[] | null;
-
    testTypeCode: LabTestTypeCode | null;
+}
+
+export function emptyTestsSearchQuery(): TestsSearchQuery
+{
+   return {
+      searchText: null,
+      fromTimestamp: null,
+      toTimestamp: null,
+      timestampPropertyName: 'created',
+      testTypeCode: null,
+   };
 }

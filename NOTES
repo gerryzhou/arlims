@@ -1,3 +1,7 @@
+Publish to dev and test, enter some test data and try to reproduce error trying to generate pdf report.
+
+Find error in test search (examine logs).
+
 
 Try to find example of sample in 'I' status that won't accept AOAC submission with "sample analysis id is not 'I'" message.
 

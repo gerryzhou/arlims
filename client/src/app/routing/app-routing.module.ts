@@ -40,10 +40,17 @@ const routes: Routes = [
       canActivate: [AuthenticatedUserGuard],
    },
    {
-      path: 'test/:testId/attached-files',
+      path: 'test/:testId/attached-files-editor',
       component: TestAttachedFilesComponent,
       resolve: { testAttachedFiles: TestAttachedFilesResolver },
-      data: {title: 'Test-Attached Files', allowDataChanges: false},
+      data: {title: 'Test-Attached Files', allowDataChanges: true},
+      canActivate: [AuthenticatedUserGuard],
+   },
+   {
+      path: 'test/:testId/attached-files-view',
+      component: TestAttachedFilesComponent,
+      resolve: { testAttachedFiles: TestAttachedFilesResolver },
+      data: {title: 'Test-Attached Files View', allowDataChanges: false},
       canActivate: [AuthenticatedUserGuard],
    },
    {

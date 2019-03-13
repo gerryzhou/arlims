@@ -88,7 +88,6 @@ export class ApiUrlsService {
          fromTimestamp: Moment | null,
          toTimestamp: Moment | null,
          timestampProperty: string | null,
-         includeStatusCodes: SampleOpStatusCode[] | null,
          includeTestTypeCodes: LabTestTypeCode[] | null
       )
       : string
@@ -103,8 +102,6 @@ export class ApiUrlsService {
          qryParams = qryParams.append('tts', toTimestamp.toISOString());
       if ( (fromTimestamp || toTimestamp) && timestampProperty )
          qryParams = qryParams.append('tsp', timestampProperty);
-      if ( includeStatusCodes )
-         qryParams = qryParams.append('ss', JSON.stringify(includeStatusCodes));
       if ( includeTestTypeCodes )
          qryParams = qryParams.append('ltt', JSON.stringify(includeTestTypeCodes));
 

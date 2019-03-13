@@ -2,11 +2,15 @@
 
    <app-tests-search-query
       [initialQuery]="defaultQuery"
-      (queryChanged)="queryChanged($event)">
+      [labTestTypes]="labTestTypes$ | async"
+      (queryClick)="doQuery($event)">
    </app-tests-search-query>
 
-   <button mat-button class="query-button" type="button" (click)="doQuery()">Search</button>
+</div>
 
+<div class="results-summary-row" *ngIf="numTestsInResults != null">
+   {{numTestsInResults}} test{{numTestsInResults > 1 ? 's' : ''}} in
+   {{numSamplesInResults}} sample{{numSamplesInResults > 1 ? 's' : ''}}
 </div>
 
 <div>

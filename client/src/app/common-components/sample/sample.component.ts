@@ -83,7 +83,7 @@ export class SampleComponent implements OnChanges {
    factsStatusText: string;
    factsStatusCssClass: string;
 
-   displayRefreshedFromFactsTimestamp: string;
+   refreshedFromFacts: string;
 
    constructor
       (
@@ -99,11 +99,11 @@ export class SampleComponent implements OnChanges {
       this.displayFactsStatusTimestamp =
          this.sampleOp.factsStatusTimestamp ? moment(this.sampleOp.factsStatusTimestamp).format('MMM D h:mm a')
          : '';
-      this.factsStatusText = this.sampleOp.factsStatus ? factsStatusTextFromCode(this.sampleOp.factsStatus) : '';
-      this.factsStatusCssClass = this.factsStatusText.replace(/ /g, '-').toLowerCase();
-      this.displayRefreshedFromFactsTimestamp =
+      this.factsStatusText = this.sampleOp.factsStatus ? factsStatusTextFromCode(this.sampleOp.factsStatus) : null;
+      this.factsStatusCssClass = this.factsStatusText ? this.factsStatusText.replace(/ /g, '-').toLowerCase() : null;
+      this.refreshedFromFacts =
          this.sampleOp.lastRefreshedFromFactsInstant ? moment(this.sampleOp.lastRefreshedFromFactsInstant).format('h:mm a MMM D')
-         : '';
+         : null;
    }
 
    onHeaderClick()

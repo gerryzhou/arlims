@@ -1,11 +1,13 @@
-pre-enr sampling method
-  When selecting to enter subs numbers (manual entry), "extracted grams per sub" is disabled.
-  Data is complete but shows as incomplete, update stage status to consider that fewer fields are needed when testing subs.
+Tests Search
+  - Tests search should persist through navigations.
 
+  - Date range not properly inclusive of endpoints.
+    E.g. to search for single day, should specify that day at both endpoints.
+
+Commit Notes
+  Remove unsupported facts_status test search criteria, move test types fetching from test search query into parent test search component.
 
 Within-test search
-  - tests-search-query-component shouldn't do its own query for test types, should just accept this as an input.
-    From parent | async?
   - test search component needs to handle test/stage and report events from sample component children.
     Make sure any new properties are supplied as well.
   - Allow opening test data forms (staged test data entry component) in read-only mode and also to show audit data.

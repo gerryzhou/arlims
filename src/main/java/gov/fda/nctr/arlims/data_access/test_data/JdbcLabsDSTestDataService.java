@@ -795,7 +795,6 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             Optional<Instant> fromTimestamp,
             Optional<Instant> toTimestamp,
             Optional<String> testTimestampProperty,
-            Optional<List<String>> sampleOpStatusCodes,
             Optional<List<String>> labTestTypeCodes
         )
     {
@@ -815,16 +814,6 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         toTimestamp.ifPresent(tts -> {
             whereCriteria.add(tsProp + " <= :tts");
             params.addValue("tts", new java.sql.Timestamp(tts.toEpochMilli()));
-        });
-
-        sampleOpStatusCodes.ifPresent(codes -> {
-            if ( codes.isEmpty() )
-                whereCriteria.add("facts_status is null");
-            else
-            {
-                whereCriteria.add("facts_status in (:statusCodes)");
-                params.addValue("statusCodes", codes);
-            }
         });
 
         labTestTypeCodes.ifPresent(codes -> {

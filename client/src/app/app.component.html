@@ -4,15 +4,15 @@
          <button mat-button routerLink="/samples" [routerLinkActive]="['active-route']">
             <mat-icon>home</mat-icon> ALIS
          </button>
-         <button mat-button routerLink="/tests-search" [routerLinkActive]="['active-route']">
-            <mat-icon>search</mat-icon> Search
-         </button>
          <mat-menu #linksMenu="matMenu">
             <a *ngIf="authenticatedUserIsAdmin$ | async" mat-menu-item routerLink="/register-users">
                Register new users
             </a>
             <a *ngIf="authenticatedUserIsAdmin$ | async" mat-menu-item routerLink="/audit-log/review">
                Review audit log
+            </a>
+            <a *ngIf="authenticatedUserIsAdmin$" mat-menu-item routerLink="/tests-search">
+               Search for tests <mat-icon>search</mat-icon>
             </a>
             <button *ngIf="appVersion$ | async" type="button" mat-menu-item (click)="showAbout()">
                About

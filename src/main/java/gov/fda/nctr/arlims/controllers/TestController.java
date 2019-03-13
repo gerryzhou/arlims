@@ -251,11 +251,9 @@ public class TestController extends ControllerBase
             @RequestParam(value="fts", required=false) Optional<Instant> fromTimestamp,
             @RequestParam(value="tts", required=false) Optional<Instant> toTimestamp,
             @RequestParam(value="tsp", required=false) Optional<String>  timestampProperty,
-            @RequestParam(value="ss",  required=false) Optional<String>  sampleOpStatusCodesJson,
             @RequestParam(value="ltt", required=false) Optional<String>  labTestTypeCodesJson
         )
     {
-        Optional<List<String>> sampleOpStatusCodes = sampleOpStatusCodesJson.map(this::parseJsonStringArray);
         Optional<List<String>> labTestTypeCodes = labTestTypeCodesJson.map(this::parseJsonStringArray);
 
         timestampProperty.ifPresent(tsProp -> {
@@ -269,12 +267,12 @@ public class TestController extends ControllerBase
 
         Optional<String> prepdTextQuery = searchText.map(this::prepareTextQuery);
 
-        return testDataService.findTests(
+        return
+            testDataService.findTests(
                 prepdTextQuery,
                 fromTimestamp,
                 toTimestamp,
                 timestampProperty,
-                sampleOpStatusCodes,
                 labTestTypeCodes
             );
     }

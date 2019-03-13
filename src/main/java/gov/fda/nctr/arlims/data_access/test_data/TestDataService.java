@@ -57,7 +57,6 @@ public interface TestDataService
             Optional<Instant> fromTimestamp,
             Optional<Instant> toTimestamp,
             Optional<String> timestampProperty,
-            Optional<List<String>> sampleOpStatusCodes,
             Optional<List<String>> labTestTypeCodes
         );
 }

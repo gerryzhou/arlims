@@ -249,7 +249,6 @@ export class TestsService {
          fromTimestamp: Moment | null,
          toTimestamp: Moment | null,
          timestampProperty: string | null,
-         includeStatusCodes: SampleOpStatusCode[] | null,
          includeTestTypeCodes: LabTestTypeCode[] | null
       )
       : Observable<SampleOpTest[]>
@@ -260,7 +259,6 @@ export class TestsService {
             fromTimestamp,
             toTimestamp,
             timestampProperty,
-            includeStatusCodes,
             includeTestTypeCodes
          );
 

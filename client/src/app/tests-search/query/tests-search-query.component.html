@@ -1,6 +1,6 @@
 <form [formGroup]="form">
 
-   <div class="criteria-panel">
+   <div class="main-row">
 
       <div class="criteria-group search">
          <mat-icon>search</mat-icon>
@@ -41,27 +41,18 @@
          </mat-form-field>
       </div>
 
-      <mat-form-field class="criteria-group">
-         <mat-select placeholder="include statuses" [formControl]="selectedStatusesCtl" multiple>
-            <mat-select-trigger>
-               <span *ngFor="let status of selectedStatusesCtl.value" class="selected-statuses-trigger-text">
-                  {{status}}
-               </span>
-            </mat-select-trigger>
-            <mat-option *ngFor="let status of ALL_SAMPLE_OP_STATUSES" [value]="status.code">
-               {{status.displayName}} ({{status.code}})
-            </mat-option>
-         </mat-select>
-      </mat-form-field>
-
       <div class="criteria-group">
          <mat-form-field>
             <mat-select formControlName="testTypeCode" placeholder="test type">
                <mat-option [value]="null"></mat-option>
-               <mat-option *ngFor="let tt of labTestTypes$ | async" [value]="tt.code">{{tt.name}}</mat-option>
+               <mat-option *ngFor="let tt of labTestTypes" [value]="tt.code">{{tt.name}}</mat-option>
             </mat-select>
          </mat-form-field>
       </div>
+
+      <button mat-button class="query-button" type="button" (click)="onQueryClicked()">Search</button>
+
+      <button class="clear-query link" (click)="clearSearch()">clear</button>
 
    </div>
 
