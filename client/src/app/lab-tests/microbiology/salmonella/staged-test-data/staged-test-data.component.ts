@@ -208,7 +208,6 @@ export class StagedTestDataComponent implements OnInit {
          this.testIsNew = false;
       }
 
-      this.alertMsgSvc.alertSuccess('Test data saved.', true);
       this.doAfterSaveNavigation();
    }
 
