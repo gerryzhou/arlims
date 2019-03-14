@@ -25,28 +25,33 @@ export class AlertMessageService {
       });
    }
 
-   messages(): Observable<AlertMessage | null> {
+   messages(): Observable<AlertMessage | null>
+   {
       return this.subject.asObservable();
    }
 
-   alertSuccess(message: string, detailLines = null, persistThroughNavigation = false) {
+   alertSuccess(message: string, persistThroughNavigation = false, detailLines: string[] = null)
+   {
       this.persistThroughNavigation = persistThroughNavigation;
+      console.log('alertSuccess(): set this.persistThroughNavigation ', this.persistThroughNavigation);
       this.subject.next({ type: 'success', text: message, detailLines });
    }
 
-   alertInfo(message: string, detailLines = null, persistThroughNavigation = false) {
+   alertInfo(message: string, persistThroughNavigation = false, detailLines: string[] = null)
+   {
       this.persistThroughNavigation = persistThroughNavigation;
       this.subject.next({ type: 'info', text: message, detailLines });
    }
 
-   alertWarning(message: string, detailLines = null, persistThroughNavigation = false) {
+   alertWarning(message: string, persistThroughNavigation = false, detailLines: string[] = null)
+   {
       this.persistThroughNavigation = persistThroughNavigation;
       this.subject.next({ type: 'warning', text: message, detailLines });
    }
 
-   alertDanger(message: string, detailLines = null, persistThroughNavigation = false) {
+   alertDanger(message: string, persistThroughNavigation = false, detailLines: string[] = null)
+   {
       this.persistThroughNavigation = persistThroughNavigation;
       this.subject.next({ type: 'danger', text: message, detailLines });
    }
-
 }

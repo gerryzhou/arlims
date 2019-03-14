@@ -13,6 +13,31 @@ Slant and ident stages
     Preferably should remain empty until test suites are created for the Vidas positives within these stages.
   Maybe disable or hide the stage tabs when there are no Vidas positives.
 
+
+Don't auto-push after Vidas stage.
+  Just single-submit FACTS for now at WRAPUP stage.
+    Show both AOAC and BAM submissions and any errors.
+    Add button at sample level leading to page to push to FACTS (under # files).
+  VIDAS:
+            if ( this.ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData) )
+               this.submitAOACDataToFactsAsync(testData);
+  WRAPUP:
+            if ( this.vidasPositiveSampleTestUnitNumbers.length > 0 )
+            {
+               if ( this.ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData) )
+                  this.submitBAMDataToFactsAsync(testData);
+            }
+            else
+            {
+               this.alertMsgSvc.alertSuccess(
+                  'Test data saved, no positive findings are present ' +
+                  'so no FACTS submission was done.', true
+               );
+               this.doAfterSaveNavigation();
+            }
+            break;
+      }
+
 Done
 ====
 - Tweak layout in new test dialog and default to current date.
@@ -31,14 +56,6 @@ Done
 - In M-Broth stage set water bath start time to current timestamp when a water bath is selected.
 - In prep stage when selecting from FACTS transfers, set fields without prompting when there is only one transfer.
 
-
-Don't auto-push after Vidas stage.
-  Just single-submit FACTS for now at WRAPUP stage.
-    Show both AOAC and BAM submissions and any errors.
-    Add button at sample level leading to page to push to FACTS (under # files).
-  Post AOAC and BAM at once.
-    But this is test-specific, so need standard way of instantiating a test and
-    telling it to post itself (?).
 
 Identify isolates by their number not by creation timestamp.
 

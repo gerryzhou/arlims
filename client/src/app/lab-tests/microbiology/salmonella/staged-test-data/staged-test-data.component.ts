@@ -208,31 +208,8 @@ export class StagedTestDataComponent implements OnInit {
          this.testIsNew = false;
       }
 
-      switch ( this.visibleStageName() )
-      {
-         case 'VIDAS':
-            if ( this.ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData) )
-               this.submitAOACDataToFactsAsync(testData);
-            break;
-         case 'WRAPUP':
-            if ( this.vidasPositiveSampleTestUnitNumbers.length > 0 )
-            {
-               if ( this.ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData) )
-                  this.submitBAMDataToFactsAsync(testData);
-            }
-            else
-            {
-               this.alertMsgSvc.alertSuccess(
-                  'Test data saved, no positive findings are present ' +
-                  'so no FACTS submission was done.', true
-               );
-               this.doAfterSaveNavigation();
-            }
-            break;
-         default:
-            this.alertMsgSvc.alertSuccess('Test data saved.', true);
-            this.doAfterSaveNavigation();
-      }
+      this.alertMsgSvc.alertSuccess('Test data saved.', true);
+      this.doAfterSaveNavigation();
    }
 
    private submitAOACDataToFactsAsync(testData: TestData)
@@ -293,7 +270,8 @@ export class StagedTestDataComponent implements OnInit {
       )
    {
       console.log('FACTS response for AOAC submission: ', factsResponse);
-      this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
+      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
+      // this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
       this.doAfterSaveNavigation();
    }
 
@@ -303,7 +281,8 @@ export class StagedTestDataComponent implements OnInit {
        )
    {
       console.log('FACTS response for BAM submission: ', factsResponse);
-      this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
+      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
+      // this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
       this.doAfterSaveNavigation();
    }
 
@@ -345,10 +324,13 @@ export class StagedTestDataComponent implements OnInit {
    {
       const sm = testData.preEnrData.samplingMethod;
 
+      // TODO: Return messages for a dedicated display area below when this is moved to a dedicated page or component.
+
       if ( sm == null || sm.testUnitsType == null || sm.testUnitsCount <= 0 )
       {
          this.alertMsgSvc.alertWarning(
             'Vidas data was not saved to FACTS at this time for the reasons listed below.',
+            false,
             ['The sampling method data is incomplete.']
          );
 
@@ -363,6 +345,7 @@ export class StagedTestDataComponent implements OnInit {
       {
          this.alertMsgSvc.alertWarning(
             'Vidas data was not saved to FACTS at this time for the reasons listed below.',
+            false,
             ['The Vidas results data is incomplete.']
          );
 
