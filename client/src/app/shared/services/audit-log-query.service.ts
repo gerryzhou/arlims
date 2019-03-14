@@ -18,7 +18,7 @@ export class AuditLogQueryService {
 
    getEntriesForTest(testId: number)
    {
-      return this.getEntries(null,null, testId, null, true, true);
+      return this.getEntries(null, null, testId, null, true, true);
    }
 
    getEntries
