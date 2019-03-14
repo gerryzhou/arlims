@@ -63,6 +63,9 @@ export class StagePrepComponent implements OnChanges {
                case 0:
                   this.alertMsgSvc.alertInfo('No FACTS transfers found for this sample.');
                   break;
+               case 1:
+                  this.fillReceivedFields(sampleTransfers[0]);
+                  break;
                default:
                   this.promptSelectSampleTransfer(sampleTransfers).subscribe(selectedTransfers => {
                      if ( selectedTransfers )
