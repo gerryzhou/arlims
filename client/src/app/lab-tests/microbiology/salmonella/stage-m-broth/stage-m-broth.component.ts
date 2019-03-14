@@ -61,4 +61,10 @@ export class StageMBrothComponent implements OnChanges {
    {
       this.resourceAssignments.promptAssignResources(this.dialogSvc, this.alertMsgSvc);
    }
+
+   onWaterbathSelected()
+   {
+      if ( !this.form.get('waterBathStarted').value )
+         this.setStartTimeNow();
+   }
 }

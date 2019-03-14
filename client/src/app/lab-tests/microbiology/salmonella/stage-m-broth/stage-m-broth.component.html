@@ -33,7 +33,9 @@
 
       <div class="field-area" [class.conflicted]="conflicts.mBrothWaterBathId !== undefined">
          <mat-form-field>
-            <mat-select formControlName="mBrothWaterBathId" placeholder="Water bath" *ngIf="waterBaths; else textInputWaterBath">
+            <mat-select formControlName="mBrothWaterBathId"*ngIf="waterBaths; else textInputWaterBath"
+                        (selectionChange)="onWaterbathSelected()"
+                        placeholder="Water bath">
                <mat-option [value]="null"></mat-option>
                <mat-option *ngFor="let labRsc of waterBaths" [value]="labRsc.code">
                   {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}
