@@ -3,7 +3,6 @@ package gov.fda.nctr.arlims.controllers;
 import java.time.*;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.security.RolesAllowed;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,6 @@ public class AuditLogAccessController extends ControllerBase
     }
 
     @GetMapping("entries")
-    @RolesAllowed("ROLE_ADMIN")
     public List<AuditLogEntry> getAuditLogEntries
         (
             @RequestParam(value="from", required=false) Optional<Instant> fromTimestamp,
