@@ -1,16 +1,12 @@
 package gov.fda.nctr.arlims.models.dto;
 
-
-import java.time.Instant;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 public class AppVersion
 {
    @JsonAlias("git.build.time")
-   @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ", timezone = "UTC")
-   private Instant buildTimestamp;
+   private String buildTimestamp;
 
    @JsonAlias("git.build.user.email")
    private String buildUserEmail;
@@ -22,12 +18,11 @@ public class AppVersion
    private String commitId;
 
    @JsonAlias("git.commit.time")
-   @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ", timezone = "UTC")
-   private Instant commitTimestamp;
+   private String commitTimestamp;
 
    public AppVersion() {}
 
-   public Instant getBuildTimestamp() { return buildTimestamp; }
+   public String getBuildTimestamp() { return buildTimestamp; }
 
    public String getBuildUserEmail() { return buildUserEmail; }
 
@@ -35,7 +30,7 @@ public class AppVersion
 
    public String getCommitId() { return commitId; }
 
-   public Instant getCommitTimestamp() { return commitTimestamp; }
+   public String getCommitTimestamp() { return commitTimestamp; }
 
    @Override
    public String toString()
