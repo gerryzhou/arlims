@@ -40,7 +40,7 @@ const routes: Routes = [
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {
          title: 'Test Reports - Salmonella',
-         includeAuditLogEntries: true, // tell resolver to also load audit log entries
+         includeAuditLogEntries: true,
       },
    },
    {
@@ -49,7 +49,7 @@ const routes: Routes = [
       resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {
          title: 'Salmonella Test Data Review',
-         includeAuditLogEntries: true, // tell resolver to also load audit log entries
+         includeAuditLogEntries: true,
       },
    },
 ];
