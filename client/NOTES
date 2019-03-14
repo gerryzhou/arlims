@@ -1,27 +1,14 @@
+
 Tests Search
   - Tests search should persist through navigations.
-
+    Add a new Angular service to hold most recent search(es).
   - Date range not properly inclusive of endpoints.
     E.g. to search for single day, should specify that day at both endpoints.
 
-Commit Notes
-  Remove unsupported facts_status test search criteria, move test types fetching from test search query into parent test search component.
-
-Within-test search
-  - test search component needs to handle test/stage and report events from sample component children.
-    Make sure any new properties are supplied as well.
-  - Allow opening test data forms (staged test data entry component) in read-only mode and also to show audit data.
-
-Received auto-fill: if only one option, just auto-fill without dialog.
-
-Identify problem in pre-enr sampling method panel (demoed on Chrome) where some fields are enabled/disabled when they shouldn't be.
-
-Maybe disable or remove slant/ident stage icons if there are no positives.
-
-In M-broth stage, populate timestamp automatically when water bath is selected.
+Sort person inbox, allow user to control which properties to sort by.
 
 Slant and ident stages
-  Should be empty at least until there are Vidas positives.
+  Stage status should be empty at least until there are Vidas positives.
     Preferably should remain empty until test suites are created for the Vidas positives within these stages.
   Maybe disable or hide the stage tabs when there are no Vidas positives.
 
@@ -39,6 +26,9 @@ Done
   - Sync selected statuses to and from local storage via new Angular service.
 - Add application version dialog with information provided by version control system as part of build process.
 - Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
+- Re-enable within-tests search feature.
+- In M-Broth stage set water bath start time to current timestamp when a water bath is selected.
+- In prep stage when selecting from FACTS transfers, set fields without prompting when there is only one transfer.
 
 
 Don't auto-push after Vidas stage.
