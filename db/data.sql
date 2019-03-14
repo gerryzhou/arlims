@@ -18,6 +18,10 @@ insert into employee_role(emp_id, role_id)
   values(1,1);
 insert into employee_role(emp_id, role_id)
   values(1,2);
+insert into employee_role(emp_id, role_id)
+  values(2,1);
+insert into employee_role(emp_id, role_id)
+  values(2,2);
 
 insert into lab_resource(code, resource_type, lab_group_id, description)
   values('ARL00424', 'BAL', 1, null);
