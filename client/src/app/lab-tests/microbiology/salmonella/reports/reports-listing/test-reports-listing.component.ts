@@ -38,10 +38,13 @@ export class TestReportsListingComponent
       const reportTestData = makePdfReportData(this.testData, this.auditLogEntries);
 
       const testId = this.sampleOpTest.testMetadata.testId;
+      const sample = this.sampleOpTest.sampleOp;
+      const sampleNum = sample.sampleTrackingNum + '-' + sample.sampleTrackingSubNum;
+      const paf = sample.paf || '';
 
       this.testsSvc.getTestReportBlobForPostedTestData(testId, IMP_SLM_VIDAS_PDF_REPORT_NAME, reportTestData)
          .pipe(
-            map(blob => FileSaver.saveAs(blob, `imp slm vidas (test ${testId}).pdf`, true))
+            map(blob => FileSaver.saveAs(blob, `${sampleNum}_${paf}_SLM.pdf`, true))
          )
          .subscribe();
    }
