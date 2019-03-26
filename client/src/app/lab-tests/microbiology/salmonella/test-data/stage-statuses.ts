@@ -178,7 +178,8 @@ function posContStatusCode
    : FieldValuesStatusCode
 {
    const positivesData = testData.posContData;
-   if ( positivesData == null )
+
+   if ( positivesData.continuationControls == null && positivesData.testUnitsContinuationTests == null )
       return 'e';
 
    const testUnitsStatus =

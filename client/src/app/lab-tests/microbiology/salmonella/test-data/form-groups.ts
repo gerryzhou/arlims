@@ -103,26 +103,28 @@ export function makeTestDataFormGroup
    });
 }
 
-export function makePositivesContinuationDataFormGroup(posContData: PositivesContinuationData | null, username: string): FormGroup
+export function makePositivesContinuationDataFormGroup(posContData: PositivesContinuationData, username: string): FormGroup
 {
    const formValidatorFunctions = [];  // Put form-level validation here if any.
 
-   if ( posContData == null )
+   if ( posContData.continuationControls == null && posContData.testUnitsContinuationTests == null )
       return new FormGroup({}, formValidatorFunctions);
+   else
+   {
+      const testUnitsContinuationTests =
+         makeTestUnitsContinuationTestsFormGroup(posContData.testUnitsContinuationTests || {});
 
-   const testUnitsContinuationTests =
-      makeTestUnitsContinuationTestsFormGroup(posContData.testUnitsContinuationTests || {});
+      const continuationControls =
+         makeContinuationControlsFormGroup(posContData.continuationControls || makeEmptyContinuationControls(username));
 
-   const continuationControls =
-      makeContinuationControlsFormGroup(posContData.continuationControls || makeEmptyContinuationControls(username));
-
-   return new FormGroup(
-      {
-         testUnitsContinuationTests,
-         continuationControls
-      },
-      formValidatorFunctions
-   );
+      return new FormGroup(
+         {
+            testUnitsContinuationTests,
+            continuationControls
+         },
+         formValidatorFunctions
+      );
+   }
 }
 
 export function makeTestUnitsContinuationTestsFormGroup(testUnitsContinuationTests: ContinuationTestssByTestUnitNum): FormGroup

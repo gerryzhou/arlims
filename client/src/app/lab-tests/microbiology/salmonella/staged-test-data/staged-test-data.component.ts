@@ -211,6 +211,49 @@ export class StagedTestDataComponent implements OnInit {
       this.doAfterSaveNavigation();
    }
 
+/* TODO: FACTS test submission methods (Micro/SLM). Maybe move this somewhere else when feature is re-enabled.
+   private ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData: TestData): boolean
+   {
+      const sm = testData.preEnrData.samplingMethod;
+
+      // TODO: Return messages for a dedicated display area below when this is moved to a dedicated page or component.
+
+      if ( sm == null || sm.testUnitsType == null || sm.testUnitsCount <= 0 )
+      {
+         this.alertMsgSvc.alertWarning(
+            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
+            false,
+            ['The sampling method data is incomplete.']
+         );
+
+         return false;
+      }
+
+      const vidas = testData.vidasData;
+
+      if ( vidas.testUnitDetections == null ||
+         vidas.testUnitDetections.length === 0 ||
+         vidas.testUnitDetections.some(v => v == null) )
+      {
+         this.alertMsgSvc.alertWarning(
+            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
+            false,
+            ['The Vidas results data is incomplete.']
+         );
+
+         return false;
+      }
+
+      return true;
+   }
+
+   private ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData: TestData): boolean
+   {
+      // TODO: Decide required items from test data for BAM submission and check here.
+      return true;
+   }
+
+
    private submitAOACDataToFactsAsync(testData: TestData)
    {
       this.factsPostingService.submitAOACAnalysisResults(
@@ -226,6 +269,17 @@ export class StagedTestDataComponent implements OnInit {
       );
    }
 
+   private onAOACFactsSubmitResponseReceived
+   (
+      factsResponse: CreatedSampleAnalysisMicrobiology
+   )
+   {
+      console.log('FACTS response for AOAC submission: ', factsResponse);
+      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
+      // this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
+      this.doAfterSaveNavigation();
+   }
+
    private submitBAMDataToFactsAsync(testData: TestData)
    {
       this.factsPostingService.submitBAMAnalysisResults(
@@ -239,6 +293,29 @@ export class StagedTestDataComponent implements OnInit {
          err => this.onFactsSaveError(err)
       );
    }
+
+   private onBAMFactsSubmitResponseReceived
+   (
+      factsResponse: CreatedSampleAnalysisMicrobiology
+   )
+   {
+      console.log('FACTS response for BAM submission: ', factsResponse);
+      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
+      // this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
+      this.doAfterSaveNavigation();
+   }
+
+   private onFactsSaveError(err)
+   {
+      console.log('Error occurred while trying to post data to FACTS, details below:');
+      console.log(err);
+
+      this.alertMsgSvc.alertDanger(
+         'An error occurred while trying to post data to FACTS. ' +
+         'The data may not have been received properly by FACTS.'
+      );
+   }
+*/
 
    private onTestDataSaveConflict(saveResult: SaveResult)
    {
@@ -263,47 +340,13 @@ export class StagedTestDataComponent implements OnInit {
      this.alertMsgSvc.alertWarning(msg);
    }
 
-   private onAOACFactsSubmitResponseReceived
-      (
-         factsResponse: CreatedSampleAnalysisMicrobiology
-      )
-   {
-      console.log('FACTS response for AOAC submission: ', factsResponse);
-      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
-      // this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
-      this.doAfterSaveNavigation();
-   }
-
-   private onBAMFactsSubmitResponseReceived
-       (
-          factsResponse: CreatedSampleAnalysisMicrobiology
-       )
-   {
-      console.log('FACTS response for BAM submission: ', factsResponse);
-      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
-      // this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
-      this.doAfterSaveNavigation();
-   }
-
    private onTestDataSaveError(err)
    {
-      console.log('Error occurred while trying to save test data, details below:');
-      console.log(err);
+      console.log('Error occurred while trying to save test data, details below:\n', err);
 
       this.alertMsgSvc.alertDanger(
          'An error occurred while trying to save test data. ' +
          'The test data may not have been saved.'
-      );
-   }
-
-   private onFactsSaveError(err)
-   {
-      console.log('Error occurred while trying to post data to FACTS, details below:');
-      console.log(err);
-
-      this.alertMsgSvc.alertDanger(
-         'An error occurred while trying to post data to FACTS. ' +
-         'The data may not have been received properly by FACTS.'
       );
    }
 
@@ -316,48 +359,6 @@ export class StagedTestDataComponent implements OnInit {
          'An error occurred while trying to set FACTS status to in-progress. ' +
          'The status update may not have been received properly by FACTS.'
       );
-   }
-
-
-   private ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData: TestData): boolean
-   {
-      const sm = testData.preEnrData.samplingMethod;
-
-      // TODO: Return messages for a dedicated display area below when this is moved to a dedicated page or component.
-
-      if ( sm == null || sm.testUnitsType == null || sm.testUnitsCount <= 0 )
-      {
-         this.alertMsgSvc.alertWarning(
-            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
-            false,
-            ['The sampling method data is incomplete.']
-         );
-
-         return false;
-      }
-
-      const vidas = testData.vidasData;
-
-      if ( vidas.testUnitDetections == null ||
-           vidas.testUnitDetections.length === 0 ||
-           vidas.testUnitDetections.some(v => v == null) )
-      {
-         this.alertMsgSvc.alertWarning(
-            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
-            false,
-            ['The Vidas results data is incomplete.']
-         );
-
-         return false;
-      }
-
-      return true;
-   }
-
-   private ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData: TestData): boolean
-   {
-      // TODO: Decide required items from test data for BAM submission and check here.
-      return true;
    }
 
    hasUnsavedChanges(): boolean

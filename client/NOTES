@@ -1,3 +1,11 @@
+
+
+PRE-ENR
+  Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
+  sampleTestUnitsChange event in stage pre enr component.
+
+BAM data submission: Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
+
 Submit employee work hours to FACTS in wrapup via new button.
 
 Tests Search
@@ -8,11 +16,7 @@ Tests Search
 
 Sort person inbox, allow user to control which properties to sort by.
 
-Slant and ident stages
-  Stage status should be empty at least until there are Vidas positives.
-    Preferably should remain empty until test suites are created for the Vidas positives within these stages.
-  Maybe disable or hide the stage tabs when there are no Vidas positives.
-
+Improve error message: "Failed to delete test [Object object]"
 
 Don't auto-push after Vidas stage.
   Just single-submit FACTS for now at WRAPUP stage.
@@ -55,7 +59,7 @@ Done
 - Re-enable within-tests search feature.
 - In M-Broth stage set water bath start time to current timestamp when a water bath is selected.
 - In prep stage when selecting from FACTS transfers, set fields without prompting when there is only one transfer.
-
+- Rename pdf test report output file.
 
 Identify isolates by their number not by creation timestamp.
 

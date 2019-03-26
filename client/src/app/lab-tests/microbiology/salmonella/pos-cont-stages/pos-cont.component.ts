@@ -4,8 +4,14 @@ import {Subscription} from 'rxjs';
 
 import {arraysEqual} from '../../../../shared/util/data-objects';
 import {
-   makeEmptyContinuationControls, makeEmptySelectiveAgarsTestSuite, makeContinuationControlsFormGroup, makeContinuationTestsFormGroup,
-   makeTestUnitsContinuationTestsFormGroup, PositivesContinuationData, ContinuationTests, countIsolates,
+   makeEmptyContinuationControls,
+   makeEmptySelectiveAgarsTestSuite,
+   makeContinuationControlsFormGroup,
+   makeContinuationTestsFormGroup,
+   makeTestUnitsContinuationTestsFormGroup,
+   countIsolates,
+   PositivesContinuationData,
+   ContinuationTests
 } from '../test-data';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {TestConfig} from '../test-config';
@@ -107,6 +113,7 @@ export class PosContComponent implements OnChanges {
    addUnrepresentedVidasPositivesContinuationTestsFormGroups()
    {
       let testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup || null;
+
       if ( !testUnitsFormGroup )
       {
          this.initFormGroup();

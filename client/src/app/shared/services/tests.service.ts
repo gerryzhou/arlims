@@ -17,7 +17,6 @@ import {
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
-import {SampleOpStatusCode} from '../models/sample-op-status';
 
 @Injectable({
   providedIn: 'root'

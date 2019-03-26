@@ -71,8 +71,9 @@ export interface VidasData {
 
 export interface PositivesContinuationData
 {
-   testUnitsContinuationTests: ContinuationTestssByTestUnitNum;
-   continuationControls: ContinuationControls;
+   // These fields Should be both present or both absent.
+   testUnitsContinuationTests?: ContinuationTestssByTestUnitNum;
+   continuationControls?: ContinuationControls;
 }
 
 export interface ContinuationTestssByTestUnitNum {
@@ -169,7 +170,7 @@ export function emptyTestData(): TestData {
       selEnrData: {},
       mBrothData: {},
       vidasData: {},
-      posContData: null,
+      posContData: {},
       wrapupData: {
          testTimeCharges: {}
       },
