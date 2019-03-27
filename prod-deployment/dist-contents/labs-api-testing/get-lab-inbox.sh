@@ -5,4 +5,4 @@ curl \
   -H "Authorization: Basic <SEE APP DEBUG LOG FOR VALUE>" \
   -H "sourceApplicationId: 0757" \
   -H "sourceTransactionId: A3WDBHDA${rand}" \
-  "http://dih-svc.test.fda.gov/LabsDataService/api/LabsInbox?accomplishingOrgName=ARKL&statusCodes=S,A,I,O&maxRecords=5"
+  "http://dih-svc.dev.fda.gov/LabsDataService/api/LabsInbox?accomplishingOrgName=ARKL&statusCodes=S,A,I,O&maxRecords=5"

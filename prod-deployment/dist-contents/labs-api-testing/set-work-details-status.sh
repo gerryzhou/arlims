@@ -6,7 +6,7 @@ curl -i -d @- \
   -H "Authorization: Basic ..." \
   -H "sourceApplicationId: 0757" \
   -H "sourceTransactionId: A3WDBHDA${rand}" \
-  "http://dih-svc.dev/LabsDataService/api/WorkDetails" <<REQBODY
+  "http://dih-svc.dev.fda.gov/LabsDataService/api/WorkDetails" <<REQBODY
 {
   "operationId":8646420,
   "assignedToPersonId": 472629,

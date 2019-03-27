@@ -5,5 +5,4 @@ curl \
   -H "Authorization: Basic ..." \
   -H "sourceApplicationId: 0757" \
   -H "sourceTransactionId: A3WDBHDA${rand}" \
-  "http://dih-svc.test.fda.gov/LabsDataService/api/SampleAnalyses/$1"
-
+  "http://dih-svc.dev.fda.gov/LabsDataService/api/SampleAnalyses?operationId=$1"
