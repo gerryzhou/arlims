@@ -229,7 +229,7 @@ class AcroformReportService
 
     private String sampleNum(LabTestMetadata testMetadata)
     {
-        return testMetadata.getSampleTrackingNum() + "-" + testMetadata.getSampleTrackingSubNum();
+        return testMetadata.getSampleTrackingNumber() + "-" + testMetadata.getSampleTrackingSubNumber();
     }
 }
 

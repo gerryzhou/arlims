@@ -2,21 +2,20 @@ package gov.fda.nctr.arlims.data_access.facts.models.dto;
 
 import java.time.Instant;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
+// {"sampleTrackingNumber":855957,"leadIndicator":"Y","operationCode":"43","personId":472629,"rvMeaning":"In Progress","sampleAnalysisId":889832,"sampleTrackingSubNumber":0,"statusCode":"I","statusDate":"2018-10-26 00:00:00.000-0400","workDetailsId":8539216,"operationId":8651834,"workRequestId":11657153,"assignedToFirstName":"Tripti","assignedToLastName":"Parajuli","assignedToMiddleName":"T","pacCode":"56008H","pacCodeDesc":"IMPORTED DRUGS (DPS)","cfsanProductDesc":"Bayer Asprin 100 mg","problemAreaFlag":"MIC","lidCode":"M","samplingDistrictOrgId":10020,"samplingDistrictOrgName":"DNEI","workAssignmentDate":"2018-10-26"}
 public class EmployeeInboxItem
 {
     private Long operationId;
 
-    private Long sampleTrackingNum;
+    private Long sampleTrackingNumber;
 
     private Long sampleTrackingSubNumber;
 
     private Long sampleAnalysisId;
 
-    @JsonAlias("cfsanPrductDescription")
     private String cfsanProductDesc;
 
     private String lidCode;
@@ -32,13 +31,13 @@ public class EmployeeInboxItem
 
     private String subjectText;
 
-    private String remarksText;
+    private String remarks;
 
     private long personId;
-    private String firstName;
-    private String lastName;
-    private String mdlIntlName;
-    private String leadInd;
+    private String assignedToFirstName;
+    private String assignedToLastName;
+    private String assignedToMiddleName;
+    private String leadIndicator;
 
 
     protected EmployeeInboxItem() {}
@@ -46,7 +45,7 @@ public class EmployeeInboxItem
 
     public Long getOperationId() { return operationId; }
 
-    public Long getSampleTrackingNum() { return sampleTrackingNum; }
+    public Long getSampleTrackingNumber() { return sampleTrackingNumber; }
 
     public Long getSampleTrackingSubNumber() { return sampleTrackingSubNumber; }
 
@@ -66,24 +65,24 @@ public class EmployeeInboxItem
 
     public String getSubjectText() { return subjectText; }
 
-    public String getRemarksText() { return remarksText; }
+    public String getRemarks() { return remarks; }
 
     public long getPersonId() { return personId; }
 
-    public String getFirstName() { return firstName; }
+    public String getAssignedToFirstName() { return assignedToFirstName; }
 
-    public String getLastName() { return lastName; }
+    public String getAssignedToLastName() { return assignedToLastName; }
 
-    public String getMdlIntlName() { return mdlIntlName; }
+    public String getAssignedToMiddleName() { return assignedToMiddleName; }
 
-    public String getLeadInd() { return leadInd; }
+    public String getLeadIndicator() { return leadIndicator; }
 
     @Override
     public String toString()
     {
         return "EmployeeInboxItem{" +
         "operationId=" + operationId +
-        ", sampleTrackingNum=" + sampleTrackingNum +
+        ", sampleTrackingNumber=" + sampleTrackingNumber +
         ", sampleTrackingSubNumber=" + sampleTrackingSubNumber +
         ", sampleAnalysisId=" + sampleAnalysisId +
         ", cfsanProductDesc='" + cfsanProductDesc + '\'' +
@@ -93,12 +92,12 @@ public class EmployeeInboxItem
         ", statusCode='" + statusCode + '\'' +
         ", statusDate=" + statusDate +
         ", subjectText='" + subjectText + '\'' +
-        ", remarksText='" + remarksText + '\'' +
+        ", remarks='" + remarks + '\'' +
         ", personId=" + personId +
-        ", firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        ", mdlIntlName='" + mdlIntlName + '\'' +
-        ", leadInd='" + leadInd + '\'' +
+        ", assignedToFirstName='" + assignedToFirstName + '\'' +
+        ", assignedToLastName='" + assignedToLastName + '\'' +
+        ", assignedToMiddleName='" + assignedToMiddleName + '\'' +
+        ", leadIndicator='" + leadIndicator + '\'' +
         '}';
     }
 }

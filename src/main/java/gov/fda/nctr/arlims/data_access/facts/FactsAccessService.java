@@ -16,11 +16,11 @@ public interface FactsAccessService
 {
     CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems(long employeeId, Optional<List<String>> statusCodes);
 
-    CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, List<String> statusCodes);
+    CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, Optional<List<String>> statusCodes);
 
     CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId);
 
-    CompletableFuture<List<SampleTransfer>> getSampleTransfers(long sampleTrackingNum, Optional<Long> toPersonId);
+    CompletableFuture<List<SampleTransfer>> getSampleTransfers(long sampleTrackingNumber, Optional<Long> toPersonId);
 
     CompletableFuture<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalysis(MicrobiologySampleAnalysis analysis);
 

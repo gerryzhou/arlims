@@ -11,9 +11,9 @@ public class LabInboxItem
 {
     private Long operationId;
 
-    private Long sampleTrackingNum;
+    private Long sampleTrackingNumber;
 
-    private Long sampleTrackingSubNum;
+    private Long sampleTrackingSubNumber;
 
     private String cfsanProductDesc;
 
@@ -28,7 +28,7 @@ public class LabInboxItem
 
     private String problemAreaFlag;
 
-    private Long workRqstId;
+    private Long workRequestId;
 
     private String operationCode;
 
@@ -40,15 +40,13 @@ public class LabInboxItem
 
     private LocalDate scheduledCompletionDate;
 
-    private String accomplishingOrg;
+    private String accomplishingOrgName;
 
     private Long accomplishingOrgId;
 
-    private Long fdaOrganizationId;
-
     private String responsibleFirmCode;
 
-    private String assignedToLeadInd;
+    private String leadIndicator;
 
     private Long assignedToPersonId;
 
@@ -56,19 +54,19 @@ public class LabInboxItem
 
     private String assignedToLastName;
 
-    private String assignedToStatusCode;
+    private String assignmentStatusCode;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
-    private Instant assignedToStatusDate;
+    private Instant assignmentStatusDate;
 
-    private LocalDate assignedToWorkAssignmentDate;
+    private LocalDate workAssignmentDate;
 
 
     protected LabInboxItem() {}
 
-    public Long getSampleTrackingNum() { return sampleTrackingNum; }
+    public Long getSampleTrackingNumber() { return sampleTrackingNumber; }
 
-    public Long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
+    public Long getSampleTrackingSubNumber() { return sampleTrackingSubNumber; }
 
     public String getCfsanProductDesc() { return cfsanProductDesc; }
 
@@ -84,7 +82,7 @@ public class LabInboxItem
 
     public Long getOperationId() { return operationId; }
 
-    public Long getWorkRqstId() { return workRqstId; }
+    public Long getWorkRequestId() { return workRequestId; }
 
     public String getOperationCode() { return operationCode; }
 
@@ -96,11 +94,9 @@ public class LabInboxItem
 
     public LocalDate getScheduledCompletionDate() { return scheduledCompletionDate; }
 
-    public String getAccomplishingOrg() { return accomplishingOrg; }
+    public String getAccomplishingOrgName() { return accomplishingOrgName; }
 
     public Long getAccomplishingOrgId() { return accomplishingOrgId; }
-
-    public Long getFdaOrganizationId() { return fdaOrganizationId; }
 
     public String getResponsibleFirmCode() { return responsibleFirmCode; }
 
@@ -110,19 +106,19 @@ public class LabInboxItem
 
     public String getAssignedToLastName() { return assignedToLastName; }
 
-    public String getAssignedToLeadInd() { return assignedToLeadInd; }
+    public String getLeadIndicator() { return leadIndicator; }
 
-    public String getAssignedToStatusCode() { return assignedToStatusCode; }
+    public String getAssignmentStatusCode() { return assignmentStatusCode; }
 
-    public Instant getAssignedToStatusDate() { return assignedToStatusDate; }
+    public Instant getAssignmentStatusDate() { return assignmentStatusDate; }
 
-    public LocalDate getAssignedToWorkAssignmentDate() { return assignedToWorkAssignmentDate; }
+    public LocalDate getWorkAssignmentDate() { return workAssignmentDate; }
 
     public boolean hasSameSampleAssignment(LabInboxItem item)
     {
         return
-            Objects.equals(sampleTrackingNum, item.getSampleTrackingNum()) &&
-            Objects.equals(sampleTrackingSubNum, item.getSampleTrackingSubNum()) &&
+            Objects.equals(sampleTrackingNumber, item.getSampleTrackingNumber()) &&
+            Objects.equals(sampleTrackingSubNumber, item.getSampleTrackingSubNumber()) &&
             Objects.equals(getAssignedToPersonId(), item.getAssignedToPersonId());
     }
 
@@ -130,8 +126,8 @@ public class LabInboxItem
     public String toString()
     {
         return "LabInboxItem{" +
-        "sampleTrackingNum=" + sampleTrackingNum +
-        ", sampleTrackingSubNum=" + sampleTrackingSubNum +
+        "sampleTrackingNumber=" + sampleTrackingNumber +
+        ", sampleTrackingSubNumber=" + sampleTrackingSubNumber +
         ", cfsanProductDesc='" + cfsanProductDesc + '\'' +
         ", statusCode='" + statusCode + '\'' +
         ", statusDate=" + statusDate +
@@ -139,21 +135,20 @@ public class LabInboxItem
         ", pacCode='" + pacCode + '\'' +
         ", problemAreaFlag='" + problemAreaFlag + '\'' +
         ", operationId=" + operationId +
-        ", workRqstId=" + workRqstId +
+        ", workRequestId=" + workRequestId +
         ", operationCode='" + operationCode + '\'' +
         ", sampleAnalysisId=" + sampleAnalysisId +
         ", requestedOperationNum=" + requestedOperationNum +
         ", requestDate=" + requestDate +
         ", scheduledCompletionDate=" + scheduledCompletionDate +
-        ", accomplishingOrg='" + accomplishingOrg + '\'' +
+        ", accomplishingOrgName='" + accomplishingOrgName + '\'' +
         ", accomplishingOrgId=" + accomplishingOrgId +
-        ", fdaOrganizationId=" + fdaOrganizationId +
         ", responsibleFirmCode='" + responsibleFirmCode + '\'' +
         ", assignedToPersonId=" + assignedToPersonId +
-        ", assignedToLeadInd='" + assignedToLeadInd + '\'' +
-        ", assignedToStatusCode='" + assignedToStatusCode + '\'' +
-        ", assignedToStatusDate=" + assignedToStatusDate +
-        ", assignedToWorkAssignmentDate=" + assignedToWorkAssignmentDate +
+        ", leadIndicator='" + leadIndicator + '\'' +
+        ", assignmentStatusCode='" + assignmentStatusCode + '\'' +
+        ", assignmentStatusDate=" + assignmentStatusDate +
+        ", workAssignmentDate=" + workAssignmentDate +
         '}';
     }
 

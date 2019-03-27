@@ -27,15 +27,15 @@ public class FactsController extends ControllerBase
         this.factsService = factsService;
     }
 
-    @GetMapping("/samples/{sampleTrackingNum:\\d+}/transfers")
+    @GetMapping("/samples/{sampleTrackingNumber:\\d+}/transfers")
     public List<SampleTransfer> getSampleTransfers
         (
-            @PathVariable("sampleTrackingNum") long sampleTrackingNum,
+            @PathVariable("sampleTrackingNumber") long sampleTrackingNumber,
             @RequestParam(value = "to", required = false) Optional<Long> toPersonId
         )
         throws ExecutionException, InterruptedException
     {
-        return factsService.getSampleTransfers(sampleTrackingNum, toPersonId).get();
+        return factsService.getSampleTransfers(sampleTrackingNumber, toPersonId).get();
     }
 
     @PostMapping("/sample-analysis/micro")

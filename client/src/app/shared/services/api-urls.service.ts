@@ -148,12 +148,12 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/facts/sample-op/${opId}/work-status/${factsPersonId}`);
    }
 
-   factsSampleTransfersUrl(sampleTrackingNum: number, toPersonId: number | null)
+   factsSampleTransfersUrl(sampleTrackingNumber: number, toPersonId: number | null)
    {
       const params = toPersonId ? new HttpParams().append('to', toPersonId.toString()) : null;
 
       return this.location.prepareExternalUrl(
-         `/api/facts/samples/${sampleTrackingNum}/transfers` + (params ? '?' + params.toString() : '')
+         `/api/facts/samples/${sampleTrackingNumber}/transfers` + (params ? '?' + params.toString() : '')
       );
    }
 

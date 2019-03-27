@@ -1,5 +1,3 @@
-
-
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
   sampleTestUnitsChange event in stage pre enr component.
@@ -59,7 +57,7 @@ Done
 - Re-enable within-tests search feature.
 - In M-Broth stage set water bath start time to current timestamp when a water bath is selected.
 - In prep stage when selecting from FACTS transfers, set fields without prompting when there is only one transfer.
-- Rename pdf test report output file.
+- Rename pdf test report output file to include sample number, paf, and test type.
 
 Identify isolates by their number not by creation timestamp.
 

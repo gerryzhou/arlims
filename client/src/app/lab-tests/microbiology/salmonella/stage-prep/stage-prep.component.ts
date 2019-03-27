@@ -56,7 +56,7 @@ export class StagePrepComponent implements OnChanges {
 
    promptGetReceivedFieldsFromFacts()
    {
-      this.generalFactsService.getSampleTransfers(this.sampleOp.sampleTrackingNum, null).subscribe(
+      this.generalFactsService.getSampleTransfers(this.sampleOp.sampleTrackingNumber, null).subscribe(
          sampleTransfers => {
             switch ( sampleTransfers.length )
             {

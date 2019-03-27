@@ -27,10 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import static org.springframework.http.HttpMethod.GET;
 
 import org.hobsoft.spring.resttemplatelogger.LoggingCustomizer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.*;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.*;
@@ -42,7 +39,7 @@ import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnaly
 
 
 @Service
-@Profile({"!dev"}) // LABS-DS api is unreachable from dev workstation (as opposed to dev server).
+@Profile({"!fake-labsds"})
 public class LabsDSFactsAccessService extends ServiceBase implements FactsAccessService
 {
     private final FactsApiConfig apiConfig;
@@ -72,6 +69,8 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             RestTemplateBuilder restTemplateBuilder
         )
     {
+        log.info("Initializing LABS-DS access service.");
+
         this.apiConfig = apiConfig;
         this.restTemplate =
             restTemplateBuilder
@@ -96,7 +95,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         this.secureRandom = new SecureRandom();
 
-        ObjectMapper jsonSerializer = Jackson2ObjectMapperBuilder.json().build();
+        ObjectMapper jsonSerializer = Jackson2ObjectMapperBuilder.json().failOnUnknownProperties(true).build();
         this.jsonReader = jsonSerializer.reader();
         this.jsonWriter = jsonSerializer.writer();
     }
@@ -110,9 +109,9 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         )
     {
         String includeFields =
-          "operationId,sampleTrackingNum,sampleTrackingSubNumber,sampleAnalysisId,cfsanPrductDescription,lidCode," +
-          "problemAreaFlag,pacCode,statusCode,statusDate,subjectText,remarksText,personId,firstName,lastName," +
-          "mdlIntlName,leadInd";
+            "operationId,sampleTrackingNumber,sampleTrackingSubNumber,sampleAnalysisId,cfsanProductDesc,lidCode," +
+            "problemAreaFlag,pacCode,statusCode,statusDate,subjectText,remarks,personId,assignedToFirstName," +
+            "assignedToLastName,assignedToMiddleName,leadIndicator";
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
@@ -138,7 +137,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     public CompletableFuture<List<LabInboxItem>> getLabInboxItems
         (
             String orgName,
-            List<String> statusCodes
+            Optional<List<String>> statusCodes
         )
     {
         Optional<String> minAssignedToStatusDateStr = apiConfig.getLabInboxAssignedStatusAgeCutoffDays() > 0 ?
@@ -147,21 +146,22 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             : Optional.empty();
 
         String includeFields =
-            "operationId,sampleTrackingNum,sampleTrackingSubNum,cfsanProductDesc,statusCode,statusDate,subject," +
-            "pacCode,problemAreaFlag,workRqstId,operationCode,sampleAnalysisId,requestedOperationNum,requestDate," +
-            "scheduledCompletionDate,accomplishingOrg,accomplishingOrgId,fdaOrganizationId,responsibleFirmCode," +
-            "assignedToLeadInd,assignedToPersonId,assignedToFirstName,assignedToLastName,assignedToStatusCode," +
-            "assignedToStatusDate,assignedToWorkAssignmentDate";
+            "operationId,sampleTrackingNumber,sampleTrackingSubNumber,cfsanProductDesc,statusCode,statusDate," +
+            "subject,pacCode,problemAreaFlag,workRequestId,operationCode,sampleAnalysisId,requestedOperationNum," +
+            "requestDate,scheduledCompletionDate,accomplishingOrgName,accomplishingOrgId,responsibleFirmCode," +
+            "leadIndicator,assignedToPersonId,assignedToFirstName,assignedToLastName,assignmentStatusCode," +
+            "assignmentStatusDate,workAssignmentDate";
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
             .queryParam("accomplishingOrgName", orgName)
-            .queryParam("statusCodes", String.join(",", statusCodes))
             .queryParam("objectFilters", includeFields);
 
-        minAssignedToStatusDateStr.ifPresent(cutoffDateStr ->
-            uriBldr.queryParam("statusDateFrom", cutoffDateStr)
-        );
+        if ( statusCodes.isPresent() )
+            uriBldr = uriBldr.queryParam("statusCodes", String.join(",", statusCodes.get()));
+
+        if ( minAssignedToStatusDateStr.isPresent() )
+            uriBldr = uriBldr.queryParam("statusDateFrom", minAssignedToStatusDateStr.get());
 
         String uri = uriBldr.build(false).encode().toUriString();
 
@@ -182,7 +182,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     public CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId)
     {
         String includeFields =
-            "operationId,sampleTrackingNum,sampleTrackingSubNumber,programAssignmentCode,problemAreaFlag," +
+            "operationId,sampleTrackingNumber,sampleTrackingSubNumber,programAssignmentCode,problemAreaFlag," +
             "cfsanProductDesc";
 
         String uri =
@@ -209,17 +209,18 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     @Async
     public CompletableFuture<List<SampleTransfer>> getSampleTransfers
         (
-            long sampleTrackingNum,
+            long sampleTrackingNumber,
             Optional<Long> toPersonId
         )
     {
-        String includeFields = "sampleTrackingNum,sampleTrackingSubNum,receivedByPersonId,receivedByPersonFirstName," +
+        String includeFields =
+            "sampleTrackingNumber,sampleTrackingSubNumber,receivedByPersonId,receivedByPersonFirstName," +
             "receivedByPersonLastName,receivedDate,receiverConfirmationInd,sentByPersonId,sentByPersonFirstName," +
             "sentByPersonLastName,sentDate,sentByOrgName,remarks";
 
         UriComponentsBuilder uriBuilder =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + SAMPLE_TRANSFERS_RESOURCE)
-            .queryParam("sampleTrackingNum", sampleTrackingNum)
+            .queryParam("sampleTrackingNumber", sampleTrackingNumber)
             .queryParam("objectFilters", includeFields);
 
         if ( toPersonId.isPresent() )

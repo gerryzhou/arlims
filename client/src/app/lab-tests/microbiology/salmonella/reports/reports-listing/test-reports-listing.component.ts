@@ -39,7 +39,7 @@ export class TestReportsListingComponent
 
       const testId = this.sampleOpTest.testMetadata.testId;
       const sample = this.sampleOpTest.sampleOp;
-      const sampleNum = sample.sampleTrackingNum + '-' + sample.sampleTrackingSubNum;
+      const sampleNum = sample.sampleTrackingNumber + '-' + sample.sampleTrackingSubNumber;
       const paf = sample.paf || '';
 
       this.testsSvc.getTestReportBlobForPostedTestData(testId, IMP_SLM_VIDAS_PDF_REPORT_NAME, reportTestData)

@@ -20,13 +20,13 @@ export class GeneralFactsService {
 
    getSampleTransfers
       (
-         sampleTrackingNum: number,
+         sampleTrackingNumber: number,
          toPersonId: number|null
       )
       : Observable<SampleTransfer[]>
    {
       return this.httpClient.get<SampleTransfer[]>(
-         this.apiUrlsSvc.factsSampleTransfersUrl(sampleTrackingNum, toPersonId)
+         this.apiUrlsSvc.factsSampleTransfersUrl(sampleTrackingNumber, toPersonId)
       );
    }
 }

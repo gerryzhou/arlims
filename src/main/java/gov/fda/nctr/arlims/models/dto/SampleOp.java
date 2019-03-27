@@ -9,9 +9,9 @@ public class SampleOp
 {
     private final long opId;
 
-    private final long sampleTrackingNum;
+    private final long sampleTrackingNumber;
 
-    private final long sampleTrackingSubNum;
+    private final long sampleTrackingSubNumber;
 
     private final String pac;
 
@@ -36,8 +36,8 @@ public class SampleOp
     public SampleOp
         (
             long opId,
-            long sampleTrackingNum,
-            long sampleTrackingSubNum,
+            long sampleTrackingNumber,
+            long sampleTrackingSubNumber,
             String pac,
             Optional<String> lid,
             Optional<String> paf,
@@ -51,8 +51,8 @@ public class SampleOp
         )
     {
         this.opId = opId;
-        this.sampleTrackingNum = sampleTrackingNum;
-        this.sampleTrackingSubNum = sampleTrackingSubNum;
+        this.sampleTrackingNumber = sampleTrackingNumber;
+        this.sampleTrackingSubNumber = sampleTrackingSubNumber;
         this.pac = pac;
         this.lid = lid;
         this.paf = paf;
@@ -67,9 +67,9 @@ public class SampleOp
 
     public long getOpId() { return opId; }
 
-    public long getSampleTrackingNum() { return sampleTrackingNum; }
+    public long getSampleTrackingNumber() { return sampleTrackingNumber; }
 
-    public long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
+    public long getSampleTrackingSubNumber() { return sampleTrackingSubNumber; }
 
     public String getPac() { return pac; }
 

@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public class SampleTransfer
 {
-    private long sampleTrackingNum;
+    private long sampleTrackingNumber;
 
-    private long sampleTrackingSubNum;
+    private long sampleTrackingSubNumber;
 
     private long receivedByPersonId;
 
@@ -36,8 +36,8 @@ public class SampleTransfer
 
     public SampleTransfer
         (
-            long sampleTrackingNum,
-            long sampleTrackingSubNum,
+            long sampleTrackingNumber,
+            long sampleTrackingSubNumber,
             long receivedByPersonId,
             String receivedByPersonFirstName,
             String receivedByPersonLastName,
@@ -51,8 +51,8 @@ public class SampleTransfer
             Optional<String> remarks
         )
     {
-        this.sampleTrackingNum = sampleTrackingNum;
-        this.sampleTrackingSubNum = sampleTrackingSubNum;
+        this.sampleTrackingNumber = sampleTrackingNumber;
+        this.sampleTrackingSubNumber = sampleTrackingSubNumber;
         this.receivedByPersonId = receivedByPersonId;
         this.receivedByPersonFirstName = receivedByPersonFirstName;
         this.receivedByPersonLastName = receivedByPersonLastName;
@@ -66,9 +66,9 @@ public class SampleTransfer
         this.remarks = remarks;
     }
 
-    public long getSampleTrackingNum() { return sampleTrackingNum; }
+    public long getSampleTrackingNumber() { return sampleTrackingNumber; }
 
-    public long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
+    public long getSampleTrackingSubNumber() { return sampleTrackingSubNumber; }
 
     public long getReceivedByPersonId() { return receivedByPersonId; }
 

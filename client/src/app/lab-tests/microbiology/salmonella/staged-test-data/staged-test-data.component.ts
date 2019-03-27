@@ -415,7 +415,7 @@ export class StagedTestDataComponent implements OnInit {
 
       const ts = moment().format('YYYY-MM-DD[@]HHmmss');
 
-      const fileName = `${ts} ${s.sampleTrackingNum}-${s.sampleTrackingSubNum} ${tmd.testTypeShortName}.json`;
+      const fileName = `${ts} ${s.sampleTrackingNumber}-${s.sampleTrackingSubNumber} ${tmd.testTypeShortName}.json`;
 
       FileSaver.saveAs(blob, fileName, true);
    }

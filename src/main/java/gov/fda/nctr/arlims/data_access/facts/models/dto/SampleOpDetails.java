@@ -5,7 +5,7 @@ public class SampleOpDetails
 {
     private long operationId;
 
-    private long sampleTrackingNum;
+    private long sampleTrackingNumber;
 
     private long sampleTrackingSubNumber;
 
@@ -20,7 +20,7 @@ public class SampleOpDetails
     public SampleOpDetails
         (
             long operationId,
-            long sampleTrackingNum,
+            long sampleTrackingNumber,
             long sampleTrackingSubNum,
             String programAssignmentCode,
             String problemAreaFlag,
@@ -28,7 +28,7 @@ public class SampleOpDetails
         )
     {
         this.operationId = operationId;
-        this.sampleTrackingNum = sampleTrackingNum;
+        this.sampleTrackingNumber = sampleTrackingNumber;
         this.sampleTrackingSubNumber = sampleTrackingSubNum;
         this.programAssignmentCode = programAssignmentCode;
         this.problemAreaFlag = problemAreaFlag;
@@ -37,7 +37,7 @@ public class SampleOpDetails
 
     public long getOperationId() { return operationId; }
 
-    public long getSampleTrackingNum() { return sampleTrackingNum; }
+    public long getSampleTrackingNumber() { return sampleTrackingNumber; }
 
     public long getSampleTrackingSubNumber() { return sampleTrackingSubNumber; }
 

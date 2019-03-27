@@ -96,8 +96,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             long sampleOpId,
             LabTestTypeCode testTypeCode,
             String testBeginDate,
-            long sampleTrackingNum,
-            long sampleTrackingSubNum,
+            long sampleTrackingNumber,
+            long sampleTrackingSubNumber,
             String pac,
             String productName,
             Optional<String> lid,
@@ -134,8 +134,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             ps.setLong(6, user.getEmployeeId());
             ps.setTimestamp(7, now);
             ps.setLong(8, user.getEmployeeId());
-            ps.setLong(9, sampleTrackingNum);
-            ps.setLong(10, sampleTrackingSubNum);
+            ps.setLong(9, sampleTrackingNumber);
+            ps.setLong(10, sampleTrackingSubNumber);
             ps.setString(11, pac);
             ps.setString(12, productName);
             ps.setString(13, lid.orElse(null));
@@ -414,7 +414,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
                 new LabTestMetadata(
                     testId,
                     opId,
-                    sample.getSampleTrackingNum(),
+                    sample.getSampleTrackingNumber(),
                     sample.getSampleTrackingSubNumber(),
                     sample.getProgramAssignmentCode(),
                     sample.getCfsanProductDesc(),
@@ -871,8 +871,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             SampleOp s =
                 new SampleOp(
                     tmd.getOpId(),
-                    tmd.getSampleTrackingNum(),
-                    tmd.getSampleTrackingSubNum(),
+                    tmd.getSampleTrackingNumber(),
+                    tmd.getSampleTrackingSubNumber(),
                     tmd.getPac(),
                     lid,
                     paf,

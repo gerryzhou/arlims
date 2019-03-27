@@ -1,3 +1,5 @@
+Still need field cfsanProductDesc added to /LabsDataService/api/SampleAnalyses results.
+
 Find problem with the AOAC submission below.
 It should not be generating a 500, should result in a 4xx if LABS api is returning an error structure.
 13-03-2019 13:18:19.905 [http-nio-8000-exec-9] INFO  g.f.n.a.d.f.LabsDSFactsAccessService.submitMicrobiologySampleAnalysis - Submitting microbiology sample analysis:
@@ -5,8 +7,6 @@ It should not be generating a 500, should result in a 4xx if LABS api is returni
 13-03-2019 13:18:20.183 [http-nio-8000-exec-9] INFO  g.f.n.a.d.f.LabsDSFactsAccessService.handleError - LABS-DS api call resulted in error: [{"errorCode":"LABS-RUL-2080","message":"SampleAnalysisMicrobiology[0] : The total number of positive finding records does not match subSamplesDetectableFindingsNumber in Microbiological Analysis. Please correct your data and resubmit."}]
 13-03-2019 13:18:20.186 [http-nio-8000-exec-9] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [/alis] threw exception [Request processing failed; nested exception is org.springframework.web.client.HttpServerErrorException$InternalServerError: 500 Internal Server Error] with root cause
 org.springframework.web.client.HttpServerErrorException$InternalServerError: 500 Internal Server Error
-
-Change field names.
 
 Don't allow multiple tests for a single op id.
 

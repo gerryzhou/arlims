@@ -273,7 +273,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     {
         // We only want the inbox items that represent sample operations.
         List<EmployeeInboxItem> sampleOpInboxItems =
-            inboxItems.stream().filter(item -> item.getSampleTrackingNum() != null).collect(toList());
+            inboxItems.stream().filter(item -> item.getSampleTrackingNumber() != null).collect(toList());
 
         List<Long> opIds = sampleOpInboxItems.stream().map(EmployeeInboxItem::getOperationId).collect(toList());
 
@@ -401,7 +401,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             new LabTestMetadata(
                 t.getId(),
                 inboxItem.getOperationId(),
-                inboxItem.getSampleTrackingNum(),
+                inboxItem.getSampleTrackingNumber(),
                 inboxItem.getSampleTrackingSubNumber(),
                 inboxItem.getPacCode(),
                 inboxItem.getCfsanProductDesc(),
@@ -428,16 +428,16 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         SampleOpAssignment assignment =
             new SampleOpAssignment(
                 inboxItem.getPersonId(),
-                inboxItem.getFirstName(),
-                inboxItem.getLastName(),
-                opt(inboxItem.getMdlIntlName()),
-                opt(inboxItem.getLeadInd())
+                inboxItem.getAssignedToFirstName(),
+                inboxItem.getAssignedToLastName(),
+                opt(inboxItem.getAssignedToMiddleName()),
+                opt(inboxItem.getLeadIndicator())
             );
 
         return
             new SampleOp(
                 inboxItem.getOperationId(),
-                inboxItem.getSampleTrackingNum(),
+                inboxItem.getSampleTrackingNumber(),
                 inboxItem.getSampleTrackingSubNumber(),
                 inboxItem.getPacCode(),
                 opt(inboxItem.getLidCode()),

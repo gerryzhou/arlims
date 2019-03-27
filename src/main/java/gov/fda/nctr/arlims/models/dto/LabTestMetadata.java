@@ -9,8 +9,8 @@ public class LabTestMetadata
 {
     private long testId;
     private long opId;
-    private long sampleTrackingNum;
-    private long sampleTrackingSubNum;
+    private long sampleTrackingNumber;
+    private long sampleTrackingSubNumber;
     private String pac;
     private String productName;
     private LabTestTypeCode testTypeCode;
@@ -34,8 +34,8 @@ public class LabTestMetadata
         (
             long testId,
             long opId,
-            long sampleTrackingNum,
-            long sampleTrackingSubNum,
+            long sampleTrackingNumber,
+            long sampleTrackingSubNumber,
             String pac,
             String productName,
             LabTestTypeCode testTypeCode,
@@ -57,8 +57,8 @@ public class LabTestMetadata
     {
         this.testId = testId;
         this.opId = opId;
-        this.sampleTrackingNum = sampleTrackingNum;
-        this.sampleTrackingSubNum = sampleTrackingSubNum;
+        this.sampleTrackingNumber = sampleTrackingNumber;
+        this.sampleTrackingSubNumber = sampleTrackingSubNumber;
         this.pac = pac;
         this.productName = productName;
         this.testTypeCode = testTypeCode;
@@ -82,9 +82,9 @@ public class LabTestMetadata
 
     public long getOpId() { return opId; }
 
-    public long getSampleTrackingNum() { return sampleTrackingNum; }
+    public long getSampleTrackingNumber() { return sampleTrackingNumber; }
 
-    public long getSampleTrackingSubNum() { return sampleTrackingSubNum; }
+    public long getSampleTrackingSubNumber() { return sampleTrackingSubNumber; }
 
     public String getPac() { return pac; }
 
