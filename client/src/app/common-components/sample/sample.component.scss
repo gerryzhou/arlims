@@ -76,6 +76,18 @@
    align-items: center;
 }
 
+.employee-assignment-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   justify-content: center;
+   align-items: center;
+   min-width: 105px;
+}
+
+.employee-assignment-role {
+   display: flex;
+   align-items: center;
+}
 
 .nums-associated-items-stack {
    display: flex;

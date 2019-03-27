@@ -431,7 +431,8 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                 inboxItem.getAssignedToFirstName(),
                 inboxItem.getAssignedToLastName(),
                 opt(inboxItem.getAssignedToMiddleName()),
-                opt(inboxItem.getLeadIndicator())
+                opt(inboxItem.getLeadIndicator()),
+                inboxItem.getWorkAssignmentDate()
             );
 
         return
