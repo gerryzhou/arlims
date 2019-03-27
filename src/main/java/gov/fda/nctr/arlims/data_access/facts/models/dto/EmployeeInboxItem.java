@@ -1,6 +1,7 @@
 package gov.fda.nctr.arlims.data_access.facts.models.dto;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -38,6 +39,8 @@ public class EmployeeInboxItem
     private String assignedToLastName;
     private String assignedToMiddleName;
     private String leadIndicator;
+
+    private LocalDate workAssignmentDate;
 
 
     protected EmployeeInboxItem() {}
@@ -77,6 +80,8 @@ public class EmployeeInboxItem
 
     public String getLeadIndicator() { return leadIndicator; }
 
+    public LocalDate getWorkAssignmentDate() { return workAssignmentDate; }
+
     @Override
     public String toString()
     {
@@ -98,6 +103,7 @@ public class EmployeeInboxItem
         ", assignedToLastName='" + assignedToLastName + '\'' +
         ", assignedToMiddleName='" + assignedToMiddleName + '\'' +
         ", leadIndicator='" + leadIndicator + '\'' +
+        ", workAssignmentDate='" + workAssignmentDate + '\'' +
         '}';
     }
 }

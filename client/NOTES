@@ -1,10 +1,37 @@
+Done
+====
+- Tweak layout in new test dialog and default to current date.
+- Make date pickers easier to use for touchscreen devices.
+  Clicking anywhere on text field opens date picker dialog, and dialog now centered and larger.
+- For prep stage received fields auto-fill feature, combine "transfers to me" and "transfers to anyone" buttons.
+  In resulting dialog, transfers to the current user are displayed above transfers to others.
+  Remove FACTS person id from received-from text.
+- For water bath start timestamp in M-broth stage, separate format to right with subdued font.
+- In samples listing:
+  - Show visible statuses inline as row of toggle buttons, add 'T' status choice.
+  - Sync selected statuses to and from local storage via new Angular service.
+- Add application version dialog with information provided by version control system as part of build process.
+- Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
+- Re-enable within-tests search feature.
+- In M-Broth stage set water bath start time to current timestamp when a water bath is selected.
+- In prep stage when selecting from FACTS transfers, set fields without prompting when there is only one transfer.
+- Rename pdf test report output file to include sample number, paf, and test type.
+- Field names updated to match latest LABS DS api.
+- Correct stage statuses for positive continuation stages (SLANT and IDENT) to reflect empty status when not modified through multiple save/reloads.
+- In person inbox, add work assignment status display and sorting.
+
+
+Apply some kind of sorting to samples listing by default.
+
+Submit employee work hours to FACTS in wrapup via new button.
+
+
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
   sampleTestUnitsChange event in stage pre enr component.
 
 BAM data submission: Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
 
-Submit employee work hours to FACTS in wrapup via new button.
 
 Tests Search
   - Tests search should persist through navigations.
@@ -40,24 +67,6 @@ Don't auto-push after Vidas stage.
             break;
       }
 
-Done
-====
-- Tweak layout in new test dialog and default to current date.
-- Make date pickers easier to use for touchscreen devices.
-  Clicking anywhere on text field opens date picker dialog, and dialog now centered and larger.
-- For prep stage received fields auto-fill feature, combine "transfers to me" and "transfers to anyone" buttons.
-  In resulting dialog, transfers to the current user are displayed above transfers to others.
-  Remove FACTS person id from received-from text.
-- For water bath start timestamp in M-broth stage, separate format to right with subdued font.
-- In samples listing:
-  - Show visible statuses inline as row of toggle buttons, add 'T' status choice.
-  - Sync selected statuses to and from local storage via new Angular service.
-- Add application version dialog with information provided by version control system as part of build process.
-- Specify min sizes of some items within sample component so they are aligned when samples are vertically stacked.
-- Re-enable within-tests search feature.
-- In M-Broth stage set water bath start time to current timestamp when a water bath is selected.
-- In prep stage when selecting from FACTS transfers, set fields without prompting when there is only one transfer.
-- Rename pdf test report output file to include sample number, paf, and test type.
 
 Identify isolates by their number not by creation timestamp.
 

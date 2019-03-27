@@ -1,4 +1,7 @@
+Leidos
+------
 Still need field cfsanProductDesc added to /LabsDataService/api/SampleAnalyses results.
+Can requests containing unrecognized fields be rejected?
 
 Find problem with the AOAC submission below.
 It should not be generating a 500, should result in a 4xx if LABS api is returning an error structure.

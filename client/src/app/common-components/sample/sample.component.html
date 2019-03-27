@@ -20,7 +20,7 @@
 
          <div class="facts-status-stack" [ngClass]="factsStatusCssClass" *ngIf="factsStatusText != null">
             <div>{{factsStatusText}}</div>
-            <span class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</span>
+            <div class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</div>
          </div>
 
          <div class="employee-assignments" *ngIf="showEmployeeAssignments && sampleOp.assignments.length == 1">
@@ -29,8 +29,12 @@
                  the samples within the lab contents, then add ui support for those
                  assignments here.
             -->
-            <mat-icon>person_outline</mat-icon>
-            {{sampleOp.assignments[0].leadInd === 'Y' ? 'LEAD' : 'AUX'}}
+            <div class="employee-assignment-stack" matTooltip="work assignment role and date">
+               <div class="employee-assignment-role">
+                  <mat-icon>person_outline</mat-icon> {{sampleOp.assignments[0].leadInd === 'Y' ? 'LEAD' : 'AUX'}}
+               </div>
+               <div>{{sampleOp.assignments[0].workAssignmentDate}}</div>
+            </div>
          </div>
 
          <div class="expanding-flex-space"></div>

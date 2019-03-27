@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.models.dto;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -10,6 +11,7 @@ public class SampleOpAssignment
     private String lastName;
     private Optional<String> middleInitial;
     private Optional<String> leadInd;
+    private LocalDate workAssignmentDate;
 
     protected SampleOpAssignment() {}
 
@@ -19,7 +21,8 @@ public class SampleOpAssignment
             String firstName,
             String lastName,
             Optional<String> middleInitial,
-            Optional<String> leadInd
+            Optional<String> leadInd,
+            LocalDate workAssignmentDate
         )
     {
         this.factsPersonId = factsPersonId;
@@ -27,6 +30,7 @@ public class SampleOpAssignment
         this.lastName = lastName;
         this.middleInitial = middleInitial;
         this.leadInd = leadInd;
+        this.workAssignmentDate = workAssignmentDate;
     }
 
     public long getFactsPersonId() { return factsPersonId; }
@@ -38,4 +42,6 @@ public class SampleOpAssignment
     public Optional<String> getMiddleInitial() { return middleInitial; }
 
     public Optional<String> getLeadInd() { return leadInd; }
+
+    public LocalDate getWorkAssignmentDate() { return workAssignmentDate; }
 }

@@ -111,11 +111,12 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         String includeFields =
             "operationId,sampleTrackingNumber,sampleTrackingSubNumber,sampleAnalysisId,cfsanProductDesc,lidCode," +
             "problemAreaFlag,pacCode,statusCode,statusDate,subjectText,remarks,personId,assignedToFirstName," +
-            "assignedToLastName,assignedToMiddleName,leadIndicator";
+            "assignedToLastName,assignedToMiddleName,leadIndicator,workAssignmentDate";
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
             .queryParam("personId", employeeId)
+            .queryParam("orderByFields", "workAssignmentDate:desc")
             .queryParam("objectFilters", includeFields);
 
         if ( statusCodes.isPresent() )
