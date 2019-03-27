@@ -20,7 +20,6 @@ Done
 - Correct stage statuses for positive continuation stages (SLANT and IDENT) to reflect empty status when not modified through multiple save/reloads.
 - In person inbox, add work assignment status display and sorting.
 
-
 Apply some kind of sorting to samples listing by default.
 
 Submit employee work hours to FACTS in wrapup via new button.
