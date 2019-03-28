@@ -429,23 +429,22 @@ function wrapupStatusCode(testData: TestData): FieldValuesStatusCode
 {
    const data = testData.wrapupData;
 
-   let reqFieldsStatus;
+   const reserveSampleFieldsStatus =
+      !data.reserveSampleDisposition ? 'e'
+         : data.reserveSampleDisposition === 'OTHER' && isEmptyString(data.reserveSampleOtherDescription) ? 'i'
+            : data.reserveSampleDisposition  === 'ISOLATES_SENT' && isEmptyString(data.reserveSampleDestinations) ? 'i'
+               : 'c';
 
-   if ( !data.reserveSampleDisposition )
-      reqFieldsStatus = 'e';
-   else if ( data.reserveSampleDisposition === 'OTHER' &&
-             isEmptyString(data.reserveSampleOtherDescription) )
-      reqFieldsStatus = 'i';
-   else if ( data.reserveSampleDisposition  === 'ISOLATES_SENT' &&
-             isEmptyString(data.reserveSampleDestinations) )
-      reqFieldsStatus = 'i';
-   else
-      reqFieldsStatus = 'c';
+   const timeChargePresent = Object.keys(data.testTimeCharges).length > 0;
 
-   if ( reqFieldsStatus === 'e' )
-      return data.analysisResultsRemarksText == null ? 'e' : 'i';
+   const empty = reserveSampleFieldsStatus === 'e' && !timeChargePresent && data.analysisResultsRemarksText == null;
+
+   if ( empty ) return 'e';
    else
-      return reqFieldsStatus;
+   {
+      const complete = reserveSampleFieldsStatus === 'c' && timeChargePresent;
+      return complete ? 'c' : 'i';
+   }
 }
 
 export function getTestStageStatuses
