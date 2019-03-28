@@ -16,11 +16,11 @@
          <app-stage-prep class="test-stage"
             [form]="testDataForm.get('prepData')"
             [allowDataChanges]="allowDataChanges"
-            [sampleOp]="sampleOpTest.sampleOp"
-            [currentUser]="appUser"
             [conflicts]="conflictsTestData.prepData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [showUnsetAffordances]="showUnsetAffordances"
+            [sampleOp]="sampleOpTest.sampleOp"
+            [currentUser]="appUser">
          </app-stage-prep>
       </mat-step>
 
@@ -28,13 +28,13 @@
          <app-stage-pre-enr class="test-stage"
             [form]="testDataForm.get('preEnrData')"
             [allowDataChanges]="allowDataChanges"
+            [conflicts]="conflictsTestData.preEnrData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances"
             [balances]="balances"
             [incubators]="incubators"
             [samplingMethodChoices]="testConfig.samplingMethodChoices"
-            (sampleTestUnitsChange)="onSampleTestUnitsChanged($event)"
-            [conflicts]="conflictsTestData.preEnrData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            (sampleTestUnitsChange)="onSampleTestUnitsChanged($event)">
          </app-stage-pre-enr>
       </mat-step>
 
@@ -42,11 +42,11 @@
          <app-stage-sel-enr class="test-stage"
             [form]="testDataForm.get('selEnrData')"
             [allowDataChanges]="allowDataChanges"
-            [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
-            [waterBaths]="waterBaths"
             [conflicts]="conflictsTestData.selEnrData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [showUnsetAffordances]="showUnsetAffordances"
+            [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
+            [waterBaths]="waterBaths">
          </app-stage-sel-enr>
       </mat-step>
 
@@ -54,10 +54,10 @@
          <app-stage-m-broth class="test-stage"
             [form]="testDataForm.get('mBrothData')"
             [allowDataChanges]="allowDataChanges"
-            [waterBaths]="waterBaths"
             [conflicts]="conflictsTestData.mBrothData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [showUnsetAffordances]="showUnsetAffordances"
+            [waterBaths]="waterBaths">
          </app-stage-m-broth>
       </mat-step>
 
@@ -65,15 +65,15 @@
          <app-stage-vidas class="test-stage"
             [form]="testDataForm.get('vidasData')"
             [allowDataChanges]="allowDataChanges"
+            [conflicts]="conflictsTestData.vidasData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances"
             [testId]="sampleOpTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasInstruments]="vidasInstruments"
             [sampleTestUnitsCount]="sampleTestUnitsCount"
             [sampleTestUnitsType]="sampleTestUnitsType"
             [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
-            [conflicts]="conflictsTestData.vidasData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances"
             (positiveSampleTestUnitNumbersChange)="onVidasPositiveSampleTestUnitNumbersChanged($event)">
          </app-stage-vidas>
       </mat-step>
@@ -82,16 +82,16 @@
          <app-pos-cont #slantPosContComp class="test-stage"
             [form]="testDataForm.get('posContData')"
             [allowDataChanges]="allowDataChanges"
-            [testId]="sampleOpTest.testMetadata.testId"
+            [conflicts]="conflictsTestData.posContData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances"
             [stage]="'SLANT'"
+            [testId]="sampleOpTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
             [sampleTestUnitsType]="sampleTestUnitsType"
             [testConfig]="testConfig"
-            [appUser]="appUser"
-            [conflicts]="conflictsTestData.posContData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [appUser]="appUser">
          </app-pos-cont>
       </mat-step>
 
@@ -99,16 +99,16 @@
          <app-pos-cont #identPosContComp class="test-stage"
             [form]="testDataForm.get('posContData')"
             [allowDataChanges]="allowDataChanges"
-            [testId]="sampleOpTest.testMetadata.testId"
+            [conflicts]="conflictsTestData.posContData"
+            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+            [showUnsetAffordances]="showUnsetAffordances"
             [stage]="'IDENT'"
+            [testId]="sampleOpTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
             [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
             [sampleTestUnitsType]="sampleTestUnitsType"
             [testConfig]="testConfig"
-            [appUser]="appUser"
-            [conflicts]="conflictsTestData.posContData"
-            [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [appUser]="appUser">
          </app-pos-cont>
       </mat-step>
 
@@ -118,7 +118,9 @@
             [allowDataChanges]="allowDataChanges"
             [conflicts]="conflictsTestData.wrapupData"
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
-            [showUnsetAffordances]="showUnsetAffordances">
+            [showUnsetAffordances]="showUnsetAffordances"
+            [sampleOp]="sampleOpTest.sampleOp"
+            [labGroupUsers]="labGroupUsers">
          </app-stage-wrapup>
       </mat-step>
 

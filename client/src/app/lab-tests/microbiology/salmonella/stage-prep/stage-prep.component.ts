@@ -27,16 +27,16 @@ export class StagePrepComponent implements OnChanges {
    conflicts: PrepData;
 
    @Input()
-   sampleOp: SampleOp;
-
-   @Input()
-   currentUser: AppUser;
-
-   @Input()
    conflictsWhoWhen: EmployeeTimestamp;
 
    @Input()
    showUnsetAffordances = false;
+
+   @Input()
+   sampleOp: SampleOp;
+
+   @Input()
+   currentUser: AppUser;
 
    constructor
       (
