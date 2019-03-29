@@ -13,7 +13,7 @@ import {
    LabTestType,
    LabResource,
    LabResourceType,
-   UserRegistration, AppVersion,
+   UserRegistration, AppVersion, UserReference,
 } from '../../../generated/dto';
 import {AppInternalUrlsService} from './app-internal-urls.service';
 import {Router} from '@angular/router';
@@ -31,6 +31,7 @@ export class UserContextService {
    private testIdToSampleOpTest$: Promise<Map<number, SampleOpTest>>;
    private testTypeCodeToLabGroupTestConfigJson$: Promise<Map<string, string>>;
    private labResourcesByType$: Promise<Map<string, LabResource[]>>;
+   private labUsers$: Promise<UserReference[]>;
 
    static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
    static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
@@ -81,7 +82,7 @@ export class UserContextService {
             const authHdr = httpRes.headers.get('authorization') || httpRes.headers.get('Authorization');
             if ( authHdr != null )
             {
-               const authToken = this.extractAuthToken(authHdr);
+               const authToken = extractAuthToken(authHdr);
                if ( authToken != null )
                   this.authenticationToken$.next(authToken);
             }
@@ -131,6 +132,11 @@ export class UserContextService {
       return this.labResourcesByType$;
    }
 
+   getLabUsers(): Promise<UserReference[]>
+   {
+      return this.labUsers$;
+   }
+
    refreshLabGroupContents(): Promise<LabGroupContents>
    {
       this.refreshLabGroupContentsMembersFrom(this.fetchLabGroupContents());
@@ -147,17 +153,22 @@ export class UserContextService {
 
       this.testIdToSampleOpTest$ =
          labGroupContents$
-         .pipe( map(lgc => UserContextService.getSampleOpTestsByTestId(lgc.activeSamples)) )
+         .pipe(map(lgc => UserContextService.getSampleOpTestsByTestId(lgc.activeSamples)))
          .toPromise();
 
       this.testTypeCodeToLabGroupTestConfigJson$ =
          labGroupContents$
-         .pipe( map(lgc => UserContextService.getLabGroupTestConfigJsonsByTestTypeCode(lgc.supportedTestTypes)) )
+         .pipe(map(lgc => UserContextService.getLabGroupTestConfigJsonsByTestTypeCode(lgc.supportedTestTypes)))
          .toPromise();
 
       this.labResourcesByType$ =
          labGroupContents$
-         .pipe( map(lgc => UserContextService.groupLabResourcesByType(lgc.managedResources)) )
+         .pipe(map(lgc => groupLabResourcesByType(lgc.managedResources)))
+         .toPromise();
+
+      this.labUsers$ =
+         labGroupContents$
+         .pipe(map(lgc => lgc.memberUsers))
          .toPromise();
 
       labGroupContents$.subscribe(() => {
@@ -197,42 +208,43 @@ export class UserContextService {
    private static getLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string>
    {
       const m = new Map<string, string>();
-      for (const testType of testTypes) {
-         if (testType.configurationJson) {
+      for ( const testType of testTypes )
+      {
+         if (testType.configurationJson)
+         {
             m.set(testType.code, testType.configurationJson);
          }
       }
       return m;
    }
 
-   private static groupLabResourcesByType(managedResources: LabResource[])
-   {
-      const m = new Map<string, LabResource[]>();
 
-      for (const labResource of managedResources)
-      {
-         const resourcesOfType = m.get(labResource.resourceType);
-         if (!resourcesOfType)
-         {
-            m.set(labResource.resourceType, [labResource]);
-         }
-         else
-         {
-            resourcesOfType.push(labResource);
-         }
-      }
+}
 
-      return m;
-   }
+function extractAuthToken(authHeader: string): string | null
+{
+   if (!authHeader) return null;
+   const prefix = 'Bearer ';
+   if ( authHeader.startsWith(prefix) )
+      return authHeader.substring(prefix.length);
+   else
+      return authHeader;
+}
 
-   private extractAuthToken(authHeader: string): string | null
-   {
-      if (!authHeader) return null;
-      const prefix = 'Bearer ';
-      if ( authHeader.startsWith(prefix) )
-         return authHeader.substring(prefix.length);
-      else
-         return authHeader;
-   }
 
+function groupLabResourcesByType(managedResources: LabResource[]): Map<string, LabResource[]>
+{
+   const m = new Map<string, LabResource[]>();
+
+   for ( const labResource of managedResources )
+    {
+       const resourcesOfType = m.get(labResource.resourceType);
+
+       if ( !resourcesOfType )
+          m.set(labResource.resourceType, [labResource]);
+       else
+          resourcesOfType.push(labResource);
+    }
+
+   return m;
 }
