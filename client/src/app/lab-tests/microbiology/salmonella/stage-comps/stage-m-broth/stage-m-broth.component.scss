@@ -1,0 +1,32 @@
+@import '../common-styles';
+
+.row {
+   display: flex;
+   flex-flow: row wrap;
+}
+
+.started-helpers {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: flex-start;
+}
+
+.start-now {
+   display:flex;
+   align-items: center;
+}
+
+.now-time {
+   margin-left: 10px;
+}
+
+.format-msg {
+   margin-left: 10px;
+   color: lightgray;
+   font-size: smaller;
+}
+
+.apply-resources-btn {
+   background-color: $batch-resource-background-color;
+   margin-left: 10px;
+}

@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
-import {StagedTestDataComponent} from '../staged-test-data/staged-test-data.component';
+import {StagedTestDataComponent} from '../multi-stage-comps/staged-test-data/staged-test-data.component';
 import {LabGroupTestDataResolver} from '../../../../routing/lab-group-test-data.resolver';
-import {FormDataReviewComponent} from '../form-data-review/form-data-review.component';
+import {FormDataReviewComponent} from '../multi-stage-comps/form-data-review/form-data-review.component';
 import {TestDataEntryConfirmDeactivateGuard} from './test-data-entry-confirm-deactivate-guard';
 import {TestReportsListingComponent} from '../reports/reports-listing/test-reports-listing.component';
 

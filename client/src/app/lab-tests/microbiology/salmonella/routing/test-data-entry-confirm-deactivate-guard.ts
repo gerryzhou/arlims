@@ -1,5 +1,5 @@
 import {CanDeactivate} from '@angular/router';
-import {StagedTestDataComponent} from '../staged-test-data/staged-test-data.component';
+import {StagedTestDataComponent} from '../multi-stage-comps/staged-test-data/staged-test-data.component';
 
 export class TestDataEntryConfirmDeactivateGuard implements CanDeactivate<StagedTestDataComponent> {
 

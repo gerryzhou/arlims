@@ -1,0 +1,47 @@
+// Styles that are common to all test stages.
+
+@import '../../../../../styles';
+
+form {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: flex-start;
+   margin: 10px 25px;
+}
+
+
+// A field area is a vertical stack of a form field's input element (with any surrounding wrappers e.g. mat-form-field)
+// and advisories such as conflicting values from a concurrent update.
+.field-area {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
+   margin: 3px 10px;
+
+   &.conflicted {
+      border: 2px dashed orange;
+      padding: 7px;
+   }
+
+   &.batch-resource-matched {
+      border: 2px dashed $batch-resource-background-color;
+      padding: 7px;
+   }
+}
+
+mat-radio-group {
+
+   mat-radio-button {
+      margin: 5px 10px 5px 0;
+      .unset {
+         margin-left: 10px;
+      }
+   }
+
+   mat-radio-button.unset {
+      font-size: smaller;
+      color: #aaa;
+   }
+}
+
+
