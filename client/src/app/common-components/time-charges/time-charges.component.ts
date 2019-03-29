@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {MatDialog, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
@@ -16,13 +16,25 @@ import {UserTimeChargeDialogComponent} from './time-charge-dialog/user-time-char
 export class TimeChargesComponent implements OnChanges, OnDestroy {
 
    @Input()
-   form: FormGroup; // from makeTestTimeChargesFormGroup() in form-groups.ts
+   form: FormGroup; // contains time charge form groups by user short name, from makeTestTimeChargesFormGroup() in form-groups.ts
 
    @Input()
    availableUsers: UserReference[];
 
    @Input()
    allowDataChanges: boolean;
+
+   @Output()
+   timeChargeCreate = new EventEmitter<UserTimeCharge>();
+
+   @Output()
+   timeChargeUpdate = new EventEmitter<UserTimeCharge>();
+
+   @Output()
+   timeChargeDelete = new EventEmitter<UserTimeCharge>();
+
+   @Output()
+   timeChargesDataChange = new EventEmitter<void>();
 
    formChangesSubscription: Subscription;
 
@@ -44,6 +56,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
 
       if ( this.formChangesSubscription )
          this.formChangesSubscription.unsubscribe();
+
       this.formChangesSubscription = this.form.valueChanges.subscribe(() => {
          this.refreshTableDataSource();
          this.changeDetectorRef.markForCheck();
@@ -52,17 +65,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
 
    refreshTableDataSource()
    {
-      const userShortNames = Object.keys(this.form.controls);
-
-      const userTimeCharges =
-         userShortNames.map(userShortName => {
-            const timeCharge = this.form.get(userShortName).value;
-            const role = timeCharge.role;
-            const assignmentStatus = timeCharge.assignmentStatus;
-            const hours = +timeCharge.hours;
-            const enteredTimestamp = timeCharge.enteredTimestamp;
-            return { userShortName, timeCharge: { role, assignmentStatus, hours, enteredTimestamp } };
-         });
+      const userTimeCharges = this.getUserTimeCharges();
 
       this.tableDataSource.data =
           userTimeCharges.sort((userTimeCharge1, userTimeCharge2) => {
@@ -72,10 +75,27 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
           });
    }
 
+   getUserTimeCharges(): UserTimeCharge[]
+   {
+      const userShortNames = Object.keys(this.form.controls);
+
+      return (
+         userShortNames.map(userShortName => {
+            const timeCharge = this.form.get(userShortName).value;
+            const role = timeCharge.role;
+            const assignmentStatus = timeCharge.assignmentStatus;
+            const hours = +timeCharge.hours;
+            const enteredTimestamp = timeCharge.enteredTimestamp;
+            return { userShortName, timeCharge: { role, assignmentStatus, hours, enteredTimestamp } };
+         })
+      );
+   }
+
    promptCreateUserTimeCharge()
    {
       const chargedUserShortNames =
          new Set(this.tableDataSource.data.map(u => u.userShortName));
+
       const selectableUsers = this.availableUsers.filter(user =>
          !chargedUserShortNames.has(user.shortName)
       );
@@ -95,6 +115,8 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
                userTimeCharge.userShortName,
                makeTimeChargeFormGroup(userTimeCharge.timeCharge)
             );
+
+            this.timeChargeCreate.emit(userTimeCharge);
          }
       });
    }
@@ -115,6 +137,8 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
             const updatedTimeCharge = updatedUserTimeCharge.timeCharge;
             this.form.get(userTimeCharge.userShortName).setValue(updatedTimeCharge);
          }
+
+         this.timeChargeUpdate.emit(userTimeCharge);
       });
    }
 
@@ -122,6 +146,8 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
    {
       this.form.removeControl(userTimeCharge.userShortName);
       this.refreshTableDataSource();
+
+      this.timeChargeDelete.emit(userTimeCharge);
    }
 
    ngOnDestroy()

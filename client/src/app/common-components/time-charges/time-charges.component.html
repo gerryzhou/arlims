@@ -1,71 +1,73 @@
-<div class="table-container mat-elevation-z8"
-     *ngIf="tableDataSource.data.length > 0; else noCharges">
+<div>
+   <div class="table-container mat-elevation-z8"
+        *ngIf="tableDataSource.data.length > 0; else noCharges">
 
-   <table mat-table [dataSource]="tableDataSource">
+      <table mat-table [dataSource]="tableDataSource">
 
-      <ng-container matColumnDef="edit">
-         <th mat-header-cell *matHeaderCellDef></th>
-         <td mat-cell *matCellDef="let utc">
-            <button mat-icon-button type="button" *ngIf="allowDataChanges"
-                    (click)="promptUpdateUserTimeCharge(utc)">
-               <mat-icon>edit</mat-icon>
-            </button>
-         </td>
-      </ng-container>
+         <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let utc">
+               <button mat-icon-button type="button" *ngIf="allowDataChanges"
+                       (click)="promptUpdateUserTimeCharge(utc)">
+                  <mat-icon>edit</mat-icon>
+               </button>
+            </td>
+         </ng-container>
 
-      <ng-container matColumnDef="user">
-         <th mat-header-cell *matHeaderCellDef class="user">User</th>
-         <td mat-cell *matCellDef="let utc">
-            {{utc.userShortName}}
-         </td>
-      </ng-container>
+         <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef class="user">User</th>
+            <td mat-cell *matCellDef="let utc">
+               {{utc.userShortName}}
+            </td>
+         </ng-container>
 
-      <ng-container matColumnDef="role">
-         <th mat-header-cell *matHeaderCellDef>Role</th>
-         <td mat-cell *matCellDef="let utc">
-            {{utc.timeCharge.role | titlecase}}
-         </td>
-      </ng-container>
+         <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Role</th>
+            <td mat-cell *matCellDef="let utc">
+               {{utc.timeCharge.role | titlecase}}
+            </td>
+         </ng-container>
 
-      <ng-container matColumnDef="status">
-         <th mat-header-cell *matHeaderCellDef>Assignment Status</th>
-         <td mat-cell *matCellDef="let utc">
-            {{utc.timeCharge.assignmentStatus === 'I' ? 'In Progress' :
-              utc.timeCharge.assignmentStatus === 'C' ? 'Completed' : ''}}
-         </td>
-      </ng-container>
+         <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Assignment Status</th>
+            <td mat-cell *matCellDef="let utc">
+               {{utc.timeCharge.assignmentStatus === 'I' ? 'In Progress' :
+               utc.timeCharge.assignmentStatus === 'C' ? 'Completed' : ''}}
+            </td>
+         </ng-container>
 
-      <ng-container matColumnDef="hours">
-         <th mat-header-cell *matHeaderCellDef>Hours</th>
-         <td mat-cell *matCellDef="let utc">
-            {{utc.timeCharge.hours}}
-         </td>
-      </ng-container>
+         <ng-container matColumnDef="hours">
+            <th mat-header-cell *matHeaderCellDef>Hours</th>
+            <td mat-cell *matCellDef="let utc">
+               {{utc.timeCharge.hours}}
+            </td>
+         </ng-container>
 
-      <ng-container matColumnDef="delete">
-         <th mat-header-cell *matHeaderCellDef></th>
-         <td mat-cell *matCellDef="let utc">
-            <button mat-icon-button type="button" *ngIf="allowDataChanges"
-                    (click)="removeUserTimeCharge(utc)">
-               <mat-icon>delete_forever</mat-icon>
-            </button>
-         </td>
-      </ng-container>
+         <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let utc">
+               <button mat-icon-button type="button" *ngIf="allowDataChanges"
+                       (click)="removeUserTimeCharge(utc)">
+                  <mat-icon>delete_forever</mat-icon>
+               </button>
+            </td>
+         </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="tableDisplayColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: tableDisplayColumns"></tr>
+         <tr mat-header-row *matHeaderRowDef="tableDisplayColumns"></tr>
+         <tr mat-row *matRowDef="let row; columns: tableDisplayColumns"></tr>
 
-   </table>
+      </table>
 
-</div> <!-- table container -->
+   </div> <!-- table container -->
 
-<ng-template #noCharges>
-   <div class="no-charges-message">
-      <span>( no time entries )</span>
-   </div>
-</ng-template>
+   <ng-template #noCharges>
+      <div class="no-charges-message">
+         <span>( no time entries )</span>
+      </div>
+   </ng-template>
 
-<button mat-button type="button" *ngIf="allowDataChanges"
-        (click)="promptCreateUserTimeCharge()">
-   Add User Time
-</button>
+   <button mat-button type="button" *ngIf="allowDataChanges" (click)="promptCreateUserTimeCharge()">
+      <mat-icon>add</mat-icon> Add user time
+   </button>
+
+</div>
