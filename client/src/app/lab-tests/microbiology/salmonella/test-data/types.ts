@@ -149,6 +149,8 @@ export interface WrapupData {
    reserveSampleDestinations?: string | null;
    reserveSampleOtherDescription?: string | null;
    testTimeCharges: TestTimeCharges;
+   timeChargesLastSavedToFacts?: string | null;
+   timeChargesLastEdited?: string | null;
    analysisResultsRemarksText?: string | null;
 }
 

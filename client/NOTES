@@ -18,12 +18,27 @@ Done
 - Rename pdf test report output file to include sample number, paf, and test type.
 - Field names updated to match latest LABS DS api.
 - Correct stage statuses for positive continuation stages (SLANT and IDENT) to reflect empty status when not modified through multiple save/reloads.
-- In person inbox, add work assignment status display and sorting.
+- Add work assignment status display and sorting for person inbox.
 
-Apply some kind of sorting to samples listing by default.
+Submit employee work hours to FACTS (LabAccomplishmentHours endpoint) in wrapup stage.
+  Wrapup stage component
+    Add inputs for:
+      operationId
+      accomplishingOrg
+  Add method in general facts service to submit POST to LabAccomplishmentHours.
 
-Submit employee work hours to FACTS in wrapup via new button.
 
+function makeLabUsersByShortName(labUsers: UserReference[]): Map<string, UserReference>
+{
+   const m = new Map<string, UserReference>();
+
+   for ( const userRef of labUsers )
+   {
+      m.set(userRef.shortName, userRef);
+   }
+
+   return m;
+}
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.

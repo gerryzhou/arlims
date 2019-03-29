@@ -2,6 +2,12 @@ Leidos
 ------
 Still need field cfsanProductDesc added to /LabsDataService/api/SampleAnalyses results.
 Can requests containing unrecognized fields be rejected?
+LabAccomplishmentHours: What will happen if multiple submits are made which include the same employee and op id?
+  Semantics of this operation aren't clear:
+    Are hours updated if they already exist?
+    Are existing hours not represented in the submission removed in FACTS? If not, how would an entry be deleted?
+    Maybe should be a PUT?
+
 
 Find problem with the AOAC submission below.
 It should not be generating a 500, should result in a 4xx if LABS api is returning an error structure.

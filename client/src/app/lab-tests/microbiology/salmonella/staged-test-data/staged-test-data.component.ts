@@ -14,7 +14,7 @@ import {
    TestAttachedFileMetadata,
    SampleOpTest,
    TestSaveData,
-   CreatedSampleAnalysisMicrobiology
+   UserReference
 } from '../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../shared/models/employee-timestamp';
 import {
@@ -83,6 +83,7 @@ export class StagedTestDataComponent implements OnInit {
    readonly incubators: LabResource[] | undefined;
    readonly waterBaths: LabResource[] | undefined;
    readonly vidasInstruments: LabResource[] | undefined;
+   readonly labGroupUsers: UserReference[];
 
    jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter;
 
@@ -150,6 +151,8 @@ export class StagedTestDataComponent implements OnInit {
       this.incubators = labResources.get(UserContextService.INCUBATOR_RESOURCE_TYPE);
       this.waterBaths = labResources.get(UserContextService.WATERBATH_RESOURCE_TYPE);
       this.vidasInstruments = labResources.get(UserContextService.VIDAS_RESOURCE_TYPE);
+
+      this.labGroupUsers = labGroupTestData.labGroupUsers;
 
       this.conflictsTestData = emptyTestData();
       this.conflictsEmployeeTimestamp = null;

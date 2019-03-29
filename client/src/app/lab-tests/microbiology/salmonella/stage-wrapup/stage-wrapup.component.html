@@ -55,11 +55,15 @@
 
    <div class="time-charges-area">
       <h3>Accomplishment Hours</h3>
-      <app-time-charges
-         [form]="form.get('testTimeCharges')"
-         [availableUsers]="labGroupUsers$ | async"
-         [allowDataChanges]="allowDataChanges">
-      </app-time-charges>
+      <div class="time-charges-table-area">
+         <app-time-charges
+            [form]="form.get('testTimeCharges')"
+            [availableUsers]="labGroupUsers"
+            [allowDataChanges]="allowDataChanges"
+            (timeChargesDataChange)="onTimeChargesDataChanged()">
+         </app-time-charges>
+         <button class="facts-save-btn" mat-button (click)="saveTimeChargesToFacts()">Save to FACTS</button>
+      </div>
    </div>
 
    <div class="remarks-area">

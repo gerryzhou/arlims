@@ -27,6 +27,7 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
       const sampleOpTest$ = obsFrom(this.usrCtxSvc.getSampleOpTest(testId));
+
       const testConfig$ = sampleOpTest$.pipe(
          flatMap(sampleOpTest =>
             obsFrom(this.usrCtxSvc.getLabGroupTestConfigJson(sampleOpTest.testMetadata.testTypeCode)).pipe(
@@ -47,21 +48,23 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
             this.testsService.getTestAttachedFilesMetadatas(testId),
             sampleOpTest$,
             this.usrCtxSvc.getLabResourcesByType(),
+            this.usrCtxSvc.getLabUsers(),
             auditEntries$,
             this.usrCtxSvc.getAuthenticatedUser(),
          )
          .pipe(
-            map(([labGroupTestConfig, versionedTestData, attachedFiles, sampleOpTest, labResourcesByType, auditLogEntries, appUser]) => (
-               {
-                  labGroupTestConfig,
-                  versionedTestData,
-                  attachedFiles,
-                  sampleOpTest,
-                  labResourcesByType,
-                  auditLogEntries,
-                  appUser
-               }
-            ))
+            map(([conf, data, files, test, res, users, audit, user]) =>
+               ({
+                  labGroupTestConfig: conf,
+                  versionedTestData: data,
+                  attachedFiles: files,
+                  sampleOpTest: test,
+                  labResourcesByType: res,
+                  labGroupUsers: users,
+                  auditLogEntries: audit,
+                  appUser: user
+               })
+            )
          )
       );
    }

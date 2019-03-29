@@ -98,6 +98,8 @@ export function makeTestDataFormGroup
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
          reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
          testTimeCharges: makeTestTimeChargesFormGroup(testData.wrapupData.testTimeCharges),
+         timeChargesLastSavedToFacts: new FormControl(testData.wrapupData.timeChargesLastSavedToFacts),
+         timeChargesLastEdited: new FormControl(testData.wrapupData.timeChargesLastEdited),
          analysisResultsRemarksText: new FormControl(testData.wrapupData.analysisResultsRemarksText),
       }),
    });
