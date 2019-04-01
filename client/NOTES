@@ -24,6 +24,25 @@ Done
 - Add work assignment status display and sorting for person inbox.
 - Allow saving work hours to FACTS in wrapup stage.
 
+Create acounts for Morgan, Josheph, Paul W., Dave Lau.
+  Testing beginning Mon. 8.
+  Composites
+  Subs
+Hide SLANT/IDENT stages if there are no positives.
+Tell Leidos to bring test up to date with dev so testing can be done against test server.
+Save should just take you to next step, not back to sample listing.
+Just one button to push AOAC, BAM and work hours.
+  Automatically save test before pushing to FACTS.
+Need scroll pane for sample received auto-fill dialog.
+Many fields like lot #'s need multiple entries.
+  Maybe just multi-select to input.
+Vidas
+  If there are more than 10 or so, show button to make them all negative.
+  Allow entering more than one Vidas machine, if there's time to implement.
+    Multi-select list.
+Why product description is not showing 857937.
+
+
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
