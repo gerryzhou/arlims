@@ -7,7 +7,7 @@ import {NewTestDialogComponent} from '../new-test-dialog/new-test-dialog.compone
 import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
-import {factsStatusTextFromCode} from '../../shared/models/sample-op-status';
+import {factsStatusTextFromCode} from '../../shared/client-models/sample-op-status';
 import {TestClickEvent, TestStageClickEvent} from '../test-metadata/events';
 
 

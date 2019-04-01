@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
+import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
@@ -14,7 +15,7 @@ import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnaly
 
 public interface FactsAccessService
 {
-    CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems(long employeeId, Optional<List<String>> statusCodes);
+    CompletableFuture<List<EmployeeInboxItem>> getPersonInboxItems(long personId, Optional<List<String>> statusCodes);
 
     CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, Optional<List<String>> statusCodes);
 
@@ -25,4 +26,6 @@ public interface FactsAccessService
     CompletableFuture<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalysis(MicrobiologySampleAnalysis analysis);
 
     CompletableFuture<Void> updateWorkStatus(long sampleOpId, long personId, String statusCode);
+
+    CompletableFuture<Void> submitSampleOpTimeCharges(SampleOpTimeCharges timeCharges);
 }

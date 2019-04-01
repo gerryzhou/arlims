@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/rou
 import {Observable, throwError, zip, of as obsOf, from as obsFrom} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
 import {AuditLogQueryService, TestsService, UserContextService} from '../shared/services';
-import {LabGroupTestData} from '../shared/models/lab-group-test-data';
+import {LabGroupTestData} from '../shared/client-models/lab-group-test-data';
 
 @Injectable({providedIn: 'root'})
 export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {

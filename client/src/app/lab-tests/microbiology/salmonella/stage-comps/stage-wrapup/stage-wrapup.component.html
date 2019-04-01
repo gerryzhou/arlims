@@ -62,7 +62,9 @@
             [allowDataChanges]="allowDataChanges"
             (timeChargesDataChange)="onTimeChargesDataChanged()">
          </app-time-charges>
-         <button class="facts-save-btn" mat-button (click)="saveTimeChargesToFacts()">Save to FACTS</button>
+         <button [disabled]="!unsavedTimeCharges" class="facts-save-btn" mat-button (click)="saveTimeChargesToFacts()">
+            Save work hours to FACTS
+         </button>
       </div>
    </div>
 

@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
+import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
@@ -62,6 +63,16 @@ public class FactsController extends ControllerBase
         factsService.updateWorkStatus(opId, personId, statusCode).get();
     }
 
+    @PostMapping("/time-charges")
+    public void submitSampleOpTimeCharges
+        (
+            @RequestBody SampleOpTimeCharges timeCharges,
+            Authentication authentication
+        )
+        throws ExecutionException, InterruptedException
+    {
+        factsService.submitSampleOpTimeCharges(timeCharges).get();
+    }
 }
 
 

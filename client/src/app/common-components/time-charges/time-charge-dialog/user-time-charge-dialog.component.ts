@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import * as moment from 'moment';
 
 import {DialogData} from './dialog-data';
-import {UserTimeCharge} from '../user-time-charge';
+import {AppUserTimeCharge} from '../app-user-time-charge';
 
 @Component({
    selector: 'app-user-time-charge-dialog',
@@ -15,7 +15,7 @@ export class UserTimeChargeDialogComponent {
    userFieldEditable: boolean;
 
    constructor(
-      public dialogRef: MatDialogRef<UserTimeChargeDialogComponent, UserTimeCharge>,
+      public dialogRef: MatDialogRef<UserTimeChargeDialogComponent, AppUserTimeCharge>,
       @Inject(MAT_DIALOG_DATA) public data: DialogData
    )
    {

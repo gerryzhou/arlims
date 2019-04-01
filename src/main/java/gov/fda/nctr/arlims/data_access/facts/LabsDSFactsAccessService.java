@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.*;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.*;
+import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
@@ -56,6 +57,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     private static final String LAB_INBOX_RESOURCE = "LabsInbox";
     private static final String EMPLOYEE_INBOX_RESOURCE = "PersonInbox";
     private static final String WORK_DETAILS_RESOURCE = "WorkDetails";
+    private static final String LAB_ACCOMPLISHMENT_HOURS_RESOURCE = "LabAccomplishmentHours";
     private static final String SAMPLE_TRANSFERS_RESOURCE = "SampleTransfers";
     private static final String SAMPLE_ANALYSES_MICROBIOLOGY_RESOURCE = "SampleAnalysesMicrobiology";
     private static final String SAMPLE_ANALYSES_RESOURCE = "SampleAnalyses";
@@ -102,9 +104,9 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     @Override
     @Async
-    public CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems
+    public CompletableFuture<List<EmployeeInboxItem>> getPersonInboxItems
         (
-            long employeeId,
+            long personId,
             Optional<List<String>> statusCodes
         )
     {
@@ -115,7 +117,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + EMPLOYEE_INBOX_RESOURCE)
-            .queryParam("personId", employeeId)
+            .queryParam("personId", personId)
             .queryParam("orderByFields", "workAssignmentDate:desc")
             .queryParam("objectFilters", includeFields);
 
@@ -307,6 +309,29 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         return completedFuture(null);
     }
 
+
+    @Override
+    @Async
+    public CompletableFuture<Void> submitSampleOpTimeCharges(SampleOpTimeCharges timeCharges)
+    {
+        String reqBody = toJson(timeCharges);
+
+        log.info("Submitting sample op time charges " + reqBody + ".");
+
+        HttpEntity<String> reqEntity = new HttpEntity<>(reqBody, newRequestHeaders(true, true));
+
+        restTemplate.exchange(
+            apiConfig.getBaseUrl() + LAB_ACCOMPLISHMENT_HOURS_RESOURCE,
+            HttpMethod.POST,
+            reqEntity,
+            Void.class
+        );
+
+        log.info("Sample op time charges submitted updated.");
+
+        return completedFuture(null);
+    }
+
     private HttpHeaders newRequestHeaders(boolean acceptJson, boolean contentTypeJson)
     {
         HttpHeaders headers = new HttpHeaders();
@@ -353,7 +378,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
                     : null;
 
                 log.info(
-                    "LABS-DS api call resulted in error: " +
+                    "LABS-DS api call resulted in error with http status code " + statusCode + ": " +
                     (errorNode != null ? errorNode.toString() : "<no response body>")
                 );
 

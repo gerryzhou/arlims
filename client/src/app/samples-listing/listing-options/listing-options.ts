@@ -1,4 +1,4 @@
-import {SampleOpStatusCode} from '../../shared/models/sample-op-status';
+import {SampleOpStatusCode} from '../../shared/client-models/sample-op-status';
 
 export interface ListingOptions {
 

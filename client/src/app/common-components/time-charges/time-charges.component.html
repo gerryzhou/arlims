@@ -32,7 +32,8 @@
             <th mat-header-cell *matHeaderCellDef>Assignment Status</th>
             <td mat-cell *matCellDef="let utc">
                {{utc.timeCharge.assignmentStatus === 'I' ? 'In Progress' :
-               utc.timeCharge.assignmentStatus === 'C' ? 'Completed' : ''}}
+                 utc.timeCharge.assignmentStatus === 'M' ? 'Completed' :
+                 utc.timeCharge.assignmentStatus}}
             </td>
          </ng-container>
 

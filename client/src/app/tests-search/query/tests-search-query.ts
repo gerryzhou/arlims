@@ -1,6 +1,6 @@
 import {Moment} from 'moment';
 
-import {TestTimestampProperty} from '../../shared/models/test-timestamp-properties';
+import {TestTimestampProperty} from '../../shared/client-models/test-timestamp-properties';
 import {LabTestTypeCode} from '../../../generated/dto';
 
 export interface TestsSearchQuery {

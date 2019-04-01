@@ -18,6 +18,7 @@ import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
+import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnalysis;
@@ -39,7 +40,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
 
     @Override
     @Async
-    public CompletableFuture<List<EmployeeInboxItem>> getEmployeeInboxItems(long empId, Optional<List<String>> statusCodes)
+    public CompletableFuture<List<EmployeeInboxItem>> getPersonInboxItems(long personId, Optional<List<String>> statusCodes)
     {
         try
         {
@@ -47,7 +48,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "[" +
                 "{" +
                 "\"sampleTrackingNumber\":853317," +
-                "\"leadInd\":\"Y\"," +
+                "\"leadIndicator\":\"Y\"," +
                 "\"personId\":472629," +
                 "\"sampleAnalysisId\":885106," +
                 "\"sampleTrackingSubNumber\":0," +
@@ -366,6 +367,16 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
             "Received request to update work status in fake FACTS access service for op = " + sampleOpId +
             ", personId = " + personId + ", statusCode = " + statusCode
         );
+
+        return completedFuture(null);
+    }
+
+
+    @Override
+    @Async
+    public CompletableFuture<Void> submitSampleOpTimeCharges(SampleOpTimeCharges timeCharges)
+    {
+        log.info("Received request to submit sample op time charges.");
 
         return completedFuture(null);
     }

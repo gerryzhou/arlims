@@ -1,9 +1,9 @@
 import {UserReference} from '../../../../generated/dto';
-import {UserTimeCharge} from '../user-time-charge';
+import {AppUserTimeCharge} from '../app-user-time-charge';
 
 export interface DialogData {
 
-   userTimeCharge: UserTimeCharge | null;
+   userTimeCharge: AppUserTimeCharge | null;
 
    availableUsers: UserReference[] | null;
 

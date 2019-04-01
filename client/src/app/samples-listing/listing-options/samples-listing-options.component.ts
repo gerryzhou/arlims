@@ -3,7 +3,7 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
 import {ListingOptions} from './listing-options';
-import {SAMPLE_OP_STATUSES, SampleOpStatus} from '../../shared/models/sample-op-status';
+import {SAMPLE_OP_STATUSES, SampleOpStatus} from '../../shared/client-models/sample-op-status';
 
 @Component({
    selector: 'app-samples-listing-options',

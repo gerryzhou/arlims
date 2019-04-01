@@ -3,7 +3,6 @@ import {Location} from '@angular/common';
 import {HttpParams} from '@angular/common/http';
 import {Moment} from 'moment';
 
-import {SampleOpStatusCode} from '../models/sample-op-status';
 import {LabTestTypeCode} from '../../../generated/dto';
 
 
@@ -160,6 +159,11 @@ export class ApiUrlsService {
    factsMicrobiologySampleAnalysisUrl()
    {
       return this.location.prepareExternalUrl('/api/facts/sample-analysis/micro');
+   }
+
+   factsTimeChargesUrl()
+   {
+      return this.location.prepareExternalUrl('/api/facts/time-charges');
    }
 
    isAppApiUrl(url: string)

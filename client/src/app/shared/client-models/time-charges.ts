@@ -1,4 +1,5 @@
 import {FormControl, FormGroup} from '@angular/forms';
+import {AnalystTypeCode, TimeChargeStatusCode, YesNoCode} from '../../../generated/dto';
 
 export interface TimeCharge {
 
@@ -6,24 +7,38 @@ export interface TimeCharge {
 
    hours: number;
 
-   assignmentStatus: AssignmentStatus;
+   assignmentStatus: TimeChargeStatusCode;
 
    enteredTimestamp: string;
 
 }
 
-export type AssignmentStatus = 'I' | 'C';
-
-export interface TestTimeCharges {
+export interface TimeChargesSet {
 
    [userShortName: string]: TimeCharge;
 
 }
 
-export type ChargeRole = 'lead' | 'check' | 'additional';
+export type ChargeRole = 'lead' | 'additional' | 'check'; // display text for analyst type codes
+
+export function analystTypeCode(chargeRole: ChargeRole): AnalystTypeCode
+{
+   switch ( chargeRole )
+   {
+      case 'lead': return 'O';
+      case 'additional': return 'A';
+      case 'check': return 'C';
+   }
+}
+
+export function leadIndicator(chargeRole: ChargeRole): YesNoCode
+{
+   return chargeRole === 'lead' ? 'Y' : 'N';
+}
 
 
-export function makeTestTimeChargesFormGroup(testTimeCharges: TestTimeCharges | null): FormGroup
+
+export function makeTimeChargesSetFormGroup(testTimeCharges: TimeChargesSet | null): FormGroup
 {
    const fgControls: { [userShortName: string]: FormGroup } = {};
 
@@ -45,4 +60,3 @@ export function makeTimeChargeFormGroup(timeCharge: TimeCharge): FormGroup
       enteredTimestamp: new FormControl(timeCharge.enteredTimestamp),
    });
 }
-

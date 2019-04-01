@@ -1,6 +1,6 @@
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 
-import {makeTestTimeChargesFormGroup} from '../../../../shared/models/time-charges';
+import {makeTimeChargesSetFormGroup} from '../../../../shared/client-models/time-charges';
 import {
    ContinuationControls,
    ContinuationTests,
@@ -97,7 +97,7 @@ export function makeTestDataFormGroup
          reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
          reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
          reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
-         testTimeCharges: makeTestTimeChargesFormGroup(testData.wrapupData.testTimeCharges),
+         testTimeCharges: makeTimeChargesSetFormGroup(testData.wrapupData.testTimeCharges),
          timeChargesLastSavedToFacts: new FormControl(testData.wrapupData.timeChargesLastSavedToFacts),
          timeChargesLastEdited: new FormControl(testData.wrapupData.timeChargesLastEdited),
          analysisResultsRemarksText: new FormControl(testData.wrapupData.analysisResultsRemarksText),

@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {SelEnrData} from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {LabResource} from '../../../../../../generated/dto';
 import {ResourceControlAssignments} from '../../../../resource-assignments';
 import {MatDialog} from '@angular/material';

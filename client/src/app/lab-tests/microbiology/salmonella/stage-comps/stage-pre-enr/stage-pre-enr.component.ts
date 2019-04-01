@@ -4,7 +4,7 @@ import {merge, Subscription} from 'rxjs';
 
 import {LabResource} from '../../../../../../generated/dto';
 import {PreEnrData} from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {SampleTestUnits, SamplingMethod, TestUnitsType} from '../../../sampling-methods';
 import {ResourceControlAssignments} from '../../../../resource-assignments';
 import {MatDialog} from '@angular/material';

@@ -36,9 +36,8 @@ export class ResourceControlAssignments {
          if (!result) return;
          this.assignResourceCodes(result.resourceCodes);
          const unassigned = this.unassignedResourceCodes;
-         if ( unassigned.size > 0 && alertMsgSvc )
+         if ( unassigned.size > 0 )
          {
-            console.log('sending alert about unassigned');
             alertMsgSvc.alertWarning(
                `${unassigned.size} resource codes were not matched to any fields:`,
                false,

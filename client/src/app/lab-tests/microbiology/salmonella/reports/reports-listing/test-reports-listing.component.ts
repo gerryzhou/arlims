@@ -5,7 +5,7 @@ import * as FileSaver from 'file-saver';
 
 import {TestsService} from '../../../../../shared/services';
 import {emptyTestData, TestData} from '../../test-data';
-import {LabGroupTestData} from '../../../../../shared/models/lab-group-test-data';
+import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
 import {SampleOpTest, AuditLogEntry} from '../../../../../../generated/dto';
 import {IMP_SLM_VIDAS_PDF_REPORT_NAME, makePdfReportData} from '../pdf-report-data';
 

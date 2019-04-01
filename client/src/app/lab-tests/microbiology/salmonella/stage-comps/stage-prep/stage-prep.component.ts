@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 import {PrepData} from '../../test-data';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {AlertMessageService} from '../../../../../shared/services/alerts';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {AppUser, SampleOp, SampleTransfer} from '../../../../../../generated/dto';
 import {ItemsSelectionDialogComponent} from '../../../../../common-components/items-selection-dialog/items-selection-dialog.component';
 

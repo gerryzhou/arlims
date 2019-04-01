@@ -1,4 +1,4 @@
-import {LabGroupTestData} from '../models/lab-group-test-data';
+import {LabGroupTestData} from '../client-models/lab-group-test-data';
 import {TestAttachedFileMetadata} from '../../../generated/dto';
 
 export function makeAttachedFilesByTestPartMap(labGroupTestData: LabGroupTestData): Map<string|null, TestAttachedFileMetadata[]>

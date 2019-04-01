@@ -4,8 +4,8 @@ import {MatDialog, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 
 import {UserReference} from '../../../generated/dto';
-import {UserTimeCharge} from './user-time-charge';
-import {makeTimeChargeFormGroup} from '../../shared/models/time-charges';
+import {AppUserTimeCharge} from './app-user-time-charge';
+import {makeTimeChargeFormGroup} from '../../shared/client-models/time-charges';
 import {UserTimeChargeDialogComponent} from './time-charge-dialog/user-time-charge-dialog.component';
 
 @Component({
@@ -16,7 +16,7 @@ import {UserTimeChargeDialogComponent} from './time-charge-dialog/user-time-char
 export class TimeChargesComponent implements OnChanges, OnDestroy {
 
    @Input()
-   form: FormGroup; // contains time charge form groups by user short name, from makeTestTimeChargesFormGroup() in form-groups.ts
+   form: FormGroup; // contains time charge form groups by user short name, from makeTimeChargesSetFormGroup() in form-groups.ts
 
    @Input()
    availableUsers: UserReference[];
@@ -25,20 +25,20 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
    allowDataChanges: boolean;
 
    @Output()
-   timeChargeCreate = new EventEmitter<UserTimeCharge>();
+   timeChargeCreate = new EventEmitter<AppUserTimeCharge>();
 
    @Output()
-   timeChargeUpdate = new EventEmitter<UserTimeCharge>();
+   timeChargeUpdate = new EventEmitter<AppUserTimeCharge>();
 
    @Output()
-   timeChargeDelete = new EventEmitter<UserTimeCharge>();
+   timeChargeDelete = new EventEmitter<AppUserTimeCharge>();
 
    @Output()
    timeChargesDataChange = new EventEmitter<void>();
 
    formChangesSubscription: Subscription;
 
-   readonly tableDataSource: MatTableDataSource<UserTimeCharge>;
+   readonly tableDataSource: MatTableDataSource<AppUserTimeCharge>;
    readonly tableDisplayColumns = ['edit', 'user', 'role', 'status', 'hours', 'delete'];
 
    constructor
@@ -47,7 +47,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
          private dialogSvc: MatDialog
       )
    {
-      this.tableDataSource = new MatTableDataSource<UserTimeCharge>([]);
+      this.tableDataSource = new MatTableDataSource<AppUserTimeCharge>([]);
    }
 
    ngOnChanges()
@@ -75,7 +75,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
           });
    }
 
-   getUserTimeCharges(): UserTimeCharge[]
+   getUserTimeCharges(): AppUserTimeCharge[]
    {
       const userShortNames = Object.keys(this.form.controls);
 
@@ -108,7 +108,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
          }
       });
 
-      dlg.afterClosed().subscribe((userTimeCharge: UserTimeCharge) => {
+      dlg.afterClosed().subscribe((userTimeCharge: AppUserTimeCharge) => {
          if ( userTimeCharge )
          {
             this.form.addControl(
@@ -117,11 +117,12 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
             );
 
             this.timeChargeCreate.emit(userTimeCharge);
+            this.timeChargesDataChange.emit();
          }
       });
    }
 
-   promptUpdateUserTimeCharge(userTimeCharge: UserTimeCharge)
+   promptUpdateUserTimeCharge(userTimeCharge: AppUserTimeCharge)
    {
       const dlg = this.dialogSvc.open(UserTimeChargeDialogComponent, {
          width: 'calc(75%)',
@@ -131,23 +132,25 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
          }
       });
 
-      dlg.afterClosed().subscribe((updatedUserTimeCharge: UserTimeCharge) => {
+      dlg.afterClosed().subscribe((updatedUserTimeCharge: AppUserTimeCharge) => {
          if ( updatedUserTimeCharge )
          {
             const updatedTimeCharge = updatedUserTimeCharge.timeCharge;
             this.form.get(userTimeCharge.userShortName).setValue(updatedTimeCharge);
-         }
 
-         this.timeChargeUpdate.emit(userTimeCharge);
+            this.timeChargeUpdate.emit(userTimeCharge);
+            this.timeChargesDataChange.emit();
+         }
       });
    }
 
-   removeUserTimeCharge(userTimeCharge: UserTimeCharge)
+   removeUserTimeCharge(userTimeCharge: AppUserTimeCharge)
    {
       this.form.removeControl(userTimeCharge.userShortName);
       this.refreshTableDataSource();
 
       this.timeChargeDelete.emit(userTimeCharge);
+      this.timeChargesDataChange.emit();
    }
 
    ngOnDestroy()

@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 
-import {LabGroupTestData} from '../../../../../shared/models/lab-group-test-data';
+import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
 import {LabResource, TestAttachedFileMetadata, SampleOpTest, AppUser} from '../../../../../../generated/dto';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {emptyTestData, getVidasPositiveTestUnitNumbers, makeTestDataFormGroup} from '../../test-data';
 import {TestConfig} from '../../test-config';
 import {UserContextService} from '../../../../../shared/services';

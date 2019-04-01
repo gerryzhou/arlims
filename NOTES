@@ -1,12 +1,24 @@
+Detect validation failure api errors, extract error message properly and return to client in consistent way.
+  Do not report LABS DS validation failures as internal server errors.
+  LabsDSFactsAccessService: LABS-DS api call resulted in error: [{"errorCode":"LABS-RUL-2611","message":"Analytical Results must be recorded before Lab accomplishment hours can be entered."}]
+
+Why no op,lid,paf etc reported for "Bayer Asprin 100 mg" samples?
+
+
 Leidos
 ------
 Still need field cfsanProductDesc added to /LabsDataService/api/SampleAnalyses results.
 Can requests containing unrecognized fields be rejected?
 LabAccomplishmentHours: What will happen if multiple submits are made which include the same employee and op id?
+  500 (internal server error) code is being returned for validation failures, should be 4xx.
+    For example: 500 INTERNAL_SERVER_ERROR: [{"errorCode":"LABS-RUL-2611","message":"Analytical Results must be recorded before Lab accomplishment hours can be entered."}]
   Semantics of this operation aren't clear:
     Are hours updated if they already exist?
-    Are existing hours not represented in the submission removed in FACTS? If not, how would an entry be deleted?
-    Maybe should be a PUT?
+      (Looks like probably so.)
+    It seems if an employee hours entry was ever posted, then it must always be sent in every subsequent post.
+      [{"errorCode":"LABS-RUL-2613","message":"Assignment records for PersonId [[454522]] missing in the request. Please include ALL assignment records in the request."}] 201
+  Assignment status: What does 'M' status mean?
+    Currently 'M' is taken to mean complete, will need to make changes if this is not so.
 
 
 Find problem with the AOAC submission below.

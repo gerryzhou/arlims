@@ -47,6 +47,12 @@
    margin-bottom: 10px;
 }
 
+.time-charges-messages {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: center;
+}
+
 app-time-charges {
    margin-bottom: 10px;
 }

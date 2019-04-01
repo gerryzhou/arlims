@@ -7,7 +7,7 @@ import * as FileSaver from 'file-saver';
 
 import {copyWithMergedValuesFrom} from '../../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, SaveResult, TestsService, UserContextService} from '../../../../../shared/services';
-import {LabGroupTestData} from '../../../../../shared/models/lab-group-test-data';
+import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
 import {
    AppUser,
    LabResource,
@@ -16,7 +16,7 @@ import {
    TestSaveData,
    UserReference
 } from '../../../../../../generated/dto';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {
    emptyTestData,
    firstNonCompleteTestStageName,

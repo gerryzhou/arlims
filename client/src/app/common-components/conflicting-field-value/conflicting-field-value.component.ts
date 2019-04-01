@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {EmployeeTimestamp} from '../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../shared/client-models/employee-timestamp';
 
 @Component({
   selector: 'app-conflicting-field-value',

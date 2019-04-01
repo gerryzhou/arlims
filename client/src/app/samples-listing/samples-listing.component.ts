@@ -16,7 +16,7 @@ import {AlertMessageService, UserContextService} from '../shared/services';
 import {LocalStorageService} from '../shared/services/local-storage.service';
 import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.service';
 import {ListingOptions} from './listing-options/listing-options';
-import {SampleOpStatusCode} from '../shared/models/sample-op-status';
+import {SampleOpStatusCode} from '../shared/client-models/sample-op-status';
 import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 

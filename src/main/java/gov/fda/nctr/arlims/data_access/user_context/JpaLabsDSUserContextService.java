@@ -27,8 +27,8 @@ import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
 import gov.fda.nctr.arlims.data_access.version_info.AppVersionService;
 import gov.fda.nctr.arlims.exceptions.BadRequestException;
-import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
+import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.models.dto.LabResource;
 
 
@@ -87,10 +87,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         );
 
         CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
-            factsAccessService.getEmployeeInboxItems(
-                emp.getFactsPersonId(),
-                Optional.empty()
-            );
+            factsAccessService.getPersonInboxItems(emp.getFactsPersonId(), Optional.empty());
 
         LabGroup labGroup = emp.getLabGroup();
 
@@ -132,7 +129,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     public LabGroupContents getLabGroupContents(long factsPersonId)
     {
         CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
-            factsAccessService.getEmployeeInboxItems(factsPersonId, Optional.empty());
+            factsAccessService.getPersonInboxItems(factsPersonId, Optional.empty());
 
         LabGroup labGroup = this.labGroupRepo.findByFactsPersonId(factsPersonId).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
@@ -357,7 +354,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     {
         return
             labGroup.getEmployees().stream()
-            .map(e -> new UserReference(e.getId(), e.getFdaEmailAccountName(), e.getShortName()))
+            .map(e -> new UserReference(e.getId(), e.getFactsPersonId(), e.getFdaEmailAccountName(), e.getShortName()))
             .collect(toList());
     }
 

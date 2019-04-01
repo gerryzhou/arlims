@@ -4,10 +4,12 @@ import * as moment from 'moment';
 import {Moment} from 'moment';
 
 import {WrapupData} from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
-import {SampleOp, UserReference} from '../../../../../../generated/dto';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
+import {FactsUserTimeCharge, SampleOp, UserReference} from '../../../../../../generated/dto';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TimeChargesComponent} from '../../../../../common-components/time-charges/time-charges.component';
+import {analystTypeCode, leadIndicator} from '../../../../../shared/client-models/time-charges';
+import {AlertMessageService} from '../../../../../shared/services/alerts';
 
 @Component({
    selector: 'app-stage-wrapup',
@@ -40,6 +42,8 @@ export class StageWrapupComponent implements OnChanges {
    @Input()
    labGroupUsers: UserReference[];
 
+   usersByShortName: Map<string, UserReference>;
+
    destinationsEnabled = false;
    otherDescriptionEnabled = false;
 
@@ -49,7 +53,8 @@ export class StageWrapupComponent implements OnChanges {
 
    constructor
       (
-         private factsService: GeneralFactsService
+         private factsService: GeneralFactsService,
+         private alertMsgSvc: AlertMessageService
       )
    {}
 
@@ -57,6 +62,8 @@ export class StageWrapupComponent implements OnChanges {
    {
       this.unsavedTimeCharges =
          unsavedEditsExist(this.getTimeChargesLastEdited(), this.getTimeChargesLastSavedToFacts());
+
+      this.usersByShortName = makeUserRefsByUserShortNameMap(this.labGroupUsers);
 
       if ( this.allowDataChanges && this.form.disabled )
          this.form.enable();
@@ -91,9 +98,7 @@ export class StageWrapupComponent implements OnChanges {
 
    onTimeChargesDataChanged()
    {
-      this.form.get('timeChargesLastEdited').setValue(moment().toISOString());
-
-      this.unsavedTimeCharges = true;
+      this.setTimeChargesLastEdited(moment());
    }
 
    saveTimeChargesToFacts()
@@ -102,31 +107,80 @@ export class StageWrapupComponent implements OnChanges {
 
       const userTimeCharges = this.timeChargesComp.getUserTimeCharges();
 
-      console.log('TODO: Save user time charges to FACTS: ', userTimeCharges);
+      const factsUserTimeCharges: FactsUserTimeCharge[] =
+         userTimeCharges.map(appUserTimeCharge => {
+            const tc = appUserTimeCharge.timeCharge;
+            const personId: number = this.usersByShortName.get(appUserTimeCharge.userShortName).factsPersonId;
+            return {
+               assignedToPersonId: personId,
+               analystTypeCode: analystTypeCode(tc.role),
+               leadIndicator: leadIndicator(tc.role),
+               remarks: '',
+               statusCode: tc.assignmentStatus,
+               hoursSpentNum: tc.hours,
+               hoursCreditedOrgName: this.labGroupParentOrgName
+            };
+         });
 
-      // TODO: Call new FACTS service method.
-      // TODO: If save succeeded, update timeChargesLastSavedToFacts and then set unsavedTimeCharges as in ngOnChanges().
+      this.factsService.submitTimeCharges(this.sampleOp.opId, factsUserTimeCharges).subscribe(
+         () => {
+            this.setTimeChargesLastSavedToFacts(saveStarted);
+         },
+         err => {
+            console.error('Error trying to save work accomplishments to FACTS: ', err);
+            this.alertMsgSvc.alertDanger('Failed to save accomplishment hours to FACTS.');
+         }
+      );
    }
 
    private getTimeChargesLastEdited(): Moment | null
    {
       const isoTimestamp = this.form.get('timeChargesLastEdited').value;
 
-      if ( !isoTimestamp ) return null;
-      else return moment(isoTimestamp);
+      return isoTimestamp ? moment(isoTimestamp) : null;
+   }
+
+   private setTimeChargesLastEdited(instant: Moment)
+   {
+      this.form.get('timeChargesLastEdited').setValue(instant.toISOString());
+
+      this.unsavedTimeCharges =
+         unsavedEditsExist(this.getTimeChargesLastEdited(), this.getTimeChargesLastSavedToFacts());
    }
 
    private getTimeChargesLastSavedToFacts(): Moment | null
    {
       const isoTimestamp = this.form.get('timeChargesLastSavedToFacts').value;
 
-      if ( !isoTimestamp ) return null;
-      else return moment(isoTimestamp);
+      return isoTimestamp ? moment(isoTimestamp) : null;
    }
+
+   private setTimeChargesLastSavedToFacts(instant: Moment)
+   {
+      this.form.get('timeChargesLastSavedToFacts').setValue(instant.toISOString());
+
+      this.unsavedTimeCharges =
+         unsavedEditsExist(this.getTimeChargesLastEdited(), this.getTimeChargesLastSavedToFacts());
+   }
+
 }
 
-function unsavedEditsExist(lastEdited: Moment | null, lastSaved: Moment | null)
+function unsavedEditsExist(lastEdited: Moment | null, lastSaved: Moment | null): boolean
 {
+   console.log('lastEdited: ', lastEdited, ' lastSaved: ', lastSaved);
+   console.log('unsaved edits exist: ', lastEdited && (!lastSaved || lastEdited.isAfter(lastSaved)));
    return lastEdited && (!lastSaved || lastEdited.isAfter(lastSaved));
 }
 
+
+function makeUserRefsByUserShortNameMap(labUsers: UserReference[]): Map<string, UserReference>
+{
+   const m = new Map<string, UserReference>();
+
+   for ( const userRef of labUsers )
+   {
+      m.set(userRef.shortName, userRef);
+   }
+
+   return m;
+}

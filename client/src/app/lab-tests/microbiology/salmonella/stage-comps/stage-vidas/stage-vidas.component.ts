@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 
 import {VidasData} from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {LabResource, TestAttachedFileMetadata} from '../../../../../../generated/dto';
 import {arraysEqual} from '../../../../../shared/util/data-objects';
 import {TestUnitsType} from '../../../sampling-methods';

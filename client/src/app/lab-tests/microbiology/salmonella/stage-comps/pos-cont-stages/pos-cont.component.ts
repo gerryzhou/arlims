@@ -13,7 +13,7 @@ import {
    PositivesContinuationData,
    ContinuationTests
 } from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/models/employee-timestamp';
+import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {TestConfig} from '../../test-config';
 import {AppUser, TestAttachedFileMetadata} from '../../../../../../generated/dto';
 import {TestUnitsType} from '../../../sampling-methods';
