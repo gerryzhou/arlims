@@ -181,35 +181,6 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     @Override
     @Async
-    // TODO: Test when Leidos adds product descr field in the result.
-    public CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId)
-    {
-        String includeFields =
-            "operationId,sampleTrackingNumber,sampleTrackingSubNumber,programAssignmentCode,problemAreaFlag," +
-            "cfsanProductDesc";
-
-        String uri =
-            UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + SAMPLE_ANALYSES_RESOURCE)
-            .queryParam("operationId", sampleOpId)
-            .queryParam("objectFilters", includeFields)
-            .build(false).encode().toUriString();
-
-        HttpEntity req = new HttpEntity(newRequestHeaders(true, false));
-
-        ResponseEntity<SampleOpDetails[]> resp = restTemplate.exchange(uri, GET, req, SampleOpDetails[].class);
-
-        SampleOpDetails[] res = resp.getBody();
-
-        if ( res.length != 1 )
-            throw new RuntimeException(
-                "Expected one result for sample op details for op " + sampleOpId + ", got " + res.length + "."
-            );
-
-        return completedFuture(res[0]);
-    }
-
-    @Override
-    @Async
     public CompletableFuture<List<SampleTransfer>> getSampleTransfers
         (
             long sampleTrackingNumber,

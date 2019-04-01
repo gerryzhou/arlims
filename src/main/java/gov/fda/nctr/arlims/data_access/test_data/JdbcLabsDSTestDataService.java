@@ -33,7 +33,6 @@ import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.*;
 
 
@@ -385,7 +384,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     {
         String sql =
             "select " +
-            "t.op_id, tt.code, tt.name, tt.short_name, t.created, " +
+            "t.op_id,sample_tracking_num,sample_tracking_sub_num,pac,product_name," +
+            "tt.code, tt.name, tt.short_name, t.created, " +
             "ce.short_name created_by_emp, t.last_saved, se.short_name last_saved_emp, " +
             "(select count(*) from test_file tf where tf.test_id = t.id) attached_files_count," +
             "TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date, " +
@@ -404,39 +404,30 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         if ( !rs.next() )
             throw new RuntimeException("Test not found.");
 
-        long opId = rs.getLong(1);
-
-        try
-        {
-            SampleOpDetails sample = factsAccessService.getSampleOpDetails(opId).get();
-
-            return
-                new LabTestMetadata(
-                    testId,
-                    opId,
-                    sample.getSampleTrackingNumber(),
-                    sample.getSampleTrackingSubNumber(),
-                    sample.getProgramAssignmentCode(),
-                    sample.getCfsanProductDesc(),
-                    LabTestTypeCode.valueOf(rs.getString(2)),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getTimestamp(5).toInstant(),
-                    rs.getString(6),
-                    rs.getTimestamp(7).toInstant(),
-                    rs.getString(8),
-                    rs.getInt(9),
-                    Optional.ofNullable(rs.getString(10)).map(LocalDate::parse),
-                    Optional.ofNullable(rs.getString(11)),
-                    Optional.ofNullable(rs.getString(12)),
-                    Optional.ofNullable(rs.getTimestamp(13)).map(Timestamp::toInstant),
-                    Optional.ofNullable(rs.getString(14)), // reviewed by emp
-                    Optional.ofNullable(rs.getTimestamp(15)).map(Timestamp::toInstant),
-                    Optional.ofNullable(rs.getString(16)) // saved to facts by emp
-                );
-        }
-        catch (InterruptedException | ExecutionException e)
-        { throw new RuntimeException(e); }
+        return
+            new LabTestMetadata(
+                testId,
+                rs.getLong(1),
+                rs.getLong(2),
+                rs.getLong(3),
+                rs.getString(4),
+                rs.getString(5),
+                LabTestTypeCode.valueOf(rs.getString(6)),
+                rs.getString(7),
+                rs.getString(8),
+                rs.getTimestamp(9).toInstant(),
+                rs.getString(10),
+                rs.getTimestamp(11).toInstant(),
+                rs.getString(12),
+                rs.getInt(13),
+                Optional.ofNullable(rs.getString(14)).map(LocalDate::parse),
+                Optional.ofNullable(rs.getString(15)),
+                Optional.ofNullable(rs.getString(16)),
+                Optional.ofNullable(rs.getTimestamp(17)).map(Timestamp::toInstant),
+                Optional.ofNullable(rs.getString(18)), // reviewed by emp
+                Optional.ofNullable(rs.getTimestamp(19)).map(Timestamp::toInstant),
+                Optional.ofNullable(rs.getString(20)) // saved to facts by emp
+            );
     }
 
     @Override

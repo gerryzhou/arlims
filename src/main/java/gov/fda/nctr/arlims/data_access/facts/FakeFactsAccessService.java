@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
@@ -249,31 +248,6 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
             ));
 
             return completedFuture(items);
-        }
-        catch(Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    @Async
-    public CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId)
-    {
-        try
-        {
-            SampleOpDetails sample = jsonObjectMapper.readValue(
-                "{" +
-                "\"operationId\": 123456," +
-                "\"sampleTrackingNumber\": 804972," +
-                "\"sampleTrackingSubNumber\": 0," +
-                "\"programAssignmentCode\": \"04019A\"," +
-                "\"cfsanProductDesc\": \"SMOKED TROUT\"" +
-                "}",
-                SampleOpDetails.class
-            );
-
-            return completedFuture(sample);
         }
         catch(Exception e)
         {

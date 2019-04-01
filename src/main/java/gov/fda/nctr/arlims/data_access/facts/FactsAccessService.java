@@ -6,7 +6,6 @@ import java.util.concurrent.CompletableFuture;
 
 import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.LabInboxItem;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.SampleOpDetails;
 import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
@@ -18,8 +17,6 @@ public interface FactsAccessService
     CompletableFuture<List<EmployeeInboxItem>> getPersonInboxItems(long personId, Optional<List<String>> statusCodes);
 
     CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, Optional<List<String>> statusCodes);
-
-    CompletableFuture<SampleOpDetails> getSampleOpDetails(long sampleOpId);
 
     CompletableFuture<List<SampleTransfer>> getSampleTransfers(long sampleTrackingNumber, Optional<Long> toPersonId);
 
