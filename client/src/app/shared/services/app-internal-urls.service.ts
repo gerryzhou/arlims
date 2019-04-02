@@ -16,9 +16,9 @@ export class AppInternalUrlsService {
       return [''];
    }
 
-   samplesListing(): any[]
+   personInbox(): any[]
    {
-      return ['/samples'];
+      return ['/person-inbox'];
    }
 
    testAttachedFilesEditor(testId: number): any[]

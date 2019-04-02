@@ -27,7 +27,7 @@ const routes: Routes = [
       canActivate: [AdminUserGuard],
    },
    {
-      path: 'samples',
+      path: 'person-inbox',
       component: SamplesListingComponent,
       resolve: { labGroupContents: LabGroupContentsResolver },
       data: {title: 'Inbox', allowDataChanges: true},
@@ -56,7 +56,7 @@ const routes: Routes = [
    {
       path: 'test-types/micro-slm',
       loadChildren: '../lab-tests/microbiology/salmonella/salmonella.module#SalmonellaModule',
-      data: {preload: true, title: 'Salmonella Test'},
+      data: {title: 'Salmonella Test'},
       canActivate: [AuthenticatedUserGuard],
    },
    {
@@ -65,7 +65,7 @@ const routes: Routes = [
       data: {title: 'Audit Log'},
       canActivate: [AdminUserGuard],
    },
-   { path: '', redirectTo: 'samples', pathMatch: 'full' },
+   { path: '', redirectTo: 'person-inbox', pathMatch: 'full' },
 ];
 
 @NgModule({

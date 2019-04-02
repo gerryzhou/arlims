@@ -1,5 +1,3 @@
-In Wrapup stage, save test data after saving work hours to FACTS. Allow more flexible navigation after saving test data, defaulting to next stage.
-  Lab group contents resolver now always loads fresh data.
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.

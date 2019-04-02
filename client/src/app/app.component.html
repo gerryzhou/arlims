@@ -1,7 +1,7 @@
 <mat-toolbar color="primary" *ngIf="notLoginView$ | async">
    <mat-toolbar-row>
       <nav>
-         <button mat-button routerLink="/samples" [routerLinkActive]="['active-route']">
+         <button mat-button routerLink="/" [routerLinkActive]="['active-route']">
             <mat-icon>home</mat-icon> ALIS
          </button>
          <mat-menu #linksMenu="matMenu">

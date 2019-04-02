@@ -458,7 +458,7 @@ export class StagedTestDataComponent implements OnInit {
             break;
          case 'nav-home':
             this.selectedSamplesSvc.setSelectedSampleOps([this.sampleOpTest.sampleOp]);
-            this.router.navigate(this.appUrlsSvc.samplesListing());
+            this.router.navigate(this.appUrlsSvc.home());
             break;
       }
    }
