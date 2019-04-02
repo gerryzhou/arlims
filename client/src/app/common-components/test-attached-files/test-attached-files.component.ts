@@ -53,13 +53,13 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
 
    constructor
       (
-         private httpClient: HttpClient,
-         private activatedRoute: ActivatedRoute,
-         private dialogSvc: MatDialog,
-         private apiUrlsSvc: ApiUrlsService,
          private testsSvc: TestsService,
          private usrCtxSvc: UserContextService,
+         private apiUrlsSvc: ApiUrlsService,
          private alertMsgSvc: AlertMessageService,
+         private httpClient: HttpClient,
+         private activatedRoute: ActivatedRoute,
+         private dialogSvc: MatDialog
       )
    {
       const testAttachedFiles = <TestAttachedFiles>this.activatedRoute.snapshot.data['testAttachedFiles'];
