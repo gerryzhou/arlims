@@ -1,5 +1,6 @@
 package gov.fda.nctr.arlims.data_access.user_context;
 
+import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -39,7 +40,6 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     private final EmployeeRepository employeeRepo;
     private final LabGroupRepository labGroupRepo;
     private final TestRepository testRepo;
-    private final LabResourceRepository labResourceRepo;
     private final RoleRepository roleRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder bcryptEncoder;
@@ -56,7 +56,6 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             EmployeeRepository employeeRepo,
             LabGroupRepository labGroupRepo,
             TestRepository testRepo,
-            LabResourceRepository labResourceRepo,
             RoleRepository roleRepo,
             AuditLogService dataChangeAuditingSvc,
             NamedParameterJdbcTemplate jdbcTemplate,
@@ -68,7 +67,6 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         this.employeeRepo = employeeRepo;
         this.labGroupRepo = labGroupRepo;
         this.testRepo = testRepo;
-        this.labResourceRepo = labResourceRepo;
         this.roleRepo = roleRepo;
         this.dataChangeAuditingSvc = dataChangeAuditingSvc;
         this.jdbcTemplate = jdbcTemplate;
@@ -95,7 +93,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
         List<UserReference> users = getLabGroupUsers(labGroup);
 
-        List<LabResource> labResources = getLabGroupLabResources(labGroup);
+        List<LabResource> labResources = getLabGroupResources(labGroup);
 
         AppUser user = makeUser(emp);
 
@@ -139,7 +137,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
         List<UserReference> users = getLabGroupUsers(labGroup);
 
-        List<LabResource> labResources = getLabGroupLabResources(labGroup);
+        List<LabResource> labResources = getLabGroupResources(labGroup);
 
         try
         {
@@ -358,12 +356,26 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             .collect(toList());
     }
 
-    private List<LabResource> getLabGroupLabResources(LabGroup labGroup)
+    private List<LabResource> getLabGroupResources(LabGroup labGroup)
     {
-        return
-            labResourceRepo.findByLabGroupId(labGroup.getId()).stream()
-            .map(lr -> new LabResource(lr.getCode(), lr.getLabResourceType(), opt(lr.getDescription())))
-            .collect(toList());
+        String sql =
+            "select r.resource_group, r.code, r.resource_type, r.description " +
+            "from lab_group_resource_group lgrg " +
+            "join \"RESOURCE\" r on r.resource_group = lgrg.resource_group " +
+            "where lgrg.lab_group_id = :lgid";
+
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("lgid", labGroup.getId());
+
+        return jdbcTemplate.query(sql, params, (ResultSet rs, int ix) ->
+            new LabResource(
+                rs.getString(1),
+                rs.getString(2),
+                LabResourceType.valueOf(rs.getString(3)),
+                Optional.ofNullable(rs.getString(4))
+            )
+        );
     }
 
     private LabTestMetadata makeLabTestMetadata

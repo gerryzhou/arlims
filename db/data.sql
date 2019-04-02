@@ -23,25 +23,57 @@ insert into employee_role(emp_id, role_id)
 insert into employee_role(emp_id, role_id)
   values(2,2);
 
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('ARL00424', 'BAL', 1, null);
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('RT10971', 'WAB', 1, null);
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('ARL00190', 'WAB', 1, null);
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('ARL00232', 'WAB', 1, null);
+-- Add shared resources for ARKL's ARL-MICRO* lab groups.
 
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V1-5089993', 'VID', 1, null);
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V2-5099353', 'VID', 1, null);
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V3-5122706', 'VID', 1, null);
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V4-5122707', 'VID', 1, null);
-insert into lab_resource(code, resource_type, lab_group_id, description)
-  values('V5-5099389', 'VID', 1, null);
+insert into resource_group(name, lab_group_parent_org, description)
+  values('ARKL-MICRO-SHARED', 'ARKL', 'Shared lab resources for ARL-MICRO* labs');
+
+insert into lab_group_resource_group (lab_group_id, resource_group)
+  values(1, 'ARKL-MICRO-SHARED');
+
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'ARL00424', 'BAL', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'ARL00266', 'BAL', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'ARL00480', 'BAL', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'NA12596', 'BAL', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'NA12757', 'BAL', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'NA14728', 'BAL', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'NA14961', 'BAL', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'RT10971', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'ARL00190', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'ARL00232', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'RT10968', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'RT10969', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'RT10973', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'RT10975', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'RT10976', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'NA12536', 'WAB', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'V1-5089993', 'VID', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'V2-5099353', 'VID', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'V3-5122706', 'VID', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'V4-5122707', 'VID', null);
+insert into "RESOURCE"(resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', 'V5-5099389', 'VID', null);
+
 
 insert into test_type(code, short_name, name)
   values('MICRO_SLM', 'SALMONELLA', 'Salmonella');

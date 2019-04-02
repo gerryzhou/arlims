@@ -80,22 +80,6 @@ create index IX_EMP_LABGROUPID
   on EMPLOYEE (LAB_GROUP_ID)
 /
 
-create table LAB_RESOURCE
-(
-  CODE          VARCHAR2(50 char) not null
-    primary key,
-  DESCRIPTION   VARCHAR2(100 char),
-  LAB_GROUP_ID  NUMBER(19)        not null
-    constraint FK_LABRSC_LABGROUP
-      references LAB_GROUP,
-  RESOURCE_TYPE VARCHAR2(60 char) not null
-)
-/
-
-create index IX_LABRSC_LABGRPID
-  on LAB_RESOURCE (LAB_GROUP_ID)
-/
-
 create table ROLE
 (
   ID          NUMBER(19) generated as identity
@@ -278,4 +262,34 @@ create index IX_TSTFILE_TSTID
 create index IX_TSTFILE_TESTDATAPART
   on TEST_FILE (TEST_DATA_PART)
 /
+
+
+-------------------------------------------------------------------------------
+-- manually created tables
+
+create table resource_group
+(
+  name varchar(50),
+  lab_group_parent_org varchar(20) not null,
+  description varchar(200),
+  constraint pk_rscgrp primary key (name)
+);
+
+create table "RESOURCE"
+(
+  resource_group varchar(50) constraint fk_rscgrp references resource_group,
+  code varchar(50),
+  resource_type varchar(60) not null,
+  description varchar(100),
+  constraint pk_resource primary key (resource_group, code)
+)
+;
+
+create table lab_group_resource_group
+(
+  lab_group_id number(19) constraint fk_labgrprscgrp_labgrp references lab_group,
+  resource_group varchar(50),
+  constraint pk_labgrprscgrp primary key (lab_group_id, resource_group)
+)
+;
 

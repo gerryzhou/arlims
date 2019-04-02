@@ -167,8 +167,6 @@ export class StageWrapupComponent implements OnChanges {
 
 function unsavedEditsExist(lastEdited: Moment | null, lastSaved: Moment | null): boolean
 {
-   console.log('lastEdited: ', lastEdited, ' lastSaved: ', lastSaved);
-   console.log('unsaved edits exist: ', lastEdited && (!lastSaved || lastEdited.isAfter(lastSaved)));
    return lastEdited && (!lastSaved || lastEdited.isAfter(lastSaved));
 }
 

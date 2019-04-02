@@ -5,29 +5,30 @@ import java.util.Optional;
 
 public class LabResource
 {
+    private String resourceGroup;
     private String code;
-    private LabResourceType typeName;
+    private LabResourceType type;
     private Optional<String> description;
 
-    public LabResource(String code, LabResourceType typeName, Optional<String> description)
+    public LabResource
+        (
+            String resourceGroup,
+            String code,
+            LabResourceType type,
+            Optional<String> description
+        )
     {
+        this.resourceGroup = resourceGroup;
         this.code = code;
-        this.typeName = typeName;
+        this.type = type;
         this.description = description;
     }
 
-    public String getCode()
-    {
-        return code;
-    }
+    public String getResourceGroup() { return resourceGroup; }
 
-    public LabResourceType getResourceType()
-    {
-        return typeName;
-    }
+    public String getCode() { return code; }
 
-    public Optional<String> getDescription()
-    {
-        return description;
-    }
+    public LabResourceType getResourceType() { return type; }
+
+    public Optional<String> getDescription() { return description; }
 }

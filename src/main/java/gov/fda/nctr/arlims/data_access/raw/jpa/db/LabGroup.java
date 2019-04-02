@@ -49,9 +49,6 @@ public class LabGroup
     private Set<Employee> employees = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
-    private Set<LabResource> managedLabResources = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "labGroup")
     private Set<LabGroupTestType> testTypes = new HashSet<>();
 
     protected LabGroup() {}
@@ -112,9 +109,6 @@ public class LabGroup
 
     public Set<Employee> getEmployees() { return employees; }
     public void setEmployees(Set<Employee> employees) { this.employees = employees; }
-
-    public Set<LabResource> getManagedLabResources() { return managedLabResources; }
-    public void setManagedLabResources(Set<LabResource> managedLabResources) { this.managedLabResources = managedLabResources; }
 
     public Set<LabGroupTestType> getTestTypes() { return testTypes; }
     public void setTestTypes(Set<LabGroupTestType> testTypes) { this.testTypes = testTypes; }
