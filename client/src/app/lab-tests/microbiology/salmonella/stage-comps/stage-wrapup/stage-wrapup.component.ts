@@ -1,11 +1,11 @@
-import {Component, Input, OnChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
 import {WrapupData} from '../../test-data';
 import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
-import {FactsUserTimeCharge, SampleOp, UserReference} from '../../../../../../generated/dto';
+import {AppUser, FactsUserTimeCharge, SampleOp, UserReference} from '../../../../../../generated/dto';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TimeChargesComponent} from '../../../../../common-components/time-charges/time-charges.component';
 import {analystTypeCode, leadIndicator} from '../../../../../shared/client-models/time-charges';
@@ -42,6 +42,12 @@ export class StageWrapupComponent implements OnChanges {
    @Input()
    labGroupUsers: UserReference[];
 
+   @Input()
+   appUser: AppUser;
+
+   @Output()
+   testDataSaveRequest = new EventEmitter<void>();
+
    usersByShortName: Map<string, UserReference>;
 
    destinationsEnabled = false;
@@ -53,7 +59,7 @@ export class StageWrapupComponent implements OnChanges {
 
    constructor
       (
-         private factsService: GeneralFactsService,
+         private generalFactsService: GeneralFactsService,
          private alertMsgSvc: AlertMessageService
       )
    {}
@@ -122,9 +128,17 @@ export class StageWrapupComponent implements OnChanges {
             };
          });
 
-      this.factsService.submitTimeCharges(this.sampleOp.opId, factsUserTimeCharges).subscribe(
+      this.generalFactsService.submitTimeCharges(this.sampleOp.opId, factsUserTimeCharges).subscribe(
          () => {
             this.setTimeChargesLastSavedToFacts(saveStarted);
+
+            this.generalFactsService.setSampleOperationWorkStatus(this.sampleOp.opId, 'O', this.appUser.factsPersonId)
+            .subscribe(
+               () => { console.log('FACTS status updated to original-complete after saving work hours.'); },
+               err => this.onFactsStatusUpdateError(err)
+            );
+
+            // TODO: Emit new event requesting to save the test data.
          },
          err => {
             console.error('Error trying to save work accomplishments to FACTS: ', err);
@@ -162,6 +176,18 @@ export class StageWrapupComponent implements OnChanges {
       this.unsavedTimeCharges =
          unsavedEditsExist(this.getTimeChargesLastEdited(), this.getTimeChargesLastSavedToFacts());
    }
+
+   private onFactsStatusUpdateError(err)
+   {
+      console.log('Error occurred while trying to set FACTS status to original-complete, details below:');
+      console.log(err);
+
+      this.alertMsgSvc.alertDanger(
+         'An error occurred while trying to set FACTS status to original-complete. ' +
+         'The status update may not have been received properly by FACTS.'
+      );
+   }
+
 
 }
 

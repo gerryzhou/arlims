@@ -36,8 +36,9 @@ import {StageWrapupComponent} from '../../stage-comps/stage-wrapup/stage-wrapup.
 import {SampleTestUnits, TestUnitsType} from '../../../sampling-methods';
 import {AppInternalUrlsService} from '../../../../../shared/services/app-internal-urls.service';
 import {makeAttachedFilesByTestPartMap} from '../../../../../shared/util/lab-group-data-utils';
-import {FactsPostingService} from '../../facts-posting.service';
+import {SalmonellaFactsService} from '../../salmonella-facts.service';
 import {SelectedSampleOpsService} from '../../../../../shared/services/selected-sample-ops.service';
+import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data',
@@ -103,7 +104,8 @@ export class StagedTestDataComponent implements OnInit {
 
    constructor
       (
-         private factsPostingService: FactsPostingService,
+         private slmFactsService: SalmonellaFactsService,
+         private generalFactsService: GeneralFactsService,
          private testsSvc: TestsService,
          private usrCtxSvc: UserContextService,
          private selectedSamplesSvc: SelectedSampleOpsService,
@@ -172,7 +174,7 @@ export class StagedTestDataComponent implements OnInit {
       ];
    }
 
-   saveTestData()
+   saveTestData(nav: AfterSaveNavigation)
    {
       const testData = this.testDataForm.value as TestData;
 
@@ -187,7 +189,7 @@ export class StagedTestDataComponent implements OnInit {
       .subscribe(
          (saveResult: SaveResult) => {
             if ( saveResult.savedMd5 )
-               this.onTestDataSaveSuccess(testData, saveResult.savedMd5);
+               this.onTestDataSaveSuccess(testData, saveResult.savedMd5, nav);
             else
                this.onTestDataSaveConflict(saveResult);
          },
@@ -195,23 +197,24 @@ export class StagedTestDataComponent implements OnInit {
       );
    }
 
-   private onTestDataSaveSuccess(testData: TestData, savedMd5: string)
+   private onTestDataSaveSuccess(testData: TestData, savedMd5: string, nav: AfterSaveNavigation)
    {
       this.originalTestData = testData;
       this.originalTestDataMd5 = savedMd5;
 
       if ( this.testIsNew )
       {
-         this.factsPostingService
-            .setSampleOperationWorkStatus(this.sampleOpTest.sampleOp.opId, 'I', this.appUser.factsPersonId)
-            .subscribe(
-               () => { console.log('FACTS status updated for new test.'); },
-               err => this.onFactsStatusUpdateError(err)
-            );
+         const opId = this.sampleOpTest.sampleOp.opId;
+         this.generalFactsService.setSampleOperationWorkStatus(opId, 'I', this.appUser.factsPersonId)
+         .subscribe(
+            () => { console.log('FACTS status updated for new test.'); },
+            err => this.onFactsStatusUpdateError(err)
+         );
          this.testIsNew = false;
       }
 
-      this.doAfterSaveNavigation();
+      this.makeFormPristine();
+      this.doAfterSaveNavigation(nav);
    }
 
 /* TODO: FACTS test submission methods (Micro/SLM). Maybe move this somewhere else when feature is re-enabled.
@@ -259,7 +262,7 @@ export class StagedTestDataComponent implements OnInit {
 
    private submitAOACDataToFactsAsync(testData: TestData)
    {
-      this.factsPostingService.submitAOACAnalysisResults(
+      this.slmFactsService.submitAOACAnalysisResults(
          testData,
          this.sampleOpTest.sampleOp.opId,
          this.testConfig.aoacMethodCode || this.DEFAULT_AOAC_METHOD_CODE,
@@ -280,12 +283,12 @@ export class StagedTestDataComponent implements OnInit {
       console.log('FACTS response for AOAC submission: ', factsResponse);
       // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
       // this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
-      this.doAfterSaveNavigation();
+      this.makeFormPristine();
    }
 
    private submitBAMDataToFactsAsync(testData: TestData)
    {
-      this.factsPostingService.submitBAMAnalysisResults(
+      this.slmFactsService.submitBAMAnalysisResults(
          testData,
          this.sampleOpTest.sampleOp.opId,
          this.appUser.labGroupFactsOrgName,
@@ -305,7 +308,8 @@ export class StagedTestDataComponent implements OnInit {
       console.log('FACTS response for BAM submission: ', factsResponse);
       // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
       // this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
-      this.doAfterSaveNavigation();
+      this.makeFormPristine();
+      this.doAfterSaveNavigation('nav-home');
    }
 
    private onFactsSaveError(err)
@@ -433,17 +437,30 @@ export class StagedTestDataComponent implements OnInit {
 
       this.testsSvc.restoreTestData(Array.from(files)).subscribe(() => {
          this.alertMsgSvc.alertSuccess('Test data restored.', true);
-         this.doAfterSaveNavigation();
+         this.makeFormPristine();
+         this.doAfterSaveNavigation('nav-none');
       });
    }
 
-   private doAfterSaveNavigation()
+   private makeFormPristine()
    {
       this.clearConflictsData();
       this.testDataForm.markAsPristine();
-      this.usrCtxSvc.refreshLabGroupContents();
-      this.selectedSamplesSvc.setSelectedSampleOps([this.sampleOpTest.sampleOp]);
-      this.router.navigate(this.appUrlsSvc.samplesListing());
+   }
+
+   private doAfterSaveNavigation(nav: AfterSaveNavigation)
+   {
+      switch ( nav )
+      {
+         case 'nav-none': break;
+         case 'nav-next-stage':
+            this.testStageStepper.next();
+            break;
+         case 'nav-home':
+            this.selectedSamplesSvc.setSelectedSampleOps([this.sampleOpTest.sampleOp]);
+            this.router.navigate(this.appUrlsSvc.samplesListing());
+            break;
+      }
    }
 
    private visibleStageName(): String | null
@@ -452,4 +469,7 @@ export class StagedTestDataComponent implements OnInit {
          return this.testStageStepper.selected.label;
       return null;
    }
+
 }
+
+type AfterSaveNavigation = 'nav-none' | 'nav-next-stage' | 'nav-home';

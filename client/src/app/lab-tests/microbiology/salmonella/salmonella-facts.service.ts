@@ -13,7 +13,7 @@ import {HttpClient} from '@angular/common/http';
 
 // FACTS posting service for the salmonella module.
 @Injectable()
-export class FactsPostingService {
+export class SalmonellaFactsService {
 
    constructor
       (
@@ -225,9 +225,4 @@ export class FactsPostingService {
          // }
    }
 
-   setSampleOperationWorkStatus(sampleOpId: number, statusCode: string, factsPersonId: number): Observable<void>
-   {
-      const url = this.apiUrlsSvc.factsSampleOpWorkStatusUrl(sampleOpId, factsPersonId);
-      return this.httpClient.post<void>(url, statusCode);
-   }
 }

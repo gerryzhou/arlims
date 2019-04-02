@@ -1,4 +1,4 @@
-<form [formGroup]="testDataForm" (ngSubmit)="saveTestData()">
+<form [formGroup]="testDataForm" (ngSubmit)="saveTestData('nav-next-stage')">
 
    <div class="sample-op-test-info">
 
@@ -20,7 +20,7 @@
             [conflictsWhoWhen]="conflictsEmployeeTimestamp"
             [showUnsetAffordances]="showUnsetAffordances"
             [sampleOp]="sampleOpTest.sampleOp"
-            [currentUser]="appUser">
+            [appUser]="appUser">
          </app-stage-prep>
       </mat-step>
 
@@ -121,7 +121,9 @@
             [showUnsetAffordances]="showUnsetAffordances"
             [sampleOp]="sampleOpTest.sampleOp"
             [labGroupUsers]="labGroupUsers"
-            [labGroupParentOrgName]="appUser.labGroupFactsParentOrgName">
+            [labGroupParentOrgName]="appUser.labGroupFactsParentOrgName"
+            [appUser]="appUser"
+            (testDataSaveRequest)="saveTestData('nav-home')">
          </app-stage-wrapup>
       </mat-step>
 

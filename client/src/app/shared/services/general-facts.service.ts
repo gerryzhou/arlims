@@ -50,4 +50,9 @@ export class GeneralFactsService {
       );
    }
 
+   setSampleOperationWorkStatus(sampleOpId: number, statusCode: string, factsPersonId: number): Observable<void>
+   {
+      const url = this.apiUrlsSvc.factsSampleOpWorkStatusUrl(sampleOpId, factsPersonId);
+      return this.httpClient.post<void>(url, statusCode);
+   }
 }

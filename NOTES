@@ -2,16 +2,18 @@ Done
 ====
 - Show product name (description) in pdf report.
 - Introduce lab resource groups to avoid having to duplicate lab resources between performing orgs.
+- Update sample assignment status to original-complete when test hours are saved to FACTS.
+- Allow more flexible navigation after saving test data, defaulting to navigation to next stage in most cases.
 
 TODO
 ====
 
+Hide SLANT/IDENT stages if there are no positives.
 
 Enable ahead of time compilation and don't eagerly load slm module.
 
 Create accounts for Morgan, Josheph, Paul W., Dave Lau.
 
-Hide SLANT/IDENT stages if there are no positives.
 
 Save should just take you to next step, not back to sample listing.
 

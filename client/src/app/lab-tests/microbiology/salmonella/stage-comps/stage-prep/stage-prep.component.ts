@@ -36,7 +36,7 @@ export class StagePrepComponent implements OnChanges {
    sampleOp: SampleOp;
 
    @Input()
-   currentUser: AppUser;
+   appUser: AppUser;
 
    constructor
       (
@@ -86,7 +86,7 @@ export class StagePrepComponent implements OnChanges {
       }
 
       const dateSortedTransfers = sampleTransfers.sort((a, b) => compare(b.receivedDate, a.receivedDate));
-      const userFactsId = this.currentUser.factsPersonId;
+      const userFactsId = this.appUser.factsPersonId;
       const transferChoices =
          dateSortedTransfers
          .filter(t => t.receivedByPersonId === userFactsId)

@@ -23,7 +23,7 @@ import {
 } from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
-import {FactsPostingService} from './facts-posting.service';
+import {SalmonellaFactsService} from './salmonella-facts.service';
 import {SalmonellaRoutingModule} from './routing/salmonella-routing.module';
 import {TestDataEntryConfirmDeactivateGuard} from './routing/test-data-entry-confirm-deactivate-guard';
 import {StagedTestDataComponent} from './multi-stage-comps/staged-test-data/staged-test-data.component';
@@ -97,7 +97,7 @@ import {IsolateIdentificationEditorComponent} from './stage-comps/pos-cont-stage
    ],
    providers: [
       TestDataEntryConfirmDeactivateGuard,
-      FactsPostingService,
+      SalmonellaFactsService,
    ],
    entryComponents: [
       IsolateTestsFailureDialogComponent,

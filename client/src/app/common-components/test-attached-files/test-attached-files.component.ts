@@ -98,8 +98,6 @@ export class TestAttachedFilesComponent implements OnChanges, AfterViewInit {
                console.error('Error occurred while trying to refresh attached files: ', err);
             }
          );
-
-      this.usrCtxSvc.refreshLabGroupContents();
    }
 
    submitNewAttachments()
