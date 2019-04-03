@@ -10,8 +10,7 @@
 
    </div>
 
-   <mat-horizontal-stepper [selectedIndex]="initialStageIndex" #testStageStepper>
-
+   <mat-horizontal-stepper [selectedIndex]="initialStageIndex" labelPosition="bottom" #testStageStepper>
       <mat-step label="PREP">
          <app-stage-prep class="test-stage"
             [form]="testDataForm.get('prepData')"
