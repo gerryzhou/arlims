@@ -84,7 +84,7 @@
                  *ngFor="let ctrl of testUnitDetectionsControl.controls; let i = index;"
                  [ngClass]="{'pos': ctrl.value === true, 'neg': ctrl.value === false}">
                <span class="test-unit-number">{{i+1}}</span>
-               <mat-radio-group [formControlName]="i" (change)="testUnitDetectionsChanged()">
+               <mat-radio-group [formControlName]="i" (change)="testUnitDetectionsMaybeChanged()">
                   <mat-radio-button [value]="true">pos</mat-radio-button>
                   <mat-radio-button [value]="false">neg</mat-radio-button>
                   <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
@@ -104,6 +104,9 @@
             (dismiss)="conflicts.testUnitDetections = undefined">
          </app-conflicting-field-value>
 
+         <div class="detections-array-buttons">
+            <button class="link" (click)="setAllResultsToNegative()">set all to negative</button>
+         </div>
       </div> <!-- test unit detections -->
 
       <!-- attached files -->

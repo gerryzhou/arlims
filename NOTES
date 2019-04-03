@@ -4,31 +4,27 @@ Done
 - Introduce lab resource groups to avoid having to duplicate lab resources between performing orgs.
 - Update sample assignment status to original-complete when test hours are saved to FACTS.
 - Allow more flexible navigation after saving test data, defaulting to navigation to next stage in most cases.
+- Hide positive continuation (SLANT,IDENT) stages when there are no Vidas positives.
+- Introduce groups of lab resources in db for easy sharing between lowest-level (performing) orgs.
+- In Vidas stage add button allowing to set all results to negative.
 
 TODO
 ====
-
-Hide SLANT/IDENT stages if there are no positives.
-
-Enable ahead of time compilation and don't eagerly load slm module.
-
-Create accounts for Morgan, Josheph, Paul W., Dave Lau.
-
-
-Save should just take you to next step, not back to sample listing.
-
-Just one button to push AOAC, BAM and work hours.
-  Automatically save test before pushing to FACTS.
-
-Need scroll pane for sample received auto-fill dialog.
-
-Many fields like lot #'s need multiple entries.
-  Maybe just multi-select to input.
-
 Vidas
   If there are more than 10 or so, show button to make them all negative.
   Allow entering more than one Vidas machine, if there's time to implement.
     Multi-select list.
+
+Many fields like lot #'s also need multiple entries.
+  Maybe just multi-select to input.
+
+Need scroll pane for sample received auto-fill dialog.
+
+Just one button to push AOAC, BAM and work hours.
+  Automatically save test before pushing to FACTS.
+
+Create accounts for Morgan, Josheph, Paul W., Dave Lau.
+
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.

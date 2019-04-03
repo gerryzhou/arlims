@@ -1,7 +1,4 @@
 
-Provide test-specific login page or redirection url, to force preloading of a given test module prior to login.
-   http://localhost:4200/alis/test-types/micro-slm/login
-
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
   sampleTestUnitsChange event in stage pre enr component.
