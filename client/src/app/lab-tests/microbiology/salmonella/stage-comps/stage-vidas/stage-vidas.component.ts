@@ -120,7 +120,7 @@ export class StageVidasComponent implements OnChanges {
       this.updateExcessSampleTestUnitControlsCount();
 
       if ( !stopOnControlWithValue )
-         this.testUnitDetectionsMaybeChanged();
+         this.checkTestUnitDetectionsForChanges();
    }
 
    removeTestUnitControlAtIndex(i: number)
@@ -131,7 +131,7 @@ export class StageVidasComponent implements OnChanges {
 
       this.updateExcessSampleTestUnitControlsCount();
       if ( wasPos )
-         this.testUnitDetectionsMaybeChanged();
+         this.checkTestUnitDetectionsForChanges();
    }
 
    setAllResultsToNegative()
@@ -140,7 +140,7 @@ export class StageVidasComponent implements OnChanges {
 
       detectionCtrls.setValue(Array(detectionCtrls.length).fill(false));
 
-      this.testUnitDetectionsMaybeChanged();
+      this.checkTestUnitDetectionsForChanges();
    }
 
    private updateExcessSampleTestUnitControlsCount()
@@ -167,7 +167,7 @@ export class StageVidasComponent implements OnChanges {
       return positiveTestUnitNumbers;
    }
 
-   testUnitDetectionsMaybeChanged()
+   checkTestUnitDetectionsForChanges()
    {
       const positives: number[] = this.positiveTestUnitNumbers();
 
