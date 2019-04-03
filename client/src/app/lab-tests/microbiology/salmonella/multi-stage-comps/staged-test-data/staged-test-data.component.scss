@@ -2,7 +2,12 @@
    display: flex;
    align-items: center;
    margin: 0;
+
+   app-sample {
+      flex-grow: 1;
+   }
 }
+
 
 .test-stage {
    margin: 25px 5px 5px 5px;
