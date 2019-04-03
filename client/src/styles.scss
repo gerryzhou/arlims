@@ -63,18 +63,18 @@ button.hover-link {
 // Angular Material customizations
 
 //// Horizontal stepper customization - use less space vertically, use more of horizontal space for actual content.
-//div.mat-horizontal-stepper-header-container {
-//  margin: 5px 5px 0 5px;
-//}
-//.mat-horizontal-stepper-header {
-//   padding: unset !important;
-//}
-//.mat-stepper-horizontal-line {
-//   margin: unset !important;
-//}
-//mat-step-header {
-//   height: unset !important;
-//}
+div.mat-horizontal-stepper-header-container {
+  margin: 5px 5px 0 5px;
+}
+mat-step-header {
+   height: unset !important;
+}
+.mat-horizontal-stepper-header {
+   padding: unset !important;
+}
+.mat-stepper-horizontal-line {
+   margin: unset !important;
+}
 //// Eliminate horizontal padding of stepper content.
 //mat-horizontal-stepper > .mat-horizontal-content-container {
 //   padding: 0 !important;
