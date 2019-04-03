@@ -60,7 +60,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"mdlIntlName\":\"C\"," +
                 "\"pacCode\":\"71003E\"," +
                 "\"pacCodeDescription\":\"MICROBIAL AGENTS\"," +
-                "\"cfsanPrductDescription\":\"Micro Product\"," +
+                "\"cfsanProductDesc\":\"Micro Product\"," +
                 "\"problemAreaFlag\":\"MIC\"," +
                 "\"lidCode\":\"M\"" +
                 "}," +
@@ -78,7 +78,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"mdlIntlName\":\"T\"," +
                 "\"pacCode\":\"03844\"," +
                 "\"pacCodeDescription\":\"IMPORTED SEAFOOD PRODUCTS\"," +
-                "\"cfsanPrductDescription\":\"FROZEN RAW SHELL ON SHRIMP 16/20\"," +
+                "\"cfsanProductDesc\":\"FROZEN RAW SHELL ON SHRIMP 16/20\"," +
                 "\"problemAreaFlag\":\"MIC\"," +
                 "\"lidCode\":\"M\"" +
                 "}," +
@@ -96,7 +96,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"mdlIntlName\":\"T\"," +
                 "\"pacCode\":\"03844\"," +
                 "\"pacCodeDescription\":\"IMPORTED SEAFOOD PRODUCTS\"," +
-                "\"cfsanPrductDescription\":\"FROZEN SCALLOPS 10/15\"," +
+                "\"cfsanProductDesc\":\"FROZEN SCALLOPS 10/15\"," +
                 "\"problemAreaFlag\":\"MIC\"," +
                 "\"lidCode\":\"M\"" +
                 "}" +
