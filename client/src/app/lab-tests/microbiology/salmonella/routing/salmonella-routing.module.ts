@@ -8,6 +8,10 @@ import {TestDataEntryConfirmDeactivateGuard} from './test-data-entry-confirm-dea
 import {TestReportsListingComponent} from '../reports/reports-listing/test-reports-listing.component';
 
 const routes: Routes = [
+   // Redirect test-specific login url to the global login.
+   // This way users starting from this url will have their test module preloaded prior to login
+   // for better user experience (avoids confusing pause when test of given type is first clicked).
+   { path: 'login', redirectTo: '/login', pathMatch: 'full' },
    {
       path: 'test-data-entry/:testId',
       component: StagedTestDataComponent,
