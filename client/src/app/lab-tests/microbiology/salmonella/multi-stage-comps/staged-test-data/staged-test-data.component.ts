@@ -18,12 +18,13 @@ import {
 } from '../../../../../../generated/dto';
 import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {
+   TestData,
    emptyTestData,
-   firstNonCompleteTestStageName,
-   getTestStageStatuses, getVidasPositiveTestUnitNumbers,
+   getTestStageStatuses,
+   getVidasPositiveTestUnitNumbers,
    makeTestDataFormGroup,
    TEST_STAGES,
-   TestData
+   NO_POSITIVES_TEST_STAGES
 } from '../../test-data';
 import {TestConfig} from '../../test-config';
 import {StagePrepComponent} from '../../stage-comps/stage-prep/stage-prep.component';
@@ -76,9 +77,10 @@ export class StagedTestDataComponent implements OnInit {
    sampleTestUnitsType: TestUnitsType | null;
    sampleTestUnitsCount: number | null;
 
-   vidasPositiveSampleTestUnitNumbers: number[] | null;
+   vidasPositiveTestUnitNumbers: number[] | null;
+   showPositiveContinuationStages: boolean;
 
-   readonly initialStageIndex: number | null;
+   readonly requestStage: string | null;
 
    readonly balances: LabResource[] | undefined;
    readonly incubators: LabResource[] | undefined;
@@ -98,9 +100,7 @@ export class StagedTestDataComponent implements OnInit {
    @ViewChild('slantPosContComp') slantPosContComp: PosContComponent;
    @ViewChild('identPosContComp') identPosContComp: PosContComponent;
    @ViewChild(StageWrapupComponent) wrapupComp: StageWrapupComponent;
-   stageComps: any[];
-
-   readonly DEFAULT_AOAC_METHOD_CODE = 'T2004.03';
+   stageComps: { [stageName: string]: any };
 
    constructor
       (
@@ -131,12 +131,11 @@ export class StagedTestDataComponent implements OnInit {
       this.sampleOpTest = labGroupTestData.sampleOpTest;
       this.appUser = labGroupTestData.appUser;
 
-      const initialStage =
-         activatedRoute.snapshot.paramMap.get('stage') ||
-         firstNonCompleteTestStageName(testData, testConfig) ||
-         'WRAPUP';
-      const stageIx = TEST_STAGES.findIndex(ts => ts.name === initialStage);
-      this.initialStageIndex = stageIx !== -1 ? stageIx : null;
+      const posTestUnits = testData ? getVidasPositiveTestUnitNumbers(testData.vidasData) : [];
+      this.vidasPositiveTestUnitNumbers = posTestUnits;
+      this.showPositiveContinuationStages = posTestUnits.length > 0;
+
+      this.requestStage = activatedRoute.snapshot.paramMap.get('stage');
 
       this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username, testConfig);
       if ( !this.allowDataChanges )
@@ -145,8 +144,6 @@ export class StagedTestDataComponent implements OnInit {
       const sm = testData.preEnrData.samplingMethod;
       this.sampleTestUnitsType = sm.testUnitsType;
       this.sampleTestUnitsCount = sm.testUnitsCount;
-
-      this.vidasPositiveSampleTestUnitNumbers = testData ? getVidasPositiveTestUnitNumbers(testData.vidasData) : [];
 
       const labResources = labGroupTestData.labResourcesByType;
       this.balances = labResources.get(UserContextService.BALANCE_RESOURCE_TYPE);
@@ -162,16 +159,22 @@ export class StagedTestDataComponent implements OnInit {
 
    ngOnInit()
    {
-      this.stageComps = [
-         this.prepComp,
-         this.preEnrComp,
-         this.selEnrComp,
-         this.mBrothComp,
-         this.vidasComp,
-         this.slantPosContComp,
-         this.identPosContComp,
-         this.wrapupComp
-      ];
+      this.stageComps = {
+         'PREP': this.prepComp,
+         'PRE-ENR': this.preEnrComp,
+         'SEL-ENR': this.selEnrComp,
+         'M-BROTH': this.mBrothComp,
+         'VIDAS': this.vidasComp,
+         'SLANT': this.slantPosContComp,
+         'IDENT': this.identPosContComp,
+         'WRAPUP': this.wrapupComp
+      };
+
+      const availableStages = this.vidasPositiveTestUnitNumbers.length > 0 ?
+         TEST_STAGES
+         : NO_POSITIVES_TEST_STAGES;
+      const stageIx = availableStages.findIndex(s => s.name === this.requestStage);
+      this.testStageStepper.selectedIndex = stageIx !== -1 ? stageIx : 0;
    }
 
    saveTestData(nav: AfterSaveNavigation)
@@ -265,7 +268,7 @@ export class StagedTestDataComponent implements OnInit {
       this.slmFactsService.submitAOACAnalysisResults(
          testData,
          this.sampleOpTest.sampleOp.opId,
-         this.testConfig.aoacMethodCode || this.DEFAULT_AOAC_METHOD_CODE,
+         this.testConfig.aoacMethodCode || 'T2004.03',
          this.appUser.labGroupFactsOrgName,
          this.appUser.labGroupFactsParentOrgName
       )
@@ -381,7 +384,8 @@ export class StagedTestDataComponent implements OnInit {
 
    onVidasPositiveSampleTestUnitNumbersChanged(positiveTestUnits: number[])
    {
-      this.vidasPositiveSampleTestUnitNumbers = positiveTestUnits;
+      this.vidasPositiveTestUnitNumbers = positiveTestUnits;
+      this.showPositiveContinuationStages = this.vidasPositiveTestUnitNumbers.length > 0;
    }
 
    private clearConflictsData()
@@ -393,12 +397,21 @@ export class StagedTestDataComponent implements OnInit {
    @HostListener('window:keydown.F4')
    promptApplyResourcesInCurrentTestStage()
    {
-      const selIx = this.testStageStepper.selectedIndex;
-      if (selIx && selIx >= 0)
+      const stageName = this.getStepperSelectedTestStageName();
+      const stageComp = this.stageComps[stageName];
+
+      if ( !stageComp )
+         console.log('Failed to lookup current stage component, cannot apply resources.', this);
+      else
       {
-         if (this.stageComps[selIx].promptAssignResources)
-            this.stageComps[selIx].promptAssignResources();
+         if ( stageComp.promptApplyResources )
+            stageComp.promptApplyResources();
       }
+   }
+
+   getStepperSelectedTestStageName(): string
+   {
+      return this.testStageStepper.selected.label;
    }
 
    toggleShowUnsetAffordances()

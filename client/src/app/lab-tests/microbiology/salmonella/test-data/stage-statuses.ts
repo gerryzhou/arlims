@@ -30,6 +30,9 @@ export const TEST_STAGES: Stage[] = [
    {name: 'WRAPUP',   statusCodeFn: wrapupStatusCode},
 ];
 
+export const NO_POSITIVES_TEST_STAGES =
+   TEST_STAGES.filter(s => s.name !== 'SLANT' && s.name !== 'IDENT')
+
 type PosContStageName = 'SLANT' | 'IDENT';
 
 function prepStatusCode(testData: TestData): FieldValuesStatusCode

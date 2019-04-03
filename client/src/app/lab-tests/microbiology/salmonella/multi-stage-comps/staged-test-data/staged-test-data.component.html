@@ -10,7 +10,7 @@
 
    </div>
 
-   <mat-horizontal-stepper [selectedIndex]="initialStageIndex" labelPosition="end" #testStageStepper>
+   <mat-horizontal-stepper #testStageStepper>
       <mat-step label="PREP">
          <app-stage-prep class="test-stage"
             [form]="testDataForm.get('prepData')"
@@ -77,7 +77,7 @@
          </app-stage-vidas>
       </mat-step>
 
-      <mat-step label="SLANT">
+      <mat-step label="SLANT" *ngIf="showPositiveContinuationStages">
          <app-pos-cont #slantPosContComp class="test-stage"
             [form]="testDataForm.get('posContData')"
             [allowDataChanges]="allowDataChanges"
@@ -87,14 +87,14 @@
             [stage]="'SLANT'"
             [testId]="sampleOpTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
-            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
+            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveTestUnitNumbers"
             [sampleTestUnitsType]="sampleTestUnitsType"
             [testConfig]="testConfig"
             [appUser]="appUser">
          </app-pos-cont>
       </mat-step>
 
-      <mat-step label="IDENT">
+      <mat-step label="IDENT" *ngIf="showPositiveContinuationStages">
          <app-pos-cont #identPosContComp class="test-stage"
             [form]="testDataForm.get('posContData')"
             [allowDataChanges]="allowDataChanges"
@@ -104,7 +104,7 @@
             [stage]="'IDENT'"
             [testId]="sampleOpTest.testMetadata.testId"
             [attachedFilesByTestPart]="attachedFilesByTestPart"
-            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
+            [vidasPositiveSampleTestUnitNumbers]="vidasPositiveTestUnitNumbers"
             [sampleTestUnitsType]="sampleTestUnitsType"
             [testConfig]="testConfig"
             [appUser]="appUser">
