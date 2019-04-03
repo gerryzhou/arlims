@@ -53,7 +53,7 @@
       </div> <!-- Ends first row of sample metadata. -->
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
-      <div class="sample-metadata-row" *ngIf="hasExtendedSampleMetadata && (showAssociatedItems || showExtendedSampleMetadataAlways)">
+      <div class="sample-metadata-row" *ngIf="showAssociatedItems || showExtendedSampleMetadataAlways">
          <div>
             <span class="field-label">op: </span>
             <span class="field-value">{{sampleOp.opId}}</span>

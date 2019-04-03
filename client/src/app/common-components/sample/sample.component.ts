@@ -29,7 +29,7 @@ export class SampleComponent implements OnChanges {
    showAssociatedItemsSummaryInSampleMetadata = false;
 
    @Input()
-   showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
+   showExtendedSampleMetadataAlways = true; // whether to show extended sample metadata even when tests & resources are not shown
 
    @Input()
    labGroupTestTypes: LabTestType[] = [];
@@ -76,7 +76,6 @@ export class SampleComponent implements OnChanges {
    @Output()
    testReportsClick = new EventEmitter<TestClickEvent>();
 
-   hasExtendedSampleMetadata: boolean; // whether sample metadata needs a second row
    hasAssociatedItems: boolean;
 
    displayFactsStatusTimestamp: string;
@@ -94,7 +93,6 @@ export class SampleComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.hasExtendedSampleMetadata = !!this.sampleOp.subject;
       this.hasAssociatedItems = this.sampleOp.tests.length > 0;
       this.displayFactsStatusTimestamp =
          this.sampleOp.factsStatusTimestamp ? moment(this.sampleOp.factsStatusTimestamp).format('MMM D h:mm a')
