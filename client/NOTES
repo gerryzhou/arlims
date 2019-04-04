@@ -1,21 +1,19 @@
-Put op/(lid paf) stack to the right of sample/pac stack.
-  Only leave subject text on second row and hide by default.
 
+Identify isolates by their number not by creation timestamp.
+
+BAM data submission: Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
+
+Remove performing org from AOAC and BAM data submissions, Leidos will make api change so performing org doesn't have to be submitted.
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
   sampleTestUnitsChange event in stage pre enr component.
-
-BAM data submission: Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
-
 
 Tests Search
   - Tests search should persist through navigations.
     Add a new Angular service to hold most recent search(es).
   - Date range not properly inclusive of endpoints.
     E.g. to search for single day, should specify that day at both endpoints.
-
-Sort person inbox, allow user to control which properties to sort by.
 
 Improve error message: "Failed to delete test [Object object]"
 
@@ -44,18 +42,10 @@ Don't auto-push after Vidas stage.
       }
 
 
-Identify isolates by their number not by creation timestamp.
-
 Add lab inbox page based on sample listing.
   For lab admins only.
   Just route to samples listing component but add route data to specify lab inbox is wanted.
     Modify resolver and samples listing component to load/refresh from the proper source in each case.
-
-Login dialog is misaligned vs. progress spinner.
-
-
-Try to reduce the angular/webpack's package size, see notes on ipad.
-
 
 SLM test
   Implement actual validation function for each stage, returning list of complaints.

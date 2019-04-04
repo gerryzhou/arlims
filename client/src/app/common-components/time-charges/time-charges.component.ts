@@ -24,6 +24,9 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
    @Input()
    allowDataChanges: boolean;
 
+   @Input()
+   allowDeletes: boolean;
+
    @Output()
    timeChargeCreate = new EventEmitter<AppUserTimeCharge>();
 

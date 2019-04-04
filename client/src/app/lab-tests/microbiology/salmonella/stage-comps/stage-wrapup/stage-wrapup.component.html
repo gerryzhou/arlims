@@ -60,6 +60,7 @@
             [form]="form.get('testTimeCharges')"
             [availableUsers]="labGroupUsers"
             [allowDataChanges]="allowDataChanges"
+            [allowDeletes]="false"
             (timeChargesDataChange)="onTimeChargesDataChanged()">
          </app-time-charges>
          <button [disabled]="!unsavedTimeCharges" class="facts-save-btn" mat-button (click)="saveTimeChargesToFacts()">

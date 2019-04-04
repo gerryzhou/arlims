@@ -1,3 +1,7 @@
+Commit
+------
+
+
 Done
 ====
 - Show product name (description) in pdf report.
@@ -9,11 +13,15 @@ Done
 - In Vidas stage add button allowing to set all results to negative.
 - Provide scrolling for options in sample received auto-fill dialog.
 - Allow appending resource codes to ui controls when applied via clipboard/scanner.
+- Add more sample information (op,lid,paf) in main sample row, second row hidden by default until sample is expanded.
+- Customize available sample/op status choices for person inbox.
+
 
 TODO
 ====
 Just one button to push AOAC, BAM and work hours.
   Automatically save test before pushing to FACTS.
+
 
 Create accounts for Morgan, Josheph, Paul W., Dave Lau.
 
@@ -57,7 +65,7 @@ LABSDS API
 ==========
 What are the full list of possible statuses for the person inbox?
   P,S,T,I,O,C ?
-
+  A?
 
 Data Submission Problems
   Test data
