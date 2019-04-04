@@ -16,7 +16,12 @@ import {AlertMessageService, UserContextService} from '../shared/services';
 import {LocalStorageService} from '../shared/services/local-storage.service';
 import {SelectedSampleOpsService} from '../shared/services/selected-sample-ops.service';
 import {ListingOptions} from './listing-options/listing-options';
-import {SampleOpStatusCode} from '../shared/client-models/sample-op-status';
+import {
+   SAMPLE_OP_STATUS_CODES,
+   SAMPLE_OP_STATUSES,
+   SampleOpStatus,
+   SampleOpStatusCode
+} from '../shared/client-models/sample-op-status';
 import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 
@@ -31,6 +36,8 @@ export class SamplesListingComponent {
 
    samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
+   readonly sampleOpStatusChoices: SampleOpStatus[];
+
    labGroupTestTypes: LabTestType[];
 
    contentsLastLoaded: Moment;
@@ -42,7 +49,7 @@ export class SamplesListingComponent {
 
    hiddenSelectedCount = 0;
 
-   readonly DEFAULT_INCLUDE_STATUSES: SampleOpStatusCode[] = ['S', 'I'];
+   readonly DEFAULT_INCLUDE_STATUSES: SampleOpStatusCode[] = ['S', 'I', 'O'];
    readonly PREF_INCLUDE_STATUSES = 'include-statuses';
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
@@ -57,11 +64,14 @@ export class SamplesListingComponent {
           private appUrlsSvc: AppInternalUrlsService,
           private router: Router,
           private alertMsgSvc: AlertMessageService,
-          private activatedRoute: ActivatedRoute
+          private route: ActivatedRoute
        )
    {
-      const labGroupContents = <LabGroupContents>this.activatedRoute.snapshot.data['labGroupContents'];
-      this.allowDataChanges = activatedRoute.snapshot.data && activatedRoute.snapshot.data['allowDataChanges'] || false;
+      const labGroupContents = <LabGroupContents>this.route.snapshot.data['labGroupContents'];
+      this.allowDataChanges = route.snapshot.data && route.snapshot.data['allowDataChanges'] || false;
+
+      const statusCodes = new Set(route.snapshot.data && route.snapshot.data['statuses'] || SAMPLE_OP_STATUS_CODES);
+      this.sampleOpStatusChoices = SAMPLE_OP_STATUSES.filter(sos => statusCodes.has(sos.code));
 
       const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
 

@@ -3,7 +3,7 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
 import {ListingOptions} from './listing-options';
-import {SAMPLE_OP_STATUSES, SampleOpStatus} from '../../shared/client-models/sample-op-status';
+import {SampleOpStatus} from '../../shared/client-models/sample-op-status';
 
 @Component({
    selector: 'app-samples-listing-options',
@@ -14,6 +14,9 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
 
    @Input()
    initialOptions: ListingOptions;
+
+   @Input()
+   sampleOpStatusChoices: SampleOpStatus[];
 
    @Input()
    showSaveIncludeStatuses = false;
@@ -29,8 +32,6 @@ export class SamplesListingOptionsComponent implements OnChanges, OnDestroy {
    includeStatusesCtl: AbstractControl;
 
    private optsSubscription: Subscription;
-
-   readonly allIncompleteSampleOpStatuses: SampleOpStatus[] = SAMPLE_OP_STATUSES.filter(s => s.code !== 'C');
 
    constructor() {}
 

@@ -30,7 +30,7 @@ const routes: Routes = [
       path: 'person-inbox',
       component: SamplesListingComponent,
       resolve: { labGroupContents: LabGroupContentsResolver },
-      data: {title: 'Inbox', allowDataChanges: true},
+      data: {title: 'Inbox', allowDataChanges: true, statuses: ['S', 'I', 'T', 'O']},
       canActivate: [AuthenticatedUserGuard],
    },
    {

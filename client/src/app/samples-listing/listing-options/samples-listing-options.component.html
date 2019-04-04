@@ -17,7 +17,7 @@
             </button>
          </div>
          <mat-button-toggle-group [formControl]="includeStatusesCtl" multiple>
-            <mat-button-toggle *ngFor="let status of allIncompleteSampleOpStatuses" [value]="status.code"
+            <mat-button-toggle *ngFor="let status of sampleOpStatusChoices" [value]="status.code"
                                [matTooltip]="status.displayName">
                {{status.code}}
             </mat-button-toggle>

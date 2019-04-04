@@ -16,6 +16,8 @@ export const SAMPLE_OP_STATUSES: SampleOpStatus[] = [
    {code: 'C', displayName: 'Complete'},
 ];
 
+export const SAMPLE_OP_STATUS_CODES = SAMPLE_OP_STATUSES.map(sos => sos.code);
+
 export function factsStatusTextFromCode(factsStatus: string)
 {
    switch (factsStatus)
