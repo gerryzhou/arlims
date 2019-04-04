@@ -8,12 +8,10 @@ Done
 - Introduce groups of lab resources in db for easy sharing between lowest-level (performing) orgs.
 - In Vidas stage add button allowing to set all results to negative.
 - Provide scrolling for options in sample received auto-fill dialog.
+- Allow appending resource codes to ui controls when applied via clipboard/scanner.
 
 TODO
 ====
-Many fields like lot #'s also need multiple entries.
-  Maybe just multi-select to input.
-
 Just one button to push AOAC, BAM and work hours.
   Automatically save test before pushing to FACTS.
 

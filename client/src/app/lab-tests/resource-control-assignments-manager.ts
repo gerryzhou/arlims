@@ -6,21 +6,22 @@ import {AlertMessageService} from '../shared/services/alerts';
 import {ResourceCodesDialogComponent} from '../common-components/resource-codes-dialog/resource-codes-dialog.component';
 
 
-export class ResourceControlAssignments {
+export class ResourceControlAssignmentsManager {
 
    assignedResourceCodesByTargetControlName: Map<string, Set<string>>;
 
-   unassignedResourceCodes: Set<string>;
+   unassignedCodes: Set<string>;
 
    constructor
       (
          private formGroup: FormGroup,
          private resourceTypeListsByTargetControlName: Map<string, string[]>,
+         private delimiter: string,
          private resourceTypeCodeExtractor: (string) => string = defaultResourceTypeCodeExtractor
       )
    {
       this.assignedResourceCodesByTargetControlName = new Map();
-      this.unassignedResourceCodes = new Set();
+      this.unassignedCodes = new Set();
    }
 
    promptAssignResources
@@ -33,16 +34,18 @@ export class ResourceControlAssignments {
       const dlg = dialogSvc.open(ResourceCodesDialogComponent, dialogConfig || {width: 'calc(80%)'});
 
       dlg.afterClosed().subscribe((result: ResourceCodesDialogResult) => {
-         if (!result) return;
-         this.assignResourceCodes(result.resourceCodes);
-         const unassigned = this.unassignedResourceCodes;
-         if ( unassigned.size > 0 )
+         if ( result )
          {
-            alertMsgSvc.alertWarning(
-               `${unassigned.size} resource codes were not matched to any fields:`,
-               false,
-               Array.from(unassigned)
-            );
+            this.assignResourceCodes(result.resourceCodes);
+
+            if ( this.unassignedCodes.size > 0 )
+            {
+               alertMsgSvc.alertWarning(
+                  `${this.unassignedCodes.size} resource codes were not matched to any fields:`,
+                  false,
+                  Array.from(this.unassignedCodes)
+               );
+            }
          }
       });
    }
@@ -50,10 +53,26 @@ export class ResourceControlAssignments {
    applyAssignedResourceToControl(resourceCode: string, controlName: string)
    {
       const ctrl = this.formGroup.get(controlName);
+
       if ( ctrl )
       {
-         ctrl.setValue(resourceCode);
-         this.removeAllAssignedResourceCodesForControl(controlName);
+         if ( this.delimiter )
+         {
+            const ctlVal = ctrl.value as string;
+
+            if ( ctlVal )
+               ctrl.setValue(ctlVal + this.delimiter + resourceCode);
+            else
+               ctrl.setValue(resourceCode);
+
+            this.removeAssignedResourceCodeForControl(resourceCode, controlName);
+         }
+         else // no delimiter set, only single values may be applied
+         {
+            ctrl.setValue(resourceCode);
+
+            this.removeAllAssignedResourceCodesForControl(controlName);
+         }
       }
    }
 
@@ -75,23 +94,23 @@ export class ResourceControlAssignments {
 
    assignResourceCodes(resourceCodes: string[])
    {
-      const resourceAssignments = this.assignResourceCodesToTargetControls(resourceCodes);
+      const assignments = this.makeResourceCodeControlAssignments(resourceCodes);
 
-      const assignedResourceCodesByTargetControlName = new Map(resourceAssignments.assignedResourceCodesByTargetControlName);
+      const assignedResourceCodesByTargetControlName = new Map(assignments.assignedResourceCodesByTargetControlName);
 
       const resourceCodeInstanceCounts: Map<string, number> = getResourceCodeInstanceCounts(resourceCodes);
 
       // If a resource code's match to a control is suitably unambiguous then it is applied as the control's value, and is no
       // longer considered assigned. An empty set of assigned codes is left for the control to indicate that a code was applied to it.
       // @ts-ignore
-      for (const [controlName, controlResourceCodes] of resourceAssignments.assignedResourceCodesByTargetControlName.entries())
+      for (const [controlName, controlResourceCodes] of assignments.assignedResourceCodesByTargetControlName.entries())
       {
-         if (controlResourceCodes.size === 1)
+         if ( controlResourceCodes.size === 1 )
          {
             const loneResourceCode = controlResourceCodes.values().next().value;
-            const codeNumAssignedTargetControls = resourceAssignments.assignedTargetControlsCountByResourceCode.get(loneResourceCode);
+            const codeNumAssignedTargetControls = assignments.assignedTargetControlsCountByResourceCode.get(loneResourceCode);
             const codeMultiplicity = resourceCodeInstanceCounts.get(loneResourceCode);
-            if (codeNumAssignedTargetControls === codeMultiplicity)
+            if ( codeNumAssignedTargetControls === codeMultiplicity )
             {
                this.formGroup.get(controlName).setValue(loneResourceCode);
                assignedResourceCodesByTargetControlName.set(controlName, new Set());
@@ -100,7 +119,7 @@ export class ResourceControlAssignments {
       }
 
       this.assignedResourceCodesByTargetControlName = assignedResourceCodesByTargetControlName;
-      this.unassignedResourceCodes = resourceAssignments.unassignedResourceCodes;
+      this.unassignedCodes = assignments.unassignedResourceCodes;
    }
 
    removeAllAssignedResourceCodesForControl(controlName)
@@ -121,7 +140,7 @@ export class ResourceControlAssignments {
    // Assign the given resource codes to available (empty) target controls by their registered resource types.
    // Returns a map of control name to a set of assigned resource code values (does not consider multiple
    // occurrences of resource code values).
-   private assignResourceCodesToTargetControls(resourceCodes: string[]): Assignments
+   private makeResourceCodeControlAssignments(resourceCodes: string[]): Assignments
    {
       const resourceCodesByTargetControlName: Map<string, Set<string>> = new Map();
       const matchedTargetControlsCountByResourceCode: Map<string, number> = new Map();
@@ -134,7 +153,7 @@ export class ResourceControlAssignments {
       // @ts-ignore
       for (const [controlName, controlResourceTypes] of this.resourceTypeListsByTargetControlName.entries())
       {
-         if (isEmptyString(this.formGroup.get(controlName).value))  // only consider empty target fields
+         if ( isEmptyString(this.formGroup.get(controlName).value) )  // only consider empty target fields
          {
             for (const controlResourceType of controlResourceTypes)
             {

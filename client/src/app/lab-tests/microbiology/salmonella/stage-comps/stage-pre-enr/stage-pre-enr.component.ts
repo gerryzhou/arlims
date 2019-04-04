@@ -6,7 +6,7 @@ import {LabResource} from '../../../../../../generated/dto';
 import {PreEnrData} from '../../test-data';
 import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {SampleTestUnits, SamplingMethod, TestUnitsType} from '../../../sampling-methods';
-import {ResourceControlAssignments} from '../../../../resource-assignments';
+import {ResourceControlAssignmentsManager} from '../../../../resource-control-assignments-manager';
 import {MatDialog} from '@angular/material';
 import {AlertMessageService} from '../../../../../shared/services/alerts';
 
@@ -54,7 +54,7 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
    sampleTestUnitsChangeSubcription: Subscription;
 
-   resourceAssignments: ResourceControlAssignments;
+   resourceAssignments: ResourceControlAssignmentsManager;
 
    testUnitsTypeDescr = 'subs/comps?';
 
@@ -62,12 +62,13 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
 
    ngOnChanges()
    {
-      this.resourceAssignments = new ResourceControlAssignments(
+      this.resourceAssignments = new ResourceControlAssignmentsManager(
          this.form,
          new Map()
             .set('blenderJarId', ['JAR'])
             .set('bagId', ['BAG'])
-            .set('mediumBatchId', ['RV', 'TT', 'LAC'])
+            .set('mediumBatchId', ['RV', 'TT', 'LAC']),
+         ','
       );
 
       this.sampleMethodChoicesByTestUnitType = {

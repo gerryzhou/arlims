@@ -7,7 +7,7 @@ import * as moment from 'moment';
 import {AlertMessageService} from '../../../../../shared/services/alerts';
 import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {LabResource} from '../../../../../../generated/dto';
-import {ResourceControlAssignments} from '../../../../resource-assignments';
+import {ResourceControlAssignmentsManager} from '../../../../resource-control-assignments-manager';
 import {MBrothData} from '../../test-data';
 
 @Component({
@@ -35,16 +35,17 @@ export class StageMBrothComponent implements OnChanges {
    @Input()
    showUnsetAffordances = false;
 
-   resourceAssignments: ResourceControlAssignments;
+   resourceAssignments: ResourceControlAssignmentsManager;
 
    constructor(private dialogSvc: MatDialog, private alertMsgSvc: AlertMessageService) {}
 
    ngOnChanges()
    {
-      this.resourceAssignments = new ResourceControlAssignments(
+      this.resourceAssignments = new ResourceControlAssignmentsManager(
          this.form,
          new Map()
-            .set('mBrothBatchId', ['MB'])
+            .set('mBrothBatchId', ['MB']),
+         ','
       );
 
       if ( this.allowDataChanges && this.form.disabled )

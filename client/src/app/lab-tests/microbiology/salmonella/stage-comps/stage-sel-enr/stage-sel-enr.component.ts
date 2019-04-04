@@ -3,7 +3,7 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 import {SelEnrData} from '../../test-data';
 import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {LabResource} from '../../../../../../generated/dto';
-import {ResourceControlAssignments} from '../../../../resource-assignments';
+import {ResourceControlAssignmentsManager} from '../../../../resource-control-assignments-manager';
 import {MatDialog} from '@angular/material';
 import {AlertMessageService} from '../../../../../shared/services/alerts';
 
@@ -35,7 +35,7 @@ export class StageSelEnrComponent implements OnChanges {
    @Input()
    spiking: boolean | null = null;
 
-   resourceAssignments: ResourceControlAssignments;
+   resourceAssignments: ResourceControlAssignmentsManager;
 
    positiveControlGrowthControl: AbstractControl;
    mediumControlGrowthControl: AbstractControl;
@@ -50,13 +50,14 @@ export class StageSelEnrComponent implements OnChanges {
       if ( this.spiking ) spikePlateCountCtrl.enable();
       else spikePlateCountCtrl.disable();
 
-      this.resourceAssignments = new ResourceControlAssignments(
+      this.resourceAssignments = new ResourceControlAssignmentsManager(
          this.form,
          new Map()
              .set('rvBatchId', ['RV'])
              .set('ttBatchId', ['TT'])
              .set('bgBatchId', ['BG'])
-             .set('i2kiBatchId', ['I2KI'])
+             .set('i2kiBatchId', ['I2KI']),
+         ','
       );
 
       this.positiveControlGrowthControl = this.form.get('positiveControlGrowth');
