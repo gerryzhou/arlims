@@ -70,6 +70,21 @@
    min-width: 105px;
 }
 
+.op-lid-paf-stack {
+   display: flex;
+   flex-flow: column nowrap;
+   justify-content: center;
+   align-items: center;
+   min-width: 105px;
+}
+
+.lid-paf-row {
+   display: flex;
+
+   > .lid {
+      margin-right: 10px;
+   }
+}
 
 .employee-assignments {
    display: flex;

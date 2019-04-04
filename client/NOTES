@@ -1,3 +1,6 @@
+Put op/(lid paf) stack to the right of sample/pac stack.
+  Only leave subject text on second row and hide by default.
+
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.

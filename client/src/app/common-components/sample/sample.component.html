@@ -18,6 +18,23 @@
             </div>
          </div>
 
+         <div class="op-lid-paf-stack">
+            <div>
+               <span class="field-label">op: </span>
+               <span class="field-value">{{sampleOp.opId}}</span>
+            </div>
+            <div class="lid-paf-row">
+               <div class="lid" *ngIf="sampleOp.lid">
+                  <span class="field-label">lid: </span>
+                  <span class="field-value">{{sampleOp.lid}}</span>
+               </div>
+               <div *ngIf="sampleOp.paf">
+                  <span class="field-label">paf: </span>
+                  <span class="field-value">{{sampleOp.paf}}</span>
+               </div>
+            </div>
+         </div>
+
          <div class="facts-status-stack" [ngClass]="factsStatusCssClass" *ngIf="factsStatusText != null">
             <div>{{factsStatusText}}</div>
             <div class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</div>
@@ -54,21 +71,6 @@
 
       <!-- Second row of sample metadata which might be longer or less often needed than that of the first row. -->
       <div class="sample-metadata-row" *ngIf="showAssociatedItems || showExtendedSampleMetadataAlways">
-         <div>
-            <span class="field-label">op: </span>
-            <span class="field-value">{{sampleOp.opId}}</span>
-         </div>
-
-         <div *ngIf="sampleOp.lid">
-            <span class="field-label">lid: </span>
-            <span class="field-value">{{sampleOp.lid}}</span>
-         </div>
-
-         <div *ngIf="sampleOp.paf">
-            <span class="field-label">paf: </span>
-            <span class="field-value">{{sampleOp.paf}}</span>
-         </div>
-
          <div *ngIf="sampleOp.subject">
             <span class="field-label">subject: </span>
             <span class="field-value">{{sampleOp.subject}}</span>

@@ -29,7 +29,7 @@ export class SampleComponent implements OnChanges {
    showAssociatedItemsSummaryInSampleMetadata = false;
 
    @Input()
-   showExtendedSampleMetadataAlways = true; // whether to show extended sample metadata even when tests & resources are not shown
+   showExtendedSampleMetadataAlways = false; // whether to show extended sample metadata even when tests & resources are not shown
 
    @Input()
    labGroupTestTypes: LabTestType[] = [];
