@@ -131,13 +131,6 @@ export class StageWrapupComponent implements OnChanges {
       this.generalFactsService.submitTimeCharges(this.sampleOp.opId, factsUserTimeCharges).subscribe(
          () => {
             this.setTimeChargesLastSavedToFacts(saveStarted);
-
-            this.generalFactsService.setSampleOperationWorkStatus(this.sampleOp.opId, 'O', this.appUser.factsPersonId)
-            .subscribe(
-               () => { console.log('FACTS status updated to original-complete after saving work hours.'); },
-               err => this.onFactsStatusUpdateError(err)
-            );
-
             // TODO: Emit new event requesting to save the test data.
          },
          err => {
