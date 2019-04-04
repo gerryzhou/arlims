@@ -7,33 +7,23 @@ Done
 - Hide positive continuation (SLANT,IDENT) stages when there are no Vidas positives.
 - Introduce groups of lab resources in db for easy sharing between lowest-level (performing) orgs.
 - In Vidas stage add button allowing to set all results to negative.
+- Provide scrolling for options in sample received auto-fill dialog.
 
 TODO
 ====
-Vidas
-  If there are more than 10 or so, show button to make them all negative.
-  Allow entering more than one Vidas machine, if there's time to implement.
-    Multi-select list.
-
 Many fields like lot #'s also need multiple entries.
   Maybe just multi-select to input.
-
-Need scroll pane for sample received auto-fill dialog.
 
 Just one button to push AOAC, BAM and work hours.
   Automatically save test before pushing to FACTS.
 
 Create accounts for Morgan, Josheph, Paul W., Dave Lau.
 
-
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.
   LabsDSFactsAccessService: LABS-DS api call resulted in error: [{"errorCode":"LABS-RUL-2611","message":"Analytical Results must be recorded before Lab accomplishment hours can be entered."}]
 
 Try pasting resource codes via actual barcode scanner.
-
-Why no op,lid,paf etc reported for "Bayer Asprin 100 mg" samples?
-
 
 
 
