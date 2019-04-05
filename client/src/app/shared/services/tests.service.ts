@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of as observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {flatMap, map} from 'rxjs/operators';
 import {Moment} from 'moment';
@@ -160,7 +160,7 @@ export class TestsService {
          flatMap(optUpdRes => {
 
             if ( optUpdRes.savedMd5 )
-               return observable(new SaveResult(optUpdRes.savedMd5, null));
+               return of(new SaveResult(optUpdRes.savedMd5, null));
 
             // There was a concurrent modification of this data, attempt auto-merge.
 
@@ -168,7 +168,7 @@ export class TestsService {
                flatMap(mergeRes => {
                   return mergeRes.hasConflicts ?
                      // If conflicts exist, just report the conflicts without any further attempt to save.
-                     observable(new SaveResult(null, mergeRes)) :
+                     of(new SaveResult(null, mergeRes)) :
                      // Latest db data merged cleanly onto local changes: attempt this process again with new db test data as baseline.
                      this.saveTestData(
                         testId,
@@ -262,13 +262,6 @@ export class TestsService {
          );
 
       return this.httpClient.get<SampleOpTest[]>(searchUrl);
-   }
-
-   getTestModifyingEmployeeIds(testId: number): Observable<number[]>
-   {
-      return this.httpClient.get<number[]>(
-         this.apiUrlsSvc.testModifyingEmployeeIdsUrl(testId)
-      );
    }
 }
 
