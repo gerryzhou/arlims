@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {BehaviorSubject, from as obsFrom, Observable} from 'rxjs';
-import {catchError, map, take} from 'rxjs/operators';
+import {BehaviorSubject, from, Observable} from 'rxjs';
+import {catchError, take} from 'rxjs/operators';
 
 import {Router} from '@angular/router';
 import {AlertMessageService, TestsService, UserContextService} from '../shared/services';
@@ -36,7 +36,7 @@ export class TestsSearchComponent {
          private router: Router
       )
    {
-      this.labTestTypes$ = obsFrom(userCtxSvc.getLabGroupContents().then(lgc => lgc.supportedTestTypes));
+      this.labTestTypes$ = from(userCtxSvc.getLabGroupContents().then(lgc => lgc.supportedTestTypes));
       this.defaultQuery = emptyTestsSearchQuery();
    }
 

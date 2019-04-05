@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, from as obsFrom} from 'rxjs';
+import {Observable, from} from 'rxjs';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
@@ -271,7 +271,7 @@ export class SamplesListingComponent {
    reload(): Observable<void>
    {
       const reload$: Observable<void> =
-         obsFrom(
+         from(
             this.usrCtxSvc.refreshLabGroupContents()
             .then(lgc => this.refreshFromLabGroupContents(lgc, null))
          );

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {BehaviorSubject, from as obsFrom, Observable} from 'rxjs';
+import {BehaviorSubject, from, Observable} from 'rxjs';
 
 import {UserContextService, AuditLogQueryService} from '../../shared/services';
 import {AuditLogDataOptions} from './audit-log-data-options';
@@ -36,7 +36,7 @@ export class AuditLogReviewComponent
 
       this.analyzedAuditLogEntries$ = new BehaviorSubject(entries.map(e => new AnalyzedAuditLogEntry(e)));
 
-      this.labGroupUsernames$ = obsFrom(
+      this.labGroupUsernames$ = from(
          userCtxSvc.getLabGroupContents()
          .then(lgc => lgc.memberUsers.map(uref => uref.username))
       );

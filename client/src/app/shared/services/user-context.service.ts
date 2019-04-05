@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {BehaviorSubject, Observable, of as obsOf, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {catchError, flatMap, map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
@@ -91,7 +91,7 @@ export class UserContextService {
                map(userContext => {
                   this.authenticatedUser$.next(userContext.user);
                   this.applicationVersion$.next(userContext.applicationVersion || null);
-                  this.refreshLabGroupContentsMembersFrom(obsOf(userContext.labGroupContents));
+                  this.refreshLabGroupContentsMembersFrom(of(userContext.labGroupContents));
                   return true;
                })
             );
@@ -99,7 +99,7 @@ export class UserContextService {
          catchError((err) => {
             console.log(err);
             this.authenticationToken$.next(null);
-            return obsOf(false);
+            return of(false);
          })
       );
    }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Observable, throwError, zip, of as obsOf, from as obsFrom} from 'rxjs';
+import {Observable, throwError, zip, of, from} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
 import {AuditLogQueryService, TestsService, UserContextService} from '../shared/services';
 import {LabGroupTestData} from '../shared/client-models/lab-group-test-data';
@@ -26,11 +26,11 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       const testId = +route.paramMap.get('testId');
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
-      const sampleOpTest$ = obsFrom(this.usrCtxSvc.getSampleOpTest(testId));
+      const sampleOpTest$ = from(this.usrCtxSvc.getSampleOpTest(testId));
 
       const testConfig$ = sampleOpTest$.pipe(
          flatMap(sampleOpTest =>
-            obsFrom(this.usrCtxSvc.getLabGroupTestConfigJson(sampleOpTest.testMetadata.testTypeCode)).pipe(
+            from(this.usrCtxSvc.getLabGroupTestConfigJson(sampleOpTest.testMetadata.testTypeCode)).pipe(
                map(configJson => configJson ? JSON.parse(configJson) : null)
             )
          )
@@ -39,7 +39,7 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       const includeAuditEntries = !!route.data['includeAuditLogEntries'];
       const auditEntries$ = includeAuditEntries ?
          this.auditLogSvc.getEntriesForTest(testId)
-         : obsOf(null);
+         : of(null);
 
       return (
          zip(
