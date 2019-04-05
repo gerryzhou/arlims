@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
 import {arraysEqual} from '../../../../../shared/util/data-objects';
@@ -10,10 +10,8 @@ import {
    makeContinuationTestsFormGroup,
    makeTestUnitsContinuationTestsFormGroup,
    countIsolates,
-   PositivesContinuationData,
    ContinuationTests
 } from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {TestConfig} from '../../test-config';
 import {AppUser, TestAttachedFileMetadata} from '../../../../../../generated/dto';
 import {TestUnitsType} from '../../../sampling-methods';
@@ -30,12 +28,6 @@ export class PosContComponent implements OnChanges {
 
    @Input()
    allowDataChanges: boolean;
-
-   @Input()
-   conflicts: PositivesContinuationData;
-
-   @Input()
-   conflictsWhoWhen: EmployeeTimestamp;
 
    @Input()
    showUnsetAffordances = false;
@@ -120,9 +112,11 @@ export class PosContComponent implements OnChanges {
          testUnitsFormGroup = this.form.get('testUnitsContinuationTests') as FormGroup;
       }
 
+      const fb = new FormBuilder();
+
       for ( const newTestUnitNum of this.testUnitNumbersDiff.unrepresentedVidasPositives )
       {
-         const emptyContTestsFormGroup = makeContinuationTestsFormGroup(this.makeEmptyContinuationTests());
+         const emptyContTestsFormGroup = makeContinuationTestsFormGroup(fb, this.makeEmptyContinuationTests());
 
          testUnitsFormGroup.addControl(newTestUnitNum.toString(), emptyContTestsFormGroup);
       }
@@ -132,8 +126,10 @@ export class PosContComponent implements OnChanges {
 
    private initFormGroup()
    {
-      const emptyTestUnitsFormGroup = makeTestUnitsContinuationTestsFormGroup({});
-      const emptyContControlsFormGroup = makeContinuationControlsFormGroup(makeEmptyContinuationControls(this.appUser.username));
+      const fb = new FormBuilder();
+      const emptyTestUnitsFormGroup = makeTestUnitsContinuationTestsFormGroup(fb, {});
+      const emptyControls = makeEmptyContinuationControls(this.appUser.username);
+      const emptyContControlsFormGroup = makeContinuationControlsFormGroup(fb, emptyControls);
 
       this.form.addControl('testUnitsContinuationTests', emptyTestUnitsFormGroup);
       this.form.addControl('continuationControls', emptyContControlsFormGroup);

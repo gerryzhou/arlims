@@ -12,61 +12,61 @@ export interface TestData {
 }
 
 export interface PrepData {
-   sampleReceivedDate?: string | null;
-   sampleReceivedFrom?: string | null;
-   descriptionMatchesCR?: boolean | null;
-   descriptionMatchesCRNotes?: string | null;
-   labelAttachmentType?: LabelAttachmentType | null;
-   containerMatchesCR?: boolean | null;
-   containerMatchesCRNotes?: string | null;
-   codeMatchesCR?: boolean | null;
-   codeMatchesCRNotes?: string | null;
+   sampleReceivedDate: string | null;
+   sampleReceivedFrom: string | null;
+   descriptionMatchesCR: boolean | null;
+   descriptionMatchesCRNotes: string | null;
+   labelAttachmentType: LabelAttachmentType | null;
+   containerMatchesCR: boolean | null;
+   containerMatchesCRNotes: string | null;
+   codeMatchesCR: boolean | null;
+   codeMatchesCRNotes: string | null;
 }
 
 export interface PreEnrData {
-   samplingMethod?: SamplingMethod | null;
-   samplingMethodExceptionsNotes?: string | null;
-   balanceId?: string | null;
-   blenderJarId?: string | null;
-   bagId?: string | null;
-   sampleSpike?: boolean | null;
-   spikeSpeciesText?: string | null;
-   spikeKitRemarksText?: string | null;
-   mediumBatchId?: string | null;
-   mediumType?: string | null;
-   incubatorId?: string | null;
+   samplingMethod: SamplingMethod | null;
+   samplingMethodExceptionsNotes: string | null;
+   balanceId: string | null;
+   blenderJarId: string | null;
+   bagId: string | null;
+   sampleSpike: boolean | null;
+   spikeSpeciesText: string | null;
+   spikeKitRemarksText: string | null;
+   mediumBatchId: string | null;
+   mediumType: string | null;
+   incubatorId: string | null;
 }
 
 export interface SelEnrData {
-   rvBatchId?: string | null;
-   ttBatchId?: string | null;
-   bgBatchId?: string | null;
-   i2kiBatchId?: string | null;
-   spikePlateCount?: number | null;
-   rvttWaterBathId?: string | null;
-   positiveControlGrowth?: boolean | null;
-   mediumControlGrowth?: boolean | null;
-   systemControlsGrowth?: 'G' | 'NG' | 'NA' | null;
-   systemControlTypes?: string | null;
-   collectorControlsGrowth?: 'G' | 'NG' | 'NA' | null;
-   collectorControlTypes?: string | null;
-   bacterialControlsUsed?: boolean | null;
+   rvBatchId: string | null;
+   ttBatchId: string | null;
+   bgBatchId: string | null;
+   i2kiBatchId: string | null;
+   spikePlateCount: number | null;
+   rvttWaterBathId: string | null;
+   positiveControlGrowth: boolean | null;
+   mediumControlGrowth: boolean | null;
+   systemControlsGrowth: 'G' | 'NG' | 'NA' | null;
+   systemControlTypes: string | null;
+   collectorControlsGrowth: 'G' | 'NG' | 'NA' | null;
+   collectorControlTypes: string | null;
+   bacterialControlsUsed: boolean | null;
 }
 
 export interface MBrothData {
-   mBrothBatchId?: string | null;
-   mBrothWaterBathId?: string | null;
-   waterBathStarted?: string | null;
+   mBrothBatchId: string | null;
+   mBrothWaterBathId: string | null;
+   waterBathStarted: string | null;
 }
 
 export interface VidasData {
-   instrumentId?: string | null;
-   kitIds?: string | null;
-   testUnitDetections?: boolean[] | null;
-   positiveControlDetection?: boolean | null;
-   mediumControlDetection?: boolean | null;
-   spikeDetection?: boolean | null;
-   methodRemarks?: string | null;
+   instrumentId: string | null;
+   kitIds: string | null;
+   testUnitDetections: boolean[] | null;
+   positiveControlDetection: boolean | null;
+   mediumControlDetection: boolean | null;
+   spikeDetection: boolean | null;
+   methodRemarks: string | null;
 }
 
 export interface PositivesContinuationData
@@ -95,7 +95,7 @@ export interface ContinuationControls
    pVulgarisUreaDetection: boolean | null;
    pVulgarisIdentification: IsolateIdentification;
    pVulgarisSatisfactory: boolean | null;
-   pAerugiOxidaseDetection?: boolean| null;
+   pAerugiOxidaseDetection: boolean| null;
    pAerugiSatisfactory: boolean | null;
    mediumControlGrowth: boolean | null;
    mediumSatisfactory: boolean | null;
@@ -115,8 +115,8 @@ export interface IsolateTestSequence {
    colonyAppearance: ColonyAppearance | null;
    tsiTubeTest: SlantTubeTest;
    liaTubeTest: SlantTubeTest;
-   ureaDetection?: boolean | null;
-   oxidaseDetection?: boolean | null;
+   ureaDetection: boolean | null;
+   oxidaseDetection: boolean | null;
    identification?: IsolateIdentification | null;
    failure?: IsolateTestSequenceFailure | null;
 }
@@ -145,13 +145,13 @@ export interface IsolateTestSequenceFailure {
 }
 
 export interface WrapupData {
-   reserveSampleDisposition?: ReserveSampleDisposition | null;
-   reserveSampleDestinations?: string | null;
-   reserveSampleOtherDescription?: string | null;
+   reserveSampleDisposition: ReserveSampleDisposition | null;
+   reserveSampleDestinations: string | null;
+   reserveSampleOtherDescription: string | null;
    testTimeCharges: TimeChargesSet;
-   timeChargesLastSavedToFacts?: string | null;
-   timeChargesLastEdited?: string | null;
-   analysisResultsRemarksText?: string | null;
+   timeChargesLastSavedToFacts: string | null;
+   timeChargesLastEdited: string | null;
+   analysisResultsRemarksText: string | null;
 }
 
 export type ColonyAppearance = 'T' | 'AT'| 'NT'| 'NG';
@@ -165,16 +165,76 @@ export type ReserveSampleDisposition = 'NO_RESERVE_SAMPLE' | 'SAMPLE_DISCARDED_A
 // which are bound to form controls, other than the leaf data elements themselves.
 export function emptyTestData(): TestData {
    return {
-      prepData: {},
-      preEnrData: {
-         samplingMethod: {}
+      prepData: {
+         sampleReceivedDate: null,
+         sampleReceivedFrom: null,
+         descriptionMatchesCR: null,
+         descriptionMatchesCRNotes: null,
+         labelAttachmentType: null,
+         containerMatchesCR: null,
+         containerMatchesCRNotes: null,
+         codeMatchesCR: null,
+         codeMatchesCRNotes: null
       },
-      selEnrData: {},
-      mBrothData: {},
-      vidasData: {},
+      preEnrData: {
+         samplingMethod: {
+            name: null,
+            description: null,
+            testUnitsType: null,
+            testUnitsCount: null,
+            extractedGramsPerSub: null,
+            numberOfSubsPerComposite: null,
+            userModifiable: null
+         },
+         samplingMethodExceptionsNotes: null,
+         balanceId: null,
+         blenderJarId: null,
+         bagId: null,
+         sampleSpike: null,
+         spikeSpeciesText: null,
+         spikeKitRemarksText: null,
+         mediumBatchId: null,
+         mediumType: null,
+         incubatorId: null
+      },
+      selEnrData: {
+         rvBatchId: null,
+         ttBatchId: null,
+         bgBatchId: null,
+         i2kiBatchId: null,
+         spikePlateCount: null,
+         rvttWaterBathId: null,
+         positiveControlGrowth: null,
+         mediumControlGrowth: null,
+         systemControlsGrowth: null,
+         systemControlTypes: null,
+         collectorControlsGrowth: null,
+         collectorControlTypes: null,
+         bacterialControlsUsed: null
+      },
+      mBrothData: {
+         mBrothBatchId: null,
+         mBrothWaterBathId: null,
+         waterBathStarted: null
+      },
+      vidasData: {
+         instrumentId: null,
+         kitIds: null,
+         testUnitDetections: null,
+         positiveControlDetection: null,
+         mediumControlDetection: null,
+         spikeDetection: null,
+         methodRemarks: null
+      },
       posContData: {},
       wrapupData: {
-         testTimeCharges: {}
+         reserveSampleDisposition: null,
+         reserveSampleDestinations: null,
+         reserveSampleOtherDescription: null,
+         testTimeCharges: {},
+         timeChargesLastSavedToFacts: null,
+         timeChargesLastEdited: null,
+         analysisResultsRemarksText: null
       },
    };
 }

@@ -25,12 +25,6 @@ export class StageWrapupComponent implements OnChanges {
    allowDataChanges: boolean;
 
    @Input()
-   conflicts: WrapupData;
-
-   @Input()
-   conflictsWhoWhen: EmployeeTimestamp;
-
-   @Input()
    showUnsetAffordances = false;
 
    @Input()

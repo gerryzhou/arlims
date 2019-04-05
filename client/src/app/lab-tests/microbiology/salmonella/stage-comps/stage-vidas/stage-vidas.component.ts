@@ -27,12 +27,6 @@ export class StageVidasComponent implements OnChanges {
    attachedFilesByTestPart: Map<string|null, TestAttachedFileMetadata[]>;
 
    @Input()
-   conflicts: VidasData;
-
-   @Input()
-   conflictsWhoWhen: EmployeeTimestamp;
-
-   @Input()
    vidasInstruments: LabResource[];
 
    @Input()

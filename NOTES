@@ -1,6 +1,11 @@
+Make sure there are no more aliases of imports from rxjs.
+
+Package versions for angular and rxjs don't seem to be quite right:
+  angular versions aren't uniform
+  rxjs is declared at 6.4 in package.json but package lock shows 6.3.3 everywhere.
+
 Commit
 ------
-
 
 Done
 ====
@@ -15,6 +20,7 @@ Done
 - Allow appending resource codes to ui controls when applied via clipboard/scanner.
 - Add more sample information (op,lid,paf) in main sample row, second row hidden by default until sample is expanded.
 - Customize available sample/op status choices for person inbox.
+- Don't update sample/op status after submitting work hours as FACTS will do this internally when appropriate.
 
 
 TODO

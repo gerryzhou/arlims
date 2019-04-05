@@ -67,10 +67,6 @@ export class StagedTestDataComponent implements OnInit {
    // The form group holds the edited state of the test data.
    readonly testDataForm: FormGroup;
 
-   // After a failed save, we can temporarily show values from another user's conflicting edits.
-   conflictsTestData: TestData;
-   conflictsEmployeeTimestamp: EmployeeTimestamp | null;
-
    // Controls whether a null option is shown for some ui choice components.
    showUnsetAffordances = false;
 
@@ -152,9 +148,6 @@ export class StagedTestDataComponent implements OnInit {
       this.vidasInstruments = labResources.get(UserContextService.VIDAS_RESOURCE_TYPE);
 
       this.labGroupUsers = labGroupTestData.labGroupUsers;
-
-      this.conflictsTestData = emptyTestData();
-      this.conflictsEmployeeTimestamp = null;
    }
 
    ngOnInit()
@@ -208,15 +201,14 @@ export class StagedTestDataComponent implements OnInit {
       if ( this.testIsNew )
       {
          const opId = this.sampleOpTest.sampleOp.opId;
-         this.generalFactsService.setSampleOperationWorkStatus(opId, 'I', this.appUser.factsPersonId)
-         .subscribe(
+         this.generalFactsService.setSampleOperationWorkStatus(opId, 'I', this.appUser.factsPersonId).subscribe(
             () => { console.log('FACTS status updated for new test.'); },
             err => this.onFactsStatusUpdateError(err)
          );
          this.testIsNew = false;
       }
 
-      this.makeFormPristine();
+      this.testDataForm.markAsPristine();
       this.doAfterSaveNavigation(nav);
    }
 
@@ -286,7 +278,7 @@ export class StagedTestDataComponent implements OnInit {
       console.log('FACTS response for AOAC submission: ', factsResponse);
       // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
       // this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
-      this.makeFormPristine();
+      this.testDataForm.markAsPristine();
    }
 
    private submitBAMDataToFactsAsync(testData: TestData)
@@ -311,7 +303,7 @@ export class StagedTestDataComponent implements OnInit {
       console.log('FACTS response for BAM submission: ', factsResponse);
       // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
       // this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
-      this.makeFormPristine();
+      this.testDataForm.markAsPristine();
       this.doAfterSaveNavigation('nav-home');
    }
 
@@ -329,25 +321,11 @@ export class StagedTestDataComponent implements OnInit {
 
    private onTestDataSaveConflict(saveResult: SaveResult)
    {
-     this.testIsNew = false;
+      this.alertMsgSvc.alertDanger('Cannot save test data, concurrent changes by another user would be overwritten.');
 
-     const conflicts = saveResult.mergeConflicts;
-     const modInfo = conflicts.dbModificationInfo;
-     const msg =
-        'Changes were not saved due to the conflicting changes made by ' +
-        modInfo.savedByUserShortName + ' highlighted below. Please adjust ' +
-        'field values as necessary and save again.';
-
-     this.testDataForm.patchValue(conflicts.mergedTestData);
-     this.originalTestData = conflicts.dbTestData;
-     this.originalTestDataMd5 = conflicts.dbModificationInfo.dataMd5;
-     this.conflictsTestData = copyWithMergedValuesFrom(emptyTestData(), conflicts.conflictingDbValues);
-     this.conflictsEmployeeTimestamp = {
-        employeeShortName: modInfo.savedByUserShortName,
-        timestamp: moment(modInfo.savedInstant, moment.ISO_8601).toDate(),
-     };
-
-     this.alertMsgSvc.alertWarning(msg);
+      // TODO: - Save both test data values to a record in new conflicts table, then save this data forcing overwrite.
+      //       - Alert user that there was a conflict, that this version of the data has overwritten the other,
+      //         that the both versions have been saved, and conflicting data can be examined/merged later.
    }
 
    private onTestDataSaveError(err)
@@ -386,12 +364,6 @@ export class StagedTestDataComponent implements OnInit {
    {
       this.vidasPositiveTestUnitNumbers = positiveTestUnits;
       this.showPositiveContinuationStages = this.vidasPositiveTestUnitNumbers.length > 0;
-   }
-
-   private clearConflictsData()
-   {
-      this.conflictsTestData = emptyTestData();
-      this.conflictsEmployeeTimestamp = null;
    }
 
    @HostListener('window:keydown.F4')
@@ -450,15 +422,9 @@ export class StagedTestDataComponent implements OnInit {
 
       this.testsSvc.restoreTestData(Array.from(files)).subscribe(() => {
          this.alertMsgSvc.alertSuccess('Test data restored.', true);
-         this.makeFormPristine();
+         this.testDataForm.markAsPristine();
          this.doAfterSaveNavigation('nav-none');
       });
-   }
-
-   private makeFormPristine()
-   {
-      this.clearConflictsData();
-      this.testDataForm.markAsPristine();
    }
 
    private doAfterSaveNavigation(nav: AfterSaveNavigation)

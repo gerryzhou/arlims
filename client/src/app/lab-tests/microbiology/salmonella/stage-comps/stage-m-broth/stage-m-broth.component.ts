@@ -8,7 +8,6 @@ import {AlertMessageService} from '../../../../../shared/services/alerts';
 import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {LabResource} from '../../../../../../generated/dto';
 import {ResourceControlAssignmentsManager} from '../../../../resource-control-assignments-manager';
-import {MBrothData} from '../../test-data';
 
 @Component({
    selector: 'app-stage-m-broth',
@@ -24,13 +23,7 @@ export class StageMBrothComponent implements OnChanges {
    allowDataChanges: boolean;
 
    @Input()
-   conflicts: MBrothData;
-
-   @Input()
    waterBaths: LabResource[];
-
-   @Input()
-   conflictsWhoWhen: EmployeeTimestamp;
 
    @Input()
    showUnsetAffordances = false;

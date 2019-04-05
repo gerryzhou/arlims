@@ -1,21 +1,41 @@
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 import {makeTimeChargesSetFormGroup} from '../../../../shared/client-models/time-charges';
 import {
+   TestData,
+   PrepData,
+   PreEnrData,
+   SelEnrData,
+   MBrothData,
+   VidasData,
+   WrapupData,
+   PositivesContinuationData,
    ContinuationControls,
    ContinuationTests,
    ContinuationTestssByTestUnitNum,
+   makeEmptyContinuationControls,
+   SlantTubeTest,
    IsolateIdentification,
    IsolateTestSequence,
    IsolateTestSequenceFailure,
    IsolateTestSequencesByUid,
-   makeEmptyContinuationControls,
-   PositivesContinuationData,
    SelectiveAgarsTestSuite,
-   SlantTubeTest,
-   TestData
 } from './types';
 import {TestConfig} from '../test-config';
+import {SamplingMethod} from '../../sampling-methods';
+
+type FormModel<T> = { [P in keyof T]: any };
+
+export function makeFormGroup<T>
+   (
+      fb: FormBuilder,
+      formModel: FormModel<T>,
+      validators: any[] | null = null
+   )
+   : FormGroup
+{
+   return ( validators != null ) ? fb.group(formModel, {validators: validators}) : fb.group(formModel);
+}
 
 export function makeTestDataFormGroup
    (
@@ -25,217 +45,269 @@ export function makeTestDataFormGroup
    )
    : FormGroup
 {
-   return new FormGroup({
-      prepData: new FormGroup({
-         sampleReceivedDate: new FormControl(testData.prepData.sampleReceivedDate),
-         sampleReceivedFrom: new FormControl(testData.prepData.sampleReceivedFrom),
-         descriptionMatchesCR: new FormControl(testData.prepData.descriptionMatchesCR),
-         descriptionMatchesCRNotes: new FormControl(testData.prepData.descriptionMatchesCRNotes),
-         labelAttachmentType: new FormControl(testData.prepData.labelAttachmentType),
-         containerMatchesCR: new FormControl(testData.prepData.containerMatchesCR),
-         containerMatchesCRNotes: new FormControl(testData.prepData.containerMatchesCRNotes),
-         codeMatchesCR: new FormControl(testData.prepData.codeMatchesCR),
-         codeMatchesCRNotes: new FormControl(testData.prepData.codeMatchesCRNotes),
+   const fb = new FormBuilder();
+
+   function formGroup<T>(formModel: FormModel<T>, validators: any[] | null = null): FormGroup
+   {
+      return makeFormGroup(fb, formModel, validators);
+   }
+
+   return formGroup<TestData>({
+
+      prepData: formGroup<PrepData>({
+         sampleReceivedDate: [testData.prepData.sampleReceivedDate],
+         sampleReceivedFrom: [testData.prepData.sampleReceivedFrom],
+         descriptionMatchesCR: [testData.prepData.descriptionMatchesCR],
+         descriptionMatchesCRNotes: [testData.prepData.descriptionMatchesCRNotes],
+         labelAttachmentType: [testData.prepData.labelAttachmentType],
+         containerMatchesCR: [testData.prepData.containerMatchesCR],
+         containerMatchesCRNotes: [testData.prepData.containerMatchesCRNotes],
+         codeMatchesCR: [testData.prepData.codeMatchesCR],
+         codeMatchesCRNotes: [testData.prepData.codeMatchesCRNotes],
       }),
-      preEnrData: new FormGroup({
-         samplingMethod: new FormGroup({
-            testUnitsType: new FormControl(testData.preEnrData.samplingMethod.testUnitsType),
-            testUnitsCount: new FormControl(testData.preEnrData.samplingMethod.testUnitsCount),
-            numberOfSubsPerComposite: new FormControl(testData.preEnrData.samplingMethod.numberOfSubsPerComposite),
-            extractedGramsPerSub: new FormControl(testData.preEnrData.samplingMethod.extractedGramsPerSub),
-            userModifiable: new FormControl(testData.preEnrData.samplingMethod.userModifiable || false),
+
+      preEnrData: formGroup<PreEnrData>({
+         samplingMethod: formGroup<SamplingMethod>({
+            testUnitsType: [testData.preEnrData.samplingMethod.testUnitsType],
+            testUnitsCount: [testData.preEnrData.samplingMethod.testUnitsCount],
+            extractedGramsPerSub: [testData.preEnrData.samplingMethod.extractedGramsPerSub],
+            numberOfSubsPerComposite: [testData.preEnrData.samplingMethod.numberOfSubsPerComposite],
+            userModifiable: [testData.preEnrData.samplingMethod.userModifiable || false],
          }),
-         samplingMethodExceptionsNotes: new FormControl(testData.preEnrData.samplingMethodExceptionsNotes),
-         balanceId: new FormControl(testData.preEnrData.balanceId),
-         blenderJarId: new FormControl(testData.preEnrData.blenderJarId),
-         bagId: new FormControl(testData.preEnrData.bagId),
-         mediumBatchId: new FormControl(testData.preEnrData.mediumBatchId),
-         mediumType: new FormControl(testData.preEnrData.mediumType),
-         incubatorId: new FormControl(testData.preEnrData.incubatorId),
-         sampleSpike: new FormControl(testData.preEnrData.sampleSpike),
-         spikeSpeciesText: new FormControl(
-            testData.preEnrData.spikeSpeciesText || testConfig.spikeSpeciesText || null
-         ),
-         spikeKitRemarksText: new FormControl(
-            testData.preEnrData.spikeKitRemarksText || testConfig.spikeKitRemarksText || null
-         )
+         samplingMethodExceptionsNotes: [testData.preEnrData.samplingMethodExceptionsNotes],
+         balanceId: [testData.preEnrData.balanceId],
+         blenderJarId: [testData.preEnrData.blenderJarId],
+         bagId: [testData.preEnrData.bagId],
+         mediumBatchId: [testData.preEnrData.mediumBatchId],
+         mediumType: [testData.preEnrData.mediumType],
+         incubatorId: [testData.preEnrData.incubatorId],
+         sampleSpike: [testData.preEnrData.sampleSpike],
+         spikeSpeciesText: [testData.preEnrData.spikeSpeciesText || testConfig.spikeSpeciesText || null],
+         spikeKitRemarksText: [testData.preEnrData.spikeKitRemarksText || testConfig.spikeKitRemarksText || null]
       }),
-      selEnrData: new FormGroup({
-         rvBatchId: new FormControl(testData.selEnrData.rvBatchId),
-         ttBatchId: new FormControl(testData.selEnrData.ttBatchId),
-         bgBatchId: new FormControl(testData.selEnrData.bgBatchId),
-         i2kiBatchId: new FormControl(testData.selEnrData.i2kiBatchId),
-         spikePlateCount: new FormControl(testData.selEnrData.spikePlateCount),
-         rvttWaterBathId: new FormControl(testData.selEnrData.rvttWaterBathId),
-         positiveControlGrowth: new FormControl(testData.selEnrData.positiveControlGrowth),
-         mediumControlGrowth: new FormControl(testData.selEnrData.mediumControlGrowth),
-         systemControlsGrowth: new FormControl(testData.selEnrData.systemControlsGrowth),
-         systemControlTypes: new FormControl(testData.selEnrData.systemControlTypes),
-         collectorControlsGrowth: new FormControl(testData.selEnrData.collectorControlsGrowth),
-         collectorControlTypes: new FormControl(testData.selEnrData.collectorControlTypes),
-         bacterialControlsUsed: new FormControl(testData.selEnrData.bacterialControlsUsed),
+
+      selEnrData: formGroup<SelEnrData>({
+         rvBatchId: [testData.selEnrData.rvBatchId],
+         ttBatchId: [testData.selEnrData.ttBatchId],
+         bgBatchId: [testData.selEnrData.bgBatchId],
+         i2kiBatchId: [testData.selEnrData.i2kiBatchId],
+         spikePlateCount: [testData.selEnrData.spikePlateCount],
+         rvttWaterBathId: [testData.selEnrData.rvttWaterBathId],
+         positiveControlGrowth: [testData.selEnrData.positiveControlGrowth],
+         mediumControlGrowth: [testData.selEnrData.mediumControlGrowth],
+         systemControlsGrowth: [testData.selEnrData.systemControlsGrowth],
+         systemControlTypes: [testData.selEnrData.systemControlTypes],
+         collectorControlsGrowth: [testData.selEnrData.collectorControlsGrowth],
+         collectorControlTypes: [testData.selEnrData.collectorControlTypes],
+         bacterialControlsUsed: [testData.selEnrData.bacterialControlsUsed],
       }),
-      mBrothData: new FormGroup({
-         mBrothBatchId: new FormControl(testData.mBrothData.mBrothBatchId),
-         mBrothWaterBathId: new FormControl(testData.mBrothData.mBrothWaterBathId),
-         waterBathStarted: new FormControl(testData.mBrothData.waterBathStarted),
+
+      mBrothData: formGroup<MBrothData>({
+         mBrothBatchId: [testData.mBrothData.mBrothBatchId],
+         mBrothWaterBathId: [testData.mBrothData.mBrothWaterBathId],
+         waterBathStarted: [testData.mBrothData.waterBathStarted],
       }),
-      vidasData: new FormGroup({
-         instrumentId: new FormControl(testData.vidasData.instrumentId),
-         kitIds: new FormControl(testData.vidasData.kitIds),
+
+      vidasData: formGroup<VidasData>({
+         instrumentId: [testData.vidasData.instrumentId],
+         kitIds: [testData.vidasData.kitIds],
          testUnitDetections: new FormArray(
-            (testData.vidasData.testUnitDetections || [null])
-               .map(detected => new FormControl(detected))
+            (testData.vidasData.testUnitDetections || [null]).map(detected => new FormControl(detected))
          ),
-         positiveControlDetection: new FormControl(testData.vidasData.positiveControlDetection),
-         mediumControlDetection: new FormControl(testData.vidasData.mediumControlDetection),
-         spikeDetection: new FormControl(testData.vidasData.spikeDetection),
-         methodRemarks: new FormControl(testData.vidasData.methodRemarks),
+         positiveControlDetection: [testData.vidasData.positiveControlDetection],
+         mediumControlDetection: [testData.vidasData.mediumControlDetection],
+         spikeDetection: [testData.vidasData.spikeDetection],
+         methodRemarks: [testData.vidasData.methodRemarks],
       }),
-      posContData: makePositivesContinuationDataFormGroup(testData.posContData, username),
-      wrapupData: new FormGroup({
-         reserveSampleDisposition: new FormControl(testData.wrapupData.reserveSampleDisposition),
-         reserveSampleDestinations: new FormControl(testData.wrapupData.reserveSampleDestinations),
-         reserveSampleOtherDescription: new FormControl(testData.wrapupData.reserveSampleOtherDescription),
+
+      posContData: makePositivesContinuationDataFormGroup(fb, testData.posContData, username),
+
+      wrapupData: formGroup<WrapupData>({
+         reserveSampleDisposition: [testData.wrapupData.reserveSampleDisposition],
+         reserveSampleDestinations: [testData.wrapupData.reserveSampleDestinations],
+         reserveSampleOtherDescription: [testData.wrapupData.reserveSampleOtherDescription],
          testTimeCharges: makeTimeChargesSetFormGroup(testData.wrapupData.testTimeCharges),
-         timeChargesLastSavedToFacts: new FormControl(testData.wrapupData.timeChargesLastSavedToFacts),
-         timeChargesLastEdited: new FormControl(testData.wrapupData.timeChargesLastEdited),
-         analysisResultsRemarksText: new FormControl(testData.wrapupData.analysisResultsRemarksText),
+         timeChargesLastSavedToFacts: [testData.wrapupData.timeChargesLastSavedToFacts],
+         timeChargesLastEdited: [testData.wrapupData.timeChargesLastEdited],
+         analysisResultsRemarksText: [testData.wrapupData.analysisResultsRemarksText],
       }),
    });
 }
 
-export function makePositivesContinuationDataFormGroup(posContData: PositivesContinuationData, username: string): FormGroup
+export function makePositivesContinuationDataFormGroup
+   (
+      formBuilder: FormBuilder,
+      posContData: PositivesContinuationData,
+      username: string
+   )
+   : FormGroup
 {
-   const formValidatorFunctions = [];  // Put form-level validation here if any.
-
    if ( posContData.continuationControls == null && posContData.testUnitsContinuationTests == null )
-      return new FormGroup({}, formValidatorFunctions);
+      return new FormGroup({});
    else
    {
-      const testUnitsContinuationTests =
-         makeTestUnitsContinuationTestsFormGroup(posContData.testUnitsContinuationTests || {});
+      const contTests = posContData.testUnitsContinuationTests || {};
+      const contControls = posContData.continuationControls || makeEmptyContinuationControls(username);
 
-      const continuationControls =
-         makeContinuationControlsFormGroup(posContData.continuationControls || makeEmptyContinuationControls(username));
-
-      return new FormGroup(
-         {
-            testUnitsContinuationTests,
-            continuationControls
-         },
-         formValidatorFunctions
-      );
+      return makeFormGroup<PositivesContinuationData>(formBuilder, {
+         testUnitsContinuationTests: makeTestUnitsContinuationTestsFormGroup(formBuilder, contTests),
+         continuationControls: makeContinuationControlsFormGroup(formBuilder, contControls)
+      });
    }
 }
 
-export function makeTestUnitsContinuationTestsFormGroup(testUnitsContinuationTests: ContinuationTestssByTestUnitNum): FormGroup
+export function makeTestUnitsContinuationTestsFormGroup
+   (
+      formBuilder: FormBuilder,
+      testUnitsContinuationTests: ContinuationTestssByTestUnitNum
+   )
+   : FormGroup
 {
    const fgControls: {[testUnitNum: string]: FormGroup} = {};
 
    for ( const testUnitNumStr of Object.keys(testUnitsContinuationTests) )
-      fgControls[testUnitNumStr] = makeContinuationTestsFormGroup(testUnitsContinuationTests[testUnitNumStr]);
+      fgControls[testUnitNumStr] =
+         makeContinuationTestsFormGroup(formBuilder, testUnitsContinuationTests[testUnitNumStr]);
 
    return new FormGroup(fgControls);
 }
 
 // Make continuation testing form group for one test unit.
-export function makeContinuationTestsFormGroup(contTests: ContinuationTests): FormGroup
+export function makeContinuationTestsFormGroup
+   (
+      formBuilder: FormBuilder,
+      contTests: ContinuationTests
+   )
+   : FormGroup
 {
-   return new FormGroup({
-      rvSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(contTests.rvSourcedTests),
-      ttSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(contTests.ttSourcedTests),
+   return makeFormGroup<ContinuationTests>(formBuilder, {
+      rvSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(formBuilder, contTests.rvSourcedTests),
+      ttSourcedTests: makeSelectiveAgarsTestSuiteFormGroup(formBuilder, contTests.ttSourcedTests),
    });
 }
 
-export function makeContinuationControlsFormGroup(contControls: ContinuationControls): FormGroup
+export function makeContinuationControlsFormGroup
+   (
+      formBuilder: FormBuilder,
+      contControls: ContinuationControls
+   )
+   : FormGroup
 {
-   return new FormGroup({
-      salmonellaGaminara: makeSelectiveAgarsTestSuiteFormGroup(contControls.salmonellaGaminara),
-      salmonellaGaminaraSatisfactory: new FormControl(contControls.salmonellaGaminaraSatisfactory),
-      salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(contControls.salmonellaDiarizonae),
-      salmonellaDiarizonaeSatisfactory: new FormControl(contControls.salmonellaDiarizonaeSatisfactory),
-      pVulgarisUreaDetection: new FormControl(contControls.pVulgarisUreaDetection),
-      pVulgarisIdentification: makeIsolateIdentificationFormGroup(contControls.pVulgarisIdentification),
-      pVulgarisSatisfactory: new FormControl(contControls.pVulgarisSatisfactory),
-      pAerugiOxidaseDetection: new FormControl(contControls.pAerugiOxidaseDetection),
-      pAerugiSatisfactory: new FormControl(contControls.pAerugiSatisfactory),
-      mediumControlGrowth: new FormControl(contControls.mediumControlGrowth),
-      mediumSatisfactory: new FormControl(contControls.mediumSatisfactory),
+   return makeFormGroup<ContinuationControls>(formBuilder, {
+      salmonellaGaminara: makeSelectiveAgarsTestSuiteFormGroup(formBuilder, contControls.salmonellaGaminara),
+      salmonellaGaminaraSatisfactory: [contControls.salmonellaGaminaraSatisfactory],
+      salmonellaDiarizonae: makeSelectiveAgarsTestSuiteFormGroup(formBuilder, contControls.salmonellaDiarizonae),
+      salmonellaDiarizonaeSatisfactory: [contControls.salmonellaDiarizonaeSatisfactory],
+      pVulgarisUreaDetection: [contControls.pVulgarisUreaDetection],
+      pVulgarisIdentification: makeIsolateIdentificationFormGroup(formBuilder, contControls.pVulgarisIdentification),
+      pVulgarisSatisfactory: [contControls.pVulgarisSatisfactory],
+      pAerugiOxidaseDetection: [contControls.pAerugiOxidaseDetection],
+      pAerugiSatisfactory: [contControls.pAerugiSatisfactory],
+      mediumControlGrowth: [contControls.mediumControlGrowth],
+      mediumSatisfactory: [contControls.mediumSatisfactory],
    });
 }
 
-function makeSelectiveAgarsTestSuiteFormGroup(selAgarsTestSuite: SelectiveAgarsTestSuite): FormGroup
+function makeSelectiveAgarsTestSuiteFormGroup
+   (
+      formBuilder: FormBuilder,
+      selAgarsTestSuite: SelectiveAgarsTestSuite
+   )
+   : FormGroup
 {
-   return new FormGroup({
-      he: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.he),
-      xld: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.xld),
-      bs24h: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.bs24h),
-      bs48h: makeIsolatesTestSequencesFormGroup(selAgarsTestSuite.bs48h),
+   return makeFormGroup<SelectiveAgarsTestSuite>(formBuilder, {
+      he: makeIsolatesTestSequencesFormGroup(formBuilder, selAgarsTestSuite.he),
+      xld: makeIsolatesTestSequencesFormGroup(formBuilder, selAgarsTestSuite.xld),
+      bs24h: makeIsolatesTestSequencesFormGroup(formBuilder, selAgarsTestSuite.bs24h),
+      bs48h: makeIsolatesTestSequencesFormGroup(formBuilder, selAgarsTestSuite.bs48h),
    });
 }
 
-function makeIsolatesTestSequencesFormGroup(isolateTestSeqsByUid: IsolateTestSequencesByUid): FormGroup
+function makeIsolatesTestSequencesFormGroup
+   (
+      formBuilder: FormBuilder,
+      isolateTestSeqsByUid: IsolateTestSequencesByUid
+   )
+   : FormGroup
 {
    const fgControls: { [testSeqUid: string]: FormGroup } = {};
 
    for ( const testSeqUid of Object.keys(isolateTestSeqsByUid) )
-      fgControls[testSeqUid] = makeIsolateTestSequenceFormGroup(isolateTestSeqsByUid[testSeqUid]);
+      fgControls[testSeqUid] = makeIsolateTestSequenceFormGroup(formBuilder, isolateTestSeqsByUid[testSeqUid]);
 
    return new FormGroup(fgControls);
 }
 
-export function makeIsolateTestSequenceFormGroup(isolateTestSeq: IsolateTestSequence): FormGroup
+export function makeIsolateTestSequenceFormGroup
+   (
+      formBuilder: FormBuilder,
+      isolateTestSeq: IsolateTestSequence
+   )
+   : FormGroup
 {
-   const fg = new FormGroup({
-      isolateNumber: new FormControl(isolateTestSeq.isolateNumber),
-      colonyAppearance: new FormControl(isolateTestSeq.colonyAppearance),
-      tsiTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.tsiTubeTest),
-      liaTubeTest: makeSlantTubeTestFormGroup(isolateTestSeq.liaTubeTest),
-      ureaDetection: new FormControl(isolateTestSeq.ureaDetection),
-      oxidaseDetection: new FormControl(isolateTestSeq.oxidaseDetection),
+   const fg = makeFormGroup<IsolateTestSequence>(formBuilder, {
+      isolateNumber: [isolateTestSeq.isolateNumber],
+      colonyAppearance: [isolateTestSeq.colonyAppearance],
+      tsiTubeTest: makeSlantTubeTestFormGroup(formBuilder, isolateTestSeq.tsiTubeTest),
+      liaTubeTest: makeSlantTubeTestFormGroup(formBuilder, isolateTestSeq.liaTubeTest),
+      ureaDetection: [isolateTestSeq.ureaDetection],
+      oxidaseDetection: [isolateTestSeq.oxidaseDetection],
       // 'identification' and 'failure' FormGroups are added below or interactively as needed
    });
 
    if ( isolateTestSeq.identification != null )
-      fg.addControl('identification', makeIsolateIdentificationFormGroup(isolateTestSeq.identification));
+      fg.addControl('identification', makeIsolateIdentificationFormGroup(formBuilder, isolateTestSeq.identification));
    if ( isolateTestSeq.failure != null )
-      fg.addControl('failure', makeIsolateTestSequenceFailureFormGroup(isolateTestSeq.failure));
+      fg.addControl('failure', makeIsolateTestSequenceFailureFormGroup(formBuilder, isolateTestSeq.failure));
 
    return fg;
 }
 
-function makeSlantTubeTestFormGroup(slantTubeTest: SlantTubeTest): FormGroup
+function makeSlantTubeTestFormGroup
+   (
+      formBuilder: FormBuilder,
+      slantTubeTest: SlantTubeTest
+   )
+   : FormGroup
 {
-   return new FormGroup({
-      slant: new FormControl(slantTubeTest.slant),
-      butt: new FormControl(slantTubeTest.butt),
-      h2s: new FormControl(slantTubeTest.h2s),
-      gas: new FormControl(slantTubeTest.gas),
+   return makeFormGroup<SlantTubeTest>(formBuilder, {
+      slant: [slantTubeTest.slant],
+      butt: [slantTubeTest.butt],
+      h2s: [slantTubeTest.h2s],
+      gas: [slantTubeTest.gas],
    });
 }
 
 export function makeEmptyIsolateIdentificationFormGroup(): FormGroup
 {
-   return makeIsolateIdentificationFormGroup(null);
+   return makeIsolateIdentificationFormGroup(new FormBuilder(), null);
 }
 
-export function makeIsolateIdentificationFormGroup(isolateIdent: IsolateIdentification): FormGroup
+export function makeIsolateIdentificationFormGroup
+   (
+      formBuilder: FormBuilder,
+      isolateIdent: IsolateIdentification
+   )
+   : FormGroup
 {
-   return new FormGroup({
-      method:    new FormControl(isolateIdent && isolateIdent.method || null),
-      identCode: new FormControl(isolateIdent && isolateIdent.identCode || null),
-      identText: new FormControl(isolateIdent && isolateIdent.identText || null),
-      attachmentLabel: new FormControl(isolateIdent && isolateIdent.attachmentLabel || null),
+   return makeFormGroup<IsolateIdentification>(formBuilder, {
+      method:    [isolateIdent && isolateIdent.method || null],
+      identCode: [isolateIdent && isolateIdent.identCode || null],
+      identText: [isolateIdent && isolateIdent.identText || null],
+      attachmentLabel: [isolateIdent && isolateIdent.attachmentLabel || null],
    });
 }
 
-export function makeIsolateTestSequenceFailureFormGroup(failure: IsolateTestSequenceFailure)
+export function makeIsolateTestSequenceFailureFormGroup
+   (
+      formBuilder: FormBuilder,
+      failure: IsolateTestSequenceFailure
+   )
 {
-   return new FormGroup({
-      declaredAt: new FormControl(failure.declaredAt),
-      reason: new FormControl(failure.reason),
-      notes: new FormControl(failure.notes),
+   return makeFormGroup<IsolateTestSequenceFailure>(formBuilder, {
+      declaredAt: [failure.declaredAt],
+      reason: [failure.reason],
+      notes: [failure.notes],
    });
 }
 

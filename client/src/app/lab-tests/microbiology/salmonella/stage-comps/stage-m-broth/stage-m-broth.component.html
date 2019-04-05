@@ -3,7 +3,6 @@
    <div class="row">
 
       <div class="field-area"
-           [class.conflicted]="conflicts.mBrothBatchId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('mBrothBatchId')">
          <mat-form-field>
             <input formControlName="mBrothBatchId" type="text" matInput placeholder="M broth batch">
@@ -14,11 +13,6 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'mBrothBatchId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('mBrothBatchId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.mBrothBatchId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.mBrothBatchId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <button class="apply-resources-btn" *ngIf="allowDataChanges"
@@ -31,7 +25,7 @@
 
    <div class="row">
 
-      <div class="field-area" [class.conflicted]="conflicts.mBrothWaterBathId !== undefined">
+      <div class="field-area">
          <mat-form-field>
             <mat-select formControlName="mBrothWaterBathId"*ngIf="waterBaths; else textInputWaterBath"
                         (selectionChange)="onWaterbathSelected()"
@@ -45,14 +39,9 @@
                <input formControlName="mBrothWaterBathId" type="text" matInput placeholder="Water bath">
             </ng-template>
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.mBrothWaterBathId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.mBrothWaterBathId = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.waterBathStarted !== undefined">
+      <div class="field-area">
          <div class="row">
             <mat-form-field>
                <input formControlName="waterBathStarted" type="text" matInput placeholder="Water bath started">
@@ -68,11 +57,6 @@
                 <span class="format-msg">YYYY-MM-DD HH:mm[:ss]</span>
             </span>
          </div>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.waterBathStarted"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.waterBathStarted = undefined">
-         </app-conflicting-field-value>
       </div>
 
    </div>

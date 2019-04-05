@@ -22,7 +22,7 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
       <!--<java.release>11</java.release>-->
-      <nodejs.version>v8.11.1</nodejs.version>
+      <nodejs.version>v10.15.3</nodejs.version>
       <!-- prod.context.name:
        Provides the final jar or war file name, and the context name (initial component of the resource
        part of the app's url) under which the client produced here will expect application services and

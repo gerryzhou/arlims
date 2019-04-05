@@ -21,12 +21,6 @@ export class StageSelEnrComponent implements OnChanges {
    allowDataChanges: boolean;
 
    @Input()
-   conflicts: SelEnrData;
-
-   @Input()
-   conflictsWhoWhen: EmployeeTimestamp;
-
-   @Input()
    waterBaths: LabResource[];
 
    @Input()

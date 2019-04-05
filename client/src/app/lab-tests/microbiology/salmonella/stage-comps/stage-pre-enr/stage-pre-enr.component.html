@@ -53,8 +53,7 @@
             </mat-icon>
          </button>
 
-         <div class="field-area" *ngIf="form.get(['samplingMethod', 'userModifiable']).value; else subsCompsReadOnly"
-              [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.testUnitsType !== undefined">
+         <div class="field-area" *ngIf="form.get(['samplingMethod', 'userModifiable']).value; else subsCompsReadOnly">
             <mat-radio-group formControlName="testUnitsType">
                <div>Examining:</div>
                <div>
@@ -69,71 +68,42 @@
                   </mat-radio-button>
                </div>
             </mat-radio-group>
-            <app-conflicting-field-value
-               [conflictValue]="conflicts.samplingMethod.testUnitsType"
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.samplingMethod.testUnitsType = undefined">
-            </app-conflicting-field-value>
          </div>
          <ng-template #subsCompsReadOnly>
             <div class="test-units-type-ro">Examining: <b>{{testUnitsTypeDescr}}</b></div>
          </ng-template>
 
-         <div class="field-area"
-              [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.testUnitsCount !== undefined">
+         <div class="field-area">
             <mat-form-field>
                <input formControlName="testUnitsCount" type="number" min="0" step="1" matInput
                   [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
                   [placeholder]="'Examined ' + testUnitsTypeDescr">
             </mat-form-field>
-            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-               [conflictValue]="conflicts.samplingMethod.testUnitsCount"
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.samplingMethod.testUnitsCount = undefined">
-            </app-conflicting-field-value>
          </div>
 
-         <div class="field-area" *ngIf="form.get(['samplingMethod', 'testUnitsType']).value === 'composite'"
-              [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.numberOfSubsPerComposite !== undefined">
+         <div class="field-area" *ngIf="form.get(['samplingMethod', 'testUnitsType']).value === 'composite'">
             <mat-form-field>
                <input formControlName="numberOfSubsPerComposite" type="number" min="0" step="1" matInput
                       [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
                       placeholder="Subs per comp">
             </mat-form-field>
-            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-               [conflictValue]="conflicts.samplingMethod.numberOfSubsPerComposite"
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.samplingMethod.numberOfSubsPerComposite = undefined">
-            </app-conflicting-field-value>
          </div>
 
-         <div class="field-area"
-              [class.conflicted]="conflicts.samplingMethod && conflicts.samplingMethod.extractedGramsPerSub !== undefined">
+         <div class="field-area">
             <mat-form-field>
                <input formControlName="extractedGramsPerSub" type="number" min="0" step="1" matInput
                   [readonly]="!form.get(['samplingMethod', 'userModifiable']).value"
                   placeholder="Extracted grams per sub">
             </mat-form-field>
-            <app-conflicting-field-value *ngIf="conflicts.samplingMethod"
-               [conflictValue]="conflicts.samplingMethod.extractedGramsPerSub"
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.samplingMethod.extractedGramsPerSub = undefined">
-            </app-conflicting-field-value>
          </div>
 
       </div> <!-- sampling method numbers -->
 
-      <div class="field-area method-exceptions" *ngIf="form.get(['samplingMethod', 'testUnitsType']).value"
-           [class.conflicted]="conflicts.samplingMethodExceptionsNotes !== undefined">
+      <div class="field-area method-exceptions" *ngIf="form.get(['samplingMethod', 'testUnitsType']).value">
          <mat-form-field>
             <input formControlName="samplingMethodExceptionsNotes" type="text" matInput
                placeholder="Sampling method exceptions">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.samplingMethodExceptionsNotes"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.samplingMethodExceptionsNotes = undefined">
-         </app-conflicting-field-value>
       </div>
 
    </div> <!-- sampling method form group -->
@@ -141,7 +111,7 @@
 
    <div class="row area">
 
-      <div class="field-area" [class.conflicted]="conflicts.balanceId !== undefined">
+      <div class="field-area">
          <span>
             <mat-form-field>
                <mat-select formControlName="balanceId" placeholder="Balance"
@@ -161,15 +131,9 @@
                <mat-icon>create</mat-icon>
             </button>
          </span>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.balanceId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.balanceId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <div class="field-area"
-           [class.conflicted]="conflicts.blenderJarId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('blenderJarId')">
          <mat-form-field>
             <input formControlName="blenderJarId" type="text" matInput placeholder="Blender jar">
@@ -180,16 +144,9 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'blenderJarId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('blenderJarId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.blenderJarId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.blenderJarId = undefined">
-         </app-conflicting-field-value>
-
       </div>
 
       <div class="field-area"
-           [class.conflicted]="conflicts.bagId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('bagId')">
          <mat-form-field>
             <input formControlName="bagId" type="text" matInput placeholder="Bag">
@@ -200,16 +157,9 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'bagId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('bagId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.bagId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.bagId = undefined">
-         </app-conflicting-field-value>
-
       </div>
 
       <div class="field-area"
-           [class.conflicted]="conflicts.mediumBatchId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('mediumBatchId')">
          <mat-form-field>
             <input formControlName="mediumBatchId" type="text" matInput placeholder="Medium batch">
@@ -220,24 +170,13 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'mediumBatchId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('mediumBatchId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.mediumBatchId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.mediumBatchId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <div class="field-area medium-type"
-           [class.conflicted]="conflicts.mediumType !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('mediumType')">
          <mat-form-field>
             <input formControlName="mediumType" type="text" matInput placeholder="Medium type">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.mediumType"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.mediumType = undefined">
-         </app-conflicting-field-value>
       </div>
       <div class="medium-type-predefined-inputs">
          <button class="link" (click)="form.get('mediumType').setValue('Lactose');" *ngIf="allowDataChanges">
@@ -248,7 +187,7 @@
          </button>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.incubatorId !== undefined">
+      <div class="field-area">
          <span>
             <mat-form-field>
                <mat-select formControlName="incubatorId" placeholder="Incubator"
@@ -268,11 +207,6 @@
                <mat-icon>create</mat-icon>
             </button>
          </span>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.incubatorId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.incubatorId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <button class="apply-resources-btn"  *ngIf="allowDataChanges"
@@ -285,7 +219,7 @@
 
 
    <div class="area">
-      <div class="field-area" [class.conflicted]="conflicts.sampleSpike !== undefined">
+      <div class="field-area">
          <mat-radio-group formControlName="sampleSpike">
             <div>Sample spiking</div>
             <div>
@@ -294,11 +228,6 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.sampleSpike"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.sampleSpike = undefined">
-         </app-conflicting-field-value>
       </div>
    </div> <!-- spiking -->
 

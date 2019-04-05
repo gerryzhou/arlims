@@ -1,9 +1,7 @@
 <form [formGroup]="form">
 
    <div class="row">
-
       <div class="field-area"
-           [class.conflicted]="conflicts.rvBatchId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('rvBatchId')">
          <mat-form-field>
             <input formControlName="rvBatchId" type="text" matInput placeholder="RV batch">
@@ -14,15 +12,9 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'rvBatchId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('rvBatchId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.rvBatchId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.rvBatchId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <div class="field-area"
-           [class.conflicted]="conflicts.ttBatchId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('ttBatchId')">
          <mat-form-field>
             <input formControlName="ttBatchId" type="text" matInput placeholder="TT batch">
@@ -33,15 +25,9 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'ttBatchId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('ttBatchId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.ttBatchId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.ttBatchId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <div class="field-area"
-           [class.conflicted]="conflicts.bgBatchId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('bgBatchId')">
          <mat-form-field>
             <input formControlName="bgBatchId" type="text" matInput placeholder="BG batch">
@@ -52,15 +38,9 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'bgBatchId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('bgBatchId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.bgBatchId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.bgBatchId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <div class="field-area"
-           [class.conflicted]="conflicts.i2kiBatchId !== undefined"
            [class.batch-resource-matched]="resourceAssignments.hasAssignedOrAppliedResources('i2kiBatchId')">
          <mat-form-field>
             <input formControlName="i2kiBatchId" type="text" matInput placeholder="I2KI batch">
@@ -71,11 +51,6 @@
             (remove)="resourceAssignments.removeAssignedResourceCodeForControl($event, 'i2kiBatchId')"
             (removeAll)="resourceAssignments.removeAllResourceAssignmentsForControl('i2kiBatchId')">
          </app-field-assigned-resources>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.i2kiBatchId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.i2kiBatchId = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <button class="apply-resources-btn" *ngIf="allowDataChanges"
@@ -83,24 +58,17 @@
                mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>
       </button>
-
    </div>
 
    <div class="row">
-
-      <div class="field-area" [class.conflicted]="conflicts.spikePlateCount !== undefined">
+      <div class="field-area">
          <mat-form-field>
             <input formControlName="spikePlateCount" type="number" min="0" step="1" matInput
                    placeholder="Spike plate count">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.spikePlateCount"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.spikePlateCount = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area" [class.conflicted]="conflicts.rvttWaterBathId !== undefined">
+      <div class="field-area">
          <mat-form-field>
             <mat-select formControlName="rvttWaterBathId" placeholder="Water bath" *ngIf="waterBaths; else textInputWaterBath">
                <mat-option [value]="null"></mat-option>
@@ -112,19 +80,11 @@
                <input formControlName="rvttWaterBathId" type="text" matInput placeholder="Water bath">
             </ng-template>
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.rvttWaterBathId"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.rvttWaterBathId = undefined">
-         </app-conflicting-field-value>
       </div>
-
    </div>
 
    <div class="row">
-
       <div class="field-area positive-control-growth"
-           [class.conflicted]="conflicts.positiveControlGrowth !== undefined"
            [class.growth]="positiveControlGrowthControl.value === true"
            [class.no-growth]="positiveControlGrowthControl.value === false">
          <mat-radio-group formControlName="positiveControlGrowth">
@@ -135,15 +95,9 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.positiveControlGrowth"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.positiveControlGrowth = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <div class="field-area medium-control-growth"
-           [class.conflicted]="conflicts.mediumControlGrowth !== undefined"
            [class.growth]="mediumControlGrowthControl.value === true"
            [class.no-growth]="mediumControlGrowthControl.value === false">
          <mat-radio-group formControlName="mediumControlGrowth">
@@ -154,14 +108,9 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.mediumControlGrowth"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.mediumControlGrowth = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area bacterial-controls" [class.conflicted]="conflicts.bacterialControlsUsed !== undefined">
+      <div class="field-area bacterial-controls">
          <mat-radio-group formControlName="bacterialControlsUsed">
             <div>Bacterial controls used</div>
             <div>
@@ -170,21 +119,13 @@
                <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.bacterialControlsUsed"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.bacterialControlsUsed = undefined">
-         </app-conflicting-field-value>
       </div>
-
    </div>
 
 
    <!-- system controls -->
    <div class="row">
-
       <div class="field-area system-controls-growth" (change)="onSystemControlsGrowthChanged()"
-           [class.conflicted]="conflicts.systemControlsGrowth !== undefined"
            [class.growth]="systemControlsGrowthControl.value === 'G'"
            [class.no-growth]="systemControlsGrowthControl.value === 'NG'">
          <mat-radio-group formControlName="systemControlsGrowth">
@@ -196,14 +137,9 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.systemControlsGrowth"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.systemControlsGrowth = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area sys-ctrl-types" [class.conflicted]="conflicts.systemControlTypes!== undefined">
+      <div class="field-area sys-ctrl-types">
          <div class="row">
             <mat-form-field>
                <input formControlName="systemControlTypes" type="text" matInput placeholder="System control types">
@@ -215,18 +151,12 @@
                <button class="link" (click)="appendSystemControlType('spatula')">spatula</button>
             </div>
          </div>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.systemControlTypes"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.systemControlTypes = undefined">
-         </app-conflicting-field-value>
       </div>
    </div>
 
    <!-- collector controls -->
    <div class="row">
       <div class="field-area collector-controls-growth" (change)="onCollectorControlsGrowthChanged()"
-           [class.conflicted]="conflicts.collectorControlsGrowth !== undefined"
            [class.growth]="collectorControlsGrowthControl.value === 'G'"
            [class.no-growth]="collectorControlsGrowthControl.value === 'NG'">
          <mat-radio-group formControlName="collectorControlsGrowth">
@@ -238,14 +168,9 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.collectorControlsGrowth"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.collectorControlsGrowth = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area coll-ctrl-types" [class.conflicted]="conflicts.collectorControlTypes!== undefined">
+      <div class="field-area coll-ctrl-types">
          <div class="row">
             <mat-form-field>
                <input formControlName="collectorControlTypes" type="text" matInput placeholder="Collector control types">
@@ -254,13 +179,7 @@
                <button class="link" (click)="appendCollectorControlType('none')">none</button>
             </div>
          </div>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.collectorControlTypes"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.collectorControlTypes = undefined">
-         </app-conflicting-field-value>
       </div>
-
    </div>
 
 </form>

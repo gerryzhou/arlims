@@ -22,9 +22,6 @@ export class FormDataReviewComponent implements OnInit {
    // The form group holds the edited state of the test data.
    readonly testDataForm: FormGroup;
 
-   readonly conflictsTestData = emptyTestData();
-   readonly conflictsEmployeeTimestamp: EmployeeTimestamp | null;
-
    // Controls whether a null option is shown for some ui choice components.
    readonly showUnsetAffordances = false;
 
@@ -78,9 +75,6 @@ export class FormDataReviewComponent implements OnInit {
       this.incubators = labResources.get(UserContextService.INCUBATOR_RESOURCE_TYPE);
       this.waterBaths = labResources.get(UserContextService.WATERBATH_RESOURCE_TYPE);
       this.vidasInstruments = labResources.get(UserContextService.VIDAS_RESOURCE_TYPE);
-
-      this.conflictsTestData = emptyTestData();
-      this.conflictsEmployeeTimestamp = null;
 
       this.analyzedAuditLogEntries = labGroupTestData.auditLogEntries ?
          labGroupTestData.auditLogEntries

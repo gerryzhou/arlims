@@ -2,7 +2,7 @@
 
    <div class="received-fields">
 
-      <span class="field-area" [class.conflicted]="conflicts.sampleReceivedDate !== undefined">
+      <span class="field-area">
          <mat-form-field>
             <input matInput formControlName="sampleReceivedDate" [matDatepicker]="rcvdDatepicker"
                    (click)="rcvdDatepicker.open()"
@@ -10,22 +10,12 @@
             <mat-datepicker-toggle matSuffix [for]="rcvdDatepicker"></mat-datepicker-toggle>
             <mat-datepicker touchUi #rcvdDatepicker></mat-datepicker>
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.sampleReceivedDate"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.sampleReceivedDate = undefined">
-         </app-conflicting-field-value>
       </span>
 
-      <span class="field-area" [class.conflicted]="conflicts.sampleReceivedFrom !== undefined">
+      <span class="field-area">
          <mat-form-field>
             <input type="text" matInput placeholder="Received from" formControlName="sampleReceivedFrom">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.sampleReceivedFrom"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.sampleReceivedFrom = undefined">
-         </app-conflicting-field-value>
       </span>
 
       <span class="received-autofill" *ngIf="allowDataChanges">
@@ -39,7 +29,7 @@
 
    </div> <!-- received fields -->
 
-   <div class="label-attachment-type field-area" [class.conflicted]="conflicts.labelAttachmentType !== undefined">
+   <div class="label-attachment-type field-area">
       <span>
          <span class="label">Labeling</span>
          <mat-radio-group formControlName="labelAttachmentType">
@@ -50,17 +40,12 @@
             <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
          </mat-radio-group>
       </span>
-      <app-conflicting-field-value
-         [conflictValue]="conflicts.labelAttachmentType"
-         [conflictWhoWhen]="conflictsWhoWhen"
-         (dismiss)="conflicts.labelAttachmentType = undefined">
-      </app-conflicting-field-value>
    </div>
 
 
    <div class="cr-matching-grid">
 
-      <div class="field-area descr" [class.conflicted]="conflicts.descriptionMatchesCR !== undefined">
+      <div class="field-area descr">
          <mat-radio-group formControlName="descriptionMatchesCR">
             <div>Description matches CR</div>
             <div>
@@ -69,26 +54,16 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.descriptionMatchesCR"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.descriptionMatchesCR = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area descr-notes" [class.conflicted]="conflicts.descriptionMatchesCRNotes !== undefined">
+      <div class="field-area descr-notes">
          <mat-form-field class="notes">
             <input type="text" matInput placeholder="Notes"
                    formControlName="descriptionMatchesCRNotes">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.descriptionMatchesCRNotes"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.descriptionMatchesCRNotes = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area container" [class.conflicted]="conflicts.containerMatchesCR !== undefined">
+      <div class="field-area container">
          <mat-radio-group formControlName="containerMatchesCR">
             <div>Container matches CR</div>
             <div>
@@ -97,25 +72,15 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.containerMatchesCR"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.containerMatchesCR = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area container-notes" [class.conflicted]="conflicts.containerMatchesCRNotes !== undefined">
+      <div class="field-area container-notes">
          <mat-form-field class="notes">
             <input type="text" matInput placeholder="Notes" formControlName="containerMatchesCRNotes">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.containerMatchesCRNotes"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.containerMatchesCRNotes = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area code" [class.conflicted]="conflicts.codeMatchesCR !== undefined">
+      <div class="field-area code">
          <mat-radio-group formControlName="codeMatchesCR">
             <div>Code matches CR</div>
             <div>
@@ -124,22 +89,12 @@
                <mat-radio-button *ngIf="showUnsetAffordances" [value]="null" class="unset">unset</mat-radio-button>
             </div>
          </mat-radio-group>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.codeMatchesCR"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.codeMatchesCR = undefined">
-         </app-conflicting-field-value>
       </div>
 
-      <div class="field-area code-notes" [class.conflicted]="conflicts.codeMatchesCRNotes !== undefined">
+      <div class="field-area code-notes">
          <mat-form-field class="notes">
             <input type="text" matInput placeholder="Notes" formControlName="codeMatchesCRNotes">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.codeMatchesCRNotes"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.codeMatchesCRNotes = undefined">
-         </app-conflicting-field-value>
       </div>
 
    </div>

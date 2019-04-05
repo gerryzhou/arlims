@@ -2,8 +2,7 @@
 
    <div class="reserve-sample-area">
 
-      <div class="field-area"
-           [class.conflicted]="conflicts.reserveSampleDisposition !== undefined">
+      <div class="field-area">
          <span>
             <span class="label">Reserve sample: </span>
             <mat-radio-group formControlName="reserveSampleDisposition" (change)="onReserveSampleDispositionChanged()">
@@ -14,40 +13,21 @@
                <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
             </mat-radio-group>
          </span>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.reserveSampleDisposition"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.reserveSampleDisposition = undefined">
-         </app-conflicting-field-value>
       </div>
 
       <div class="extra-information">
-         <div class="field-area destinations"
-               [class.conflicted]="conflicts.reserveSampleDestinations !== undefined"
-               *ngIf="destinationsEnabled">
+         <div class="field-area destinations" *ngIf="destinationsEnabled">
             <mat-form-field>
                <textarea matInput placeholder="Sample destinations" formControlName="reserveSampleDestinations"
                          rows="8" cols="30">
                </textarea>
             </mat-form-field>
-            <app-conflicting-field-value
-               [conflictValue]="conflicts.reserveSampleDestinations "
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.reserveSampleDestinations = undefined">
-            </app-conflicting-field-value>
          </div>
 
-         <div class="field-area"
-               [class.conflicted]="conflicts.reserveSampleOtherDescription !== undefined"
-               *ngIf="otherDescriptionEnabled">
+         <div class="field-area" *ngIf="otherDescriptionEnabled">
             <mat-form-field>
                <input type="text" matInput placeholder="Other case description" formControlName="reserveSampleOtherDescription">
             </mat-form-field>
-            <app-conflicting-field-value
-               [conflictValue]="conflicts.reserveSampleOtherDescription "
-               [conflictWhoWhen]="conflictsWhoWhen"
-               (dismiss)="conflicts.reserveSampleOtherDescription = undefined">
-            </app-conflicting-field-value>
          </div>
       </div>
 
@@ -70,17 +50,11 @@
    </div>
 
    <div class="remarks-area">
-      <div class="field-area"
-           [class.conflicted]="conflicts.analysisResultsRemarksText !== undefined">
+      <div class="field-area">
          <mat-form-field>
             <input type="text" formControlName="analysisResultsRemarksText"
                    matInput placeholder="Analysis results remarks">
          </mat-form-field>
-         <app-conflicting-field-value
-            [conflictValue]="conflicts.analysisResultsRemarksText"
-            [conflictWhoWhen]="conflictsWhoWhen"
-            (dismiss)="conflicts.analysisResultsRemarksText = undefined">
-         </app-conflicting-field-value>
       </div>
    </div>
 

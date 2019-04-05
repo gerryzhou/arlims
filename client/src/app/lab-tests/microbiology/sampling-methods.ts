@@ -1,12 +1,12 @@
 
 export interface SamplingMethod {
-   name?: string;
-   description?: string;
-   testUnitsType?: TestUnitsType | null;
-   testUnitsCount?: number | null;
-   numberOfSubsPerComposite?: number; // composites only
-   extractedGramsPerSub?: number;     // composites only
-   userModifiable?: boolean;
+   name?: string | null;
+   description?: string | null;
+   testUnitsType: TestUnitsType | null;
+   testUnitsCount: number | null;
+   extractedGramsPerSub: number | null;
+   numberOfSubsPerComposite?: number | null; // composites only
+   userModifiable?: boolean | null;
 }
 
 export interface SampleTestUnits {

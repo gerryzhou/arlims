@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
 import {makeEmptyIsolateIdentificationFormGroup, makeIsolateTestSequenceFailureFormGroup} from '../../../test-data';
@@ -112,12 +112,16 @@ export class IsolateTestSeqComponent implements OnChanges {
             {
                if ( prevFailureCtl != null )
                   this.form.removeControl('failure');
+
                const failure = {
                   declaredAt: new Date().toISOString(),
                   reason: failureEdit.reason,
                   notes: failureEdit.notes,
                };
-               this.form.addControl('failure', makeIsolateTestSequenceFailureFormGroup(failure));
+
+               const fb = new FormBuilder();
+
+               this.form.addControl('failure', makeIsolateTestSequenceFailureFormGroup(fb, failure));
 
                if ( prevFailureCtl == null )
                   this.failureDeclared.emit();

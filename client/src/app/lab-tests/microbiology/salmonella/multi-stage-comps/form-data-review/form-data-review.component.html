@@ -11,9 +11,7 @@
          [form]="testDataForm.get('prepData')"
          [allowDataChanges]="false"
          [sampleOp]="sampleOpTest.sampleOp"
-                      [appUser]="appUser"
-         [conflicts]="conflictsTestData.prepData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
+         [appUser]="appUser"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-prep>
    </div>
@@ -26,8 +24,6 @@
          [balances]="balances"
          [incubators]="incubators"
          [samplingMethodChoices]="[]"
-         [conflicts]="conflictsTestData.preEnrData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-pre-enr>
    </div>
@@ -39,8 +35,6 @@
          [allowDataChanges]="false"
          [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
          [waterBaths]="waterBaths"
-         [conflicts]="conflictsTestData.selEnrData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-sel-enr>
    </div>
@@ -51,8 +45,6 @@
          [form]="testDataForm.get('mBrothData')"
          [allowDataChanges]="false"
          [waterBaths]="waterBaths"
-         [conflicts]="conflictsTestData.mBrothData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-m-broth>
    </div>
@@ -68,8 +60,6 @@
          [sampleTestUnitsCount]="sampleTestUnitsCount"
          [sampleTestUnitsType]="sampleTestUnitsType"
          [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
-         [conflicts]="conflictsTestData.vidasData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-vidas>
    </div>
@@ -86,8 +76,6 @@
          [vidasPositiveSampleTestUnitNumbers]="vidasPositiveSampleTestUnitNumbers"
          [testConfig]="testConfig"
          [appUser]="appUser"
-         [conflicts]="conflictsTestData.posContData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-pos-cont>
    </div>
@@ -104,8 +92,6 @@
          [sampleTestUnitsType]="sampleTestUnitsType"
          [testConfig]="testConfig"
          [appUser]="appUser"
-         [conflicts]="conflictsTestData.posContData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-pos-cont>
    </div>
@@ -115,8 +101,6 @@
       <app-stage-wrapup class="test-stage"
          [form]="testDataForm.get('wrapupData')"
          [allowDataChanges]="false"
-         [conflicts]="conflictsTestData.wrapupData"
-         [conflictsWhoWhen]="conflictsEmployeeTimestamp"
          [showUnsetAffordances]="showUnsetAffordances">
       </app-stage-wrapup>
    </div>

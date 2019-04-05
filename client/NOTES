@@ -1,6 +1,9 @@
 
 Identify isolates by their number not by creation timestamp.
 
+Add some type safety to form building
+
+
 BAM data submission: Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
 
 Remove performing org from AOAC and BAM data submissions, Leidos will make api change so performing org doesn't have to be submitted.

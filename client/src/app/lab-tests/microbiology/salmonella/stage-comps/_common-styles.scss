@@ -18,11 +18,6 @@ form {
    align-items: center;
    margin: 3px 10px;
 
-   &.conflicted {
-      border: 2px dashed orange;
-      padding: 7px;
-   }
-
    &.batch-resource-matched {
       border: 2px dashed $batch-resource-background-color;
       padding: 7px;

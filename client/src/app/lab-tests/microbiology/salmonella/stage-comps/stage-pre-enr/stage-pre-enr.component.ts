@@ -25,12 +25,6 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    allowDataChanges: boolean;
 
    @Input()
-   conflicts: PreEnrData;
-
-   @Input()
-   conflictsWhoWhen: EmployeeTimestamp;
-
-   @Input()
    balances: LabResource[];
 
    @Input()

@@ -6,7 +6,7 @@ import {
    OnChanges,
    OnDestroy,
 } from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material';
 
@@ -65,6 +65,8 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    ];
 
    displayOrderedIsolateTestSeqUidsBySelAgar: IsolateTestSeqUidsBySelAgar;
+
+   readonly formBuilder = new FormBuilder();
 
    formChangesSubscription: Subscription;
 
@@ -132,7 +134,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
       const uid = makeIsolateTestSequenceUid(new Date(), this.appUser.username, 1, fg.controls);
       const emptyTestSeq = makeEmptyIsolateTestSequence(isolateNum);
 
-      fg.addControl(uid, makeIsolateTestSequenceFormGroup(emptyTestSeq));
+      fg.addControl(uid, makeIsolateTestSequenceFormGroup(this.formBuilder, emptyTestSeq));
    }
 
    private refreshDisplayOrderedIsolateTestSeqUids()
