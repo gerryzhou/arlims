@@ -1,12 +1,10 @@
+Remove performing org from AOAC and BAM data submissions, Leidos will make api change so performing org doesn't have to be submitted.
+
+BAM data submission
+  Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
 
 Identify isolates by their number not by creation timestamp.
 
-Add some type safety to form building
-
-
-BAM data submission: Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
-
-Remove performing org from AOAC and BAM data submissions, Leidos will make api change so performing org doesn't have to be submitted.
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
