@@ -2,25 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FormsModule} from '@angular/forms';
-import {
-   MatCheckboxModule,
-   MatExpansionModule,
-   MatInputModule,
-   MatRadioModule,
-   MatButtonToggleModule,
-   MatSelectModule,
-   MatSlideToggleModule,
-   MatButtonModule,
-   MatDatepickerModule,
-   MatIconModule,
-   MatStepperModule,
-   MatMenuModule,
-   MatCardModule,
-   MatDialogModule,
-   MatTooltipModule,
-   MatTabsModule,
-   MatDividerModule,
-} from '@angular/material';
 
 import {CommonComponentsModule} from '../../../common-components/common-components.module';
 import {SalmonellaFactsService} from './salmonella-facts.service';
@@ -46,31 +27,16 @@ import {IsolateSlantTubeViewComponent} from './stage-comps/pos-cont-stages/isola
 import {IsolateSlantTubeEditorComponent} from './stage-comps/pos-cont-stages/isolate-slant-tube-editor/isolate-slant-tube-editor.component';
 import {IsolateIdentificationViewComponent} from './stage-comps/pos-cont-stages/isolate-identification-view/isolate-identification-view.component';
 import {IsolateIdentificationEditorComponent} from './stage-comps/pos-cont-stages/isolate-identification-editor/isolate-identification-editor.component';
+import {CommonMaterialUIModule} from '../../../common-material-ui/common-material-ui.module';
 
 @NgModule({
    imports: [
       CommonModule,
       FormsModule,
-      MatExpansionModule,
       ReactiveFormsModule,
-      MatInputModule,
-      MatCheckboxModule,
-      MatSelectModule,
-      MatRadioModule,
-      MatButtonToggleModule,
-      MatSlideToggleModule,
-      MatButtonModule,
-      MatDatepickerModule,
-      MatIconModule,
-      MatStepperModule,
-      MatMenuModule,
-      MatCardModule,
-      MatDialogModule,
-      MatTooltipModule,
-      MatTabsModule,
-      MatDividerModule,
       //
       CommonComponentsModule,
+      CommonMaterialUIModule,
       SalmonellaRoutingModule,
    ],
    declarations: [

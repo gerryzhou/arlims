@@ -1,10 +1,12 @@
-Remove performing org from AOAC and BAM data submissions, Leidos will make api change so performing org doesn't have to be submitted.
-
-BAM data submission
-  Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
-
 Identify isolates by their number not by creation timestamp.
 
+SampleAnalysesMicro FACTS Submissions
+=====================================
+- Add back in stage test data component.
+- Remove performing org from AOAC and BAM data submissions.
+  Leidos will make api change so performing org doesn't have to be submitted.
+- BAM data submission
+  Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
