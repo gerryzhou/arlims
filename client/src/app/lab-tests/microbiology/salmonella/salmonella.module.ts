@@ -27,7 +27,7 @@ import {IsolateSlantTubeViewComponent} from './stage-comps/pos-cont-stages/isola
 import {IsolateSlantTubeEditorComponent} from './stage-comps/pos-cont-stages/isolate-slant-tube-editor/isolate-slant-tube-editor.component';
 import {IsolateIdentificationViewComponent} from './stage-comps/pos-cont-stages/isolate-identification-view/isolate-identification-view.component';
 import {IsolateIdentificationEditorComponent} from './stage-comps/pos-cont-stages/isolate-identification-editor/isolate-identification-editor.component';
-import {CommonMaterialUIModule} from '../../../common-material-ui/common-material-ui.module';
+import {MaterialUiModule} from '../../../material-ui.module';
 
 @NgModule({
    imports: [
@@ -36,7 +36,7 @@ import {CommonMaterialUIModule} from '../../../common-material-ui/common-materia
       ReactiveFormsModule,
       //
       CommonComponentsModule,
-      CommonMaterialUIModule,
+      MaterialUiModule,
       SalmonellaRoutingModule,
    ],
    declarations: [

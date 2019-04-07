@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {MatDialog} from '@angular/material';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
 
 import {LoadingStatusService, UserContextService} from './shared/services';
 import {ViewTitleService} from './shared/services/view-title.service';
 import {AppVersion} from '../generated/dto';
-import {MatDialog} from "@angular/material";
-import {ConfirmDialogComponent} from "./common-components/confirm-dialog/confirm-dialog.component";
+import {ConfirmDialogComponent} from './common-components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-root',

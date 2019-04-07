@@ -91,4 +91,4 @@ const matModules = [
       },
    ]
 })
-export class CommonMaterialUIModule {}
+export class MaterialUiModule {}

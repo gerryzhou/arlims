@@ -10,7 +10,7 @@ import {TruncateModule} from '@yellowspot/ng-truncate';
 import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
 import {CommonComponentsModule} from './common-components/common-components.module';
-import {CommonMaterialUIModule} from './common-material-ui/common-material-ui.module';
+import {MaterialUiModule} from './material-ui.module';
 import {UserContextService, LoadingStatusService, LoadingStatusInterceptor, ApiUrlsService} from './shared/services';
 import {SamplesListingComponent} from './samples-listing/samples-listing.component';
 import {SamplesListingOptionsComponent} from './samples-listing/listing-options/samples-listing-options.component';
@@ -44,7 +44,7 @@ import {AuthTokenHttpInterceptor} from './shared/services/auth-token-http-interc
       TruncateModule,
       // app modules which are NOT LOADED LAZILY
       CommonComponentsModule,
-      CommonMaterialUIModule,
+      MaterialUiModule,
       AppRoutingModule,
    ],
    providers: [

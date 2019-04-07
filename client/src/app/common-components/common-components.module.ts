@@ -22,7 +22,7 @@ import {AttachedFileMetadataDialogComponent} from './attached-file-metadata-dial
 import {TimeChargesComponent} from './time-charges/time-charges.component';
 import {UserTimeChargeDialogComponent} from './time-charges/time-charge-dialog/user-time-charge-dialog.component';
 import {ItemsSelectionDialogComponent} from './items-selection-dialog/items-selection-dialog.component';
-import {CommonMaterialUIModule} from '../common-material-ui/common-material-ui.module';
+import {MaterialUiModule} from '../material-ui.module';
 
 @NgModule({
    imports: [
@@ -30,7 +30,7 @@ import {CommonMaterialUIModule} from '../common-material-ui/common-material-ui.m
       ReactiveFormsModule,
       FormsModule,
       RouterModule,
-      CommonMaterialUIModule,
+      MaterialUiModule,
    ],
    declarations: [
       SampleComponent,
