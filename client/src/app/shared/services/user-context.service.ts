@@ -103,7 +103,10 @@ export class UserContextService {
                return of(false);
             else
             {
-               console.log('Login failure: ', err.error && err.error.message || err);
+               console.error(
+                  'A server side error occurred during the login process: ',
+                  err.error && err.error.message || err
+               );
                return throwError({message: 'An error occurred on the server.'});
             }
          })
