@@ -242,9 +242,9 @@ export function emptyTestData(): TestData {
 export function makeEmptyContinuationControls(username: string): ContinuationControls
 {
    return {
-      salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1, 1, username),
+      salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1, 1),
       salmonellaGaminaraSatisfactory: null,
-      salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1, 1, username),
+      salmonellaDiarizonae: makeEmptySelectiveAgarsTestSuite(1, 1),
       salmonellaDiarizonaeSatisfactory: null,
       pVulgarisUreaDetection: null,
       pVulgarisIdentification: makeEmptyIsolateIdentification(),
@@ -259,17 +259,15 @@ export function makeEmptyContinuationControls(username: string): ContinuationCon
 export function makeEmptySelectiveAgarsTestSuite
    (
       firstIsolateNum: number,
-      numIsolatesPerSelAgarPlate: number,
-      username: string
+      numIsolatesPerSelAgarPlate: number
    )
    : SelectiveAgarsTestSuite
 {
-   const now = new Date();
    return {
-      he:    makeEmptyIsolateTestSequences(firstIsolateNum, numIsolatesPerSelAgarPlate, now, username),
-      xld:   makeEmptyIsolateTestSequences(firstIsolateNum + numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate, now, username),
-      bs24h: makeEmptyIsolateTestSequences(firstIsolateNum + 2 * numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate, now, username),
-      bs48h: makeEmptyIsolateTestSequences(firstIsolateNum + 3 * numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate, now, username),
+      he:    makeEmptyIsolateTestSequences(firstIsolateNum, numIsolatesPerSelAgarPlate),
+      xld:   makeEmptyIsolateTestSequences(firstIsolateNum + numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate),
+      bs24h: makeEmptyIsolateTestSequences(firstIsolateNum + 2 * numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate),
+      bs48h: makeEmptyIsolateTestSequences(firstIsolateNum + 3 * numIsolatesPerSelAgarPlate, numIsolatesPerSelAgarPlate),
    };
 }
 
@@ -296,18 +294,16 @@ export function countIsolates(selAgarsTestSuite: SelectiveAgarsTestSuite)
 function makeEmptyIsolateTestSequences
    (
       firstIsolateNum: number,
-      numIsolates: number,
-      timestamp: Date,
-      username: string,
+      numIsolates: number
    )
    : IsolateTestSequencesByUid
 {
    const seqs: IsolateTestSequencesByUid = {};
 
-   for (let i = 0; i < numIsolates; ++i)
+   for (let i = 1; i <= numIsolates; ++i)
    {
-      const uid = makeIsolateTestSequenceUid(timestamp, username, i + 1);
-      seqs[uid] = makeEmptyIsolateTestSequence(firstIsolateNum + i);
+      const uid = makeIsolateTestSequenceUid(i);
+      seqs[uid] = makeEmptyIsolateTestSequence(i);
    }
 
    return seqs;
@@ -315,22 +311,19 @@ function makeEmptyIsolateTestSequences
 
 export function makeIsolateTestSequenceUid
    (
-      timestamp: Date,
-      userName: string,
-      startSeqNum: number,
+      isolateNum: number,
       uniquenessTestObj: { [key: string]: any } = null
    )
    : string
 {
-   const uidBase = timestamp.toISOString() + '|' + userName + '|';
+   const uidBase = isolateNum.toString();
+   let uid = uidBase;
 
-   let seqNum = startSeqNum;
-   let uid = uidBase + seqNum;
-
+   let seqNum = 1;
    if ( uniquenessTestObj )
    {
       while (uniquenessTestObj[uid] != null)
-         uid = uidBase + (++seqNum);
+         uid = uidBase + '-' + (++seqNum);
    }
 
    return uid;

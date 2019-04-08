@@ -131,7 +131,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    {
       const fg = this.form.get(selAgar) as FormGroup;
 
-      const uid = makeIsolateTestSequenceUid(new Date(), this.appUser.username, 1, fg.controls);
+      const uid = makeIsolateTestSequenceUid(isolateNum, fg.controls);
       const emptyTestSeq = makeEmptyIsolateTestSequence(isolateNum);
 
       fg.addControl(uid, makeIsolateTestSequenceFormGroup(this.formBuilder, emptyTestSeq));
@@ -157,12 +157,27 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
    {
       const selAgarFg = this.form.get(selAgar) as FormGroup;
 
-      const isolateUids = Object.keys(selAgarFg.controls);
+      const isolateUids = this.stage === 'SLANT' ? Object.keys(selAgarFg.controls)
+         : Object.keys(selAgarFg.controls).filter(uid => selAgarFg.get([uid, 'identification']) != null);
 
-      if ( this.stage === 'IDENT' )
-         return isolateUids.filter(isolateUid => selAgarFg.get([isolateUid, 'identification']) != null).sort();
-      else
-         return isolateUids.sort();
+      return isolateUids.sort((uid1, uid2) => {
+         const isolateNum1 = parseInt(uid1);
+         const isolateNum2 = parseInt(uid2);
+         const isolateNumDiff = isolateNum1 - isolateNum2;
+         if ( isolateNumDiff !== 0 )
+            return isolateNumDiff;
+
+         const dashIx1 = uid1.indexOf('-');
+         if ( dashIx1 === -1 )
+            return -1;
+         const dashIx2 = uid2.indexOf('-');
+         if ( dashIx2 === -1 )
+            return 1;
+
+         const trailingNum1 = parseInt(uid1.substr(dashIx1 + 1));
+         const trailingNum2 = parseInt(uid2.substr(dashIx2 + 1));
+         return trailingNum1 - trailingNum2;
+      });
    }
 
    ngOnDestroy()

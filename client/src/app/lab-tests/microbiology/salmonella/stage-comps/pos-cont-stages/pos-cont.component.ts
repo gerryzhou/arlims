@@ -138,12 +138,12 @@ export class PosContComponent implements OnChanges {
    private makeEmptyContinuationTests(): ContinuationTests
    {
       const rvSourcedTests =
-         makeEmptySelectiveAgarsTestSuite(1, this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username);
+         makeEmptySelectiveAgarsTestSuite(1, this.defaultNumIsolatesPerSelectiveAgarPlate);
 
       const numRVIsolates = countIsolates(rvSourcedTests);
 
       const ttSourcedTests =
-         makeEmptySelectiveAgarsTestSuite(numRVIsolates + 1, this.defaultNumIsolatesPerSelectiveAgarPlate, this.appUser.username);
+         makeEmptySelectiveAgarsTestSuite(numRVIsolates + 1, this.defaultNumIsolatesPerSelectiveAgarPlate);
 
       return { rvSourcedTests, ttSourcedTests };
    }

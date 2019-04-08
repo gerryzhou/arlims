@@ -6,6 +6,7 @@ Done
 - Show product name (description) in pdf report.
 - Introduce lab resource groups to avoid having to duplicate lab resources between performing orgs.
 - Update sample assignment status to original-complete when test hours are saved to FACTS.
+  [Removed again after being told that LABS-DS does this internally when appropriate.]
 - Allow more flexible navigation after saving test data, defaulting to navigation to next stage in most cases.
 - Hide positive continuation (SLANT,IDENT) stages when there are no Vidas positives.
 - Introduce groups of lab resources in db for easy sharing between lowest-level (performing) orgs.
@@ -14,7 +15,6 @@ Done
 - Allow appending resource codes to ui controls when applied via clipboard/scanner.
 - Add more sample information (op,lid,paf) in main sample row, second row hidden by default until sample is expanded.
 - Customize available sample/op status choices for person inbox.
-- Don't update sample/op status after submitting work hours as FACTS will do this internally when appropriate.
 
 
 
