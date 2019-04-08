@@ -34,7 +34,7 @@ export class LoginComponent {
       {
          const {username, password } = this.form.value;
 
-         this.usrCtxSvc.login(username, password).subscribe(
+         this.usrCtxSvc.login(username.toLowerCase(), password).subscribe(
             loginSucceeded => {
                if ( loginSucceeded === true )
                   this.router.navigate(this.appUrlsSvc.home());
