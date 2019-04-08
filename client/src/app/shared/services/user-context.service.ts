@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
 import {catchError, flatMap, map} from 'rxjs/operators';
 
 import {ApiUrlsService} from './api-urls.service';
@@ -97,9 +97,15 @@ export class UserContextService {
             );
          }),
          catchError((err) => {
-            console.log(err);
             this.authenticationToken$.next(null);
-            return of(false);
+
+            if ( err.status && err.status === 401 )
+               return of(false);
+            else
+            {
+               console.log('Login failure: ', err.error && err.error.message || err);
+               return throwError({message: 'An error occurred on the server.'});
+            }
          })
       );
    }

@@ -42,7 +42,7 @@ export class LoginComponent {
                   this.alertMsgSvc.alertWarning('Invalid username or password.');
             },
             err => {
-               this.alertMsgSvc.alertDanger('Unexpected error ' + (err.message ? ': ' + err.message + '.' : '.'));
+               this.alertMsgSvc.alertDanger('Login failed' + (err.message ? ': ' + err.message + '.' : '.'));
             }
          );
       }
