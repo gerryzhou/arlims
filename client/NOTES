@@ -1,4 +1,15 @@
+TODO
+----
 
+salmonella-facts service:
+  Add fields to stuctured remarks.
+     //TODO +vidasDetails
+     // Add timestamp of Vidas positive control entry (new field) - sample custodian received timestamp.
+     //   "vidasTimeframe" as fractional hours duration.
+     //   "lotNumbers"
+Try for FACTS of at least AOAC push by Wed.
+  BAM by Mon.
+Add samp# label before sample number.
 
 SampleAnalysesMicro FACTS Submissions
 =====================================

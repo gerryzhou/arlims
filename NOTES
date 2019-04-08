@@ -1,30 +1,17 @@
-Commit
-------
-
-Done
-====
-- Show product name (description) in pdf report.
-- Introduce lab resource groups to avoid having to duplicate lab resources between performing orgs.
-- Update sample assignment status to original-complete when test hours are saved to FACTS.
-  [Removed again after being told that LABS-DS does this internally when appropriate.]
-- Allow more flexible navigation after saving test data, defaulting to navigation to next stage in most cases.
-- Hide positive continuation (SLANT,IDENT) stages when there are no Vidas positives.
-- Introduce groups of lab resources in db for easy sharing between lowest-level (performing) orgs.
-- In Vidas stage add button allowing to set all results to negative.
-- Provide scrolling for options in sample received auto-fill dialog.
-- Allow appending resource codes to ui controls when applied via clipboard/scanner.
-- Add more sample information (op,lid,paf) in main sample row, second row hidden by default until sample is expanded.
-- Customize available sample/op status choices for person inbox.
-
-
-
 TODO
 ====
+Try to hide SLANT/IDENT in stages list when not applicable.
+Create accounts for Morgan, Josheph, Paul W., Dave Lau.
+
+Investigate replacing Oracle with No-SQL db like Redis.
 Just one button to push AOAC, BAM and work hours.
   Automatically save test before pushing to FACTS.
 
+Done
+====
+- Correct the login error message to distinguish invalid username/password from other problems.
+- Setup accounts for Morgan and Joseph.
 
-Create accounts for Morgan, Josheph, Paul W., Dave Lau.
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.
