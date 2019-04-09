@@ -16,7 +16,7 @@ Done
 - Correct the login error message to distinguish invalid username/password from other problems.
 - Add label for sample in sample ui component.
 - Submit login username in lowercase form as done in user registration process.
-- Enable assigning resources (e.g. via barcode scanner) to balance and incubator selection fields (dropdowns).
+- Enable assigning resources (e.g. via barcode scanner) to balance, incubator, and waterbath selection fields (dropdowns).
 - Allow toggling whether multiple resources may be applied for fields that can be toggled between selection
   lists and freeform text inputs.
 

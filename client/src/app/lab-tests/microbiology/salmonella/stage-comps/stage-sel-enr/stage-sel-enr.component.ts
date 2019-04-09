@@ -20,13 +20,18 @@ export class StageSelEnrComponent implements OnChanges {
    allowDataChanges: boolean;
 
    @Input()
-   waterBaths: LabResource[];
+   waterBaths: LabResource[] | undefined;
+
+   @Input()
+   spiking: boolean | null = null;
 
    @Input()
    showUnsetAffordances = false;
 
    @Input()
-   spiking: boolean | null = null;
+   allowFreeformEntryForSelectFields = false;
+
+   selectWaterbath = true;
 
    resourceAssignments: ResourceControlAssignmentsManager;
 
@@ -53,6 +58,7 @@ export class StageSelEnrComponent implements OnChanges {
              .set('rvttWaterBathId', ['WAB']),
          ','
       );
+      this.resourceAssignments.setMultipleValuesAssignable('rvttWaterBathId', !this.selectWaterbath);
 
       this.positiveControlGrowthControl = this.form.get('positiveControlGrowth');
       this.mediumControlGrowthControl = this.form.get('mediumControlGrowth');
@@ -105,4 +111,9 @@ export class StageSelEnrComponent implements OnChanges {
       this.resourceAssignments.promptAssignResources(this.dialogSvc, this.alertMsgSvc);
    }
 
+   toggleSelectWaterbath()
+   {
+      this.selectWaterbath = !this.selectWaterbath;
+      this.resourceAssignments.setMultipleValuesAssignable('rvttWaterBathId', !this.selectWaterbath);
+   }
 }

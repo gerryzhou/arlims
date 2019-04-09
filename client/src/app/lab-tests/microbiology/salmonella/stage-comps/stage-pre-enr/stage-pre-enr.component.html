@@ -116,7 +116,7 @@
          <span>
             <mat-form-field>
                <mat-select formControlName="balanceId" placeholder="Balance"
-                  *ngIf="selectBalance; else textInputBalance">
+                           *ngIf="selectBalance; else textInputBalance">
                   <mat-option [value]="null"></mat-option>
                   <mat-option *ngFor="let labRsc of balances" [value]="labRsc.code">
                      {{labRsc.code}}{{labRsc.description ? ' - ' + labRsc.description : ''}}

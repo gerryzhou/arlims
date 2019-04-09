@@ -5,6 +5,17 @@
    flex-flow: row wrap;
    width: 100%;
    align-items: center;
+
+   .apply-resources-btn {
+      background-color: $batch-resource-background-color;
+      margin-left: 10px;
+   }
+}
+
+button.toggle-select {
+   mat-icon {
+      font-size: smaller;
+   }
 }
 
 .apply-resources-btn {

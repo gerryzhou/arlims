@@ -55,12 +55,6 @@ mat-divider {
    flex-flow: row wrap;
    align-items: center;
 
-   button.toggle-select {
-      mat-icon {
-         font-size: smaller;
-      }
-   }
-
    .apply-resources-btn {
       background-color: $batch-resource-background-color;
       margin-left: 10px;
@@ -88,6 +82,13 @@ mat-divider {
    }
 
 }
+
+button.toggle-select {
+   mat-icon {
+      font-size: smaller;
+   }
+}
+
 
 .bottom-bar {
    display: flex;
