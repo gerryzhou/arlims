@@ -1,7 +1,5 @@
 TODO
 ----
-Fix barcode scanning via lighting bolt button.
-  Don't suppress keystrokes.
 First user hours entry should default to current user as 'LEAD'.
 Wrapup: After save, exit to samples listing.
 Buttons like "Save" need to have a background color so they look like buttons.

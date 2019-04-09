@@ -19,17 +19,23 @@ export class ResourceCodesDialogComponent {
 
    addResourceCodesForInput(event: any)
    {
-      const value = event.target ? event.target.value : undefined;
-      const input = event.target ? event.target : undefined;
-      if (value && value.length > 2) { // assume pastes are at least 3 chars
-         const toks = value.split(/\s+/);
-         for (const tok of toks) {
-            if (tok.length > 0) {
+      const input = event.target;
+      const value = input && input.value as string;
+
+      console.log('Resource codes value: "' + value + '".');
+
+      if ( value && (value.endsWith('\n') || value.endsWith(' ')) )
+      {
+         for ( const tok of value.split(/\s+/) )
+         {
+            if ( tok.length > 0 )
                this.data.resourceCodes.push(tok);
-            }
          }
+
+         input.value = '';
       }
-      if (input) { input.value = ''; }
+      else
+         console.log('Not processing resource codes.');
    }
 
    addResourceCodes(event: any) {
@@ -56,11 +62,11 @@ export class ResourceCodesDialogComponent {
       this.dialogRef.close();
    }
 
-   @HostListener('window:keydown.ENTER')
-   acceptAndCloseIfValid()
-   {
-      if ( this.data.resourceCodes.length === 0 )
-         return;
-      this.dialogRef.close(this.data);
-   }
+   // @HostListener('window:keydown.ENTER')
+   // acceptAndCloseIfValid()
+   // {
+   //    if ( this.data.resourceCodes.length === 0 )
+   //       return;
+   //    this.dialogRef.close(this.data);
+   // }
 }
