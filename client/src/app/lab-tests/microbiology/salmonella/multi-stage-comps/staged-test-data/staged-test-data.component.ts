@@ -60,6 +60,7 @@ export class StagedTestDataComponent implements OnInit {
    readonly sampleOpTest: SampleOpTest;
 
    readonly appUser: AppUser;
+   readonly userIsAdmin: boolean;
 
 
    // The form group holds the edited state of the test data.
@@ -67,6 +68,7 @@ export class StagedTestDataComponent implements OnInit {
 
    // Controls whether a null option is shown for some ui choice components.
    showUnsetAffordances = false;
+   allowFreeformEntryForSelectFields = false;
 
    sampleTestUnitsType: TestUnitsType | null;
    sampleTestUnitsCount: number | null;
@@ -124,6 +126,7 @@ export class StagedTestDataComponent implements OnInit {
 
       this.sampleOpTest = labGroupTestData.sampleOpTest;
       this.appUser = labGroupTestData.appUser;
+      this.userIsAdmin = labGroupTestData.appUser.roles.find(role => role === 'ADMIN') != null;
 
       const posTestUnits = testData ? getVidasPositiveTestUnitNumbers(testData.vidasData) : [];
       this.vidasPositiveTestUnitNumbers = posTestUnits;
@@ -387,6 +390,11 @@ export class StagedTestDataComponent implements OnInit {
    toggleShowUnsetAffordances()
    {
       this.showUnsetAffordances = !this.showUnsetAffordances;
+   }
+
+   toggleAllowFreeformEntryForSelectFields()
+   {
+      this.allowFreeformEntryForSelectFields = !this.allowFreeformEntryForSelectFields;
    }
 
    promptSaveTestDataToFile()

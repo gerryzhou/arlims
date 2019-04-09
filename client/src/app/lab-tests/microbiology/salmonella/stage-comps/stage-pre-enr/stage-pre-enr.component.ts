@@ -3,8 +3,6 @@ import {FormGroup} from '@angular/forms';
 import {merge, Subscription} from 'rxjs';
 
 import {LabResource} from '../../../../../../generated/dto';
-import {PreEnrData} from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {SampleTestUnits, SamplingMethod, TestUnitsType} from '../../../sampling-methods';
 import {ResourceControlAssignmentsManager} from '../../../../resource-control-assignments-manager';
 import {MatDialog} from '@angular/material';
@@ -38,13 +36,16 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    @Input()
    showUnsetAffordances = false;
 
+   @Input()
+   allowFreeformEntryForSelectFields = false;
+
    @Output()
    sampleTestUnitsChange = new EventEmitter<SampleTestUnits>();
 
    // These allow the user to control how lab resources are entered, either via select field (when true) or else by free-form text input.
    selectBalance = true;
    selectIncubator = true;
-   allowTogglingSelects = false; // Get this from test config if this option is useful.
+   selectMediumType = true;
 
    sampleTestUnitsChangeSubcription: Subscription;
 
@@ -175,6 +176,11 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    toggleSelectIncubator()
    {
       this.selectIncubator = !this.selectIncubator;
+   }
+
+   toggleSelectMediumType()
+   {
+      this.selectMediumType = !this.selectMediumType;
    }
 
    promptApplyResources()

@@ -1,8 +1,5 @@
 TODO
 ----
-Add samp# label before sample number.
-Medium type: make dropdown for now.
-  Add pencil icon.
 Fix barcode scanning via lighting bolt button.
   Don't suppress keystrokes.
 First user hours entry should default to current user as 'LEAD'.

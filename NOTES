@@ -1,7 +1,6 @@
 TODO
 ====
 
-
 Investigate replacing Oracle with No-SQL db like Redis.
 Just one button to push AOAC, BAM and work hours.
   Automatically save test before pushing to FACTS.
@@ -12,7 +11,9 @@ Done
 - Submit login username in lowercase as done in registration process.
 - Setup accounts on Test server.
 - Omit positive continuations (SLANT/IDENT) stage statuses when not applicable.
-
+- Add label for sample in sample ui component.
+- Allow some select fields to be toggled to free-form text inputs by admin users.
+- In pre-enr make medium type a select list, that can be toggled for admins to free-form entry.
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.

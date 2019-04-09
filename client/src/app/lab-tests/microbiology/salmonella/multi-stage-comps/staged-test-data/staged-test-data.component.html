@@ -26,6 +26,7 @@
             [form]="testDataForm.get('preEnrData')"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
+            [allowFreeformEntryForSelectFields]="allowFreeformEntryForSelectFields"
             [balances]="balances"
             [incubators]="incubators"
             [samplingMethodChoices]="testConfig.samplingMethodChoices"
@@ -120,6 +121,10 @@
             <button mat-menu-item type="button" *ngIf="allowDataChanges"
                     (click)="toggleShowUnsetAffordances()">
                Toggle showing 'unset' option for supporting fields
+            </button>
+            <button mat-menu-item type="button" *ngIf="allowDataChanges && userIsAdmin"
+                    (click)="toggleAllowFreeformEntryForSelectFields()">
+               Toggle allowing free form data entry for select fields.
             </button>
             <mat-divider></mat-divider>
             <button type="button" mat-menu-item (click)="promptSaveTestDataToFile()">
