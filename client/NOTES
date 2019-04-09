@@ -1,5 +1,7 @@
 TODO
 ----
+Try enabling barcode scanning support for balance dropdown using dummy balance BAL-9999.
+  Don't try to append a value onto the end of another for a list selection component.
 First user hours entry should default to current user as 'LEAD'.
 Wrapup: After save, exit to samples listing.
 Buttons like "Save" need to have a background color so they look like buttons.

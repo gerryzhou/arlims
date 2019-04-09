@@ -12,16 +12,22 @@ export class ResourceControlAssignmentsManager {
 
    unassignedCodes: Set<string>;
 
+   // Don't append multiple selection values together for these controls (e.g. dropdown lists),
+   // even if a delimiter is set.
+   readonly singleValueOnlyControlNames: Set<string>;
+
    constructor
       (
          private formGroup: FormGroup,
          private resourceTypeListsByTargetControlName: Map<string, string[]>,
          private delimiter: string,
+         singleValueOnlyControlNames: string[] = [],
          private resourceTypeCodeExtractor: (string) => string = defaultResourceTypeCodeExtractor
       )
    {
       this.assignedResourceCodesByTargetControlName = new Map();
       this.unassignedCodes = new Set();
+      this.singleValueOnlyControlNames = new Set(singleValueOnlyControlNames);
    }
 
    promptAssignResources
@@ -56,7 +62,7 @@ export class ResourceControlAssignmentsManager {
 
       if ( ctrl )
       {
-         if ( this.delimiter )
+         if ( this.delimiter && !this.singleValueOnlyControlNames.has(controlName) )
          {
             const ctlVal = ctrl.value as string;
 
@@ -67,7 +73,7 @@ export class ResourceControlAssignmentsManager {
 
             this.removeAssignedResourceCodeForControl(resourceCode, controlName);
          }
-         else // no delimiter set, only single values may be applied
+         else // only single values may be applied
          {
             ctrl.setValue(resourceCode);
 
@@ -188,6 +194,13 @@ export class ResourceControlAssignmentsManager {
       };
    }
 
+   setMultipleValuesAssignable(controlName: string, multipleAssignable: boolean)
+   {
+      if ( multipleAssignable && this.singleValueOnlyControlNames.has(controlName) )
+         this.singleValueOnlyControlNames.delete(controlName);
+      else if ( !multipleAssignable && !this.singleValueOnlyControlNames.has(controlName) )
+         this.singleValueOnlyControlNames.add(controlName);
+   }
 }
 
 function getResourceCodeValuesByCodeType

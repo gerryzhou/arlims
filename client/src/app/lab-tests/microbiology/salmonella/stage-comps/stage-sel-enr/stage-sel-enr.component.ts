@@ -50,7 +50,8 @@ export class StageSelEnrComponent implements OnChanges {
              .set('rvBatchId', ['RV'])
              .set('ttBatchId', ['TT'])
              .set('bgBatchId', ['BG'])
-             .set('i2kiBatchId', ['I2KI']),
+             .set('i2kiBatchId', ['I2KI'])
+             .set('rvttWaterBathId', ['WAB']),
          ','
       );
 

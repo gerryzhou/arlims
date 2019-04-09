@@ -7,7 +7,8 @@ Just one button to push AOAC, BAM and work hours.
 
 Done
 ====
-- Barcode scanning dialog now accepts line delimited codes incrementally as delivered by example barcode scanner.
+- Barcode scanning dialog now accepts line delimited codes incrementally as delivered by example barcode
+  scanner.
 - Basic user registration form to setup new accounts and several accounts created.
 - Omit positive continuations (SLANT/IDENT) stage statuses when not applicable.
 - Allow some select fields to be toggled to free-form text inputs by admin users.
@@ -15,6 +16,9 @@ Done
 - Correct the login error message to distinguish invalid username/password from other problems.
 - Add label for sample in sample ui component.
 - Submit login username in lowercase form as done in user registration process.
+- Enable assigning resources (e.g. via barcode scanner) to balance and incubator selection fields (dropdowns).
+- Allow toggling whether multiple resources may be applied for fields that can be toggled between selection
+  lists and freeform text inputs.
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.

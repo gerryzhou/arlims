@@ -23,10 +23,10 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    allowDataChanges: boolean;
 
    @Input()
-   balances: LabResource[];
+   balances: LabResource[] | undefined;
 
    @Input()
-   incubators: LabResource[];
+   incubators: LabResource[] | undefined;
 
    @Input()
    samplingMethodChoices: SamplingMethod[];
@@ -60,11 +60,15 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
       this.resourceAssignments = new ResourceControlAssignmentsManager(
          this.form,
          new Map()
+            .set('balanceId', ['BAL'])
+            .set('incubatorId', ['INC'])
             .set('blenderJarId', ['JAR'])
             .set('bagId', ['BAG'])
             .set('mediumBatchId', ['RV', 'TT', 'LAC']),
-         ','
+         ',',
       );
+      this.resourceAssignments.setMultipleValuesAssignable('balanceId', !this.selectBalance);
+      this.resourceAssignments.setMultipleValuesAssignable('incubatorId', !this.selectIncubator);
 
       this.sampleMethodChoicesByTestUnitType = {
          compsMethods: this.samplingMethodChoices.filter(m => m.testUnitsType === 'composite'),
@@ -171,11 +175,13 @@ export class StagePreEnrComponent implements OnChanges, OnDestroy {
    toggleSelectBalance()
    {
       this.selectBalance = !this.selectBalance;
+      this.resourceAssignments.setMultipleValuesAssignable('balanceId', !this.selectBalance);
    }
 
    toggleSelectIncubator()
    {
       this.selectIncubator = !this.selectIncubator;
+      this.resourceAssignments.setMultipleValuesAssignable('incubatorId', !this.selectIncubator);
    }
 
    toggleSelectMediumType()
