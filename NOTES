@@ -7,14 +7,14 @@ Just one button to push AOAC, BAM and work hours.
 
 Done
 ====
-- Correct the login error message to distinguish invalid username/password from other problems.
-- Submit login username in lowercase as done in registration process.
-- Basic user registration form to setup new accounts.
+- Barcode scanning dialog now accepts line delimited codes incrementally as delivered by example barcode scanner.
+- Basic user registration form to setup new accounts and several accounts created.
 - Omit positive continuations (SLANT/IDENT) stage statuses when not applicable.
-- Add label for sample in sample ui component.
 - Allow some select fields to be toggled to free-form text inputs by admin users.
-- In pre-enr make medium type a select list, that can be toggled for admins to free-form entry.
-- Resource application dialog changed to accept line delimited codes as delivered by example barcode scanner.
+- In pre-enr make medium type a select list (toggleable by admins).
+- Correct the login error message to distinguish invalid username/password from other problems.
+- Add label for sample in sample ui component.
+- Submit login username in lowercase form as done in user registration process.
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.
