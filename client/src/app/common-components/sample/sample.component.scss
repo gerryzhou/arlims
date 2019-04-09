@@ -50,6 +50,7 @@
 
 .field-label {
    font-weight: normal;
+   font-size: smaller;
 }
 .field-value {
    font-weight: bold;
@@ -66,7 +67,7 @@
    display: flex;
    flex-flow: column nowrap;
    justify-content: center;
-   align-items: center;
+   align-items: flex-start;
    min-width: 105px;
 }
 
@@ -74,7 +75,7 @@
    display: flex;
    flex-flow: column nowrap;
    justify-content: center;
-   align-items: center;
+   align-items: flex-start;
    min-width: 105px;
 }
 
