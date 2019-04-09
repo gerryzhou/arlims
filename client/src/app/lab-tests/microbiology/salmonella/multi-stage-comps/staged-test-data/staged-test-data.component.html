@@ -125,7 +125,7 @@
             </button>
             <button mat-menu-item type="button" *ngIf="allowDataChanges && userIsAdmin"
                     (click)="toggleAllowFreeformEntryForSelectFields()">
-               Toggle allowing free form data entry for select fields.
+               Allow enabling free form data entry for some select-list fields (via <mat-icon>create</mat-icon> buttons).
             </button>
             <mat-divider></mat-divider>
             <button type="button" mat-menu-item (click)="promptSaveTestDataToFile()">
