@@ -5,13 +5,13 @@ describe('microbiology salmonella test data functions', () => {
    it('should yield empty for empty test data', () => {
       expect(getTestStageStatuses(emptyTestData(), null))
          .toEqual([
-            {stageName: 'PREP', fieldValuesStatus: 'e'},
-            {stageName: 'PRE-ENR', fieldValuesStatus: 'e'},
-            {stageName: 'SEL-ENR', fieldValuesStatus: 'e'},
-            {stageName: 'M-BROTH', fieldValuesStatus: 'e'},
-            {stageName: 'VIDAS', fieldValuesStatus: 'e'},
-            {stageName: 'POS-CONT', fieldValuesStatus: 'e'},
-            {stageName: 'WRAPUP', fieldValuesStatus: 'e'},
+            {stageName: 'PREP', stageStatus: 'e'},
+            {stageName: 'PRE-ENR', stageStatus: 'e'},
+            {stageName: 'SEL-ENR', stageStatus: 'e'},
+            {stageName: 'M-BROTH', stageStatus: 'e'},
+            {stageName: 'VIDAS', stageStatus: 'e'},
+            {stageName: 'POS-CONT', stageStatus: 'e'},
+            {stageName: 'WRAPUP', stageStatus: 'e'},
          ]);
    });
 
@@ -80,13 +80,13 @@ describe('microbiology salmonella test data functions', () => {
 
       expect(getTestStageStatuses(completeTestData, null))
          .toEqual([
-            {stageName: 'PREP', fieldValuesStatus: 'c'},
-            {stageName: 'PRE-ENR', fieldValuesStatus: 'c'},
-            {stageName: 'SEL-ENR', fieldValuesStatus: 'c'},
-            {stageName: 'M-BROTH', fieldValuesStatus: 'c'},
-            {stageName: 'VIDAS', fieldValuesStatus: 'c'},
-            {stageName: 'POS-CONT', fieldValuesStatus: 'c'},
-            {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
+            {stageName: 'PREP', stageStatus: 'c'},
+            {stageName: 'PRE-ENR', stageStatus: 'c'},
+            {stageName: 'SEL-ENR', stageStatus: 'c'},
+            {stageName: 'M-BROTH', stageStatus: 'c'},
+            {stageName: 'VIDAS', stageStatus: 'c'},
+            {stageName: 'POS-CONT', stageStatus: 'c'},
+            {stageName: 'WRAPUP', stageStatus: 'c'},
          ]);
    });
 
@@ -144,12 +144,12 @@ describe('microbiology salmonella test data functions', () => {
 
       expect(getTestStageStatuses(partialTestData, null))
          .toEqual([
-            {stageName: 'PREP', fieldValuesStatus: 'c'},
-            {stageName: 'PRE-ENR', fieldValuesStatus: 'i'},
-            {stageName: 'SEL-ENR', fieldValuesStatus: 'i'},
-            {stageName: 'M-BROTH', fieldValuesStatus: 'i'},
-            {stageName: 'VIDAS', fieldValuesStatus: 'e'},
-            {stageName: 'WRAPUP', fieldValuesStatus: 'c'},
+            {stageName: 'PREP', stageStatus: 'c'},
+            {stageName: 'PRE-ENR', stageStatus: 'i'},
+            {stageName: 'SEL-ENR', stageStatus: 'i'},
+            {stageName: 'M-BROTH', stageStatus: 'i'},
+            {stageName: 'VIDAS', stageStatus: 'e'},
+            {stageName: 'WRAPUP', stageStatus: 'c'},
          ]);
    });
 

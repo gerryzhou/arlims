@@ -4,7 +4,6 @@ import {FormGroup} from '@angular/forms';
 
 import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
 import {LabResource, TestAttachedFileMetadata, SampleOpTest, AppUser} from '../../../../../../generated/dto';
-import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {emptyTestData, getVidasPositiveTestUnitNumbers, makeTestDataFormGroup} from '../../test-data';
 import {TestConfig} from '../../test-config';
 import {UserContextService} from '../../../../../shared/services';

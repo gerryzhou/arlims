@@ -30,7 +30,7 @@
          color: green;
       }
 
-      .field-values-completion-gauge {
+      .completion-gauge {
          width: 30px;
          height: 15px;
          border: 2px solid black;
@@ -40,13 +40,16 @@
             height: 100%;
             border-radius: 5px;
          }
-         &.fields-e {
+         &.status-n {
+            color: lightgray;
+         }
+         &.status-e {
             .completed-portion { width: 0; background: black; }
          }
-         &.fields-i {
+         &.status-i {
             .completed-portion { width: 50%; background: orange; }
          }
-         &.fields-c {
+         &.status-c {
             .completed-portion { width: 100%; background: green; }
          }
       }

@@ -1,7 +1,6 @@
 TODO
 ====
-Try to hide SLANT/IDENT in stages list when not applicable.
-Create accounts for Morgan, Josheph, Paul W., Dave Lau.
+
 
 Investigate replacing Oracle with No-SQL db like Redis.
 Just one button to push AOAC, BAM and work hours.
@@ -10,7 +9,9 @@ Just one button to push AOAC, BAM and work hours.
 Done
 ====
 - Correct the login error message to distinguish invalid username/password from other problems.
-- Setup accounts for Morgan and Joseph.
+- Submit login username in lowercase as done in registration process.
+- Setup accounts on Test server.
+- Omit positive continuations (SLANT/IDENT) stage statuses when not applicable.
 
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.

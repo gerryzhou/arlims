@@ -1,5 +1,15 @@
 TODO
 ----
+Add samp# label before sample number.
+Medium type: make dropdown for now.
+  Add pencil icon.
+Fix barcode scanning via lighting bolt button.
+  Don't suppress keystrokes.
+First user hours entry should default to current user as 'LEAD'.
+Wrapup: After save, exit to samples listing.
+Buttons like "Save" need to have a background color so they look like buttons.
+Add required validators which trigger when user tries to go to next stage.
+
 
 salmonella-facts service:
   Add fields to stuctured remarks.
@@ -9,7 +19,6 @@ salmonella-facts service:
      //   "lotNumbers"
 Try for FACTS of at least AOAC push by Wed.
   BAM by Mon.
-Add samp# label before sample number.
 
 SampleAnalysesMicro FACTS Submissions
 =====================================

@@ -1,4 +1,4 @@
-import {FieldValuesStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../../test-stages';
+import {TestStageStatusCode, statusForRequiredFieldValues, TestStageStatus} from '../../../test-stages';
 import {
    ContinuationControls,
    ContinuationTests,
@@ -12,7 +12,7 @@ import {arraysEqual} from '../../../../shared/util/data-objects';
 
 interface Stage {
    name: string;
-   statusCodeFn: (TestData, TestConfig) => FieldValuesStatusCode;
+   statusCodeFn: (TestData, TestConfig) => TestStageStatusCode;
 }
 
 // This structure defines the test stage names and their status computations,
@@ -31,11 +31,11 @@ export const TEST_STAGES: Stage[] = [
 ];
 
 export const NO_POSITIVES_TEST_STAGES =
-   TEST_STAGES.filter(s => s.name !== 'SLANT' && s.name !== 'IDENT')
+   TEST_STAGES.filter(s => s.name !== 'SLANT' && s.name !== 'IDENT');
 
 type PosContStageName = 'SLANT' | 'IDENT';
 
-function prepStatusCode(testData: TestData): FieldValuesStatusCode
+function prepStatusCode(testData: TestData): TestStageStatusCode
 {
    const data = testData.prepData;
 
@@ -55,7 +55,7 @@ function prepStatusCode(testData: TestData): FieldValuesStatusCode
    else return reqStatus;
 }
 
-function preEnrStatusCode(testData: TestData): FieldValuesStatusCode
+function preEnrStatusCode(testData: TestData): TestStageStatusCode
 {
    const data = testData.preEnrData;
 
@@ -93,7 +93,7 @@ function spikingSpecified(testData: TestData) {
    return testData.preEnrData && !!testData.preEnrData.sampleSpike;
 }
 
-function selEnrStatusCode(testData: TestData): FieldValuesStatusCode
+function selEnrStatusCode(testData: TestData): TestStageStatusCode
 {
    const data = testData.selEnrData;
 
@@ -120,9 +120,10 @@ function selEnrStatusCode(testData: TestData): FieldValuesStatusCode
    );
 }
 
-function mBrothStatusCode(testData: TestData): FieldValuesStatusCode
+function mBrothStatusCode(testData: TestData): TestStageStatusCode
 {
    const data = testData.mBrothData;
+
    return statusForRequiredFieldValues([
       data.mBrothBatchId,
       data.mBrothWaterBathId,
@@ -130,7 +131,7 @@ function mBrothStatusCode(testData: TestData): FieldValuesStatusCode
    ]);
 }
 
-export function vidasStatusCode(testData: TestData): FieldValuesStatusCode
+export function vidasStatusCode(testData: TestData): TestStageStatusCode
 {
    const data = testData.vidasData;
    const spiking = spikingSpecified(testData);
@@ -157,7 +158,7 @@ function slantStatusCode
       testData: TestData,
       testConfig: TestConfig | null
    )
-   : FieldValuesStatusCode
+   : TestStageStatusCode
 {
    return posContStatusCode('SLANT', testData, testConfig);
 }
@@ -167,7 +168,7 @@ function identStatusCode
    testData: TestData,
    testConfig: TestConfig | null
 )
-   : FieldValuesStatusCode
+   : TestStageStatusCode
 {
    return posContStatusCode('IDENT', testData, testConfig);
 }
@@ -178,8 +179,11 @@ function posContStatusCode
       testData: TestData,
       testConfig: TestConfig | null
    )
-   : FieldValuesStatusCode
+   : TestStageStatusCode
 {
+   if ( !vidasPositiveExists(testData.vidasData) )
+      return 'n';
+
    const positivesData = testData.posContData;
 
    if ( positivesData.continuationControls == null && positivesData.testUnitsContinuationTests == null )
@@ -205,7 +209,7 @@ function posContTestUnitsStatusCode
       vidasData: VidasData,
       testConfig: TestConfig | null
    )
-   : FieldValuesStatusCode
+   : TestStageStatusCode
 {
    if ( !contTestss )
       return 'e';
@@ -234,7 +238,7 @@ function contControlsStatusCode
       contControls: ContinuationControls | null,
       testConfig: TestConfig | null
    )
-   : FieldValuesStatusCode
+   : TestStageStatusCode
 {
    if ( contControls == null )
       return 'e';
@@ -340,7 +344,7 @@ function isolateTestSequenceStatus
       onlySlantTubesRequired = false,
       testConfig: TestConfig | null
    )
-   : FieldValuesStatusCode
+   : TestStageStatusCode
 {
    const { slantStageStatus, identRequired } =
       isolateTestSequenceSlantStageState(testSeq, onlySlantTubesRequired, testConfig);
@@ -355,7 +359,7 @@ function isolateTestSequenceStatus
 }
 
 interface IsolateTestSeqSlantStageState {
-   slantStageStatus: FieldValuesStatusCode;
+   slantStageStatus: TestStageStatusCode;
    identRequired: boolean;
 }
 
@@ -398,7 +402,7 @@ function isolateTestSequenceSlantStageState
       return { slantStageStatus: 'i', identRequired: false};
 }
 
-function slantTubeTestStatus(slantTest: SlantTubeTest): FieldValuesStatusCode
+function slantTubeTestStatus(slantTest: SlantTubeTest): TestStageStatusCode
 {
    if ( slantTest.slant == null && slantTest.butt == null && slantTest.h2s == null && slantTest.gas == null )
       return 'e';
@@ -428,7 +432,7 @@ function slantTubeResultsMixed(tsiTest: SlantTubeTest, liaTest): boolean
    );
 }
 
-function wrapupStatusCode(testData: TestData): FieldValuesStatusCode
+function wrapupStatusCode(testData: TestData): TestStageStatusCode
 {
    const data = testData.wrapupData;
 
@@ -459,7 +463,7 @@ export function getTestStageStatuses
 {
    return TEST_STAGES.map(stage => ({
       stageName: stage.name,
-      fieldValuesStatus: stage.statusCodeFn(testData, testConfig)
+      stageStatus: stage.statusCodeFn(testData, testConfig)
    }));
 }
 
@@ -475,6 +479,21 @@ export function firstNonCompleteTestStageName
       if (stage.statusCodeFn(testData, testConfig) !== 'c') return stage.name;
    }
    return null;
+}
+
+export function vidasPositiveExists(vidasData: VidasData): boolean
+{
+   if ( vidasData == null || vidasData.testUnitDetections == null )
+      return false;
+
+   const detections = vidasData.testUnitDetections;
+   for (let i = 0; i < detections.length; ++i)
+   {
+      if ( detections[i] === true )
+         return true;
+   }
+
+   return false;
 }
 
 export function getVidasPositiveTestUnitNumbers(vidasData: VidasData): number[]

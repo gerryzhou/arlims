@@ -16,16 +16,17 @@ export class TestStageStatusComponent implements OnChanges {
    @Input()
    status: TestStageStatus;
 
-   fieldValuesStatusText: string;
+   statusText: string;
 
    constructor(private datePipe: DatePipe) { }
 
    ngOnChanges() {
-      switch ( this.status.fieldValuesStatus ) {
-         case 'e': this.fieldValuesStatusText = 'empty'; break;
-         case 'i': this.fieldValuesStatusText = 'incomplete'; break;
-         case 'c': this.fieldValuesStatusText = 'complete'; break;
-         default: this.fieldValuesStatusText = '?';
+      switch ( this.status.stageStatus ) {
+         case 'e': this.statusText = 'empty'; break;
+         case 'i': this.statusText = 'incomplete'; break;
+         case 'c': this.statusText = 'complete'; break;
+         case 'n': this.statusText = 'not-applicable'; break;
+         default: this.statusText = '?';
       }
    }
 

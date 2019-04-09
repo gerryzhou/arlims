@@ -1,13 +1,14 @@
 
 export interface TestStageStatus {
    stageName: string;
-   fieldValuesStatus: FieldValuesStatusCode;
+   stageStatus: TestStageStatusCode;
 }
 
-export type FieldValuesStatusCode =
+export type TestStageStatusCode =
      'e'  // empty
    | 'i'  // incomplete
    | 'c'  // required fields complete
+   | 'n'  // stage not-applicable
 ;
 
 export function stageNameToTestDataFieldName(stageName: string): string
@@ -28,7 +29,7 @@ export function statusForRequiredFieldValues
       fieldValues: any[],
       allowEmptyArrayAsValue = false,
    )
-   : FieldValuesStatusCode
+   : TestStageStatusCode
 {
    let valueFound = false;
    let nonValueFound = false;
@@ -44,13 +45,7 @@ export function statusForRequiredFieldValues
       else valueFound = true;
    }
 
-   if (!valueFound) {
-      return 'e';
-   } else if (!nonValueFound) {
-      return 'c';
-   } else {
-      return 'i';
-   }
+   return !valueFound ? 'e' : !nonValueFound ? 'c' : 'i';
 }
 
 export function arrayContainsValue<T>(a: Array<T>): boolean

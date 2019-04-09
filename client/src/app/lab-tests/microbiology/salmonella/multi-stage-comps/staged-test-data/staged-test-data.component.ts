@@ -5,7 +5,6 @@ import {MatStepper} from '@angular/material';
 import * as moment from 'moment';
 import * as FileSaver from 'file-saver';
 
-import {copyWithMergedValuesFrom} from '../../../../../shared/util/data-objects';
 import {AlertMessageService, defaultJsonFieldFormatter, SaveResult, TestsService, UserContextService} from '../../../../../shared/services';
 import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
 import {
@@ -16,7 +15,6 @@ import {
    TestSaveData,
    UserReference
 } from '../../../../../../generated/dto';
-import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {
    TestData,
    emptyTestData,
