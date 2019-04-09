@@ -3,8 +3,6 @@ import {FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
-import {WrapupData} from '../../test-data';
-import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {AppUser, FactsUserTimeCharge, SampleOp, UserReference} from '../../../../../../generated/dto';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TimeChargesComponent} from '../../../../../common-components/time-charges/time-charges.component';

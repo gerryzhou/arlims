@@ -5,7 +5,6 @@ import {MatDialog} from '@angular/material';
 import * as moment from 'moment';
 
 import {AlertMessageService} from '../../../../../shared/services/alerts';
-import {EmployeeTimestamp} from '../../../../../shared/client-models/employee-timestamp';
 import {LabResource} from '../../../../../../generated/dto';
 import {ResourceControlAssignmentsManager} from '../../../../resource-control-assignments-manager';
 
