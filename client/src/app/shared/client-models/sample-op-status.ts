@@ -3,7 +3,7 @@ export interface SampleOpStatus {
    displayName: string;
 }
 
-export type SampleOpStatusCode = 'P' | 'A' |'S' | 'I' | 'T' | 'O' |  'C';
+export type SampleOpStatusCode = 'P' | 'A' |'S' | 'I' | 'T' | 'O' |  'M' | 'C';
 
 
 export const SAMPLE_OP_STATUSES: SampleOpStatus[] = [
@@ -13,6 +13,7 @@ export const SAMPLE_OP_STATUSES: SampleOpStatus[] = [
    {code: 'I', displayName: 'In Progress'},
    {code: 'T', displayName: 'Returned to Assignee'},
    {code: 'O', displayName: 'Original Completed'},
+   {code: 'M', displayName: 'Completed'},
    {code: 'C', displayName: 'Complete'},
 ];
 
