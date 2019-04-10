@@ -1,9 +1,6 @@
-import {TimeCharge} from '../../shared/client-models/time-charges';
+import {TimeCharge} from '../../lab-tests/microbiology/salmonella/test-data';
 
 export interface AppUserTimeCharge {
-
    userShortName: string;
-
    timeCharge: TimeCharge;
-
 }

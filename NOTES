@@ -18,7 +18,7 @@ Done
 - Submit login username in lowercase form as done in user registration process.
 - Enable assigning resources (e.g. via barcode scanner) to balance, incubator, and waterbath selection fields (dropdowns).
 - Allow toggling whether multiple resources may be applied for fields that can be toggled between selection
-  lists and freeform text inputs.
+  lists and free-form text inputs.
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.

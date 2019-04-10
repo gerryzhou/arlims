@@ -1,12 +1,12 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatDialog, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 
 import {UserReference} from '../../../generated/dto';
 import {AppUserTimeCharge} from './app-user-time-charge';
-import {makeTimeChargeFormGroup} from '../../shared/client-models/time-charges';
 import {UserTimeChargeDialogComponent} from './time-charge-dialog/user-time-charge-dialog.component';
+import {makeTimeChargeFormGroup} from '../../lab-tests/microbiology/salmonella/test-data';
 
 @Component({
    selector: 'app-time-charges',
@@ -116,7 +116,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
          {
             this.form.addControl(
                userTimeCharge.userShortName,
-               makeTimeChargeFormGroup(userTimeCharge.timeCharge)
+               makeTimeChargeFormGroup(new FormBuilder(), userTimeCharge.timeCharge)
             );
 
             this.timeChargeCreate.emit(userTimeCharge);

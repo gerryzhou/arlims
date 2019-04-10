@@ -1,6 +1,5 @@
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
-import {makeTimeChargesSetFormGroup} from '../../../../shared/client-models/time-charges';
 import {
    TestData,
    PrepData,
@@ -20,6 +19,10 @@ import {
    IsolateTestSequenceFailure,
    IsolateTestSequencesByUid,
    SelectiveAgarsTestSuite,
+   TimeChargesSet,
+   TimeCharge,
+   FactsAnalysisSubmissionsResults,
+   FactsAnalysisSubmissionResult,
 } from './types';
 import {TestConfig} from '../test-config';
 import {SamplingMethod} from '../../sampling-methods';
@@ -120,16 +123,19 @@ export function makeTestDataFormGroup
          methodRemarks: [testData.vidasData.methodRemarks],
       }),
 
-      posContData: makePositivesContinuationDataFormGroup(fb, testData.posContData, username),
+      posContData: makePositivesContinuationDataFormGroup(fb, testData.posContData),
 
       wrapupData: formGroup<WrapupData>({
          reserveSampleDisposition: [testData.wrapupData.reserveSampleDisposition],
          reserveSampleDestinations: [testData.wrapupData.reserveSampleDestinations],
          reserveSampleOtherDescription: [testData.wrapupData.reserveSampleOtherDescription],
-         testTimeCharges: makeTimeChargesSetFormGroup(testData.wrapupData.testTimeCharges),
+         testTimeCharges:
+            makeTimeChargesSetFormGroup(fb, testData.wrapupData.testTimeCharges),
          timeChargesLastSavedToFacts: [testData.wrapupData.timeChargesLastSavedToFacts],
          timeChargesLastEdited: [testData.wrapupData.timeChargesLastEdited],
          analysisResultsRemarksText: [testData.wrapupData.analysisResultsRemarksText],
+         factsAnalysisSubmissionsResults:
+            makeFactsAnalysisSubmissionResultsFormGroup(fb, testData.wrapupData.factsAnalysisSubmissionsResults),
       }),
    });
 }
@@ -137,8 +143,7 @@ export function makeTestDataFormGroup
 export function makePositivesContinuationDataFormGroup
    (
       formBuilder: FormBuilder,
-      posContData: PositivesContinuationData,
-      username: string
+      posContData: PositivesContinuationData
    )
    : FormGroup
 {
@@ -147,7 +152,7 @@ export function makePositivesContinuationDataFormGroup
    else
    {
       const contTests = posContData.testUnitsContinuationTests || {};
-      const contControls = posContData.continuationControls || makeEmptyContinuationControls(username);
+      const contControls = posContData.continuationControls || makeEmptyContinuationControls();
 
       return makeFormGroup<PositivesContinuationData>(formBuilder, {
          testUnitsContinuationTests: makeTestUnitsContinuationTestsFormGroup(formBuilder, contTests),
@@ -311,3 +316,70 @@ export function makeIsolateTestSequenceFailureFormGroup
    });
 }
 
+function makeTimeChargesSetFormGroup
+   (
+      formBuilder: FormBuilder,
+      testTimeCharges: TimeChargesSet | null
+   )
+   : FormGroup
+{
+   const fgControls: { [userShortName: string]: FormGroup } = {};
+
+   if ( testTimeCharges )
+   {
+      for ( const userShortName of Object.keys(testTimeCharges) )
+         fgControls[userShortName] = makeTimeChargeFormGroup(formBuilder, testTimeCharges[userShortName]);
+   }
+
+   return new FormGroup(fgControls);
+}
+
+export function makeTimeChargeFormGroup
+   (
+      formBuilder: FormBuilder,
+      timeCharge: TimeCharge
+   )
+   : FormGroup
+{
+   return makeFormGroup<TimeCharge>(formBuilder, {
+      role: [timeCharge.role],
+      assignmentStatus: [timeCharge.assignmentStatus],
+      hours: [timeCharge.hours],
+      enteredTimestamp: [timeCharge.enteredTimestamp],
+   });
+}
+
+export function makeFactsAnalysisSubmissionResultsFormGroup
+   (
+      formBuilder: FormBuilder,
+      res: FactsAnalysisSubmissionsResults
+   )
+   : FormGroup
+{
+   const fgControls: { [submType: string]: FormGroup } = {};
+
+   if ( res )
+   {
+      for (const submType of Object.keys(res))
+      {
+         fgControls[submType] =
+            makeFactsAnalysisSubmissionResultFormGroup(formBuilder, res[submType]);
+      }
+   }
+
+   return new FormGroup(fgControls);
+}
+
+export function makeFactsAnalysisSubmissionResultFormGroup
+   (
+      formBuilder: FormBuilder,
+      res: FactsAnalysisSubmissionResult
+   )
+   : FormGroup
+{
+   return makeFormGroup<FactsAnalysisSubmissionResult>(formBuilder, {
+      submissionTimestamp: [res.submissionTimestamp],
+      submissionSucceeded: [res.submissionSucceeded],
+      failureMessage: [res.failureMessage],
+   });
+}

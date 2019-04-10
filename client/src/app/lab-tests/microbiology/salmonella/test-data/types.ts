@@ -1,5 +1,5 @@
 import {SamplingMethod} from '../../sampling-methods';
-import {TimeChargesSet} from '../../../../shared/client-models/time-charges';
+import {TimeChargeStatusCode} from '../../../../../generated/dto';
 
 export interface TestData {
    prepData:     PrepData;
@@ -152,6 +152,31 @@ export interface WrapupData {
    timeChargesLastSavedToFacts: string | null;
    timeChargesLastEdited: string | null;
    analysisResultsRemarksText: string | null;
+   factsAnalysisSubmissionsResults: FactsAnalysisSubmissionsResults;
+}
+
+export interface TimeChargesSet {
+   [userShortName: string]: TimeCharge;
+}
+
+export interface TimeCharge {
+   role: TimeChargeRole;
+   hours: number;
+   assignmentStatus: TimeChargeStatusCode;
+   enteredTimestamp: string;
+}
+
+export type TimeChargeRole = 'lead' | 'additional' | 'check'; // display text for analyst type codes
+
+// latest result of FACTS submission by submission type ('AOAC' or 'BAM')
+export interface FactsAnalysisSubmissionsResults {
+   [submissionType: string]: FactsAnalysisSubmissionResult;
+}
+
+export interface FactsAnalysisSubmissionResult {
+   submissionTimestamp: string;
+   submissionSucceeded: boolean;
+   failureMessage?: string | null;
 }
 
 export type ColonyAppearance = 'T' | 'AT'| 'NT'| 'NG';
@@ -234,12 +259,13 @@ export function emptyTestData(): TestData {
          testTimeCharges: {},
          timeChargesLastSavedToFacts: null,
          timeChargesLastEdited: null,
-         analysisResultsRemarksText: null
+         analysisResultsRemarksText: null,
+         factsAnalysisSubmissionsResults: {},
       },
    };
 }
 
-export function makeEmptyContinuationControls(username: string): ContinuationControls
+export function makeEmptyContinuationControls(): ContinuationControls
 {
    return {
       salmonellaGaminara: makeEmptySelectiveAgarsTestSuite(1, 1),

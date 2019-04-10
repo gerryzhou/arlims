@@ -3,11 +3,11 @@ import {FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
-import {AppUser, FactsUserTimeCharge, SampleOp, UserReference} from '../../../../../../generated/dto';
+import {AnalystTypeCode, AppUser, FactsUserTimeCharge, SampleOp, UserReference, YesNoCode} from '../../../../../../generated/dto';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TimeChargesComponent} from '../../../../../common-components/time-charges/time-charges.component';
-import {analystTypeCode, leadIndicator} from '../../../../../shared/client-models/time-charges';
 import {AlertMessageService} from '../../../../../shared/services/alerts';
+import {TimeChargeRole} from '../../test-data';
 
 @Component({
    selector: 'app-stage-wrapup',
@@ -192,4 +192,21 @@ function makeUserRefsByUserShortNameMap(labUsers: UserReference[]): Map<string, 
    }
 
    return m;
+}
+
+function analystTypeCode(chargeRole: TimeChargeRole): AnalystTypeCode
+{
+   switch (chargeRole) {
+      case 'lead':
+         return 'O';
+      case 'additional':
+         return 'A';
+      case 'check':
+         return 'C';
+   }
+}
+
+function leadIndicator(chargeRole: TimeChargeRole): YesNoCode
+{
+   return chargeRole === 'lead' ? 'Y' : 'N';
 }

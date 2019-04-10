@@ -128,7 +128,7 @@ export class PosContComponent implements OnChanges {
    {
       const fb = new FormBuilder();
       const emptyTestUnitsFormGroup = makeTestUnitsContinuationTestsFormGroup(fb, {});
-      const emptyControls = makeEmptyContinuationControls(this.appUser.username);
+      const emptyControls = makeEmptyContinuationControls();
       const emptyContControlsFormGroup = makeContinuationControlsFormGroup(fb, emptyControls);
 
       this.form.addControl('testUnitsContinuationTests', emptyTestUnitsFormGroup);
