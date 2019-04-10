@@ -209,6 +209,8 @@ export class StagedTestDataComponent implements OnInit {
          this.testIsNew = false;
       }
 
+      this.usrCtxSvc.requestDeferredLabGroupContentsRefresh();
+
       this.testDataForm.markAsPristine();
       this.doAfterSaveNavigation(nav);
    }

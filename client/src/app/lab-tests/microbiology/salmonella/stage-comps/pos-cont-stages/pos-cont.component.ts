@@ -15,6 +15,7 @@ import {
 import {TestConfig} from '../../test-config';
 import {AppUser, TestAttachedFileMetadata} from '../../../../../../generated/dto';
 import {TestUnitsType} from '../../../sampling-methods';
+import {UserContextService} from '../../../../../shared/services';
 
 @Component({
    selector: 'app-pos-cont',
@@ -73,7 +74,11 @@ export class PosContComponent implements OnChanges {
 
    readonly IDENT_ATTACHED_FILES_KEY = 'ident';
 
-   constructor() {}
+   constructor
+   (
+      private usrCtxSvc: UserContextService
+   )
+   {}
 
    ngOnChanges()
    {
@@ -241,6 +246,7 @@ export class PosContComponent implements OnChanges {
    onIdentAttachedFilesChanged(attachedFiles: TestAttachedFileMetadata[])
    {
       this.identAttachedFiles = attachedFiles;
+      this.usrCtxSvc.requestDeferredLabGroupContentsRefresh();
    }
 }
 

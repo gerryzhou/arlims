@@ -12,6 +12,6 @@ export class LabGroupContentsResolver implements Resolve<LabGroupContents> {
 
    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LabGroupContents>
    {
-      return from(this.userContextService.refreshLabGroupContents());
+      return from(this.userContextService.getLabGroupContents());
    }
 }

@@ -26,6 +26,8 @@ export class UserContextService {
    private readonly applicationVersion$ = new BehaviorSubject<AppVersion | null>(null);
    private labGroupContentsLastUpdated: Date | null = null;
 
+   private deferredLabGroupContentsRefreshRequested = false;
+
    // These members are derived from lab group contents and are replaced at every refresh request.
    private labGroupContents$: Promise<LabGroupContents>;
    private testIdToSampleOpTest$: Promise<Map<number, SampleOpTest>>;
@@ -71,12 +73,12 @@ export class UserContextService {
 
    login(username: string, password: string): Observable<boolean>
    {
-      const url = this.apiUrlsSvc.loginUrl();
-      const body = new HttpParams().set('username', username).set('password', password);
+      const loginUrl = this.apiUrlsSvc.loginUrl();
+      const loginBody = new HttpParams().set('username', username).set('password', password);
 
       this.logout(false);
 
-      return this.httpClient.post<void>(url, body, {observe: 'response'}).pipe(
+      return this.httpClient.post<void>(loginUrl, loginBody, {observe: 'response'}).pipe(
          flatMap(httpRes => {
             // If the auth token is in the Authorization header (as opposed to a cookie), then publish the extracted token value.
             const authHdr = httpRes.headers.get('authorization') || httpRes.headers.get('Authorization');
@@ -121,9 +123,20 @@ export class UserContextService {
          this.router.navigate(this.appUrlsSvc.login());
    }
 
+   requestDeferredLabGroupContentsRefresh()
+   {
+      this.deferredLabGroupContentsRefreshRequested = true;
+   }
+
    getLabGroupContents(): Promise<LabGroupContents>
    {
-      return this.labGroupContents$;
+      if ( this.deferredLabGroupContentsRefreshRequested )
+      {
+         this.deferredLabGroupContentsRefreshRequested = false;
+         return this.refreshLabGroupContents();
+      }
+      else
+         return this.labGroupContents$;
    }
 
    getSampleOpTest(testId: number): Promise<SampleOpTest | undefined>

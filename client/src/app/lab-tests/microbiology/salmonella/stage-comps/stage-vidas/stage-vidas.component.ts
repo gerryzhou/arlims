@@ -4,6 +4,7 @@ import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms
 import {LabResource, TestAttachedFileMetadata} from '../../../../../../generated/dto';
 import {arraysEqual} from '../../../../../shared/util/data-objects';
 import {TestUnitsType} from '../../../sampling-methods';
+import {UserContextService} from '../../../../../shared/services';
 
 @Component({
    selector: 'app-stage-vidas',
@@ -54,7 +55,11 @@ export class StageVidasComponent implements OnChanges {
 
    readonly RESULTS_ATTACHED_FILES_KEY = 'vidas/results';
 
-   constructor() {}
+   constructor
+      (
+         private usrCtxSvc: UserContextService
+      )
+   {}
 
    ngOnChanges()
    {
@@ -174,6 +179,7 @@ export class StageVidasComponent implements OnChanges {
    onAttachedFilesChanged(attachedFiles: TestAttachedFileMetadata[])
    {
       this.resultsFiles = attachedFiles;
+      this.usrCtxSvc.requestDeferredLabGroupContentsRefresh();
    }
 }
 
