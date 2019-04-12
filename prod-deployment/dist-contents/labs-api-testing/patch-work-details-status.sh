@@ -9,7 +9,7 @@ curl -i -d @- \
   "http://dih-svc.dev.fda.gov/LabsDataService/api/WorkDetails" <<REQBODY
 {
   "operationId":8646420,
-  "assignedToPersonId": 472629,
+  "assignedToPersonId": 437799,
   "statusCode": "I"
 }
 REQBODY
