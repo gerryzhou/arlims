@@ -213,17 +213,17 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     @Override
     @Async
-    public CompletableFuture<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalysis
+    public CompletableFuture<List<CreatedSampleAnalysisMicrobiology>> submitMicrobiologySampleAnalyses
         (
-            MicrobiologySampleAnalysis analysis
+            List<MicrobiologySampleAnalysis> analyses
         )
     {
-        MicrobiologySampleAnalysesSubmission subm = new MicrobiologySampleAnalysesSubmission(singletonList(analysis));
+        MicrobiologySampleAnalysesSubmission subm = new MicrobiologySampleAnalysesSubmission(analyses);
 
         String reqBody = toJson(subm);
 
         log.info(
-            "Submitting microbiology sample analysis" +
+            "Submitting microbiology sample analyses" +
             ( apiConfig.getLogSampleAnalysisSubmissionDetails() ? ":\n  " + reqBody : "." )
         );
 
@@ -238,19 +238,11 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             );
 
         log.info(
-            "Microbiology sample analysis submitted successfully" +
+            "Microbiology sample analyses submitted successfully" +
             (apiConfig.getLogSampleAnalysisSubmissionDetails() ? " with response:\n  " + toJson(resp.getBody()) : ".")
         );
 
-        int createdCount = resp.getBody().getSampleAnalysisMicrobiologyList().size();
-        if ( createdCount != 1 )
-        {
-            throw new RuntimeException(
-                "LABS-DS service returned " + createdCount + " result records for single " + "submission, expected 1."
-            );
-        }
-
-        return completedFuture(resp.getBody().getSampleAnalysisMicrobiologyList().get(0));
+        return completedFuture(resp.getBody().getSampleAnalysisMicrobiologyList());
     }
 
     @Override

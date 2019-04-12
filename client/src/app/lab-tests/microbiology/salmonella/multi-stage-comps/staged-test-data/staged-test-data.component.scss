@@ -8,9 +8,24 @@
    }
 }
 
-
 .test-stage {
    margin: 25px 5px 5px 5px;
+}
+
+.facts-submissions {
+   padding: 5px 10px 10px 10px;
+   border: 3px solid lightgray;
+}
+
+.facts-submission-buttons {
+   display: flex;
+   justify-content: center;
+   margin-top: 10px;
+}
+
+app-facts-submission-result {
+   margin: 10px;
+   padding: 50px;
 }
 
 .form-bottom-toolbar {
@@ -27,3 +42,4 @@ form {
 .compound-icon-left {
    margin-right: 0;
 }
+

@@ -50,6 +50,9 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
     private final Pattern barPattern = Pattern.compile("\\|");
 
+    // TODO: Add 'M' once LABS-DS issue with test data having too many records with M status is resolved.
+    private final Optional<List<String>> personInboxStatuses = Optional.of(Arrays.asList("S","I","T"));
+
     public JpaLabsDSUserContextService
         (
             FactsAccessService factsAccessService,
@@ -85,7 +88,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         );
 
         CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
-            factsAccessService.getPersonInboxItems(emp.getFactsPersonId(), Optional.empty());
+            factsAccessService.getPersonInboxItems(emp.getFactsPersonId(), personInboxStatuses);
 
         LabGroup labGroup = emp.getLabGroup();
 
@@ -127,7 +130,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     public LabGroupContents getLabGroupContents(long factsPersonId)
     {
         CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
-            factsAccessService.getPersonInboxItems(factsPersonId, Optional.empty());
+            factsAccessService.getPersonInboxItems(factsPersonId, personInboxStatuses);
 
         LabGroup labGroup = this.labGroupRepo.findByFactsPersonId(factsPersonId).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")

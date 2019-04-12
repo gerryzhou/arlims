@@ -8,7 +8,6 @@ public class MicrobiologySampleAnalysis
 {
     private long operationId;
     private String accomplishingOrgName;
-    private String performingOrgName;
     private String actionIndicator; // "Y" | "N"
     private String problemCode;
     private String genusCode;
@@ -31,7 +30,6 @@ public class MicrobiologySampleAnalysis
         (
             long operationId,
             String accomplishingOrgName,
-            String performingOrgName,
             String actionIndicator,
             String problemCode,
             String genusCode,
@@ -53,7 +51,6 @@ public class MicrobiologySampleAnalysis
     {
         this.operationId = operationId;
         this.accomplishingOrgName = accomplishingOrgName;
-        this.performingOrgName = performingOrgName;
         this.actionIndicator = actionIndicator;
         this.problemCode = problemCode;
         this.genusCode = genusCode;
@@ -78,8 +75,6 @@ public class MicrobiologySampleAnalysis
     public long getOperationId() { return operationId; }
 
     public String getAccomplishingOrgName() { return accomplishingOrgName; }
-
-    public String getPerformingOrgName() { return performingOrgName; }
 
     public String getActionIndicator() { return actionIndicator; }
 

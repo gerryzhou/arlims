@@ -1,19 +1,17 @@
 <form [formGroup]="testDataForm" (ngSubmit)="saveTestData('nav-next-stage')">
 
    <div class="sample-op-test-info">
-
       <app-sample [sampleOp]="sampleOpTest.sampleOp"></app-sample>
 
       <div class="test-type">{{sampleOpTest.testMetadata.testTypeShortName}}</div>
 
       <button mat-button type="submit" *ngIf="allowDataChanges">Save</button>
-
    </div>
 
    <mat-horizontal-stepper #testStageStepper>
       <mat-step label="PREP">
          <app-stage-prep class="test-stage"
-            [form]="testDataForm.get('prepData')"
+            [form]="prepForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [sampleOp]="sampleOpTest.sampleOp"
@@ -23,7 +21,7 @@
 
       <mat-step label="PRE-ENR">
          <app-stage-pre-enr class="test-stage"
-            [form]="testDataForm.get('preEnrData')"
+            [form]="preEnrForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [allowFreeformEntryForSelectFields]="allowFreeformEntryForSelectFields"
@@ -36,18 +34,18 @@
 
       <mat-step label="SEL-ENR">
          <app-stage-sel-enr class="test-stage"
-            [form]="testDataForm.get('selEnrData')"
+            [form]="selEnrForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [allowFreeformEntryForSelectFields]="allowFreeformEntryForSelectFields"
-            [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
+            [spiking]="preEnrForm.get('sampleSpike')?.value"
             [waterBaths]="waterBaths">
          </app-stage-sel-enr>
       </mat-step>
 
       <mat-step label="M-BROTH">
          <app-stage-m-broth class="test-stage"
-            [form]="testDataForm.get('mBrothData')"
+            [form]="mBrothForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [waterBaths]="waterBaths">
@@ -56,7 +54,7 @@
 
       <mat-step label="VIDAS">
          <app-stage-vidas class="test-stage"
-            [form]="testDataForm.get('vidasData')"
+            [form]="vidasForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [testId]="sampleOpTest.testMetadata.testId"
@@ -64,14 +62,14 @@
             [vidasInstruments]="vidasInstruments"
             [sampleTestUnitsCount]="sampleTestUnitsCount"
             [sampleTestUnitsType]="sampleTestUnitsType"
-            [spiking]="testDataForm.get('preEnrData')?.get('sampleSpike')?.value"
+            [spiking]="preEnrForm.get('sampleSpike')?.value"
             (positiveSampleTestUnitNumbersChange)="onVidasPositiveSampleTestUnitNumbersChanged($event)">
          </app-stage-vidas>
       </mat-step>
 
       <mat-step label="SLANT" *ngIf="showPositiveContinuationStages">
          <app-pos-cont #slantPosContComp class="test-stage"
-            [form]="testDataForm.get('posContData')"
+            [form]="posContForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [stage]="'SLANT'"
@@ -86,7 +84,7 @@
 
       <mat-step label="IDENT" *ngIf="showPositiveContinuationStages">
          <app-pos-cont #identPosContComp class="test-stage"
-            [form]="testDataForm.get('posContData')"
+            [form]="posContForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [stage]="'IDENT'"
@@ -101,18 +99,41 @@
 
       <mat-step label="WRAPUP">
          <app-stage-wrapup class="test-stage"
-            [form]="testDataForm.get('wrapupData')"
+            [form]="wrapupForm"
             [allowDataChanges]="allowDataChanges"
             [showUnsetAffordances]="showUnsetAffordances"
             [sampleOp]="sampleOpTest.sampleOp"
             [labGroupUsers]="labGroupUsers"
             [labGroupParentOrgName]="appUser.labGroupFactsParentOrgName"
-            [appUser]="appUser"
-            (testDataSaveRequest)="saveTestData('nav-home')">
+            [appUser]="appUser">
          </app-stage-wrapup>
       </mat-step>
-
    </mat-horizontal-stepper>
+
+   <div class="facts-submissions" *ngIf="currentStage === 'WRAPUP'">
+      <h1>FACTS Submission</h1>
+      <div>
+         <div *ngIf="lastAnalysesSubm; else noSubmMsg">
+            <div>A previous FACTS analyses submission has been made for this test data:</div>
+            <app-facts-submission-result
+               [factsSubmissionResult]="lastAnalysesSubm">
+            </app-facts-submission-result>
+         </div>
+         <ng-template class="no-submission"#noSubmMsg>
+            No FACTS submission has been made yet.
+         </ng-template>
+      </div>
+      <div class="facts-submission-buttons">
+         <button class="facts-save-btn" mat-button (click)="submitFactsAnalyses()">
+            Submit analyses to FACTS
+         </button>
+         <button class="facts-save-btn" mat-button
+            [disabled]="!(lastAnalysesSubm && lastAnalysesSubm.submissionSucceeded)"
+            (click)="saveTimeChargesToFacts()">
+            Save work hours to FACTS
+         </button>
+      </div>
+   </div>
 
    <div class="form-bottom-toolbar">
       <a href="https://www.fda.gov/Food/FoodScienceResearch/LaboratoryMethods/ucm070149.htm" target="_blank">BAM</a>
@@ -134,7 +155,7 @@
                Save test data to file
             </button>
             <input type="file" #restoreFilesInput style="display:none"
-                   (change)="restoreTestDataFromSaveFile($event.target.files)">
+                   (change)="restoreTestDataFromSaveFile($event.target['files'])">
             <button type="button" mat-menu-item *ngIf="allowDataChanges"
                     (click)="restoreFilesInput.click()">
                <mat-icon class="compound-icon-left">save</mat-icon>

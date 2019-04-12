@@ -1,0 +1,47 @@
+.subm-res-row {
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: flext-start;
+   align-items: center;
+
+   &.success {
+      border-left: 20px solid green;
+      padding-left: 15px;
+      min-height: 25px;
+
+      .succeeded-failed {
+         background-color: lightgreen;
+         color: darkgreen;
+         border: 1px solid darkgreen;
+      }
+   }
+   &.failure {
+      border-left: 20px solid red;
+      padding-left: 15px;
+      min-height: 25px;
+
+      .succeeded-failed {
+         background-color: lightpink;
+         color: darkred;
+         border: 1px solid darkred;
+      }
+   }
+}
+
+.succeeded-failed {
+   margin: 10px;
+   padding: 10px;
+   border-radius: 5px;
+}
+
+.timestamp {
+   color: #888;
+   margin: 10px;
+}
+
+.failure-message {
+   background: lightpink;
+   color: darkred;
+   margin: 10px;
+}
+

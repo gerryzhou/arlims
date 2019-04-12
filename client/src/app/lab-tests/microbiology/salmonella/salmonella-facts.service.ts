@@ -1,15 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-import {ContinuationTestssByTestUnitNum, TestData} from './test-data';
 import {
    MicrobiologyAnalysisFinding,
    MicrobiologySampleAnalysis,
-   CreatedSampleAnalysisMicrobiology, MicrobiologyKitTest
+   CreatedSampleAnalysisMicrobiology,
+   MicrobiologyKitTest
 } from '../../../../generated/dto';
+import {ContinuationTestssByTestUnitNum, TestData} from './test-data';
 import {countValueOccurrences} from '../../test-stages';
 import {ApiUrlsService, UserContextService} from '../../../shared/services';
-import {HttpClient} from '@angular/common/http';
 
 // FACTS posting service for the salmonella module.
 @Injectable()
@@ -23,21 +24,39 @@ export class SalmonellaFactsService {
       )
    {}
 
-   submitAOACAnalysisResults
+   submitAnalyses
       (
          testData: TestData,
          opId: number,
          factsMethodCode: string,
-         labGroupFactsOrgName: string,
          labGroupFactsParentOrgName: string
       )
-      : Observable<CreatedSampleAnalysisMicrobiology>
+      : Observable<[CreatedSampleAnalysisMicrobiology]>
+   {
+      const analyses = [
+         this.makeAOACSampleAnalysis(testData, opId, factsMethodCode, labGroupFactsParentOrgName),
+         // this.makeBAMSampleAnalysis(testData, opId, labGroupFactsParentOrgName) // TODO
+      ];
+
+      return (
+         this.httpClient.post<[CreatedSampleAnalysisMicrobiology]>(
+            this.apiUrlsSvc.factsMicrobiologySampleAnalysesUrl(),
+            analyses
+         )
+      );
+   }
+
+   private makeAOACSampleAnalysis
+      (
+         testData: TestData,
+         opId: number,
+         factsMethodCode: string,
+         labGroupFactsParentOrgName: string
+      )
+      : MicrobiologySampleAnalysis
    {
       const vidasData = testData.vidasData;
       const samplingMethod = testData.preEnrData.samplingMethod;
-
-      if ( samplingMethod.testUnitsType == null || samplingMethod.testUnitsCount <= 0 )
-         return throwError('sampling method data is not complete');
 
       const positivesCount = countValueOccurrences(vidasData.testUnitDetections, true);
 
@@ -58,7 +77,6 @@ export class SalmonellaFactsService {
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
          accomplishingOrgName: labGroupFactsParentOrgName,
-         performingOrgName: null, // TODO: Should be labGroupFactsOrgName here, but that is currently rejected.
          actionIndicator: positivesCount > 0 ? 'Y' : 'N',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -87,12 +105,56 @@ export class SalmonellaFactsService {
          subm.subSamplesExaminedNumber = samplingMethod.testUnitsCount;
       }
 
-      return (
-         this.httpClient.post<CreatedSampleAnalysisMicrobiology>(
-            this.apiUrlsSvc.factsMicrobiologySampleAnalysisUrl(),
-            subm
-         )
-      );
+      return subm;
+   }
+
+   private makeBAMSampleAnalysis
+      (
+         testData: TestData,
+         opId: number,
+         labGroupFactsParentOrgName: string
+      )
+      : MicrobiologySampleAnalysis
+   {
+      const samplingMethod = testData.preEnrData.samplingMethod;
+
+      const examinedNumber = countValueOccurrences(testData.vidasData.testUnitDetections, true);
+
+      const bamFindings = this.makeBAMFindings(testData.posContData.testUnitsContinuationTests || {});
+
+      const detectableFindingsNumber = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
+
+      const subm: MicrobiologySampleAnalysis = {
+         operationId: opId,
+         accomplishingOrgName: labGroupFactsParentOrgName,
+         actionIndicator: 'Y',
+         problemCode: 'MICROID',
+         genusCode: 'SLML',
+         speciesCode: 'SLML998',
+         methodSourceCode: 'BAM',
+         methodCode: 'B160',
+         methodModificationIndicator: 'N',
+         kitTestIndicator: 'N',
+         lowestDilutionTestedCode: '1',
+         quantifiedIndicator: 'N',
+         analysisMicFindings: bamFindings,
+         subSamplesDetectableFindingsNumber: detectableFindingsNumber,
+         analysisResultsRemarksText: testData.wrapupData.analysisResultsRemarksText,
+      };
+
+      // Set any remaining fields having conditional presence.
+
+      if ( samplingMethod.testUnitsType === 'composite' )
+      {
+         subm.compositesExaminedNumber = examinedNumber;
+         subm.subSamplesUsedCompositeNumber = samplingMethod.numberOfSubsPerComposite;
+      }
+      else
+      {
+         subm.subSamplesExaminedNumber = examinedNumber;
+      }
+
+      return subm;
    }
 
    private makeSpikingKitTests
@@ -126,62 +188,6 @@ export class SalmonellaFactsService {
       ];
    }
 
-   submitBAMAnalysisResults
-      (
-         testData: TestData,
-         opId: number,
-         labGroupFactsOrgName: string,
-         labGroupFactsParentOrgName: string
-      )
-      : Observable<CreatedSampleAnalysisMicrobiology>
-   {
-      const samplingMethod = testData.preEnrData.samplingMethod;
-
-      const examinedNumber = countValueOccurrences(testData.vidasData.testUnitDetections, true);
-
-      const bamFindings = this.makeBAMFindings(testData.posContData.testUnitsContinuationTests);
-
-      const detectableFindingsNumber = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
-
-      const subm: MicrobiologySampleAnalysis = {
-         operationId: opId,
-         accomplishingOrgName: labGroupFactsParentOrgName,
-         performingOrgName: null,  // TODO: Should be labGroupFactsOrgName here, but that is currently rejected.
-         actionIndicator: 'Y',
-         problemCode: 'MICROID',
-         genusCode: 'SLML',
-         speciesCode: 'SLML998',
-         methodSourceCode: 'BAM',
-         methodCode: 'B160',
-         methodModificationIndicator: 'N',
-         kitTestIndicator: 'N',
-         lowestDilutionTestedCode: '1',
-         quantifiedIndicator: 'N',
-         analysisMicFindings: bamFindings,
-         subSamplesDetectableFindingsNumber: detectableFindingsNumber,
-         analysisResultsRemarksText: testData.wrapupData.analysisResultsRemarksText,
-      };
-
-      // Set any remaining fields having conditional presence.
-
-      if ( samplingMethod.testUnitsType === 'composite' )
-      {
-         subm.compositesExaminedNumber = examinedNumber;
-         subm.subSamplesUsedCompositeNumber = samplingMethod.numberOfSubsPerComposite;
-      }
-      else
-      {
-         subm.subSamplesExaminedNumber = examinedNumber;
-      }
-
-      return (
-         this.httpClient.post<CreatedSampleAnalysisMicrobiology>(
-            this.apiUrlsSvc.factsMicrobiologySampleAnalysisUrl(),
-            subm
-         )
-      );
-   }
-
    private makeBAMFindings
       (
          continuationTestsByTestUnitNum: ContinuationTestssByTestUnitNum
@@ -190,20 +196,16 @@ export class SalmonellaFactsService {
    {
       const res: MicrobiologyAnalysisFinding[] = [];
 
-      /* TODO
-           How to determine pos/neg from identification text or codes? Recognize specific API/Vitek codes?
-           Should failed (negative or low confidence/unclear) identifications be reported?  How?
-       */
-
       for ( const testUnitNum of Object.keys(continuationTestsByTestUnitNum) )
       {
-         // TODO: Can have multiple identifications here by source media(2) and selective agar(4), how to determine single identification?
-         //       If any firm identification exists under any of these should it be reported as positive?
-         //       What if multiple firm identifications exist?
          const contTests = continuationTestsByTestUnitNum[testUnitNum];
          const rvTests = contTests.rvSourcedTests;
          const ttTests = contTests.ttSourcedTests;
-         // TODO: Add to result array when above problems are resolved.
+
+         // TODO: Consider a test unit positive if any isolate yields conclusive positive result.
+         //       (Add test data function to find if any isolates have positive identifications.)
+         //       How to determine pos/neg from identification text or codes? Recognize specific API/Vitek codes?
+         //       Add to result array when above problems are resolved.
       }
 
       return res;
@@ -224,5 +226,4 @@ export class SalmonellaFactsService {
          //    // 'sampleAnalysisMicrobes': [] // TODO: What is this?
          // }
    }
-
 }

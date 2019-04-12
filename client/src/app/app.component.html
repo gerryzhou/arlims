@@ -27,6 +27,9 @@
 
       <span class="user" *ngIf="userCtxSvc.getAuthenticatedUser().getValue()">
          <mat-menu #userMenu="matMenu">
+            <div class="facts-person-id">FACTS Person ID
+               {{userCtxSvc.getAuthenticatedUser().getValue().factsPersonId}}
+            </div>
             <button mat-menu-item (click)="onLogoutClicked()">Logout</button>
          </mat-menu>
          <button mat-button [matMenuTriggerFor]="userMenu">

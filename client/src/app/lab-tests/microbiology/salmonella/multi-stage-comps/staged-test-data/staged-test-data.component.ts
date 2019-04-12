@@ -1,11 +1,18 @@
 import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatStepper} from '@angular/material';
+import {Observable, of} from 'rxjs';
+import {catchError, flatMap, map} from 'rxjs/operators';
 import * as moment from 'moment';
 import * as FileSaver from 'file-saver';
 
-import {AlertMessageService, defaultJsonFieldFormatter, SaveResult, TestsService, UserContextService} from '../../../../../shared/services';
+import {
+   AlertMessageService,
+   defaultJsonFieldFormatter,
+   TestsService,
+   UserContextService
+} from '../../../../../shared/services';
 import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
 import {
    AppUser,
@@ -13,7 +20,7 @@ import {
    TestAttachedFileMetadata,
    SampleOpTest,
    TestSaveData,
-   UserReference
+   UserReference,
 } from '../../../../../../generated/dto';
 import {
    TestData,
@@ -22,7 +29,9 @@ import {
    getVidasPositiveTestUnitNumbers,
    makeTestDataFormGroup,
    TEST_STAGES,
-   NO_POSITIVES_TEST_STAGES
+   NO_POSITIVES_TEST_STAGES,
+   makeFactsSubmissionResultFormGroup,
+   AOAC_BAM_SUBMT
 } from '../../test-data';
 import {TestConfig} from '../../test-config';
 import {StagePrepComponent} from '../../stage-comps/stage-prep/stage-prep.component';
@@ -38,6 +47,8 @@ import {makeAttachedFilesByTestPartMap} from '../../../../../shared/util/lab-gro
 import {SalmonellaFactsService} from '../../salmonella-facts.service';
 import {SelectedSampleOpsService} from '../../../../../shared/services/selected-sample-ops.service';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
+import {TestDataSaveResult} from '../../../../../shared/client-models/test-data-save-result';
+import {FactsSubmissionProcessResults, FactsSubmissionResult} from '../../../../../shared/client-models/facts-submission-result-types';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data',
@@ -46,14 +57,28 @@ import {GeneralFactsService} from '../../../../../shared/services/general-facts.
 })
 export class StagedTestDataComponent implements OnInit {
 
-   readonly allowDataChanges: boolean;
-
-   readonly testConfig: TestConfig | null;
-
-   // Original test data and md5 are for detecting and merging concurrent updates.
+   // Keep original test data and md5, as loaded or at last save, for detecting and merging concurrent updates.
    originalTestData: TestData;
    originalTestDataMd5: string;
    testIsNew: boolean;
+
+   sampleTestUnitsType: TestUnitsType | null;
+   sampleTestUnitsCount: number | null;
+
+   vidasPositiveTestUnitNumbers: number[] | null;
+   showPositiveContinuationStages: boolean;
+
+   currentStage: string;
+
+   lastAnalysesSubm: FactsSubmissionResult | null;
+
+   // Controls whether a null option is shown for some ui choice components.
+   showUnsetAffordances = false;
+   allowFreeformEntryForSelectFields = false;
+
+   readonly allowDataChanges: boolean;
+
+   readonly testConfig: TestConfig | null;
 
    readonly attachedFilesByTestPart: Map<string | null, TestAttachedFileMetadata[]>;
 
@@ -62,19 +87,16 @@ export class StagedTestDataComponent implements OnInit {
    readonly appUser: AppUser;
    readonly userIsAdmin: boolean;
 
-
    // The form group holds the edited state of the test data.
    readonly testDataForm: FormGroup;
-
-   // Controls whether a null option is shown for some ui choice components.
-   showUnsetAffordances = false;
-   allowFreeformEntryForSelectFields = false;
-
-   sampleTestUnitsType: TestUnitsType | null;
-   sampleTestUnitsCount: number | null;
-
-   vidasPositiveTestUnitNumbers: number[] | null;
-   showPositiveContinuationStages: boolean;
+   readonly prepForm: FormGroup;
+   readonly preEnrForm: FormGroup;
+   readonly selEnrForm: FormGroup;
+   readonly mBrothForm: FormGroup;
+   readonly vidasForm: FormGroup;
+   readonly posContForm: FormGroup;
+   readonly wrapupForm: FormGroup;
+   readonly factsSubmissionsResultsForm: FormGroup;
 
    readonly requestStage: string | null;
 
@@ -84,7 +106,7 @@ export class StagedTestDataComponent implements OnInit {
    readonly vidasInstruments: LabResource[] | undefined;
    readonly labGroupUsers: UserReference[];
 
-   jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter;
+   readonly jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter;
 
    // Keep component refs for individual test stages to dispatch hotkeys to functions on the currently selected component.
    @ViewChild('testStageStepper') testStageStepper: MatStepper;
@@ -137,6 +159,16 @@ export class StagedTestDataComponent implements OnInit {
       this.testDataForm = makeTestDataFormGroup(testData, labGroupTestData.appUser.username, testConfig);
       if ( !this.allowDataChanges )
          this.testDataForm.disable();
+      this.prepForm = this.testDataForm.get('prepData') as FormGroup;
+      this.preEnrForm = this.testDataForm.get('preEnrData') as FormGroup;
+      this.selEnrForm = this.testDataForm.get('selEnrData') as FormGroup;
+      this.mBrothForm = this.testDataForm.get('mBrothData') as FormGroup;
+      this.vidasForm = this.testDataForm.get('vidasData') as FormGroup;
+      this.posContForm = this.testDataForm.get('posContData') as FormGroup;
+      this.wrapupForm = this.testDataForm.get('wrapupData') as FormGroup;
+      this.factsSubmissionsResultsForm = this.testDataForm.get('factsSubmissionsResults') as FormGroup;
+
+      this.lastAnalysesSubm = testData.factsSubmissionsResults[AOAC_BAM_SUBMT] || null;
 
       const sm = testData.preEnrData.samplingMethod;
       this.sampleTestUnitsType = sm.testUnitsType;
@@ -169,187 +201,142 @@ export class StagedTestDataComponent implements OnInit {
          : NO_POSITIVES_TEST_STAGES;
       const stageIx = availableStages.findIndex(s => s.name === this.requestStage);
       this.testStageStepper.selectedIndex = stageIx !== -1 ? stageIx : 0;
+      this.currentStage = availableStages[this.testStageStepper.selectedIndex].name;
+      this.testStageStepper.selectionChange.subscribe(e => {
+         if ( e && e.selectedStep )
+            this.currentStage = e.selectedStep.label;
+      });
    }
 
-   saveTestData(nav: AfterSaveNavigation)
+   saveTestData(nav: AfterSaveNavigation = 'nav-none'): Observable<TestDataSaveResult>
    {
       const testData = this.testDataForm.value as TestData;
 
-      this.testsSvc.saveTestData(
-         this.sampleOpTest.testMetadata.testId,
-         testData,
-         this.originalTestData,
-         this.originalTestDataMd5,
-         (td) => getTestStageStatuses(td, this.testConfig),
-         this.jsonFieldFormatter
-      )
-      .subscribe(
-         (saveResult: SaveResult) => {
-            if ( saveResult.savedMd5 )
-               this.onTestDataSaveSuccess(testData, saveResult.savedMd5, nav);
-            else
-               this.onTestDataSaveConflict(saveResult);
-         },
+      const save$: Observable<TestDataSaveResult> =
+         this.testsSvc.saveTestData(
+            this.sampleOpTest.testMetadata.testId,
+            testData,
+            this.originalTestData,
+            this.originalTestDataMd5,
+            (td) => getTestStageStatuses(td, this.testConfig),
+            this.jsonFieldFormatter
+         )
+         .pipe(
+            map((saveResult: TestDataSaveResult) => {
+               if ( saveResult.savedTestData != null )
+                  this.onTestDataSaveSuccess(testData, saveResult.optimisticDataUpdateResult.savedMd5, nav);
+               else
+                  this.onTestDataSaveConflict(saveResult);
+               return saveResult;
+            })
+         );
+
+      save$.subscribe(
+         () => {},
          err => this.onTestDataSaveError(err)
       );
+
+      return save$;
    }
 
-   private onTestDataSaveSuccess(testData: TestData, savedMd5: string, nav: AfterSaveNavigation)
+   submitFactsAnalyses(): Observable<FactsSubmissionProcessResults>
    {
-      this.originalTestData = testData;
-      this.originalTestDataMd5 = savedMd5;
+      const res$ =
+         this.saveTestData()
+         .pipe(
+            flatMap(saveRes => {
+               const testData = saveRes.savedTestData;
 
-      if ( this.testIsNew )
-      {
-         const opId = this.sampleOpTest.sampleOp.opId;
-         this.generalFactsService.setSampleOperationWorkStatus(opId, 'I', this.appUser.factsPersonId).subscribe(
-            () => { console.log('FACTS status updated for new test.'); },
-            err => this.onFactsStatusUpdateError(err)
+               if ( !testData )
+                  return of(({
+                     preconditionFailures: ['Test data could not be saved prior to submission.'],
+                     factsSubmissionResultsByType: {}
+                  }));
+
+               const preconditionFailures = getFactsSubmissionPreconditionFailures(testData);
+               if ( preconditionFailures.length > 0 )
+                  return of({
+                     preconditionFailures,
+                     factsSubmissionResultsByType: {}
+                  });
+
+               const submissionTimestamp = moment().format();
+
+               return (
+                  this.slmFactsService.submitAnalyses(
+                     testData,
+                     this.sampleOpTest.sampleOp.opId,
+                     this.testConfig.aoacMethodCode || 'T2004.03',
+                     this.appUser.labGroupFactsParentOrgName
+                  )
+                  .pipe(
+                     map((createdAnalyses) => ({
+                        preconditionFailures: [],
+                        factsSubmissionResultsByType: {
+                           [AOAC_BAM_SUBMT]: {
+                              submissionTimestamp,
+                              submissionSucceeded: true
+                           }
+                        }
+                     })),
+                     catchError(errRes => {
+                        // TODO: Extract message from error structure.
+                        const failureMessage = 'FACTS submission error (TODO)';
+                        console.log('TODO: Extract FACTS error from structure: ', errRes);
+                        return of({
+                           preconditionFailures: [],
+                           factsSubmissionResultsByType: {
+                              [AOAC_BAM_SUBMT]: {
+                                 submissionTimestamp,
+                                 submissionSucceeded: false,
+                                 failureMessage
+                              }
+                           }
+                        });
+                     }),
+                  )
+               );
+            })
          );
-         this.testIsNew = false;
-      }
 
-      this.usrCtxSvc.requestDeferredLabGroupContentsRefresh();
-
-      this.testDataForm.markAsPristine();
-      this.doAfterSaveNavigation(nav);
-   }
-
-/* TODO: FACTS test submission methods (Micro/SLM). Maybe move this somewhere else when feature is re-enabled.
-   private ensureTestDataCompleteForAOACFactsSubmitOrWarn(testData: TestData): boolean
-   {
-      const sm = testData.preEnrData.samplingMethod;
-
-      // TODO: Return messages for a dedicated display area below when this is moved to a dedicated page or component.
-
-      if ( sm == null || sm.testUnitsType == null || sm.testUnitsCount <= 0 )
-      {
-         this.alertMsgSvc.alertWarning(
-            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
-            false,
-            ['The sampling method data is incomplete.']
-         );
-
-         return false;
-      }
-
-      const vidas = testData.vidasData;
-
-      if ( vidas.testUnitDetections == null ||
-         vidas.testUnitDetections.length === 0 ||
-         vidas.testUnitDetections.some(v => v == null) )
-      {
-         this.alertMsgSvc.alertWarning(
-            'Vidas data was not saved to FACTS at this time for the reasons listed below.',
-            false,
-            ['The Vidas results data is incomplete.']
-         );
-
-         return false;
-      }
-
-      return true;
-   }
-
-   private ensureTestDataCompleteForBAMFactsSubmitOrWarn(testData: TestData): boolean
-   {
-      // TODO: Decide required items from test data for BAM submission and check here.
-      return true;
-   }
-
-
-   private submitAOACDataToFactsAsync(testData: TestData)
-   {
-      this.slmFactsService.submitAOACAnalysisResults(
-         testData,
-         this.sampleOpTest.sampleOp.opId,
-         this.testConfig.aoacMethodCode || 'T2004.03',
-         this.appUser.labGroupFactsOrgName,
-         this.appUser.labGroupFactsParentOrgName
-      )
-      .subscribe(
-         submResponse => this.onAOACFactsSubmitResponseReceived(submResponse),
-         err => this.onFactsSaveError(err)
+      res$.subscribe(
+         (res: FactsSubmissionProcessResults) => {
+            if ( res.preconditionFailures.length > 0 ) // pre-conditions failed, no submission
+               this.alertMsgSvc.alertWarning(
+                  'Cannot Submit FACTS Data',
+                  false,
+                  res.preconditionFailures
+               );
+            else // submission attempted
+            {
+               const submResult = res.factsSubmissionResultsByType[AOAC_BAM_SUBMT];
+               if  ( submResult ) // submission result exists
+                  this.onFactsAnalysesSubmissionResult(submResult);
+               else
+                  console.error(`No ${AOAC_BAM_SUBMT} entry found in submission result: `, submResult);
+            }
+         },
+         err => {
+            // TODO: Extract message from error structure.
+            console.log('TODO: Extract error message from structure: ', err);
+            const msg = 'TODO';
+            this.alertMsgSvc.alertWarning('FACTS Submission Failed', false, [msg]);
+         }
       );
+
+      return res$;
    }
 
-   private onAOACFactsSubmitResponseReceived
-   (
-      factsResponse: CreatedSampleAnalysisMicrobiology
-   )
+   private onFactsAnalysesSubmissionResult(submResult: FactsSubmissionResult)
    {
-      console.log('FACTS response for AOAC submission: ', factsResponse);
-      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
-      // this.alertMsgSvc.alertSuccess('Saved VIDAS results to FACTS.', true);
-      this.testDataForm.markAsPristine();
+      const submResCtrl = makeFactsSubmissionResultFormGroup(new FormBuilder(), submResult);
+      this.factsSubmissionsResultsForm.setControl(AOAC_BAM_SUBMT, submResCtrl);
+      this.lastAnalysesSubm = submResult;
    }
 
-   private submitBAMDataToFactsAsync(testData: TestData)
+   saveTimeChargesToFacts()
    {
-      this.slmFactsService.submitBAMAnalysisResults(
-         testData,
-         this.sampleOpTest.sampleOp.opId,
-         this.appUser.labGroupFactsOrgName,
-         this.appUser.labGroupFactsParentOrgName
-      )
-      .subscribe(
-         submResponse => this.onBAMFactsSubmitResponseReceived(submResponse),
-         err => this.onFactsSaveError(err)
-      );
-   }
-
-   private onBAMFactsSubmitResponseReceived
-   (
-      factsResponse: CreatedSampleAnalysisMicrobiology
-   )
-   {
-      console.log('FACTS response for BAM submission: ', factsResponse);
-      // TODO: Update a dedicated message area here instead when this is moved to a separate page or component.
-      // this.alertMsgSvc.alertSuccess('Saved BAM results to FACTS.', true);
-      this.testDataForm.markAsPristine();
-      this.doAfterSaveNavigation('nav-home');
-   }
-
-   private onFactsSaveError(err)
-   {
-      console.log('Error occurred while trying to post data to FACTS, details below:');
-      console.log(err);
-
-      this.alertMsgSvc.alertDanger(
-         'An error occurred while trying to post data to FACTS. ' +
-         'The data may not have been received properly by FACTS.'
-      );
-   }
-*/
-
-   private onTestDataSaveConflict(saveResult: SaveResult)
-   {
-      this.alertMsgSvc.alertDanger('Cannot save test data, concurrent changes by another user would be overwritten.');
-
-      // TODO: - Save both test data values to a record in new conflicts table, then save this data forcing overwrite.
-      //       - Alert user that there was a conflict, that this version of the data has overwritten the other,
-      //         that the both versions have been saved, and conflicting data can be examined/merged later.
-   }
-
-   private onTestDataSaveError(err)
-   {
-      console.log('Error occurred while trying to save test data, details below:\n', err);
-
-      this.alertMsgSvc.alertDanger(
-         'An error occurred while trying to save test data. ' +
-         'The test data may not have been saved.'
-      );
-   }
-
-   private onFactsStatusUpdateError(err)
-   {
-      console.log('Error occurred while trying to set FACTS status to in-progress, details below:');
-      console.log(err);
-
-      this.alertMsgSvc.alertDanger(
-         'An error occurred while trying to set FACTS status to in-progress. ' +
-         'The status update may not have been received properly by FACTS.'
-      );
+      this.wrapupComp.saveTimeChargesToFacts();
    }
 
    hasUnsavedChanges(): boolean
@@ -357,23 +344,10 @@ export class StagedTestDataComponent implements OnInit {
       return this.testDataForm.dirty;
    }
 
-   onSampleTestUnitsChanged(testUnitsChange: SampleTestUnits)
-   {
-      this.sampleTestUnitsCount = testUnitsChange.testUnitsCount;
-      this.sampleTestUnitsType = testUnitsChange.testUnitsType;
-   }
-
-   onVidasPositiveSampleTestUnitNumbersChanged(positiveTestUnits: number[])
-   {
-      this.vidasPositiveTestUnitNumbers = positiveTestUnits;
-      this.showPositiveContinuationStages = this.vidasPositiveTestUnitNumbers.length > 0;
-   }
-
    @HostListener('window:keydown.F4')
    promptApplyResourcesInCurrentTestStage()
    {
-      const stageName = this.getStepperSelectedTestStageName();
-      const stageComp = this.stageComps[stageName];
+      const stageComp = this.stageComps[this.currentStage];
 
       if ( !stageComp )
          console.log('Failed to lookup current stage component, cannot apply resources.', this);
@@ -382,21 +356,6 @@ export class StagedTestDataComponent implements OnInit {
          if ( stageComp.promptApplyResources )
             stageComp.promptApplyResources();
       }
-   }
-
-   getStepperSelectedTestStageName(): string
-   {
-      return this.testStageStepper.selected.label;
-   }
-
-   toggleShowUnsetAffordances()
-   {
-      this.showUnsetAffordances = !this.showUnsetAffordances;
-   }
-
-   toggleAllowFreeformEntryForSelectFields()
-   {
-      this.allowFreeformEntryForSelectFields = !this.allowFreeformEntryForSelectFields;
    }
 
    promptSaveTestDataToFile()
@@ -450,13 +409,110 @@ export class StagedTestDataComponent implements OnInit {
       }
    }
 
-   private visibleStageName(): String | null
+   toggleShowUnsetAffordances()
    {
-      if ( this.testStageStepper.selected )
-         return this.testStageStepper.selected.label;
-      return null;
+      this.showUnsetAffordances = !this.showUnsetAffordances;
    }
 
+   toggleAllowFreeformEntryForSelectFields()
+   {
+      this.allowFreeformEntryForSelectFields = !this.allowFreeformEntryForSelectFields;
+   }
+
+   private onTestDataSaveSuccess(testData: TestData, savedMd5: string, nav: AfterSaveNavigation)
+   {
+      this.usrCtxSvc.requestDeferredLabGroupContentsRefresh();
+
+      this.originalTestData = testData;
+      this.originalTestDataMd5 = savedMd5;
+      this.testDataForm.markAsPristine();
+
+      if ( this.testIsNew )
+      {
+         const opId = this.sampleOpTest.sampleOp.opId;
+         this.generalFactsService.setSampleOperationWorkStatus(opId, 'I', this.appUser.factsPersonId).subscribe(
+            () => { console.log('FACTS status updated for new test.'); },
+            err => this.onFactsStatusUpdateError(err)
+         );
+         this.testIsNew = false;
+      }
+
+
+      this.doAfterSaveNavigation(nav);
+   }
+
+   onSampleTestUnitsChanged(testUnitsChange: SampleTestUnits)
+   {
+      this.sampleTestUnitsCount = testUnitsChange.testUnitsCount;
+      this.sampleTestUnitsType = testUnitsChange.testUnitsType;
+   }
+
+   onVidasPositiveSampleTestUnitNumbersChanged(positiveTestUnits: number[])
+   {
+      this.vidasPositiveTestUnitNumbers = positiveTestUnits;
+      this.showPositiveContinuationStages = this.vidasPositiveTestUnitNumbers.length > 0;
+   }
+
+   private onTestDataSaveConflict(saveResult: TestDataSaveResult)
+   {
+      this.alertMsgSvc.alertDanger('Cannot save test data, concurrent changes by another user would be overwritten.');
+
+      // TODO: - Save both test data values to a record in new conflicts table, then save this data forcing overwrite.
+      //       - Alert user that there was a conflict, that this version of the data has overwritten the other,
+      //         that the both versions have been saved, and conflicting data can be examined/merged later.
+   }
+
+   private onTestDataSaveError(err)
+   {
+      console.log('Error occurred while trying to save test data, details below:\n', err);
+
+      this.alertMsgSvc.alertDanger(
+         'An error occurred while trying to save test data. ' +
+         'The test data may not have been saved.'
+      );
+   }
+
+   private onFactsStatusUpdateError(err)
+   {
+      console.log('Error occurred while trying to set FACTS status to in-progress, details below:');
+      console.log(err);
+
+      this.alertMsgSvc.alertDanger(
+         'An error occurred while trying to set FACTS status to in-progress. ' +
+         'The status update may not have been received properly by FACTS.'
+      );
+   }
 }
 
+function getFactsSubmissionPreconditionFailures(testData: TestData): string[]
+{
+   return getAOACSubmissionPreconditionFailures(testData).concat(
+      getBamSubmissionPreconditionFailures(testData)
+   );
+}
+
+function getAOACSubmissionPreconditionFailures(testData: TestData): string[]
+{
+   const failures = [];
+
+   const sm = testData.preEnrData.samplingMethod;
+   if ( sm == null || sm.testUnitsType == null || sm.testUnitsCount <= 0 )
+      failures.push('The sampling method data is incomplete.');
+
+   const vidaDets = testData.vidasData && testData.vidasData.testUnitDetections || null;
+   if ( vidaDets == null || vidaDets.length === 0 || vidaDets.some(v => v == null) )
+      failures.push('The Vidas results data is incomplete.');
+
+   return failures;
+}
+
+function getBamSubmissionPreconditionFailures(testData: TestData): string[]
+{
+   const failures = [];
+   // TODO
+   return failures;
+}
+
+
 type AfterSaveNavigation = 'nav-none' | 'nav-next-stage' | 'nav-home';
+

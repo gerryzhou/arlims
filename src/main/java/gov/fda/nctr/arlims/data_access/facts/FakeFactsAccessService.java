@@ -323,14 +323,17 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
 
     @Override
     @Async
-    public CompletableFuture<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalysis
+    public CompletableFuture<List<CreatedSampleAnalysisMicrobiology>> submitMicrobiologySampleAnalyses
         (
-            MicrobiologySampleAnalysis subm
+            List<MicrobiologySampleAnalysis> subm
         )
     {
         log.info("Received submission in fake FACTS access service: " + toJson(subm));
 
-        return completedFuture(new CreatedSampleAnalysisMicrobiology(12345L));
+        return completedFuture(Arrays.asList(
+            new CreatedSampleAnalysisMicrobiology(12345L),
+            new CreatedSampleAnalysisMicrobiology(23456L))
+        );
     }
 
     @Override

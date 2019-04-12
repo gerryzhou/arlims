@@ -1,5 +1,6 @@
 import {SamplingMethod} from '../../sampling-methods';
 import {TimeChargeStatusCode} from '../../../../../generated/dto';
+import {FactsSubmissionResult} from '../../../../shared/client-models/facts-submission-result-types';
 
 export interface TestData {
    prepData:     PrepData;
@@ -9,6 +10,7 @@ export interface TestData {
    vidasData:    VidasData;
    posContData:  PositivesContinuationData;
    wrapupData:   WrapupData;
+   factsSubmissionsResults: FactsSubmissionResultsByType;
 }
 
 export interface PrepData {
@@ -152,7 +154,6 @@ export interface WrapupData {
    timeChargesLastSavedToFacts: string | null;
    timeChargesLastEdited: string | null;
    analysisResultsRemarksText: string | null;
-   factsAnalysisSubmissionsResults: FactsAnalysisSubmissionsResults;
 }
 
 export interface TimeChargesSet {
@@ -168,16 +169,13 @@ export interface TimeCharge {
 
 export type TimeChargeRole = 'lead' | 'additional' | 'check'; // display text for analyst type codes
 
-// latest result of FACTS submission by submission type ('AOAC' or 'BAM')
-export interface FactsAnalysisSubmissionsResults {
-   [submissionType: string]: FactsAnalysisSubmissionResult;
+// latest result of FACTS submission by submission type.
+export interface FactsSubmissionResultsByType {
+   [submissionType: string]: FactsSubmissionResult;
 }
+// Represents a submission including both AOAC and BAM analyses, as key in FactsSubmissionResultsByType structure.
+export const AOAC_BAM_SUBMT = 'AOAC+BAM';
 
-export interface FactsAnalysisSubmissionResult {
-   submissionTimestamp: string;
-   submissionSucceeded: boolean;
-   failureMessage?: string | null;
-}
 
 export type ColonyAppearance = 'T' | 'AT'| 'NT'| 'NG';
 
@@ -260,8 +258,8 @@ export function emptyTestData(): TestData {
          timeChargesLastSavedToFacts: null,
          timeChargesLastEdited: null,
          analysisResultsRemarksText: null,
-         factsAnalysisSubmissionsResults: {},
       },
+      factsSubmissionsResults: {},
    };
 }
 

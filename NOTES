@@ -1,5 +1,6 @@
 TODO
 ====
+Find out firm date for pilot demos.
 
 Investigate replacing Oracle with No-SQL db like Redis.
 Just one button to push AOAC, BAM and work hours.
@@ -30,10 +31,7 @@ Try pasting resource codes via actual barcode scanner.
 
 Leidos
 ------
-Show O (original complete) items in person inbox.
 Can requests containing unrecognized fields be rejected?
-LabAccomplishmentHours
-  Http status codes and how to remove an employee that had hours sent previously.
 
 Find problem with the AOAC submission below.
 It should not be generating a 500, should result in a 4xx if LABS api is returning an error structure.

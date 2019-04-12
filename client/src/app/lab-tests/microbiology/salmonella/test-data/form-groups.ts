@@ -21,11 +21,11 @@ import {
    SelectiveAgarsTestSuite,
    TimeChargesSet,
    TimeCharge,
-   FactsAnalysisSubmissionsResults,
-   FactsAnalysisSubmissionResult,
+   FactsSubmissionResultsByType,
 } from './types';
 import {TestConfig} from '../test-config';
 import {SamplingMethod} from '../../sampling-methods';
+import {FactsSubmissionResult} from '../../../../shared/client-models/facts-submission-result-types';
 
 type FormModel<T> = { [P in keyof T]: any };
 
@@ -129,14 +129,12 @@ export function makeTestDataFormGroup
          reserveSampleDisposition: [testData.wrapupData.reserveSampleDisposition],
          reserveSampleDestinations: [testData.wrapupData.reserveSampleDestinations],
          reserveSampleOtherDescription: [testData.wrapupData.reserveSampleOtherDescription],
-         testTimeCharges:
-            makeTimeChargesSetFormGroup(fb, testData.wrapupData.testTimeCharges),
+         testTimeCharges: makeTimeChargesSetFormGroup(fb, testData.wrapupData.testTimeCharges),
          timeChargesLastSavedToFacts: [testData.wrapupData.timeChargesLastSavedToFacts],
          timeChargesLastEdited: [testData.wrapupData.timeChargesLastEdited],
          analysisResultsRemarksText: [testData.wrapupData.analysisResultsRemarksText],
-         factsAnalysisSubmissionsResults:
-            makeFactsAnalysisSubmissionResultsFormGroup(fb, testData.wrapupData.factsAnalysisSubmissionsResults),
       }),
+      factsSubmissionsResults: makeFactsAnalysisSubmissionResultsFormGroup(fb, testData.factsSubmissionsResults),
    });
 }
 
@@ -352,32 +350,31 @@ export function makeTimeChargeFormGroup
 export function makeFactsAnalysisSubmissionResultsFormGroup
    (
       formBuilder: FormBuilder,
-      res: FactsAnalysisSubmissionsResults
+      submResultsByType: FactsSubmissionResultsByType
    )
    : FormGroup
 {
    const fgControls: { [submType: string]: FormGroup } = {};
 
-   if ( res )
+   if ( submResultsByType )
    {
-      for (const submType of Object.keys(res))
+      for ( const submType of Object.keys(submResultsByType) )
       {
-         fgControls[submType] =
-            makeFactsAnalysisSubmissionResultFormGroup(formBuilder, res[submType]);
+         fgControls[submType] = makeFactsSubmissionResultFormGroup(formBuilder, submResultsByType[submType]);
       }
    }
 
    return new FormGroup(fgControls);
 }
 
-export function makeFactsAnalysisSubmissionResultFormGroup
+export function makeFactsSubmissionResultFormGroup
    (
       formBuilder: FormBuilder,
-      res: FactsAnalysisSubmissionResult
+      res: FactsSubmissionResult
    )
    : FormGroup
 {
-   return makeFormGroup<FactsAnalysisSubmissionResult>(formBuilder, {
+   return makeFormGroup<FactsSubmissionResult>(formBuilder, {
       submissionTimestamp: [res.submissionTimestamp],
       submissionSucceeded: [res.submissionSucceeded],
       failureMessage: [res.failureMessage],

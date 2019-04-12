@@ -1,5 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
@@ -37,9 +39,6 @@ export class StageWrapupComponent implements OnChanges {
    @Input()
    appUser: AppUser;
 
-   @Output()
-   testDataSaveRequest = new EventEmitter<void>();
-
    usersByShortName: Map<string, UserReference>;
 
    destinationsEnabled = false;
@@ -58,8 +57,7 @@ export class StageWrapupComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.unsavedTimeCharges =
-         unsavedEditsExist(this.getTimeChargesLastEdited(), this.getTimeChargesLastSavedToFacts());
+      this.unsavedTimeCharges = this.checkFormForUnsavedTimeCharges();
 
       this.usersByShortName = makeUserRefsByUserShortNameMap(this.labGroupUsers);
 
@@ -96,10 +94,11 @@ export class StageWrapupComponent implements OnChanges {
 
    onTimeChargesDataChanged()
    {
-      this.setTimeChargesLastEdited(moment());
+      const now = moment();
+      this.setTimeChargesLastEdited(now);
    }
 
-   saveTimeChargesToFacts()
+   saveTimeChargesToFacts(): Observable<void>
    {
       const saveStarted = moment();
 
@@ -120,16 +119,21 @@ export class StageWrapupComponent implements OnChanges {
             };
          });
 
-      this.generalFactsService.submitTimeCharges(this.sampleOp.opId, factsUserTimeCharges).subscribe(
-         () => {
-            this.setTimeChargesLastSavedToFacts(saveStarted);
-            // TODO: Emit new event requesting to save the test data.
-         },
+      const save$ =
+         this.generalFactsService.submitTimeCharges(this.sampleOp.opId, factsUserTimeCharges)
+         .pipe(
+            tap(() => { this.setTimeChargesLastSavedToFacts(saveStarted); })
+         );
+
+      save$.subscribe(
+         () => {},
          err => {
             console.error('Error trying to save work accomplishments to FACTS: ', err);
             this.alertMsgSvc.alertDanger('Failed to save accomplishment hours to FACTS.');
          }
       );
+
+      return save$;
    }
 
    private getTimeChargesLastEdited(): Moment | null
@@ -143,8 +147,7 @@ export class StageWrapupComponent implements OnChanges {
    {
       this.form.get('timeChargesLastEdited').setValue(instant.toISOString());
 
-      this.unsavedTimeCharges =
-         unsavedEditsExist(this.getTimeChargesLastEdited(), this.getTimeChargesLastSavedToFacts());
+      this.unsavedTimeCharges = this.checkFormForUnsavedTimeCharges();
    }
 
    private getTimeChargesLastSavedToFacts(): Moment | null
@@ -158,25 +161,24 @@ export class StageWrapupComponent implements OnChanges {
    {
       this.form.get('timeChargesLastSavedToFacts').setValue(instant.toISOString());
 
-      this.unsavedTimeCharges =
-         unsavedEditsExist(this.getTimeChargesLastEdited(), this.getTimeChargesLastSavedToFacts());
+      this.unsavedTimeCharges = this.checkFormForUnsavedTimeCharges();
    }
 
-   private onFactsStatusUpdateError(err)
+   checkFormForUnsavedTimeCharges(): boolean
    {
-      console.log('Error occurred while trying to set FACTS status to original-complete, details below:');
-      console.log(err);
-
-      this.alertMsgSvc.alertDanger(
-         'An error occurred while trying to set FACTS status to original-complete. ' +
-         'The status update may not have been received properly by FACTS.'
+      return unsavedEditsExist(
+         this.getTimeChargesLastEdited(),
+         this.getTimeChargesLastSavedToFacts()
       );
    }
-
-
 }
 
-function unsavedEditsExist(lastEdited: Moment | null, lastSaved: Moment | null): boolean
+function unsavedEditsExist
+   (
+      lastEdited: Moment | null,
+      lastSaved: Moment | null
+   )
+   : boolean
 {
    return lastEdited && (!lastSaved || lastEdited.isAfter(lastSaved));
 }

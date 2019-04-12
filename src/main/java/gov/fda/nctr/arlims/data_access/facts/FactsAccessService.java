@@ -20,7 +20,7 @@ public interface FactsAccessService
 
     CompletableFuture<List<SampleTransfer>> getSampleTransfers(long sampleTrackingNumber, Optional<Long> toPersonId);
 
-    CompletableFuture<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalysis(MicrobiologySampleAnalysis analysis);
+    CompletableFuture<List<CreatedSampleAnalysisMicrobiology>> submitMicrobiologySampleAnalyses(List<MicrobiologySampleAnalysis> analyses);
 
     CompletableFuture<Void> updateWorkStatus(long sampleOpId, long personId, String statusCode);
 

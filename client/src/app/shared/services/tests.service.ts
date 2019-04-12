@@ -1,15 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {flatMap, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {Moment} from 'moment';
 
-import {copyWithMergedValuesFrom, partitionLeftChangedAndNewValuesVsRefByConflictWithRights} from '../util/data-objects';
 import {ApiUrlsService} from './api-urls.service';
 import {
    CreatedTestAttachedFiles,
    CreatedTestMetadata,
-   DataModificationInfo,
    LabTestTypeCode,
    OptimisticDataUpdateResult, SampleOp,
    SampleOpTest,
@@ -17,6 +15,7 @@ import {
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
+import {TestDataSaveResult} from '../client-models/test-data-save-result';
 
 @Injectable({
   providedIn: 'root'
@@ -134,7 +133,7 @@ export class TestsService {
          stageStatusesFn: (any) => TestStageStatus[],
          jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter
       )
-      : Observable<SaveResult>
+      : Observable<TestDataSaveResult>
    {
       const formData: FormData = new FormData();
 
@@ -156,30 +155,14 @@ export class TestsService {
 
       const url = this.apiUrlsSvc.testDataUrl(testId);
 
-      return this.httpClient.post<OptimisticDataUpdateResult>(url, formData).pipe( // optimistic update attempt
-         flatMap(optUpdRes => {
-
-            if ( optUpdRes.savedMd5 )
-               return of(new SaveResult(optUpdRes.savedMd5, null));
-
-            // There was a concurrent modification of this data, attempt auto-merge.
-
-            return this.mergeWithTestDataFromDatabase(testData, prevTestData, testId, jsonFieldFormatter).pipe(
-               flatMap(mergeRes => {
-                  return mergeRes.hasConflicts ?
-                     // If conflicts exist, just report the conflicts without any further attempt to save.
-                     of(new SaveResult(null, mergeRes)) :
-                     // Latest db data merged cleanly onto local changes: attempt this process again with new db test data as baseline.
-                     this.saveTestData(
-                        testId,
-                        mergeRes.mergedTestData,
-                        mergeRes.dbTestData,
-                        mergeRes.dbModificationInfo.dataMd5,
-                        stageStatusesFn
-                     );
-               })
-            );
-         })
+      return (
+         this.httpClient.post<OptimisticDataUpdateResult>(url, formData)
+            .pipe(
+               map(optUpdRes => ({
+                  savedTestData: optUpdRes.savedMd5 ? testData : null,
+                  optimisticDataUpdateResult: optUpdRes
+               }))
+            )
       );
    }
 
@@ -197,36 +180,6 @@ export class TestsService {
       const url = this.apiUrlsSvc.restoreTestSaveDatasUrl();
 
       return this.httpClient.post(url, formData).pipe(map(() => {}));
-   }
-
-   private mergeWithTestDataFromDatabase
-      (
-         testData: any,
-         origTestData: any,
-         testId,
-         jsonFieldFormatter: (key: string, value: any) => string
-      )
-      : Observable<MergeResults>
-   {
-      return this.getVersionedTestData(testId).pipe(
-         map(dbVerTestData => {
-            const dbModInfo = dbVerTestData.modificationInfo;
-            const dbTestData = dbVerTestData.testDataJson ? JSON.parse(dbVerTestData.testDataJson) : {};
-
-            // Use normalized form of the test data, as it would be deserialized from db after storage, for comparisons.
-            const normdTestData = JSON.parse(JSON.stringify(testData, jsonFieldFormatter));
-
-            const conflictPartitionedDbValues =
-               partitionLeftChangedAndNewValuesVsRefByConflictWithRights(dbTestData, normdTestData, origTestData, true);
-
-            const mergeableDbValues = conflictPartitionedDbValues.nonConflictingValues;
-            const conflictingDbValues = conflictPartitionedDbValues.conflictingValues;
-
-            const mergedTestData = copyWithMergedValuesFrom(normdTestData, mergeableDbValues, true);
-
-            return new MergeResults(mergedTestData, conflictingDbValues, dbTestData, dbModInfo);
-         })
-      );
    }
 
    getTestReportBlobForPostedTestData
@@ -263,31 +216,6 @@ export class TestsService {
 
       return this.httpClient.get<SampleOpTest[]>(searchUrl);
    }
-}
-
-export class SaveResult {
-
-   constructor
-      (
-         public savedMd5: string | null,
-         public mergeConflicts: MergeResults | null
-      )
-   {}
-
-}
-
-export class MergeResults {
-
-   constructor
-       (
-          public mergedTestData: any,      // Test data with local changes plus non-conflicting db changes.
-          public conflictingDbValues: any, // Lack of conflicts is represented by an empty object here.
-          public dbTestData: any,
-          public dbModificationInfo: DataModificationInfo,
-       )
-   {}
-
-   get hasConflicts(): boolean { return Object.keys(this.conflictingDbValues).length > 0; }
 }
 
 export function defaultJsonFieldFormatter(key: string, value: any): any

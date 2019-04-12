@@ -156,9 +156,9 @@ export class ApiUrlsService {
       );
    }
 
-   factsMicrobiologySampleAnalysisUrl()
+   factsMicrobiologySampleAnalysesUrl()
    {
-      return this.location.prepareExternalUrl('/api/facts/sample-analysis/micro');
+      return this.location.prepareExternalUrl('/api/facts/sample-analyses/micro');
    }
 
    factsTimeChargesUrl()

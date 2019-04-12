@@ -39,15 +39,15 @@ public class FactsController extends ControllerBase
         return factsService.getSampleTransfers(sampleTrackingNumber, toPersonId).get();
     }
 
-    @PostMapping("/sample-analysis/micro")
-    public CreatedSampleAnalysisMicrobiology submitMicrobiologySampleAnalysis
+    @PostMapping("/sample-analyses/micro")
+    public List<CreatedSampleAnalysisMicrobiology> submitMicrobiologySampleAnalyses
         (
-            @RequestBody MicrobiologySampleAnalysis analysis,
+            @RequestBody List<MicrobiologySampleAnalysis> analyses,
             Authentication authentication
         )
         throws ExecutionException, InterruptedException
     {
-        return factsService.submitMicrobiologySampleAnalysis(analysis).get();
+        return factsService.submitMicrobiologySampleAnalyses(analyses).get();
     }
 
     @PostMapping("/sample-op/{opId:\\d+}/work-status/{personId:\\d+}")

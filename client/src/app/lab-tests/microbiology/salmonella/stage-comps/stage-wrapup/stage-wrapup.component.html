@@ -1,7 +1,6 @@
 <form [formGroup]="form">
 
    <div class="reserve-sample-area">
-
       <div class="field-area">
          <span>
             <span class="label">Reserve sample: </span>
@@ -14,7 +13,6 @@
             </mat-radio-group>
          </span>
       </div>
-
       <div class="extra-information">
          <div class="field-area destinations" *ngIf="destinationsEnabled">
             <mat-form-field>
@@ -23,14 +21,12 @@
                </textarea>
             </mat-form-field>
          </div>
-
          <div class="field-area" *ngIf="otherDescriptionEnabled">
             <mat-form-field>
                <input type="text" matInput placeholder="Other case description" formControlName="reserveSampleOtherDescription">
             </mat-form-field>
          </div>
       </div>
-
    </div>
 
    <div class="time-charges-area">
@@ -43,13 +39,13 @@
             [allowDeletes]="false"
             (timeChargesDataChange)="onTimeChargesDataChanged()">
          </app-time-charges>
-         <button [disabled]="!unsavedTimeCharges" class="facts-save-btn" mat-button (click)="saveTimeChargesToFacts()">
-            Save work hours to FACTS
-         </button>
+      </div>
+      <div class="unsaved-time-charges" *ngIf="unsavedTimeCharges">
+         <span>Some accomplishments changes have not been saved to FACTS.</span>
       </div>
    </div>
 
-   <div class="remarks-area">
+   <div class="anlaysis-remarks-area">
       <div class="field-area">
          <mat-form-field>
             <input type="text" formControlName="analysisResultsRemarksText"
