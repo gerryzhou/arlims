@@ -33,6 +33,7 @@ export class SalmonellaFactsService {
       )
       : Observable<[CreatedSampleAnalysisMicrobiology]>
    {
+      // TODO: Enable BAM submission here.
       const analyses = [
          this.makeAOACSampleAnalysis(testData, opId, factsMethodCode, labGroupFactsParentOrgName),
          // this.makeBAMSampleAnalysis(testData, opId, labGroupFactsParentOrgName) // TODO

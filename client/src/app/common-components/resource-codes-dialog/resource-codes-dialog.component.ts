@@ -1,55 +1,64 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
 import {MatDialogRef} from '@angular/material';
 import {ResourceCodesDialogResult} from './resource-codes-dialog-result';
-
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-codes-dialog',
   templateUrl: './resource-codes-dialog.component.html',
   styleUrls: ['./resource-codes-dialog.component.scss']
 })
-export class ResourceCodesDialogComponent {
+export class ResourceCodesDialogComponent implements OnInit {
 
    data: ResourceCodesDialogResult;
+
+   inputFormControl: FormControl;
 
    constructor(public dialogRef: MatDialogRef<ResourceCodesDialogComponent>)
    {
       this.data = { resourceCodes: [] };
    }
 
-   addResourceCodesForInput(event: any)
+   ngOnInit()
    {
-      const input = event.target;
-      const value = input && input.value as string;
+      this.inputFormControl = new FormControl();
+      this.inputFormControl.valueChanges
+         .pipe( debounceTime(250) )
+         .subscribe(codesStr => this.addResourceCodesForInput(codesStr));
+   }
 
-      console.log('Resource codes value: "' + value + '".');
-
-      if ( value && (value.endsWith('\n') || value.endsWith(' ')) )
+   addResourceCodesForInput(codesStr: string)
+   {
+      if ( codesStr && codesStr.length > 0 )
       {
-         for ( const tok of value.split(/\s+/) )
+         for ( const tok of codesStr.split(/\s+/) )
          {
             if ( tok.length > 0 )
                this.data.resourceCodes.push(tok);
          }
 
-         input.value = '';
+         this.inputFormControl.setValue('');
       }
-      else
-         console.log('Not processing resource codes.');
    }
 
-   addResourceCodes(event: any) {
+   addResourceCodes(event: any)
+   {
       const value = event.value;
       const input = event.input;
-      if (value) {
+
+      if ( value )
+      {
          const toks = value.split(/\s+/);
-         for (const tok of toks) {
-            if (tok.length > 0) {
+         for (const tok of toks)
+         {
+            if ( tok.length > 0 )
                this.data.resourceCodes.push(tok);
-            }
          }
       }
-      if (input) { input.value = ''; }
+
+      if ( input )
+         input.value = '';
    }
 
    removeResourceCodeAt(i: number)

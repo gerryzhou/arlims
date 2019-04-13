@@ -13,9 +13,9 @@
             </mat-chip>
             <input placeholder="Paste resource codes..." cdkFocusInitial
                    [matChipInputFor]="resourceCodesChipList"
+                   [formControl]="inputFormControl"
                    [matChipInputAddOnBlur]="true"
-                   (matChipInputTokenEnd)="addResourceCodes($event)"
-                   (input)="addResourceCodesForInput($event)">
+                   (matChipInputTokenEnd)="addResourceCodes($event)">
          </mat-chip-list>
       </mat-form-field>
    </div>

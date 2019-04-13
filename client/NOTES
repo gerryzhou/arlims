@@ -1,10 +1,9 @@
+
 FACTS test data submission
 --------------------------
-Test analyses submissions on testing server.
-Remove user id filter guarding facts submission panel in staged test data component.
+Enable and test BAM analyses submissions.
+Extract error messages from failed FACTS validations in staged test data component.
 
-Resource codes dialog
-  Process content every 1/2 or 1/4 sec of quiescence after input changes (debounce).
 
 salmonella-facts service:
   Add fields to stuctured remarks.
