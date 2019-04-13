@@ -12,8 +12,6 @@ import {AppUserTimeCharge} from '../app-user-time-charge';
 })
 export class UserTimeChargeDialogComponent {
 
-   userFieldEditable: boolean;
-
    constructor(
       public dialogRef: MatDialogRef<UserTimeChargeDialogComponent, AppUserTimeCharge>,
       @Inject(MAT_DIALOG_DATA) public data: DialogData
@@ -30,11 +28,6 @@ export class UserTimeChargeDialogComponent {
                enteredTimestamp: null,
             }
          };
-         this.userFieldEditable = true;
-      }
-      else
-      {
-         this.userFieldEditable = false;
       }
    }
 

@@ -7,4 +7,5 @@ export interface DialogData {
 
    availableUsers: UserReference[] | null;
 
+   userFieldEditable: boolean;
 }

@@ -36,6 +36,8 @@
             [form]="form.get('testTimeCharges')"
             [availableUsers]="labGroupUsers"
             [allowDataChanges]="allowDataChanges"
+            [defaultFirstUserShortName]="appUser.shortName"
+            [defaultFirstUserRole]="'lead'"
             [allowDeletes]="false"
             (timeChargesDataChange)="onTimeChargesDataChanged()">
          </app-time-charges>

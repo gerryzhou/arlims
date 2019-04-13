@@ -1,18 +1,20 @@
+First user hours entry should default to current user as 'LEAD'.
 
 FACTS test data submission
 --------------------------
-Enable and test BAM analyses submissions.
+BAM
+  Implement findings summary over positive continuations data.
+  Enable and test.
+  salmonella-facts service:
+    Add fields to stuctured remarks.
+       //TODO +vidasDetails
+       // Add timestamp of Vidas positive control entry (new field) - sample custodian received timestamp.
+       //   "vidasTimeframe" as fractional hours duration.
+       //   "lotNumbers"
+
 Extract error messages from failed FACTS validations in staged test data component.
 
 
-salmonella-facts service:
-  Add fields to stuctured remarks.
-     //TODO +vidasDetails
-     // Add timestamp of Vidas positive control entry (new field) - sample custodian received timestamp.
-     //   "vidasTimeframe" as fractional hours duration.
-     //   "lotNumbers"
-
-First user hours entry should default to current user as 'LEAD'.
 Wrapup: After save, exit to samples listing.
   Probably not a good idea because of interaction with hours and FACTS saving on same page.
     Before saving others, it's not the right thing to exit.

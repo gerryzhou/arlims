@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs';
 import {UserReference} from '../../../generated/dto';
 import {AppUserTimeCharge} from './app-user-time-charge';
 import {UserTimeChargeDialogComponent} from './time-charge-dialog/user-time-charge-dialog.component';
-import {makeTimeChargeFormGroup} from '../../lab-tests/microbiology/salmonella/test-data';
+import {makeTimeChargeFormGroup, TimeChargeRole} from '../../lab-tests/microbiology/salmonella/test-data';
 
 @Component({
    selector: 'app-time-charges',
@@ -26,6 +26,12 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
 
    @Input()
    allowDeletes: boolean;
+
+   @Input()
+   defaultFirstUserShortName: string | null;
+
+   @Input()
+   defaultFirstUserRole: TimeChargeRole | null;
 
    @Output()
    timeChargeCreate = new EventEmitter<AppUserTimeCharge>();
@@ -103,11 +109,24 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
          !chargedUserShortNames.has(user.shortName)
       );
 
+      const isFirstUser = this.tableDataSource.data.length === 0;
+      const defaultUserShortName = isFirstUser ? this.defaultFirstUserShortName : null;
+      const defaultRole = isFirstUser ? this.defaultFirstUserRole : null;
+
       const dlg = this.dialogSvc.open(UserTimeChargeDialogComponent, {
          width: 'calc(75%)',
          data: {
-            userTimeCharge: null,
+            userTimeCharge: {
+               userShortName: defaultUserShortName,
+               timeCharge: {
+                  role: defaultRole,
+                  hours: null,
+                  assignmentStatus: null,
+                  enteredTimestamp: null,
+               }
+            },
             availableUsers: selectableUsers,
+            userFieldEditable: true
          }
       });
 
@@ -132,6 +151,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
          data: {
             userTimeCharge,
             availableUsers: this.availableUsers,
+            userFieldEditable: false
          }
       });
 

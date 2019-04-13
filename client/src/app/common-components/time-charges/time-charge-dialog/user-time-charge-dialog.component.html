@@ -2,7 +2,7 @@
 
 <mat-dialog-content>
 
-   <div class="field" *ngIf="userFieldEditable; else fixedUser">
+   <div class="field" *ngIf="data.userFieldEditable; else fixedUser">
       <mat-form-field>
          <mat-select placeholder="Employee"
             [(ngModel)]="data.userTimeCharge.userShortName">
