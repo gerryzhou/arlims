@@ -34,31 +34,18 @@ export class ResourceCodesDialogComponent implements OnInit {
       {
          for ( const tok of codesStr.split(/\s+/) )
          {
-            if ( tok.length > 0 )
-               this.data.resourceCodes.push(tok);
+            const trimmedTok = tok.trim();
+            if ( trimmedTok.length > 0 )
+               this.data.resourceCodes.push(trimmedTok);
          }
 
          this.inputFormControl.setValue('');
       }
    }
 
-   addResourceCodes(event: any)
+   onTokenEnd(event: any)
    {
-      const value = event.value;
-      const input = event.input;
-
-      if ( value )
-      {
-         const toks = value.split(/\s+/);
-         for (const tok of toks)
-         {
-            if ( tok.length > 0 )
-               this.data.resourceCodes.push(tok);
-         }
-      }
-
-      if ( input )
-         input.value = '';
+      this.addResourceCodesForInput(event.value);
    }
 
    removeResourceCodeAt(i: number)

@@ -15,7 +15,7 @@
                    [matChipInputFor]="resourceCodesChipList"
                    [formControl]="inputFormControl"
                    [matChipInputAddOnBlur]="true"
-                   (matChipInputTokenEnd)="addResourceCodes($event)">
+                   (matChipInputTokenEnd)="onTokenEnd($event)">
          </mat-chip-list>
       </mat-form-field>
    </div>
