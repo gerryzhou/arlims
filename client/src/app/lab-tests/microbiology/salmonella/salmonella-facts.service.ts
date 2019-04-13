@@ -8,7 +8,12 @@ import {
    CreatedSampleAnalysisMicrobiology,
    MicrobiologyKitTest
 } from '../../../../generated/dto';
-import {ContinuationTestssByTestUnitNum, TestData} from './test-data';
+import {
+   ContinuationTestssByTestUnitNum,
+   getTestMediumBatchIds,
+   TestData,
+   vidasDaysElapsedFromSampleReceipt
+} from './test-data';
 import {countValueOccurrences} from '../../test-stages';
 import {ApiUrlsService, UserContextService} from '../../../shared/services';
 
@@ -68,9 +73,14 @@ export class SalmonellaFactsService {
          this.makeSpikingKitTests(testData.vidasData.spikeDetection, spikeSpecies, kitRemarks, positivesCount, 'NA')
          : null;
 
+      const vidasDaysFromReceipt = vidasDaysElapsedFromSampleReceipt(testData);
+      const lotCodes = getTestMediumBatchIds(testData);
+
       const structuredRemarks = {
          methodRemarks: vidasData.methodRemarks,
          methodDetails: {
+            vidasDaysFromReceipt,
+            lotCodes,
             gramsPerSub: samplingMethod.extractedGramsPerSub
          },
       };
@@ -227,4 +237,5 @@ export class SalmonellaFactsService {
          //    // 'sampleAnalysisMicrobes': [] // TODO: What is this?
          // }
    }
+
 }

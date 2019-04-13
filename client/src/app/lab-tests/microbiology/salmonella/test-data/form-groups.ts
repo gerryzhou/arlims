@@ -22,7 +22,7 @@ import {
    TimeChargesSet,
    TimeCharge,
    FactsSubmissionResultsByType,
-} from './types';
+} from './test-data';
 import {TestConfig} from '../test-config';
 import {SamplingMethod} from '../../sampling-methods';
 import {FactsSubmissionResult} from '../../../../shared/client-models/facts-submission-result-types';
@@ -118,6 +118,7 @@ export function makeTestDataFormGroup
             (testData.vidasData.testUnitDetections || [null]).map(detected => new FormControl(detected))
          ),
          positiveControlDetection: [testData.vidasData.positiveControlDetection],
+         positiveControlDetectionEntered: [testData.vidasData.positiveControlDetectionEntered],
          mediumControlDetection: [testData.vidasData.mediumControlDetection],
          spikeDetection: [testData.vidasData.spikeDetection],
          methodRemarks: [testData.vidasData.methodRemarks],

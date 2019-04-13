@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 import {SamplingMethod} from '../../sampling-methods';
 import {TimeChargeStatusCode} from '../../../../../generated/dto';
 import {FactsSubmissionResult} from '../../../../shared/client-models/facts-submission-result-types';
@@ -66,6 +68,7 @@ export interface VidasData {
    kitIds: string | null;
    testUnitDetections: boolean[] | null;
    positiveControlDetection: boolean | null;
+   positiveControlDetectionEntered: string | null;
    mediumControlDetection: boolean | null;
    spikeDetection: boolean | null;
    methodRemarks: string | null;
@@ -245,6 +248,7 @@ export function emptyTestData(): TestData {
          kitIds: null,
          testUnitDetections: null,
          positiveControlDetection: null,
+         positiveControlDetectionEntered: null,
          mediumControlDetection: null,
          spikeDetection: null,
          methodRemarks: null
@@ -375,4 +379,30 @@ export function makeEmptySlantTubeTest(): SlantTubeTest
       h2s: null,
       gas: null,
    };
+}
+
+export function vidasDaysElapsedFromSampleReceipt(testData: TestData): number | null
+{
+   const vidasTimestampStr = testData.vidasData.positiveControlDetectionEntered;
+   const sampleReceivedDateStr = testData.prepData.sampleReceivedDate;
+
+   if ( vidasTimestampStr == null || sampleReceivedDateStr == null )
+      return null;
+
+   const vidas = moment(vidasTimestampStr).startOf('day');
+   const sampleRec = moment(sampleReceivedDateStr);
+
+   return vidas.diff(sampleRec, 'days');
+}
+
+export function getTestMediumBatchIds(testData: TestData): string[]
+{
+   return [
+      testData.preEnrData.mediumBatchId,
+      testData.selEnrData.rvBatchId,
+      testData.selEnrData.ttBatchId,
+      testData.selEnrData.bgBatchId,
+      testData.selEnrData.i2kiBatchId,
+      testData.mBrothData.mBrothBatchId,
+   ].filter(batchId => batchId != null);
 }

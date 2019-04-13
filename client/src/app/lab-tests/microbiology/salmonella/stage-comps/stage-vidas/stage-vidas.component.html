@@ -125,7 +125,8 @@
          <div class="field-area positive-control"
               [class.pos]="positiveControlDetectionControl.value === true"
               [class.neg]="positiveControlDetectionControl.value === false">
-            <mat-radio-group formControlName="positiveControlDetection">
+            <mat-radio-group formControlName="positiveControlDetection"
+                             (change)="onPositiveControlDetectionChanged()">
                <div>Positive control detection</div>
                <div>
                   <mat-radio-button [value]="true">pos</mat-radio-button>

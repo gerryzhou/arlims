@@ -277,7 +277,7 @@ export class SamplesListingComponent {
          );
 
       reload$.subscribe(
-         null,
+         () => {},
          err => this.alertMsgSvc.alertDanger('Failed to load samples ' + (err.message ? ': ' + err.message + '.' : '.'))
       );
 

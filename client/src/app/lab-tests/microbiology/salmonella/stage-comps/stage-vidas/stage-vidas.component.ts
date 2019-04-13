@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+import * as moment from 'moment';
 
 import {LabResource, TestAttachedFileMetadata} from '../../../../../../generated/dto';
 import {arraysEqual} from '../../../../../shared/util/data-objects';
@@ -50,6 +51,7 @@ export class StageVidasComponent implements OnChanges {
 
    mediumControlDetectionControl: AbstractControl;
    positiveControlDetectionControl: AbstractControl;
+   positiveControlDetectionEnteredControl: AbstractControl;
    spikeDetectionControl: AbstractControl;
    testUnitDetectionsControl: FormArray;
 
@@ -65,6 +67,7 @@ export class StageVidasComponent implements OnChanges {
    {
       this.mediumControlDetectionControl = this.form.get('mediumControlDetection');
       this.positiveControlDetectionControl = this.form.get('positiveControlDetection');
+      this.positiveControlDetectionEnteredControl = this.form.get('positiveControlDetectionEntered');
       this.spikeDetectionControl = this.form.get('spikeDetection');
       this.testUnitDetectionsControl = this.form.get('testUnitDetections') as FormArray;
 
@@ -180,6 +183,14 @@ export class StageVidasComponent implements OnChanges {
    {
       this.resultsFiles = attachedFiles;
       this.usrCtxSvc.requestDeferredLabGroupContentsRefresh();
+   }
+
+   onPositiveControlDetectionChanged()
+   {
+      if  ( this.positiveControlDetectionEnteredControl.value == null )
+      {
+         this.positiveControlDetectionEnteredControl.setValue(moment().format());
+      }
    }
 }
 

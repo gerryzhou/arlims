@@ -23,6 +23,9 @@ Done
 - In resource codes dialog, accomodate barcode scannners that don't send trailing newlines by processing input changes as debounced stream.
 - Allow resource codes like "RV1234" without a dash separating the prefix (resource type) from the remainder when the remainder starts with a digit.
 - Add type="button" to most buttons so they don't accidentally activate by intercepting enter keys from barcode scanners emulating keyboards.
+- In accomplishment hours entry, first entry now defaults to current user as lead.
+- Add vidas timeframe and lot numbers in structured remarks in AOAC submission.
+  Note: Vidas timeframe expressed in days since sample received information only contains date not timestamp.
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.

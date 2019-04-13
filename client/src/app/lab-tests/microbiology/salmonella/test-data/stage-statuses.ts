@@ -6,7 +6,7 @@ import {
    SelectiveAgarsTestSuite, SlantTubeTest,
    TestData,
    VidasData
-} from './types';
+} from './test-data';
 import {TestConfig} from '../test-config';
 import {arraysEqual} from '../../../../shared/util/data-objects';
 
