@@ -239,7 +239,13 @@ function getResourceCodeInstanceCounts(resourceCodes: string[]): Map<string, num
 function defaultResourceTypeCodeExtractor(resourceCode: string): string
 {
    const sepIx = resourceCode.indexOf('-');
-   return sepIx === -1 ? '' : resourceCode.substring(0, sepIx);
+   if ( sepIx !== -1 )
+      return resourceCode.substring(0, sepIx);
+   else
+   {
+      const firstDigitIx = resourceCode.search(/[0-9]/);
+      return firstDigitIx === -1 ? '' : resourceCode.substring(0, firstDigitIx);
+   }
 }
 
 

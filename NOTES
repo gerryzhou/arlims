@@ -20,12 +20,12 @@ Done
 - Enable assigning resources (e.g. via barcode scanner) to balance, incubator, and waterbath selection fields (dropdowns).
 - Allow toggling whether multiple resources may be applied for fields that can be toggled between selection
   lists and free-form text inputs.
+- In resource codes dialog, accomodate barcode scannners that don't send trailing newlines by processing input changes as debounced stream.
+- Allow resource codes like "RV1234" without a dash separating the prefix (resource type) from the remainder when the remainder starts with a digit.
 
 Detect validation failure api errors, extract error message properly and return to client in consistent way.
   Do not report LABS DS validation failures as internal server errors.
   LabsDSFactsAccessService: LABS-DS api call resulted in error: [{"errorCode":"LABS-RUL-2611","message":"Analytical Results must be recorded before Lab accomplishment hours can be entered."}]
-
-Try pasting resource codes via actual barcode scanner.
 
 
 
