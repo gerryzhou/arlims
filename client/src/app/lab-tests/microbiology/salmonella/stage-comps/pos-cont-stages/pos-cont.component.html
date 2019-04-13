@@ -5,7 +5,7 @@
            [ngClass]="{'warn': testUnitNumbersDiffMessageIsWarning, 'ok': !testUnitNumbersDiffMessageIsWarning}">
          {{testUnitNumbersDiffMessage}}
          <span *ngIf="testUnitNumbersDiff && testUnitNumbersDiff.unrepresentedVidasPositives.length > 0">
-            <button class="link" *ngIf="allowDataChanges"
+            <button class="link" *ngIf="allowDataChanges" type="button"
                     (click)="addUnrepresentedVidasPositivesContinuationTestsFormGroups()">
                Add Vidas positives.
             </button>

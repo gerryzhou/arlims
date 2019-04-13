@@ -9,8 +9,12 @@
 </mat-selection-list>
 
 <div mat-dialog-actions>
-   <button mat-button color="primary" [disabled]="!valid()" (click)="dialogRef.close(selectedItems())">
+   <button mat-button color="primary" [disabled]="!valid()"
+           (click)="dialogRef.close(selectedItems())">
       OK
    </button>
-   <button mat-button color="accent" (click)="dialogRef.close(null)">Cancel</button>
+   <button mat-button color="accent" type="button"
+           (click)="dialogRef.close(null)">
+      Cancel
+   </button>
 </div>

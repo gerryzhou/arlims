@@ -16,7 +16,10 @@
    </mat-card>
 
    <mat-card class="report">
-      <button mat-button (click)="generateAndPromptSavePdfReport()">Pdf report</button>
+      <button mat-button type="button"
+              (click)="generateAndPromptSavePdfReport()">
+         Pdf report
+      </button>
       <p>
          Generates a pdf version of the "Imp. Sal Template" form, with trailing audit log listing all test data changes.
       </p>

@@ -5,7 +5,9 @@
 
       <div class="test-type">{{sampleOpTest.testMetadata.testTypeShortName}}</div>
 
-      <button mat-button type="submit" *ngIf="allowDataChanges">Save</button>
+      <!-- Button not of type "submit" because many barcode scanners send ENTER key as
+           item separator when emulating keyboard. -->
+      <button mat-button type="button" *ngIf="allowDataChanges">Save</button>
    </div>
 
    <mat-horizontal-stepper #testStageStepper>
@@ -124,10 +126,11 @@
          </ng-template>
       </div>
       <div class="facts-submission-buttons">
-         <button class="facts-save-btn" mat-button (click)="submitFactsAnalyses()">
+         <button class="facts-save-btn" mat-button type="button"
+                 (click)="submitFactsAnalyses()">
             Submit analyses to FACTS
          </button>
-         <button class="facts-save-btn" mat-button
+         <button class="facts-save-btn" mat-button type="button"
             [disabled]="!(lastAnalysesSubm && lastAnalysesSubm.submissionSucceeded)"
             (click)="saveTimeChargesToFacts()">
             Save work hours to FACTS
@@ -168,7 +171,9 @@
             <mat-icon>settings</mat-icon>
          </button>
       </div>
-      <button mat-button *ngIf="allowDataChanges" type="submit" color="primary">
+      <!-- Button not of type "submit" because many barcode scanners send ENTER key as
+           item separator when emulating keyboard. -->
+      <button mat-button *ngIf="allowDataChanges" type="button" color="primary">
          Save
       </button>
    </div>

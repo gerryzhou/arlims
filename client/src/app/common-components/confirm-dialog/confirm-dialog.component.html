@@ -8,5 +8,8 @@
 </div>
 <div mat-dialog-actions>
    <button mat-button color="primary" (click)="dialogRef.close(true)">{{confirmButtonText}}</button>
-   <button *ngIf="showCancelButton" mat-button color="accent" (click)="dialogRef.close(false)">Cancel</button>
+   <button *ngIf="showCancelButton" mat-button color="accent" type="button"
+           (click)="dialogRef.close(false)">
+      Cancel
+   </button>
 </div>

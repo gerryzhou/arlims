@@ -10,7 +10,8 @@
                   Composite Methods
                </span>
 
-               <button mat-menu-item *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.compsMethods"
+               <button mat-menu-item type="button"
+                       *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.compsMethods"
                        (click)="onSamplingMethodClicked(samplingMethod)">
                   {{samplingMethod.description}}
                </button>
@@ -21,22 +22,25 @@
                   Subsample Methods
                </span>
 
-               <button mat-menu-item *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.subsMethods"
+               <button mat-menu-item type="button"
+                       *ngFor="let samplingMethod of sampleMethodChoicesByTestUnitType.subsMethods"
                        (click)="onSamplingMethodClicked(samplingMethod)">
                   {{samplingMethod.description}}
                </button>
 
                <span class="methods-section-header">Manual Entry Methods</span>
 
-               <button mat-menu-item (click)="onManualEntrySamplingMethodSelected('composite')">
+               <button mat-menu-item type="button"
+                       (click)="onManualEntrySamplingMethodSelected('composite')">
                   Enter composites method numbers manually
                </button>
 
-               <button mat-menu-item (click)="onManualEntrySamplingMethodSelected('subsample')">
+               <button mat-menu-item type="button"
+                       (click)="onManualEntrySamplingMethodSelected('subsample')">
                   Enter subsamples method numbers manually
                </button>
             </mat-menu>
-            <button mat-button [matMenuTriggerFor]="samplingMethodMenu">
+            <button mat-button [matMenuTriggerFor]="samplingMethodMenu" type="button">
                Select a sampling method <mat-icon>more_vert</mat-icon>
             </button>
          </ng-container>
@@ -46,7 +50,7 @@
          class="method-numbers"
          *ngIf="form.get(['samplingMethod', 'testUnitsType']).value">
 
-         <button mat-icon-button *ngIf="allowDataChanges"
+         <button mat-icon-button *ngIf="allowDataChanges" type="button"
                  (click)="onToggleSamplingMethodManualEntry()">
             <mat-icon class="user-modifiable-icon">
                {{form.get(['samplingMethod', 'userModifiable']).value === true ? 'lock_open' : 'lock'}}
@@ -126,8 +130,9 @@
                   <input formControlName="balanceId" type="text" matInput placeholder="Balance">
                </ng-template>
             </mat-form-field>
-            <button class="toggle-select" *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
-               (click)="toggleSelectBalance()"
+            <button class="toggle-select" type="button"
+                    *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
+                    (click)="toggleSelectBalance()"
                mat-icon-button matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
             </button>
@@ -192,7 +197,8 @@
                   <input formControlName="mediumType" type="text" matInput placeholder="Medium type">
                </ng-template>
             </mat-form-field>
-            <button class="toggle-select" *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
+            <button class="toggle-select" type="button"
+                    *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
                     (click)="toggleSelectMediumType()"
                     mat-icon-button matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
@@ -214,7 +220,8 @@
                   <input formControlName="incubatorId" type="text" matInput placeholder="Incubator">
                </ng-template>
             </mat-form-field>
-            <button class="toggle-select" *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
+            <button class="toggle-select" type="button"
+                    *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
                     (click)="toggleSelectIncubator()"
                     mat-icon-button matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
@@ -222,7 +229,8 @@
          </span>
       </div>
 
-      <button class="apply-resources-btn"  *ngIf="allowDataChanges"
+      <button class="apply-resources-btn" type="button"
+              *ngIf="allowDataChanges"
               (click)="promptApplyResources()"
               mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>

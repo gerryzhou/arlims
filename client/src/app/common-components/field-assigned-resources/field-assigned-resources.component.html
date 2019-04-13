@@ -1,17 +1,17 @@
 <div class="list" *ngIf="resourceCodes">
    <div *ngFor="let resourceCode of resourceCodes" class="resource">
-      <button class="code" mat-button (click)="onCodeClicked(resourceCode)">
+      <button class="code" mat-button (click)="onCodeClicked(resourceCode)" type="button">
          {{resourceCode}}
       </button>
       <div class="expanding-flex-space"></div>
-      <button class="close" mat-icon-button (click)="onCloseClicked(resourceCode)">
+      <button class="close" mat-icon-button (click)="onCloseClicked(resourceCode)" type="button">
          <mat-icon>close</mat-icon>
       </button>
    </div>
    <div class="remove-all-row" *ngIf="resourceCodes.size === 0">
       <mat-icon class="up-arrow">arrow_upward</mat-icon> (resource code applied)
       <div class="expanding-flex-space"></div>
-      <button class="remove" mat-icon-button (click)="onRemoveAll()">
+      <button class="remove" mat-icon-button (click)="onRemoveAll()" type="button">
          <mat-icon>close</mat-icon>
       </button>
    </div>

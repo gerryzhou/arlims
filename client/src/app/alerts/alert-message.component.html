@@ -4,7 +4,9 @@
           {{message.text}}
        </div>
        <div class="expanding-flex-space"></div>
-       <button class="close-btn" mat-icon-button (click)="clear()"><mat-icon>close</mat-icon></button>
+       <button class="close-btn" mat-icon-button (click)="clear()" type="button">
+          <mat-icon>close</mat-icon>
+       </button>
    </div>
    <div class="details-area" *ngIf="message.detailLines">
       <span *ngFor="let detailLine of message.detailLines">{{detailLine}}</span><br>

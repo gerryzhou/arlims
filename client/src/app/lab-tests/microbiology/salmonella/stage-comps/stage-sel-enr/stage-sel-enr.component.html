@@ -53,7 +53,8 @@
          </app-field-assigned-resources>
       </div>
 
-      <button class="apply-resources-btn" *ngIf="allowDataChanges"
+      <button class="apply-resources-btn" type="button"
+              *ngIf="allowDataChanges"
               (click)="promptApplyResources()"
                mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>
@@ -83,7 +84,8 @@
                   <input formControlName="rvttWaterBathId" type="text" matInput placeholder="Water bath">
                </ng-template>
             </mat-form-field>
-            <button class="toggle-select" *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
+            <button class="toggle-select" type="button"
+                    *ngIf="allowDataChanges && allowFreeformEntryForSelectFields"
                     (click)="toggleSelectWaterbath()"
                     mat-icon-button matTooltip="toggle between a select list and free-from text entry">
                <mat-icon>create</mat-icon>
@@ -160,10 +162,18 @@
                <input formControlName="systemControlTypes" type="text" matInput placeholder="System control types">
             </mat-form-field>
             <div class="ctrl-types-predefined-inputs" *ngIf="allowDataChanges">
-               <button class="link" (click)="appendSystemControlType('none')">none</button>
-               <button class="link" (click)="appendSystemControlType('knife')">knife</button>
-               <button class="link" (click)="appendSystemControlType('spoon')">spoon</button>
-               <button class="link" (click)="appendSystemControlType('spatula')">spatula</button>
+               <button class="link" (click)="appendSystemControlType('none')" type="button">
+                  none
+               </button>
+               <button class="link" (click)="appendSystemControlType('knife')" type="button">
+                  knife
+               </button>
+               <button class="link" (click)="appendSystemControlType('spoon')" type="button">
+                  spoon
+               </button>
+               <button class="link" (click)="appendSystemControlType('spatula')" type="button">
+                  spatula
+               </button>
             </div>
          </div>
       </div>
@@ -191,7 +201,9 @@
                <input formControlName="collectorControlTypes" type="text" matInput placeholder="Collector control types">
             </mat-form-field>
             <div class="ctrl-types-predefined-inputs" *ngIf="allowDataChanges">
-               <button class="link" (click)="appendCollectorControlType('none')">none</button>
+               <button class="link" (click)="appendCollectorControlType('none')" type="button">
+                  none
+               </button>
             </div>
          </div>
       </div>

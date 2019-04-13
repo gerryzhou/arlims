@@ -15,7 +15,7 @@
          </app-field-assigned-resources>
       </div>
 
-      <button class="apply-resources-btn" *ngIf="allowDataChanges"
+      <button class="apply-resources-btn" *ngIf="allowDataChanges" type="button"
               (click)="promptApplyResources()"
               mat-icon-button color="accent">
          <mat-icon>flash_on</mat-icon>
@@ -49,7 +49,7 @@
             <span class="started-helpers" *ngIf="allowDataChanges">
                 <span class="start-now">
                    <mat-icon>arrow_back</mat-icon>
-                   <button class="link now-time"
+                   <button class="link now-time" type="button"
                            (click)="setStartTimeNow()">
                       now
                    </button>

@@ -86,7 +86,8 @@
 
          <div class="test-area" *ngFor="let test of sampleOp.tests">
 
-            <button class="delete" mat-icon-button *ngIf="allowDataChanges && allowTestDeletion"
+            <button class="delete" mat-icon-button type="button"
+                    *ngIf="allowDataChanges && allowTestDeletion"
                     (click)="promptDeleteTest(test)">
                <mat-icon>remove_circle_outline</mat-icon>
             </button>
@@ -106,7 +107,8 @@
       </div>
 
       <div class="sample-actions">
-            <button mat-button *ngIf="allowDataChanges && allowTestCreation && labGroupTestTypes.length > 0"
+            <button mat-button type="button"
+                    *ngIf="allowDataChanges && allowTestCreation && labGroupTestTypes.length > 0"
                     (click)="promptCreateTest()">
                <mat-icon>add</mat-icon>
                Create test

@@ -50,7 +50,8 @@
          <div class="detection-controls-warning" *ngIf="excessSampleTestUnitControlsCount">
             Too many detection choices exist here vs. the <b></b> sample test units specified in
             the pre-enrichment stage. Please
-            <button class="link" *ngIf="allowDataChanges"
+            <button class="link" type="button"
+                    *ngIf="allowDataChanges"
                     (click)="removeSampleDetectionControls(excessSampleTestUnitControlsCount)">
                delete
             </button>
@@ -73,7 +74,7 @@
                   <mat-radio-button [value]="false">neg</mat-radio-button>
                   <mat-radio-button *ngIf="showUnsetAffordances" class="unset" [value]="null">unset</mat-radio-button>
                </mat-radio-group>
-               <button class="close"
+               <button class="close" type="button"
                   *ngIf="allowDataChanges && excessSampleTestUnitControlsCount && excessSampleTestUnitControlsCount > 0"
                   (click)="removeTestUnitControlAtIndex(i)"
                   mat-icon-button>
@@ -83,7 +84,10 @@
          </div>
 
          <div class="detections-array-buttons">
-            <button class="link" (click)="setAllResultsToNegative()">set all to negative</button>
+            <button class="link" type="button"
+                    (click)="setAllResultsToNegative()">
+               set all to negative
+            </button>
          </div>
       </div> <!-- test unit detections -->
 

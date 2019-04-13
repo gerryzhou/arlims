@@ -45,9 +45,9 @@
 
    <div class="expanding-flex-space"></div>
 
-   <button class="close" *ngIf="allowDataChanges && showDisposeButton"
-           (click)="onDisposeRequested()"
-           type="button" mat-icon-button>
+   <button class="close" mat-icon-button type="button"
+           *ngIf="allowDataChanges && showDisposeButton"
+           (click)="onDisposeRequested()">
       <mat-icon>close</mat-icon>
    </button>
 

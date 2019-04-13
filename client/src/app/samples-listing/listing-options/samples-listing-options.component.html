@@ -12,7 +12,9 @@
          <div class="statuses-label-stack">
             <span>include</span>
             <span>statuses</span>
-            <button *ngIf="showSaveIncludeStatuses" class="link" (click)="emitSaveIncludeStatusesEvent()">
+            <button class="link" type="button"
+                    *ngIf="showSaveIncludeStatuses"
+                    (click)="emitSaveIncludeStatusesEvent()">
                save
             </button>
          </div>

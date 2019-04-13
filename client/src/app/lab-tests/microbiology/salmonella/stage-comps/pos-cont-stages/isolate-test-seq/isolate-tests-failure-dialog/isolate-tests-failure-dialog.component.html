@@ -19,11 +19,12 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-   <button mat-button (click)="dismissWithDeleteRequest()" *ngIf="preexistingFailure">
+   <button mat-button type="button" *ngIf="preexistingFailure"
+           (click)="dismissWithDeleteRequest()">
       <mat-icon>delete</mat-icon> Clear failure
    </button>
    <div class="expanding-flex-space"></div>
-   <button mat-button mat-dialog-close>Cancel</button>
+   <button mat-button mat-dialog-close type="button">Cancel</button>
    <button mat-button [mat-dialog-close]="data" color="primary" [disabled]="!data.reason">
       OK
    </button>

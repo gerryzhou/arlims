@@ -3,7 +3,9 @@
    <div class="test-overview">
 
       <div class="test-type">
-         <button class="link" (click)="onTypeClicked()">{{test.testTypeShortName}}</button>
+         <button class="link" (click)="onTypeClicked()" type="button">
+            {{test.testTypeShortName}}
+         </button>
       </div>
 
       <div class="elapsed">
@@ -28,11 +30,15 @@
       <div class="reports-and-files-stack">
          <div class="reports">
             <mat-icon>visibility</mat-icon>
-            <button class="link" (click)="onReportsClicked()">Reports</button>
+            <button class="link" (click)="onReportsClicked()" type="button">
+               Reports
+            </button>
          </div>
          <div class="files">
             <mat-icon>attach_file</mat-icon>
-            <button class="link" (click)="onAttachedFilesClicked()">{{test.attachedFilesCount}} files</button>
+            <button class="link" (click)="onAttachedFilesClicked()" type="button">
+               {{test.attachedFilesCount}} files
+            </button>
          </div>
       </div>
 

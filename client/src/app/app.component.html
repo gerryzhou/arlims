@@ -1,7 +1,7 @@
 <mat-toolbar color="primary" *ngIf="notLoginView$ | async">
    <mat-toolbar-row>
       <nav>
-         <button mat-button routerLink="/" [routerLinkActive]="['active-route']">
+         <button mat-button routerLink="/" [routerLinkActive]="['active-route']" type="button">
             <mat-icon>home</mat-icon> ALIS
          </button>
          <mat-menu #linksMenu="matMenu">
@@ -14,11 +14,11 @@
             <a *ngIf="authenticatedUserIsAdmin$" mat-menu-item routerLink="/tests-search">
                Search for tests <mat-icon>search</mat-icon>
             </a>
-            <button *ngIf="appVersion$ | async" type="button" mat-menu-item (click)="showAbout()">
+            <button *ngIf="appVersion$ | async" mat-menu-item (click)="showAbout()" type="button">
                About
             </button>
          </mat-menu>
-         <button mat-icon-button [matMenuTriggerFor]="linksMenu">
+         <button mat-icon-button [matMenuTriggerFor]="linksMenu" type="button">
             <mat-icon>more_vert</mat-icon>
          </button>
       </nav>
@@ -30,9 +30,9 @@
             <div class="facts-person-id">FACTS Person ID
                {{userCtxSvc.getAuthenticatedUser().getValue().factsPersonId}}
             </div>
-            <button mat-menu-item (click)="onLogoutClicked()">Logout</button>
+            <button mat-menu-item (click)="onLogoutClicked()" type="button">Logout</button>
          </mat-menu>
-         <button mat-button [matMenuTriggerFor]="userMenu">
+         <button mat-button [matMenuTriggerFor]="userMenu" type="button">
             <mat-icon>person</mat-icon> {{authenticatedUserShortName$ | async}} <mat-icon>more_vert</mat-icon>
          </button>
       </span>

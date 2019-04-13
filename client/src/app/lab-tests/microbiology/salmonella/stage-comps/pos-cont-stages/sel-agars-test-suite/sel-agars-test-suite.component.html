@@ -7,7 +7,8 @@
 
             <div class="sel-agar-label-stack">
                <div class="sel-agar-label">{{selAgar.displayName}}</div>
-               <button class="add-isolate hover-link" *ngIf="allowDataChanges && showAddIsolatesButton" type="button"
+               <button class="add-isolate hover-link" type="button"
+                       *ngIf="allowDataChanges && showAddIsolatesButton"
                        (click)="promptAddNewIsolateTestSequence(selAgar.formGroupName)" matTooltip="add isolate">
                   <mat-icon>add_circle_outline</mat-icon>
                </button>
