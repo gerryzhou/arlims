@@ -1,9 +1,8 @@
 FACTS test data submission
 --------------------------
 
-
 BAM
-  Implement findings summary over positive continuations data.
+  Check LABS-DS documentation for changes to analyses submission structures.
   Enable and test.
 
 Extract error messages from failed FACTS validations in staged test data component.

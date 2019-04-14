@@ -406,3 +406,24 @@ export function getTestMediumBatchIds(testData: TestData): string[]
       testData.mBrothData.mBrothBatchId,
    ].filter(batchId => batchId != null);
 }
+
+export function containsPositiveIdentification(contTests: ContinuationTests): boolean
+{
+   for (const selAgarsTestSuite of [contTests.rvSourcedTests, contTests.ttSourcedTests])
+   {
+      for (const selAgar of Object.keys(selAgarsTestSuite))
+      {
+         const isolateTestSeqs = selAgarsTestSuite[selAgar] as IsolateTestSequencesByUid;
+
+         for (const isolateTestSeq of Object.values(isolateTestSeqs))
+         {
+            if ( !isolateTestSeq.failure &&
+                 isolateTestSeq.identification != null &&
+                 isolateTestSeq.identification.identCode != null )
+               return true;
+         }
+      }
+   }
+
+   return false;
+}

@@ -10,7 +10,7 @@ import {
 } from '../../../../generated/dto';
 import {
    ContinuationTestssByTestUnitNum,
-   getTestMediumBatchIds,
+   getTestMediumBatchIds, containsPositiveIdentification,
    TestData,
    vidasDaysElapsedFromSampleReceipt
 } from './test-data';
@@ -38,10 +38,9 @@ export class SalmonellaFactsService {
       )
       : Observable<[CreatedSampleAnalysisMicrobiology]>
    {
-      // TODO: Enable BAM submission here.
       const analyses = [
          this.makeAOACSampleAnalysis(testData, opId, factsMethodCode, labGroupFactsParentOrgName),
-         // this.makeBAMSampleAnalysis(testData, opId, labGroupFactsParentOrgName) // TODO
+         this.makeBAMSampleAnalysis(testData, opId, labGroupFactsParentOrgName)
       ];
 
       return (
@@ -96,7 +95,7 @@ export class SalmonellaFactsService {
          methodCode: factsMethodCode,
          methodModificationIndicator: 'N',
          kitTestIndicator: spiking ? 'Y' : 'N',
-         lowestDilutionTestedCode: '1', // TODO: Where should this come from?
+         lowestDilutionTestedCode: '1', // TODO: Where from?
          quantifiedIndicator: 'N',
          subSamplesDetectableFindingsNumber: positivesCount,
          analysisMicKitTests,
@@ -188,9 +187,10 @@ export class SalmonellaFactsService {
 
             spikingResultCode: detection ? 'POS' : 'NEG',
 
-            subsampleNumberCode: '1', // TODO: Where from?
+            subsampleNumberCode: '1', // TODO: Where from? Need new field for this?
+                                      // (no test unit in context here, this is at level of overall AOAC submission)
 
-            selectiveAgarResultCode: '', // TODO: Where from? Really empty text when missing, not null or absence?
+            selectiveAgarResultCode: '', // TODO: Where from? Really repre as empty text when missing, not null or absence?
 
             selectiveAgarText: '',       // TODO: "
 
@@ -210,32 +210,26 @@ export class SalmonellaFactsService {
       for ( const testUnitNum of Object.keys(continuationTestsByTestUnitNum) )
       {
          const contTests = continuationTestsByTestUnitNum[testUnitNum];
-         const rvTests = contTests.rvSourcedTests;
-         const ttTests = contTests.ttSourcedTests;
 
-         // TODO: Consider a test unit positive if any isolate yields conclusive positive result.
-         //       (Add test data function to find if any isolates have positive identifications.)
-         //       How to determine pos/neg from identification text or codes? Recognize specific API/Vitek codes?
-         //       Add to result array when above problems are resolved.
+         const posIdent = containsPositiveIdentification(contTests);
+
+         res.push({
+            actionIndicator: posIdent ? 'Y' : 'N',
+            subNumberCode: testUnitNum,
+            genusCode: 'SLML',
+            speciesCode: 'SLML998',
+            secondaryPafCode: 'SAL',
+            presenceResultIndicator: posIdent ? 'POS' : 'NEG',
+            atypicalReactionCode: 'N',
+            isolatesSentNumber: 1,      // TODO: Where from? Need new field for this?
+            isolatesSentIndicator: 'Y', // "
+            fdaLabOrganizationId: 3004, // TODO: May have been changed to org name, see docs.
+            remarksText: 'Test entry from ALIS' // TODO
+         });
+
       }
 
       return res;
-         // {
-         //    'actionIndicator': 'Y',
-         //    // TODO: Is this the original test unit number (as numbered in Vidas results)? (Inappropriate field name if so.)
-         //    //       Really string not numeric?
-         //    'subNumberCode': '1',
-         //    'genusCode': 'SLML',      // sch - why necessary again here?
-         //    'speciesCode': 'SLML998', // '
-         //    'presenceResultIndicator': 'POS', // TODO: Where from? Would a negative have an array entry at all?
-         //    'atypicalReactionCode': 'N',      // TODO: Where from?
-         //    'isolatesSentNumber': 1,          // TODO: Where from?
-         //    'fdaLabOrganizationId': 3004,     // TODO: Why not org name as elsewhere?
-         //    'isolatesSentIndicator': 'Y',     // TODO: Where from?
-         //    'remarksText': 'Remarks 1',       // TODO: Where from?
-         //    'secondaryPafCode': 'SAL',
-         //    // 'sampleAnalysisMicrobes': [] // TODO: What is this?
-         // }
    }
 
 }
