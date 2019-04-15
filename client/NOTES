@@ -1,7 +1,9 @@
 FACTS test data submission
 --------------------------
 
-Resource application to select fields
+Applying barcodes to select fields.
+  Discuss whether we can have prefixes identifying the code type or must match existing codes as they are.
+    ARL*, NA*, all digits (e.g. incubator 5099365)
 
 Record timestamp that user entered receive fields in PREP.
   Use this for vidas timeframe calculation.
