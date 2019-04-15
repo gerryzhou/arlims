@@ -12,7 +12,7 @@ import {
    ContinuationTestssByTestUnitNum,
    getTestMediumBatchIds, containsPositiveIdentification,
    TestData,
-   vidasDaysElapsedFromSampleReceipt
+   vidasHoursElapsedFromSampleReceipt
 } from './test-data';
 import {countValueOccurrences} from '../../test-stages';
 import {ApiUrlsService, UserContextService} from '../../../shared/services';
@@ -80,13 +80,13 @@ export class SalmonellaFactsService {
             'NA' // conventional method (BAM) not performed yet at this (AOAC) stage
          );
 
-      const vidasDaysFromReceipt = vidasDaysElapsedFromSampleReceipt(testData);
+      const vidasHoursFromSampleReceipt = vidasHoursElapsedFromSampleReceipt(testData);
       const lotCodes = getTestMediumBatchIds(testData);
 
       const structuredRemarks = {
          methodRemarks: vidasData.methodRemarks,
          methodDetails: {
-            vidasDaysFromReceipt,
+            vidasHoursFromSampleReceipt,
             lotCodes,
             gramsPerSub: samplingMethod.extractedGramsPerSub
          },

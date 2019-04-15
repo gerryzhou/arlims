@@ -17,6 +17,7 @@ export interface TestData {
 
 export interface PrepData {
    sampleReceivedDate: string | null;
+   sampleReceivedDateEntered: string | null;
    sampleReceivedFrom: string | null;
    descriptionMatchesCR: boolean | null;
    descriptionMatchesCRNotes: string | null;
@@ -193,6 +194,7 @@ export function emptyTestData(): TestData {
    return {
       prepData: {
          sampleReceivedDate: null,
+         sampleReceivedDateEntered: null,
          sampleReceivedFrom: null,
          descriptionMatchesCR: null,
          descriptionMatchesCRNotes: null,
@@ -381,18 +383,18 @@ export function makeEmptySlantTubeTest(): SlantTubeTest
    };
 }
 
-export function vidasDaysElapsedFromSampleReceipt(testData: TestData): number | null
+export function vidasHoursElapsedFromSampleReceipt(testData: TestData): number | null
 {
    const vidasTimestampStr = testData.vidasData.positiveControlDetectionEntered;
-   const sampleReceivedDateStr = testData.prepData.sampleReceivedDate;
+   const sampleReceivedDateEnteredStr = testData.prepData.sampleReceivedDateEntered;
 
-   if ( vidasTimestampStr == null || sampleReceivedDateStr == null )
+   if ( vidasTimestampStr == null || sampleReceivedDateEnteredStr == null )
       return null;
 
-   const vidas = moment(vidasTimestampStr).startOf('day');
-   const sampleRec = moment(sampleReceivedDateStr);
+   const vidas = moment(vidasTimestampStr);
+   const sampleRec = moment(sampleReceivedDateEnteredStr);
 
-   return vidas.diff(sampleRec, 'days');
+   return vidas.diff(sampleRec, 'hours');
 }
 
 export function getTestMediumBatchIds(testData: TestData): string[]

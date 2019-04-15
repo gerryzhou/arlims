@@ -1,7 +1,8 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material';
 import {Observable} from 'rxjs';
+import * as moment from 'moment';
 
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {AlertMessageService} from '../../../../../shared/services/alerts';
@@ -30,6 +31,8 @@ export class StagePrepComponent implements OnChanges {
    @Input()
    appUser: AppUser;
 
+   sampleReceivedDateEnteredControl: AbstractControl;
+
    constructor
       (
          private generalFactsService: GeneralFactsService,
@@ -44,6 +47,8 @@ export class StagePrepComponent implements OnChanges {
          this.form.enable();
       else if ( !this.allowDataChanges && !this.form.disabled )
          this.form.disable();
+
+      this.sampleReceivedDateEnteredControl = this.form.get('sampleReceivedDateEntered');
    }
 
    promptGetReceivedFieldsFromFacts()
@@ -106,6 +111,8 @@ export class StagePrepComponent implements OnChanges {
       this.form.get('sampleReceivedFrom').setValue(receivedFrom);
 
       this.form.get('sampleReceivedDate').setValue(transfer.receivedDate || '');
+
+      this.onSampleReceivedDateChanged();
    }
 
    private sampleTransferDescription(st: SampleTransfer): string
@@ -120,5 +127,14 @@ export class StagePrepComponent implements OnChanges {
             : st.receivedByPersonId != null ? `person id ${st.receivedByPersonId}` : '<N/A>';
 
       return `from ${fromDescr} to ${toDescr} (${st.receivedDate})`;
+   }
+
+   onSampleReceivedDateChanged()
+   {
+      if  ( this.form.get('sampleReceivedDate').value &&
+            this.sampleReceivedDateEnteredControl.value == null )
+      {
+         this.sampleReceivedDateEnteredControl.setValue(moment().format());
+      }
    }
 }

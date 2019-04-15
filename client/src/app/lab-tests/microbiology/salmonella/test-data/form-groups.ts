@@ -59,6 +59,7 @@ export function makeTestDataFormGroup
 
       prepData: formGroup<PrepData>({
          sampleReceivedDate: [testData.prepData.sampleReceivedDate],
+         sampleReceivedDateEntered: [testData.prepData.sampleReceivedDateEntered],
          sampleReceivedFrom: [testData.prepData.sampleReceivedFrom],
          descriptionMatchesCR: [testData.prepData.descriptionMatchesCR],
          descriptionMatchesCRNotes: [testData.prepData.descriptionMatchesCRNotes],
