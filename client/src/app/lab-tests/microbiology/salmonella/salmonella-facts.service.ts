@@ -34,7 +34,7 @@ export class SalmonellaFactsService {
       (
          testData: TestData,
          opId: number,
-         labGroupFactsParentOrgName: string,
+         fdaOrgName: string,
          testConfig: TestConfig
       )
       : Observable<[CreatedSampleAnalysisMicrobiology]>
@@ -42,8 +42,8 @@ export class SalmonellaFactsService {
       const aoacMethodCode = testConfig.aoacMethodCode;
 
       const analyses = [
-         this.makeAOACSampleAnalysis(testData, opId, aoacMethodCode, labGroupFactsParentOrgName),
-         this.makeBAMSampleAnalysis(testData, opId, labGroupFactsParentOrgName)
+         this.makeAOACSampleAnalysis(testData, opId, aoacMethodCode, fdaOrgName),
+         this.makeBAMSampleAnalysis(testData, opId, fdaOrgName)
       ];
 
       return (
@@ -59,7 +59,7 @@ export class SalmonellaFactsService {
          testData: TestData,
          opId: number,
          methodCode: string,
-         labGroupFactsParentOrgName: string
+         fdaOrgName: string
       )
       : MicrobiologySampleAnalysis
    {
@@ -71,9 +71,14 @@ export class SalmonellaFactsService {
       const spiking = vidasData.spikeDetection != null;
       const spikeSpecies = spiking ? testData.preEnrData.spikeSpeciesText : null;
       const kitRemarks = spiking ? testData.preEnrData.spikeKitRemarksText : null;
-      const analysisMicKitTests = spiking ?
-         this.makeSpikingKitTests(testData.vidasData.spikeDetection, spikeSpecies, kitRemarks, positivesCount, 'NA')
-         : null;
+      const analysisMicKitTests = !spiking ? null :
+         this.makeSpikingKitTests(
+            testData.vidasData.spikeDetection,
+            spikeSpecies,
+            kitRemarks,
+            positivesCount,
+            'NA' // conventional method (BAM) not performed yet at this (AOAC) stage
+         );
 
       const vidasDaysFromReceipt = vidasDaysElapsedFromSampleReceipt(testData);
       const lotCodes = getTestMediumBatchIds(testData);
@@ -89,7 +94,7 @@ export class SalmonellaFactsService {
 
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
-         accomplishingOrgName: labGroupFactsParentOrgName,
+         accomplishingOrgName: fdaOrgName,
          actionIndicator: positivesCount > 0 ? 'Y' : 'N',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -98,7 +103,7 @@ export class SalmonellaFactsService {
          methodCode: methodCode,
          methodModificationIndicator: 'N',
          kitTestIndicator: spiking ? 'Y' : 'N',
-         lowestDilutionTestedCode: '1', // TODO: Where from?
+         lowestDilutionTestedCode: '1',
          quantifiedIndicator: 'N',
          subSamplesDetectableFindingsNumber: positivesCount,
          analysisMicKitTests,
@@ -125,21 +130,21 @@ export class SalmonellaFactsService {
       (
          testData: TestData,
          opId: number,
-         labGroupFactsParentOrgName: string
+         fdaOrgName: string
       )
       : MicrobiologySampleAnalysis
    {
       const samplingMethod = testData.preEnrData.samplingMethod;
 
-      const examinedNumber = countValueOccurrences(testData.vidasData.testUnitDetections, true);
+      const contTestsByTestUnitNum = testData.posContData.testUnitsContinuationTests || {};
+      const examinedNumber = Object.keys(contTestsByTestUnitNum).length;
+      const bamFindings = this.makeBAMFindings(contTestsByTestUnitNum, fdaOrgName);
 
-      const bamFindings = this.makeBAMFindings(testData.posContData.testUnitsContinuationTests || {});
-
-      const detectableFindingsNumber = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
+      const positiveFindingsCount = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
 
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
-         accomplishingOrgName: labGroupFactsParentOrgName,
+         accomplishingOrgName: fdaOrgName,
          actionIndicator: 'Y',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -151,7 +156,9 @@ export class SalmonellaFactsService {
          lowestDilutionTestedCode: '1',
          quantifiedIndicator: 'N',
          analysisMicFindings: bamFindings,
-         subSamplesDetectableFindingsNumber: detectableFindingsNumber,
+         // TODO: Check that this is correct, which is currently counting positive
+         //  test units having at least one isolate identification in IDENT stage.
+         subSamplesDetectableFindingsNumber: positiveFindingsCount,
          analysisResultsRemarksText: testData.wrapupData.analysisResultsRemarksText,
       };
 
@@ -184,6 +191,8 @@ export class SalmonellaFactsService {
          {
             conventionalMethodResultCode,
 
+            // TODO: Meaning? Really the number of Vidas positives overall, or only for the test unit
+            //       on which spiking was performed (subsampleNumberCode)?
             rapidMethodResultCode: rapidMethodDetections > 0 ? 'POS' : 'NEG',
 
             spikingGenusSpeciesText: speciesText,
@@ -193,7 +202,7 @@ export class SalmonellaFactsService {
             subsampleNumberCode: '1', // TODO: Where from? Need new field for this?
                                       // (no test unit in context here, this is at level of overall AOAC submission)
 
-            selectiveAgarResultCode: '', // TODO: Where from? Really repre as empty text when missing, not null or absence?
+            selectiveAgarResultCode: '', // TODO: Where from? Really repr as empty text when missing, not null or absence?
 
             selectiveAgarText: '',       // TODO: "
 
@@ -204,7 +213,8 @@ export class SalmonellaFactsService {
 
    private makeBAMFindings
       (
-         continuationTestsByTestUnitNum: ContinuationTestssByTestUnitNum
+         continuationTestsByTestUnitNum: ContinuationTestssByTestUnitNum,
+         fdaOrgName: string
       )
       : MicrobiologyAnalysisFinding[]
    {
@@ -224,10 +234,10 @@ export class SalmonellaFactsService {
             secondaryPafCode: 'SAL',
             presenceResultIndicator: posIdent ? 'POS' : 'NEG',
             atypicalReactionCode: 'N',
-            isolatesSentNumber: 1,      // TODO: Where from? Need new field for this?
-            isolatesSentIndicator: 'Y', // "
-            fdaLabOrganizationId: 3004, // TODO: May have been changed to org name, see docs.
-            remarksText: 'Test entry from ALIS' // TODO
+            isolatesSentNumber: 1,              // TODO: Where from? Need new field for this?
+            isolatesSentIndicator: 'Y',         // "
+            fdaLabOrganizationName: fdaOrgName,
+            remarksText: 'Test entry from ALIS' // "
          });
 
       }

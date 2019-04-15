@@ -1,5 +1,12 @@
 FACTS test data submission
 --------------------------
+Record timestamp that user entered receive fields in PREP.
+  Use this for vidas timeframe calculation.
+
+Button backgrounds
+
+Resource application to select fields
+
 
 BAM
   Check LABS-DS documentation for changes to analyses submission structures.
@@ -98,7 +105,7 @@ If any identifications were made (positive #Subs/Comp Detect Fnd in last step):
   Enter findings ("Micro-Id Find"):
     Sub/Comp # = 1 (relative numbering among Vidas positives?)
     Genus/Species as above
-    Presence/Sterility Results = POS (always form slm)
+    Presence/Sterility Results = POS (always for slm)
     Need one isolate-send record for each of Serology, PFGE, and WGS (in that order, per positive sub/comp).
     num isolates sent = 1
     FDA Confirmation Lab = ARKL
@@ -107,14 +114,8 @@ If any identifications were made (positive #Subs/Comp Detect Fnd in last step):
     Then "send isolate" action is done, which results in the creation of a secondary PAF ("SAL", "GSA", "WGS").
       These are splits 1,2,3 of the sample, created by FACTS during the above.
 
-Accomplishment Hours Entry
-  Hours credited to: for ARL, the lab group parent org (ARKL)
-  Assignment Status needed here per employee entry ("Completed" or "In Progress")?
-
 ------------------------------------------------------------------------------------------------
 FACTS writing misc notes
-  FACTS Status Update
-    Analyst should be able to change status from "Assigned" to "In Progress" from their inbox.
   Method source codes:
     AOAC through Vidas (negatives)
     BAM if for positives (method code B160 for SLM)

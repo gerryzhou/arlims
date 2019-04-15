@@ -14,7 +14,7 @@ public class MicrobiologyAnalysisFinding
     private Optional<String> atypicalReactionRemarksText;
     private long isolatesSentNumber;
     private String isolatesSentIndicator;   // "Y" | "N" // why necessary when number sent is also specified?
-    private long fdaLabOrganizationId;
+    private String fdaLabOrganizationName;
     private Optional<String> remarksText;
 
     protected MicrobiologyAnalysisFinding() {}
@@ -31,7 +31,7 @@ public class MicrobiologyAnalysisFinding
             Optional<String> atypicalReactionRemarksText,
             long isolatesSentNumber,
             String isolatesSentIndicator,
-            long fdaLabOrganizationId,
+            String fdaLabOrganizationName,
             Optional<String> remarksText
         )
     {
@@ -45,7 +45,7 @@ public class MicrobiologyAnalysisFinding
         this.atypicalReactionRemarksText = atypicalReactionRemarksText;
         this.isolatesSentNumber = isolatesSentNumber;
         this.isolatesSentIndicator = isolatesSentIndicator;
-        this.fdaLabOrganizationId = fdaLabOrganizationId;
+        this.fdaLabOrganizationName = fdaLabOrganizationName;
         this.remarksText = remarksText;
     }
 
@@ -69,7 +69,7 @@ public class MicrobiologyAnalysisFinding
 
     public String getIsolatesSentIndicator() { return isolatesSentIndicator; }
 
-    public long getFdaLabOrganizationId() { return fdaLabOrganizationId; }
+    public String getFdaLabOrganizationName() { return fdaLabOrganizationName; }
 
     public Optional<String> getRemarksText() { return remarksText; }
 }

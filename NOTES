@@ -1,11 +1,16 @@
 TODO
 ====
+
+
 Find out firm date for pilot demos.
 
 Investigate replacing Oracle with No-SQL db like Redis.
 
+
+
 Done
 ====
+
 - Barcode scanning dialog now accepts line delimited codes incrementally as delivered by example barcode
   scanner.
 - Basic user registration form to setup new accounts and several accounts created.
@@ -102,7 +107,7 @@ Microbiology Data Submission
       'presenceResultIndicator': 'POS', // (Q for John) How to determine? Would a negative be reported (with an array entry) at all?
       'atypicalReactionCode': 'N',      // (Q for John) Where from?
       'isolatesSentNumber': 1,          // (Q for John) Where from?
-      'fdaLabOrganizationId': 3004,     // Why not org name as elsewhere?
+      'fdaLabOrganizationName': 'ARKL',
       'isolatesSentIndicator': 'Y',     // (Q for John) Where from?
       'remarksText': 'Remarks 1',       // (Q for John) Where from?
       'sampleAnalysisMicrobes': []      // What is this?
@@ -117,7 +122,7 @@ Microbiology Data Submission
            "presenceResultIndicator": "POS",
            "atypicalReactionCode": "Y",
            "isolatesSentNumber": 1,
-           "fdaLabOrganizationId": 3004,
+           "fdaLabOrganizationName": 'ARKL',
            "isolatesSentIndicator": "Y",
            "remarksText": "Findings Remarks",
            "atypicalReactionRemarksText": "Atypical Remarks Required as 'Y' in Atypical Biochem React Field",
