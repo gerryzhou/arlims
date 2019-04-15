@@ -44,6 +44,8 @@ Add lab inbox page based on sample listing.
 SLM test
   Implement actual validation function for each stage, returning list of complaints.
 
+{"samplingMethodChoices": [{"name": "25gx15S-1C-3375mlBr","description": "25 grams from each of 15 subs tested as one 375g composite, 3375mls of pre-enriched broth added","extractedGramsPerSub": 25,"numberOfSubsPerComposite": 15,"testUnitsCount": 1,"testUnitsType": "composite"},{"name": "25gx30S-2C-3375mlBr","description": "25 grams from each of 30 subs tested as two 375g composites, 3375mls of pre-enriched broth/composite","extractedGramsPerSub": 25,"numberOfSubsPerComposite": 15,"testUnitsCount": 2,"testUnitsType": "composite"}],"spikeSpeciesText": "S. cerro","spikeKitRemarksText": "7 CFUs on blood agar"}
+
 FACTS WRITING PROCESS
 ---------------------
   Staging

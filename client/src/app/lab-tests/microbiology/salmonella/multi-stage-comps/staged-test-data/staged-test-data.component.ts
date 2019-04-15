@@ -266,8 +266,8 @@ export class StagedTestDataComponent implements OnInit {
                   this.slmFactsService.submitAnalyses(
                      testData,
                      this.sampleOpTest.sampleOp.opId,
-                     this.testConfig.aoacMethodCode || 'T2004.03',
-                     this.appUser.labGroupFactsParentOrgName
+                     this.appUser.labGroupFactsParentOrgName,
+                     this.testConfig
                   )
                   .pipe(
                      map((createdAnalyses) => ({

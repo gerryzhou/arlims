@@ -4,13 +4,13 @@ export interface TestConfig {
 
    samplingMethodChoices: SamplingMethod[];
 
+   aoacMethodCode: string | null;
+
    positiveTestUnitControlsMinimumSelectiveAgars?: number | null;
 
    positiveTestUnitsMinimumIsolatesPerSelectiveAgar?: number | null;
 
    positivesContinuationTestingSerologyRequired?: boolean | null;
-
-   aoacMethodCode?: string | null;
 
    spikeSpeciesText?: string | null;
 

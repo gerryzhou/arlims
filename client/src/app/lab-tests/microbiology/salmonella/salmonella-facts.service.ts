@@ -16,6 +16,7 @@ import {
 } from './test-data';
 import {countValueOccurrences} from '../../test-stages';
 import {ApiUrlsService, UserContextService} from '../../../shared/services';
+import {TestConfig} from './test-config';
 
 // FACTS posting service for the salmonella module.
 @Injectable()
@@ -33,13 +34,15 @@ export class SalmonellaFactsService {
       (
          testData: TestData,
          opId: number,
-         factsMethodCode: string,
-         labGroupFactsParentOrgName: string
+         labGroupFactsParentOrgName: string,
+         testConfig: TestConfig
       )
       : Observable<[CreatedSampleAnalysisMicrobiology]>
    {
+      const aoacMethodCode = testConfig.aoacMethodCode;
+
       const analyses = [
-         this.makeAOACSampleAnalysis(testData, opId, factsMethodCode, labGroupFactsParentOrgName),
+         this.makeAOACSampleAnalysis(testData, opId, aoacMethodCode, labGroupFactsParentOrgName),
          this.makeBAMSampleAnalysis(testData, opId, labGroupFactsParentOrgName)
       ];
 
@@ -55,7 +58,7 @@ export class SalmonellaFactsService {
       (
          testData: TestData,
          opId: number,
-         factsMethodCode: string,
+         methodCode: string,
          labGroupFactsParentOrgName: string
       )
       : MicrobiologySampleAnalysis
@@ -92,7 +95,7 @@ export class SalmonellaFactsService {
          genusCode: 'SLML',
          speciesCode: 'SLML998',
          methodSourceCode: 'AOAC',
-         methodCode: factsMethodCode,
+         methodCode: methodCode,
          methodModificationIndicator: 'N',
          kitTestIndicator: spiking ? 'Y' : 'N',
          lowestDilutionTestedCode: '1', // TODO: Where from?
