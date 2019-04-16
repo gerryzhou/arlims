@@ -1,10 +1,6 @@
-FACTS test data submission
---------------------------
-
+Form data review component has type error.
 
 Button backgrounds
-
-Extract error messages from failed FACTS validations in staged test data component.
 
 Wrapup: After save, exit to samples listing.
   Probably not a good idea because of interaction with hours and FACTS saving on same page.

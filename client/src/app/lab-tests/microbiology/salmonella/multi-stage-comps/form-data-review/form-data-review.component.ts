@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 
 import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
-import {LabResource, TestAttachedFileMetadata, SampleOpTest, AppUser} from '../../../../../../generated/dto';
+import {LabResource, TestAttachedFileMetadata, SampleOpTest, AppUser, UserReference} from '../../../../../../generated/dto';
 import {emptyTestData, getVidasPositiveTestUnitNumbers, makeTestDataFormGroup} from '../../test-data';
 import {TestConfig} from '../../test-config';
 import {UserContextService} from '../../../../../shared/services';
@@ -41,6 +41,7 @@ export class FormDataReviewComponent implements OnInit {
    readonly incubators: LabResource[] | undefined;
    readonly waterBaths: LabResource[] | undefined;
    readonly vidasInstruments: LabResource[] | undefined;
+   readonly labGroupUsers: UserReference[];
 
    readonly analyzedAuditLogEntries: AnalyzedAuditLogEntry[];
 
@@ -74,6 +75,8 @@ export class FormDataReviewComponent implements OnInit {
       this.incubators = labResources.get(UserContextService.INCUBATOR_RESOURCE_TYPE);
       this.waterBaths = labResources.get(UserContextService.WATERBATH_RESOURCE_TYPE);
       this.vidasInstruments = labResources.get(UserContextService.VIDAS_RESOURCE_TYPE);
+
+      this.labGroupUsers = labGroupTestData.labGroupUsers;
 
       this.analyzedAuditLogEntries = labGroupTestData.auditLogEntries ?
          labGroupTestData.auditLogEntries

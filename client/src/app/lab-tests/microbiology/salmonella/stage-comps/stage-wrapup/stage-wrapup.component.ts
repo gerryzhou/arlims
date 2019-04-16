@@ -31,9 +31,6 @@ export class StageWrapupComponent implements OnChanges {
    sampleOp: SampleOp;
 
    @Input()
-   fdaOrgName: string;
-
-   @Input()
    labGroupUsers: UserReference[];
 
    @Input()
@@ -115,7 +112,7 @@ export class StageWrapupComponent implements OnChanges {
                remarks: '',
                statusCode: tc.assignmentStatus,
                hoursSpentNumber: tc.hours,
-               hoursCreditedOrgName: this.fdaOrgName
+               hoursCreditedOrgName: this.appUser.factsFdaOrgName
             };
          });
 
