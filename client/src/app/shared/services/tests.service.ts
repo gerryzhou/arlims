@@ -130,7 +130,7 @@ export class TestsService {
          testData: any,
          prevTestData: any,
          prevTestDataMd5: string,
-         stageStatusesFn: (any) => TestStageStatus[],
+         stageStatuses: TestStageStatus[],
          jsonFieldFormatter: (key: string, value: any) => string = defaultJsonFieldFormatter
       )
       : Observable<TestDataSaveResult>
@@ -138,17 +138,11 @@ export class TestsService {
       const formData: FormData = new FormData();
 
       formData.append('testDataJson',
-         new Blob(
-            [JSON.stringify(testData, jsonFieldFormatter)],
-            { type: 'application/json' }
-         )
+         new Blob([JSON.stringify(testData, jsonFieldFormatter)], { type: 'application/json' })
       );
 
       formData.append('stageStatusesJson',
-         new Blob(
-            [JSON.stringify(stageStatusesFn(testData))],
-            { type: 'application/json' }
-         )
+         new Blob([JSON.stringify(stageStatuses)], { type: 'application/json' })
       );
 
       formData.append('previousMd5', prevTestDataMd5);

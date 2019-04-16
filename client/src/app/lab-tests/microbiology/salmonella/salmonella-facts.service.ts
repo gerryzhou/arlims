@@ -41,10 +41,11 @@ export class SalmonellaFactsService {
    {
       const aoacMethodCode = testConfig.aoacMethodCode;
 
-      const analyses = [
-         this.makeAOACSampleAnalysis(testData, opId, aoacMethodCode, fdaOrgName),
-         this.makeBAMSampleAnalysis(testData, opId, fdaOrgName)
-      ];
+      const aoacAnalysis = this.makeAOACSampleAnalysis(testData, opId, aoacMethodCode, fdaOrgName);
+
+      const analyses = aoacAnalysis.subSamplesDetectableFindingsNumber === 0 ?
+         [ aoacAnalysis ]
+         : [ aoacAnalysis, this.makeBAMSampleAnalysis(testData, opId, fdaOrgName) ];
 
       return (
          this.httpClient.post<[CreatedSampleAnalysisMicrobiology]>(
@@ -137,7 +138,7 @@ export class SalmonellaFactsService {
       const samplingMethod = testData.preEnrData.samplingMethod;
 
       const contTestsByTestUnitNum = testData.posContData.testUnitsContinuationTests || {};
-      const examinedNumber = Object.keys(contTestsByTestUnitNum).length;
+      const aoacPositivesCount = countValueOccurrences(testData.vidasData.testUnitDetections, true);
       const bamFindings = this.makeBAMFindings(contTestsByTestUnitNum, fdaOrgName);
 
       const positiveFindingsCount = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
@@ -166,12 +167,12 @@ export class SalmonellaFactsService {
 
       if ( samplingMethod.testUnitsType === 'composite' )
       {
-         subm.compositesExaminedNumber = examinedNumber;
+         subm.compositesExaminedNumber = aoacPositivesCount;
          subm.subSamplesUsedCompositeNumber = samplingMethod.numberOfSubsPerComposite;
       }
       else
       {
-         subm.subSamplesExaminedNumber = examinedNumber;
+         subm.subSamplesExaminedNumber = aoacPositivesCount;
       }
 
       return subm;
@@ -199,14 +200,14 @@ export class SalmonellaFactsService {
 
             spikingResultCode: detection ? 'POS' : 'NEG',
 
-            subsampleNumberCode: '1', // TODO: Where from? Need new field for this?
+            subCompositeNumber: '1', // TODO: Where from? Need new field for this?
                                       // (no test unit in context here, this is at level of overall AOAC submission)
 
             selectiveAgarResultCode: '', // TODO: Where from? Really repr as empty text when missing, not null or absence?
 
             selectiveAgarText: '',       // TODO: "
 
-            kitRemarksText: kitRemarks || 'NA'
+            kitRemarks: kitRemarks || 'NA'
          }
       ];
    }
@@ -236,7 +237,7 @@ export class SalmonellaFactsService {
             atypicalReactionCode: 'N',
             isolatesSentNumber: 1,              // TODO: Where from? Need new field for this?
             isolatesSentIndicator: 'Y',         // "
-            fdaLabOrganizationName: fdaOrgName,
+            fdaLabOrgName: fdaOrgName,
             remarksText: 'Test entry from ALIS' // "
          });
 

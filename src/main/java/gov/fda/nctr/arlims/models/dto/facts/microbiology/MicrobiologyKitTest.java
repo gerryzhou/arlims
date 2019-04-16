@@ -13,7 +13,7 @@ public class MicrobiologyKitTest
 
     private String spikingResultCode;
 
-    private String subsampleNumberCode;
+    private String subCompositeNumber;
 
     private Optional<String> selectiveAgarResultCode;
 
@@ -21,7 +21,7 @@ public class MicrobiologyKitTest
 
     private Optional<Long> analysisMicrobiologyKitId;
 
-    private Optional<String> kitRemarksText;
+    private Optional<String> kitRemarks;
 
     protected MicrobiologyKitTest() {}
 
@@ -33,7 +33,7 @@ public class MicrobiologyKitTest
 
     public String getSpikingResultCode() { return spikingResultCode; }
 
-    public String getSubsampleNumberCode() { return subsampleNumberCode; }
+    public String getSubCompositeNumber() { return subCompositeNumber; }
 
     public Optional<String> getSelectiveAgarResultCode() { return selectiveAgarResultCode; }
 
@@ -41,5 +41,5 @@ public class MicrobiologyKitTest
 
     public Optional<Long> getAnalysisMicrobiologyKitId() { return analysisMicrobiologyKitId; }
 
-    public Optional<String> getKitRemarksText() { return kitRemarksText; }
+    public Optional<String> getKitRemarks() { return kitRemarks; }
 }

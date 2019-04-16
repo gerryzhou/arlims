@@ -21,11 +21,9 @@ import {
    SelectiveAgarsTestSuite,
    TimeChargesSet,
    TimeCharge,
-   FactsSubmissionResultsByType,
 } from './test-data';
 import {TestConfig} from '../test-config';
 import {SamplingMethod} from '../../sampling-methods';
-import {FactsSubmissionResult} from '../../../../shared/client-models/facts-submission-result-types';
 
 type FormModel<T> = { [P in keyof T]: any };
 
@@ -136,7 +134,6 @@ export function makeTestDataFormGroup
          timeChargesLastEdited: [testData.wrapupData.timeChargesLastEdited],
          analysisResultsRemarksText: [testData.wrapupData.analysisResultsRemarksText],
       }),
-      factsSubmissionsResults: makeFactsAnalysisSubmissionResultsFormGroup(fb, testData.factsSubmissionsResults),
    });
 }
 
@@ -349,36 +346,3 @@ export function makeTimeChargeFormGroup
    });
 }
 
-export function makeFactsAnalysisSubmissionResultsFormGroup
-   (
-      formBuilder: FormBuilder,
-      submResultsByType: FactsSubmissionResultsByType
-   )
-   : FormGroup
-{
-   const fgControls: { [submType: string]: FormGroup } = {};
-
-   if ( submResultsByType )
-   {
-      for ( const submType of Object.keys(submResultsByType) )
-      {
-         fgControls[submType] = makeFactsSubmissionResultFormGroup(formBuilder, submResultsByType[submType]);
-      }
-   }
-
-   return new FormGroup(fgControls);
-}
-
-export function makeFactsSubmissionResultFormGroup
-   (
-      formBuilder: FormBuilder,
-      res: FactsSubmissionResult
-   )
-   : FormGroup
-{
-   return makeFormGroup<FactsSubmissionResult>(formBuilder, {
-      submissionTimestamp: [res.submissionTimestamp],
-      submissionSucceeded: [res.submissionSucceeded],
-      failureMessage: [res.failureMessage],
-   });
-}

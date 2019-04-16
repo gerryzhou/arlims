@@ -23,7 +23,6 @@ import {TimeChargesComponent} from './time-charges/time-charges.component';
 import {UserTimeChargeDialogComponent} from './time-charges/time-charge-dialog/user-time-charge-dialog.component';
 import {ItemsSelectionDialogComponent} from './items-selection-dialog/items-selection-dialog.component';
 import {MaterialUiModule} from '../material-ui.module';
-import {FactsSubmissionResultComponent} from './facts-submission-result/facts-submission-result.component';
 
 @NgModule({
    imports: [
@@ -53,7 +52,6 @@ import {FactsSubmissionResultComponent} from './facts-submission-result/facts-su
       TimeChargesComponent,
       UserTimeChargeDialogComponent,
       ItemsSelectionDialogComponent,
-      FactsSubmissionResultComponent,
    ],
    entryComponents: [
       NewTestDialogComponent,
@@ -84,7 +82,6 @@ import {FactsSubmissionResultComponent} from './facts-submission-result/facts-su
       TimeChargesComponent,
       UserTimeChargeDialogComponent,
       ItemsSelectionDialogComponent,
-      FactsSubmissionResultComponent,
    ],
 })
 export class CommonComponentsModule {}

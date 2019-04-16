@@ -1,4 +1,4 @@
-<form [formGroup]="testDataForm" (ngSubmit)="saveTestData('nav-next-stage')">
+<form [formGroup]="testDataForm" (ngSubmit)="onSaveTestDataClicked('nav-next-stage')">
 
    <div class="sample-op-test-info">
       <app-sample [sampleOp]="sampleOpTest.sampleOp"></app-sample>
@@ -110,26 +110,14 @@
       </mat-step>
    </mat-horizontal-stepper>
 
-   <div class="facts-submissions" *ngIf="currentStage === 'WRAPUP'">
+   <div class="facts-submission" *ngIf="currentStage === 'WRAPUP'">
       <h1>FACTS Submission</h1>
-      <div>
-         <div *ngIf="lastAnalysesSubm; else noSubmMsg">
-            <div>A previous FACTS analyses submission has been made for this test data:</div>
-            <app-facts-submission-result
-               [factsSubmissionResult]="lastAnalysesSubm">
-            </app-facts-submission-result>
-         </div>
-         <ng-template class="no-submission"#noSubmMsg>
-            No FACTS submission has been made yet.
-         </ng-template>
-      </div>
       <div class="facts-submission-buttons">
          <button class="facts-save-btn" mat-button type="button"
-                 (click)="submitFactsAnalyses()">
+                 (click)="onSubmitFactsAnalysesClicked()">
             Submit analyses to FACTS
          </button>
          <button class="facts-save-btn" mat-button type="button"
-            [disabled]="!(lastAnalysesSubm && lastAnalysesSubm.submissionSucceeded)"
             (click)="saveTimeChargesToFacts()">
             Save work hours to FACTS
          </button>

@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.*;
 
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.facts.models.dto.*;
+import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
@@ -336,9 +337,6 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
             public void handleError(ClientHttpResponse response, HttpStatus statusCode) throws IOException
             {
                 JsonNode errorNode = response.getBody() != null ? jsonReader.readTree(response.getBody()) : null;
-                byte[] message = errorNode != null && errorNode.has("message") ?
-                    errorNode.get("message").textValue().getBytes()
-                    : null;
 
                 log.info(
                     "LABS-DS api call resulted in error with http status code " + statusCode + ": " +
@@ -348,6 +346,18 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
                 String statusText = response.getStatusText();
                 HttpHeaders headers = response.getHeaders();
                 Charset charset = this.getCharset(response);
+
+                if ( errorNode != null &&
+                     errorNode.isArray() &&
+                     errorNode.get(0).hasNonNull("errorCode") &&
+                     errorNode.get(0).get("errorCode").asText().startsWith("LABS-RUL-") )
+                {
+                    throw new BadRequestException(errorNode.toString());
+                }
+
+                byte[] message = errorNode != null && errorNode.has("message") ?
+                    errorNode.get("message").textValue().getBytes()
+                    : null;
 
                 switch(statusCode.series())
                 {

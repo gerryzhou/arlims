@@ -1,19 +1,8 @@
 FACTS test data submission
 --------------------------
 
-Applying barcodes to select fields.
-  Discuss whether we can have prefixes identifying the code type or must match existing codes as they are.
-    ARL*, NA*, all digits (e.g. incubator 5099365)
-
-Record timestamp that user entered receive fields in PREP.
-  Use this for vidas timeframe calculation.
 
 Button backgrounds
-
-
-BAM
-  Check LABS-DS documentation for changes to analyses submission structures.
-  Enable and test.
 
 Extract error messages from failed FACTS validations in staged test data component.
 

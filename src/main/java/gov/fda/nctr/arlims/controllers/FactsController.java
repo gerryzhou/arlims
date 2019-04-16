@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
+import gov.fda.nctr.arlims.data_access.test_data.TestDataService;
+import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.models.dto.SampleOpTimeCharges;
 import gov.fda.nctr.arlims.models.dto.SampleTransfer;
 import gov.fda.nctr.arlims.models.dto.facts.microbiology.CreatedSampleAnalysisMicrobiology;
@@ -19,13 +21,16 @@ import gov.fda.nctr.arlims.models.dto.facts.microbiology.MicrobiologySampleAnaly
 public class FactsController extends ControllerBase
 {
     private FactsAccessService factsService;
+    private TestDataService testDataService;
 
     public FactsController
         (
-            FactsAccessService factsService
+            FactsAccessService factsService,
+            TestDataService testDataService
         )
     {
         this.factsService = factsService;
+        this.testDataService = testDataService;
     }
 
     @GetMapping("/samples/{sampleTrackingNumber:\\d+}/transfers")
@@ -47,7 +52,16 @@ public class FactsController extends ControllerBase
         )
         throws ExecutionException, InterruptedException
     {
-        return factsService.submitMicrobiologySampleAnalyses(analyses).get();
+        List<CreatedSampleAnalysisMicrobiology> submRes =
+            factsService.submitMicrobiologySampleAnalyses(analyses).get();
+
+        if ( !submRes.isEmpty() )
+        {
+            // TODO: Save evidence of this successful submission via test service (to test table).
+            //       Maybe append to a list of full analyses submissions (new test field).
+        }
+
+        return submRes;
     }
 
     @PostMapping("/sample-op/{opId:\\d+}/work-status/{personId:\\d+}")
