@@ -10,8 +10,8 @@ curl -i -d @- \
 {
   "operationId":8661242,
   "labHoursList":[
-    {"assignedToPersonId":437799,"analystTypeCode":"O","leadIndicator":"Y","remarks":"","statusCode":"I","hoursSpentNum":2.2,"hoursCreditedOrgName":"ARKL"},
-    {"assignedToPersonId":454522,"analystTypeCode":"A","leadIndicator":"N","remarks":"","statusCode":"I","hoursSpentNum":1,"hoursCreditedOrgName":"ARKL"}
+    {"assignedToPersonId":437799,"analystTypeCode":"O","leadIndicator":"Y","remarks":"","statusCode":"I","hoursSpentNumber":2.2,"hoursCreditedOrgName":"ARKL"},
+    {"assignedToPersonId":454522,"analystTypeCode":"A","leadIndicator":"N","remarks":"","statusCode":"I","hoursSpentNumber":1,"hoursCreditedOrgName":"ARKL"}
   ]
 }
 REQBODY

@@ -1,19 +1,8 @@
 TODO
 ====
-Work hours can't be saved:
-2019-04-16 12:32:33.305  INFO 2852 --- [nio-8080-exec-9] g.f.n.a.d.f.LabsDSFactsAccessService     :
-  Submitting sample op time charges {"operationId":6889192,"labHoursList":[{"assignedToPersonId":437799,"analystTypeCode":"O","leadIndicator":"Y","remarks":"","statusCode":"I","hoursSpentNum":1,"hoursCreditedOrgName":"ARKL"}]}.
-2019-04-16 12:32:34.242  INFO 2852 --- [nio-8080-exec-9] g.f.n.a.d.f.LabsDSFactsAccessService     :
-  LABS-DS api call resulted in error with http status code 500 INTERNAL_SERVER_ERROR:
-    {"errorCode":"LABS-ERR-1030","message":"Labs validation rule [{0}] failed"}
-
 FactsController
   When anslyses are successfully submitted, append submission and results to new Test record json array field.
   Set timestamp of (successful) submission as well (existing field).
-
-FactsAccessService
-  Translate LABS-DS errors having 'LABS-RUL-*' errorCode values to BadRequest with error code and message in standard place (add code field).
-
 
 
 Done

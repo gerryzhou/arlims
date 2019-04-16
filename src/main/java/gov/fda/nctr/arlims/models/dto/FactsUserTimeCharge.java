@@ -16,7 +16,7 @@ public class FactsUserTimeCharge
 
     private TimeChargeStatusCode statusCode;
 
-    private BigDecimal hoursSpentNum;
+    private BigDecimal hoursSpentNumber;
 
     private String hoursCreditedOrgName;
 
@@ -30,7 +30,7 @@ public class FactsUserTimeCharge
             YesNoCode leadIndicator,
             Optional<String> remarks,
             TimeChargeStatusCode statusCode,
-            BigDecimal hoursSpentNum,
+            BigDecimal hoursSpentNumber,
             String hoursCreditedOrgName
         )
     {
@@ -39,7 +39,7 @@ public class FactsUserTimeCharge
         this.leadIndicator = leadIndicator;
         this.remarks = remarks;
         this.statusCode = statusCode;
-        this.hoursSpentNum = hoursSpentNum;
+        this.hoursSpentNumber = hoursSpentNumber;
         this.hoursCreditedOrgName = hoursCreditedOrgName;
     }
 
@@ -53,7 +53,7 @@ public class FactsUserTimeCharge
 
     public TimeChargeStatusCode getStatusCode() { return statusCode; }
 
-    public BigDecimal getHoursSpentNum() { return hoursSpentNum; }
+    public BigDecimal getHoursSpentNumber() { return hoursSpentNumber; }
 
     public String getHoursCreditedOrgName() { return hoursCreditedOrgName; }
 }
