@@ -257,7 +257,7 @@ export class StagedTestDataComponent implements OnInit {
 
    onSubmitFactsAnalysesClicked(): Observable<void>
    {
-      const factsSubmission$ = this.submitFactsAnalyses();
+      const factsSubmission$ = this.saveTestDataAndSubmitFactsAnalyses();
 
       factsSubmission$.subscribe(
          (res: FactsSubmissionProcessResult) => {
@@ -293,7 +293,7 @@ export class StagedTestDataComponent implements OnInit {
 
    // Submit FACTS analyses and update form data with latest submission attempt,
    // without any user interaction.
-   private submitFactsAnalyses(): Observable<FactsSubmissionProcessResult>
+   private saveTestDataAndSubmitFactsAnalyses(): Observable<FactsSubmissionProcessResult>
    {
       return this.saveTestData().pipe(flatMap(saveRes => {
 
@@ -306,54 +306,60 @@ export class StagedTestDataComponent implements OnInit {
             }));
 
          const preconditionFailures = getFactsSubmissionPreconditionFailures(testData);
+
          if ( preconditionFailures.length > 0 )
             return of({
                preconditionFailures,
                submissionResult: null
             });
-
-         const submissionTimestamp = moment().format();
-
-         return (
-            this.slmFactsService.submitAnalyses(
-               testData,
-               this.sampleOpTest.sampleOp.opId,
-               this.appUser.factsFdaOrgName,
-               this.testConfig
-            )
-            .pipe(
-               map((createdAnalyses) => {
-                  return ({
-                     preconditionFailures: [],
-                     submissionResult: {
-                        submissionTimestamp,
-                        submissionSucceeded: true
-                     }
-                  });
-               }),
-               catchError(errRes => {
-                  console.error('FACTS submission error: ', errRes);
-                  const msgStruct: any = errRes.error && errRes.error.message ?
-                     JSON.parse(errRes.error && errRes.error.message)
-                     : null;
-                  const labsDsErrCode = msgStruct[0] && msgStruct[0].errorCode || null;
-                  const labsDsErrMsg =  msgStruct[0] && msgStruct[0].message || null;
-                  const msg = labsDsErrCode && labsDsErrMsg ?
-                     'Validation Failure [' + labsDsErrCode + ']: ' + labsDsErrMsg +
-                     ' [ The browser console may have further details. ]'
-                     : 'see console for details';
-                  return of({
-                     preconditionFailures: [],
-                     submissionResult: {
-                           submissionTimestamp,
-                           submissionSucceeded: false,
-                           failureMessage: msg
-                     }
-                  });
-               }), // catchError
-            ) // pipe
-         );
+         else
+            return this.submitFactsAnalyses(testData);
       }));
+   }
+
+   private submitFactsAnalyses(testData)
+   {
+      const submissionTimestamp = moment().format();
+
+      return (
+         this.slmFactsService.submitAnalyses(
+            testData,
+            this.sampleOpTest.sampleOp.opId,
+            this.appUser.factsFdaOrgName,
+            this.testConfig
+         )
+         .pipe(
+            map((createdAnalyses) => {
+               return ({
+                  preconditionFailures: [],
+                  submissionResult: {
+                     submissionTimestamp,
+                     submissionSucceeded: true,
+                  }
+               });
+            }),
+            catchError(errRes => {
+               console.error('FACTS submission error: ', errRes);
+               const msgStruct: any = errRes.error && errRes.error.message ?
+                  JSON.parse(errRes.error && errRes.error.message)
+                  : null;
+               const labsDsErrCode = msgStruct[0] && msgStruct[0].errorCode || null;
+               const labsDsErrMsg = msgStruct[0] && msgStruct[0].message || null;
+               const msg = labsDsErrCode && labsDsErrMsg ?
+                  'Validation Failure [' + labsDsErrCode + ']: ' + labsDsErrMsg +
+                  ' [ The browser console may have further details. ]'
+                  : 'see console for details';
+               return of({
+                  preconditionFailures: [],
+                  submissionResult: {
+                     submissionTimestamp,
+                     submissionSucceeded: false,
+                     failureMessage: msg
+                  }
+               });
+            }), // catchError
+         ) // pipe
+      );
    }
 
    saveTimeChargesToFacts()

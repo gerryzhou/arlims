@@ -34,7 +34,7 @@ export interface PreEnrData {
    bagId: string | null;
    sampleSpike: boolean | null;
    spikeSpeciesText: string | null;
-   spikeKitRemarksText: string | null;
+   spikeKitRemarks: string | null;
    mediumBatchId: string | null;
    mediumType: string | null;
    incubatorId: string | null;
@@ -155,7 +155,7 @@ export interface WrapupData {
    testTimeCharges: TimeChargesSet;
    timeChargesLastSavedToFacts: string | null;
    timeChargesLastEdited: string | null;
-   analysisResultsRemarksText: string | null;
+   analysisResultsRemarks: string | null;
 }
 
 export interface TimeChargesSet {
@@ -210,7 +210,7 @@ export function emptyTestData(): TestData {
          bagId: null,
          sampleSpike: null,
          spikeSpeciesText: null,
-         spikeKitRemarksText: null,
+         spikeKitRemarks: null,
          mediumBatchId: null,
          mediumType: null,
          incubatorId: null
@@ -253,7 +253,7 @@ export function emptyTestData(): TestData {
          testTimeCharges: {},
          timeChargesLastSavedToFacts: null,
          timeChargesLastEdited: null,
-         analysisResultsRemarksText: null,
+         analysisResultsRemarks: null,
       },
    };
 }

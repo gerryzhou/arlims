@@ -85,7 +85,7 @@ export function makeTestDataFormGroup
          incubatorId: [testData.preEnrData.incubatorId],
          sampleSpike: [testData.preEnrData.sampleSpike],
          spikeSpeciesText: [testData.preEnrData.spikeSpeciesText || testConfig.spikeSpeciesText || null],
-         spikeKitRemarksText: [testData.preEnrData.spikeKitRemarksText || testConfig.spikeKitRemarksText || null]
+         spikeKitRemarks: [testData.preEnrData.spikeKitRemarks || testConfig.spikeKitRemarksText || null]
       }),
 
       selEnrData: formGroup<SelEnrData>({
@@ -132,7 +132,7 @@ export function makeTestDataFormGroup
          testTimeCharges: makeTimeChargesSetFormGroup(fb, testData.wrapupData.testTimeCharges),
          timeChargesLastSavedToFacts: [testData.wrapupData.timeChargesLastSavedToFacts],
          timeChargesLastEdited: [testData.wrapupData.timeChargesLastEdited],
-         analysisResultsRemarksText: [testData.wrapupData.analysisResultsRemarksText],
+         analysisResultsRemarks: [testData.wrapupData.analysisResultsRemarks],
       }),
    });
 }

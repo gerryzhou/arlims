@@ -9,9 +9,10 @@ import {
    MicrobiologyKitTest
 } from '../../../../generated/dto';
 import {
-   ContinuationTestssByTestUnitNum,
-   getTestMediumBatchIds, containsPositiveIdentification,
    TestData,
+   ContinuationTestssByTestUnitNum,
+   getTestMediumBatchIds,
+   containsPositiveIdentification,
    vidasHoursElapsedFromSampleReceipt
 } from './test-data';
 import {countValueOccurrences} from '../../test-stages';
@@ -71,7 +72,7 @@ export class SalmonellaFactsService {
 
       const spiking = vidasData.spikeDetection != null;
       const spikeSpecies = spiking ? testData.preEnrData.spikeSpeciesText : null;
-      const kitRemarks = spiking ? testData.preEnrData.spikeKitRemarksText : null;
+      const kitRemarks = spiking ? testData.preEnrData.spikeKitRemarks: null;
       const analysisMicKitTests = !spiking ? null :
          this.makeSpikingKitTests(
             testData.vidasData.spikeDetection,
@@ -109,7 +110,7 @@ export class SalmonellaFactsService {
          subSamplesDetectableFindingsNumber: positivesCount,
          analysisMicKitTests,
          analysisMicFindings: [],
-         analysisResultsRemarksText: JSON.stringify(structuredRemarks),
+         analysisResultsRemarks: JSON.stringify(structuredRemarks),
       };
 
       // Set any remaining fields having conditional presence.
@@ -160,7 +161,7 @@ export class SalmonellaFactsService {
          // TODO: Check that this is correct, which is currently counting positive
          //  test units having at least one isolate identification in IDENT stage.
          subSamplesDetectableFindingsNumber: positiveFindingsCount,
-         analysisResultsRemarksText: testData.wrapupData.analysisResultsRemarksText,
+         analysisResultsRemarks: testData.wrapupData.analysisResultsRemarks,
       };
 
       // Set any remaining fields having conditional presence.
@@ -238,7 +239,7 @@ export class SalmonellaFactsService {
             isolatesSentNumber: 1,              // TODO: Where from? Need new field for this?
             isolatesSentIndicator: 'Y',         // "
             fdaLabOrgName: fdaOrgName,
-            remarksText: 'Test entry from ALIS' // "
+            remarks: 'Test entry from ALIS' // "
          });
 
       }

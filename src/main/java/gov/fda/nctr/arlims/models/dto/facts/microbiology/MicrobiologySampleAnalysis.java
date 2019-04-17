@@ -22,7 +22,7 @@ public class MicrobiologySampleAnalysis
     private Optional<Long> compositesExaminedNumber;
     private Optional<Long> subSamplesUsedCompositeNumber;
     private Optional<Long> subSamplesExaminedNumber;
-    private Optional<String> analysisResultsRemarksText;
+    private Optional<String> analysisResultsRemarks;
     private Optional<List<MicrobiologyAnalysisFinding>> analysisMicFindings;
     private Optional<List<MicrobiologyKitTest>> analysisMicKitTests;
 
@@ -44,7 +44,7 @@ public class MicrobiologySampleAnalysis
             Optional<Long> compositesExaminedNumber,
             Optional<Long> subSamplesUsedCompositeNumber,
             Optional<Long> subSamplesExaminedNumber,
-            Optional<String> analysisResultsRemarksText,
+            Optional<String> analysisResultsRemarks,
             Optional<List<MicrobiologyAnalysisFinding>> analysisMicFindings,
             Optional<List<MicrobiologyKitTest>> analysisMicKitTests
         )
@@ -65,7 +65,7 @@ public class MicrobiologySampleAnalysis
         this.compositesExaminedNumber = compositesExaminedNumber;
         this.subSamplesUsedCompositeNumber = subSamplesUsedCompositeNumber;
         this.subSamplesExaminedNumber= subSamplesExaminedNumber;
-        this.analysisResultsRemarksText = analysisResultsRemarksText;
+        this.analysisResultsRemarks = analysisResultsRemarks;
         this.analysisMicFindings = analysisMicFindings;
         this.analysisMicKitTests = analysisMicKitTests;
     }
@@ -104,7 +104,7 @@ public class MicrobiologySampleAnalysis
 
     public Optional<Long> getSubSamplesExaminedNumber() { return subSamplesExaminedNumber; }
 
-    public Optional<String> getAnalysisResultsRemarksText() { return analysisResultsRemarksText; }
+    public Optional<String> getAnalysisResultsRemarks() { return analysisResultsRemarks; }
 
     public Optional<List<MicrobiologyAnalysisFinding>> getAnalysisMicFindings() { return analysisMicFindings; }
 

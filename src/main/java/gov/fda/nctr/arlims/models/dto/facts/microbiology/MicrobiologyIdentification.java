@@ -9,7 +9,7 @@ public class MicrobiologyIdentification
     String preFormedToxinIndicator;
     String serotypeCode;
     String subgroupCode;
-    Optional<String> identificationRemarksText;
+    Optional<String> identificationRemarks;
 
     public MicrobiologyIdentification
         (
@@ -18,7 +18,7 @@ public class MicrobiologyIdentification
             String preFormedToxinIndicator,
             String serotypeCode,
             String subgroupCode,
-            Optional<String> identificationRemarksText
+            Optional<String> identificationRemarks
         )
     {
         this.biotypeCode = biotypeCode;
@@ -26,7 +26,7 @@ public class MicrobiologyIdentification
         this.preFormedToxinIndicator = preFormedToxinIndicator;
         this.serotypeCode = serotypeCode;
         this.subgroupCode = subgroupCode;
-        this.identificationRemarksText = identificationRemarksText;
+        this.identificationRemarks = identificationRemarks;
     }
 
     protected MicrobiologyIdentification() {}
@@ -41,5 +41,5 @@ public class MicrobiologyIdentification
 
     public String getSubgroupCode() { return subgroupCode; }
 
-    public Optional<String> getIdentificationRemarksText() { return identificationRemarksText; }
+    public Optional<String> getIdentificationRemarks() { return identificationRemarks; }
 }

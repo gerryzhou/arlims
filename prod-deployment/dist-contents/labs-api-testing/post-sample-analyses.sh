@@ -26,7 +26,7 @@ curl -i -d @- \
       "compositesExaminedNumber": 1,
       "subSamplesUsedCompositeNumber": 15,
       "subSamplesExaminedNumber": null,
-      "analysisResultsRemarksText": "{\"methodRemarks\":null,\"methodDetails\":{\"vidasHoursFromSampleReceipt\":0,\"lotCodes\":[\"RV-233322\",\"RV-7361256\",\"TT-123121\",\"BG-12312\",\"I2KI-12323\",\"MB-23423\"],\"gramsPerSub\":25}}",
+      "analysisResultsRemarks": "{\"methodRemarks\":null,\"methodDetails\":{\"vidasHoursFromSampleReceipt\":0,\"lotCodes\":[\"RV-233322\",\"RV-7361256\",\"TT-123121\",\"BG-12312\",\"I2KI-12323\",\"MB-23423\"],\"gramsPerSub\":25}}",
       "analysisMicFindings": [],
       "analysisMicKitTests": null
     },
@@ -47,7 +47,7 @@ curl -i -d @- \
       "compositesExaminedNumber": 1,
       "subSamplesUsedCompositeNumber": 15,
       "subSamplesExaminedNumber": null,
-      "analysisResultsRemarksText": "all finished",
+      "analysisResultsRemarks": "all finished",
       "analysisMicFindings": [
         {
           "actionIndicator": "Y",
@@ -57,11 +57,11 @@ curl -i -d @- \
           "secondaryPafCode": "SAL",
           "presenceResultIndicator": "POS",
           "atypicalReactionCode": "N",
-          "atypicalReactionRemarksText": null,
+          "atypicalReactionRemarks": null,
           "isolatesSentNumber": 1,
           "isolatesSentIndicator": "Y",
           "fdaLabOrgName": "ARKL",
-          "remarksText": "Test entry from ALIS"
+          "remarks": "Test entry from ALIS"
         }
       ],
       "analysisMicKitTests": null

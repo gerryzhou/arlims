@@ -2,6 +2,7 @@ package gov.fda.nctr.arlims.models.dto.facts.microbiology;
 
 import java.util.Optional;
 
+
 public class MicrobiologyAnalysisFinding
 {
     private String actionIndicator;
@@ -11,11 +12,11 @@ public class MicrobiologyAnalysisFinding
     private String secondaryPafCode;
     private String presenceResultIndicator;
     private String atypicalReactionCode;
-    private Optional<String> atypicalReactionRemarksText;
+    private Optional<String> atypicalReactionRemarks;
     private long isolatesSentNumber;
     private String isolatesSentIndicator;   // "Y" | "N" // why necessary when number sent is also specified?
     private String fdaLabOrgName;
-    private Optional<String> remarksText;
+    private Optional<String> remarks;
     // TODO: Maybe add sampleAnalysisMicrobes.
 
     protected MicrobiologyAnalysisFinding() {}
@@ -29,11 +30,11 @@ public class MicrobiologyAnalysisFinding
             String secondaryPafCode,
             String presenceResultIndicator,
             String atypicalReactionCode,
-            Optional<String> atypicalReactionRemarksText,
+            Optional<String> atypicalReactionRemarks,
             long isolatesSentNumber,
             String isolatesSentIndicator,
             String fdaLabOrgName,
-            Optional<String> remarksText
+            Optional<String> remarks
         )
     {
         this.actionIndicator = actionIndicator;
@@ -43,11 +44,11 @@ public class MicrobiologyAnalysisFinding
         this.secondaryPafCode = secondaryPafCode;
         this.presenceResultIndicator = presenceResultIndicator;
         this.atypicalReactionCode = atypicalReactionCode;
-        this.atypicalReactionRemarksText = atypicalReactionRemarksText;
+        this.atypicalReactionRemarks = atypicalReactionRemarks;
         this.isolatesSentNumber = isolatesSentNumber;
         this.isolatesSentIndicator = isolatesSentIndicator;
         this.fdaLabOrgName = fdaLabOrgName;
-        this.remarksText = remarksText;
+        this.remarks = remarks;
     }
 
     public String getActionIndicator() { return actionIndicator; }
@@ -64,7 +65,7 @@ public class MicrobiologyAnalysisFinding
 
     public String getAtypicalReactionCode() { return atypicalReactionCode; }
 
-    public Optional<String> getAtypicalReactionRemarksText() { return atypicalReactionRemarksText; }
+    public Optional<String> getAtypicalReactionRemarks() { return atypicalReactionRemarks; }
 
     public long getIsolatesSentNumber() { return isolatesSentNumber; }
 
@@ -72,5 +73,5 @@ public class MicrobiologyAnalysisFinding
 
     public String getFdaLabOrgName() { return fdaLabOrgName; }
 
-    public Optional<String> getRemarksText() { return remarksText; }
+    public Optional<String> getRemarks() { return remarks; }
 }

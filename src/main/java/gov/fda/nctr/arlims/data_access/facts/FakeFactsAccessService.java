@@ -67,7 +67,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "{" +
                 "\"sampleTrackingNumber\":852325," +
                 "\"personId\":472629," +
-                "\"remarksText\":\"Starting work on this sample\"," +
+                "\"remarks\":\"Starting work on this sample\"," +
                 "\"sampleAnalysisId\":881828," +
                 "\"sampleTrackingSubNumber\":0," +
                 "\"statusCode\":\"I\"," +
@@ -85,7 +85,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "{" +
                 "\"sampleTrackingNumber\":852301," +
                 "\"personId\":472629," +
-                "\"remarksText\":\"Please work on this sample\"," +
+                "\"remarks\":\"Please work on this sample\"," +
                 "\"sampleAnalysisId\":881427," +
                 "\"sampleTrackingSubNumber\":0," +
                 "\"statusCode\":\"O\"," +

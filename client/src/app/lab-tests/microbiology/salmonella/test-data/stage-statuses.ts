@@ -444,7 +444,7 @@ function wrapupStatusCode(testData: TestData): TestStageStatusCode
 
    const timeChargePresent = Object.keys(data.testTimeCharges).length > 0;
 
-   const empty = reserveSampleFieldsStatus === 'e' && !timeChargePresent && data.analysisResultsRemarksText == null;
+   const empty = reserveSampleFieldsStatus === 'e' && !timeChargePresent && data.analysisResultsRemarks == null;
 
    if ( empty ) return 'e';
    else
