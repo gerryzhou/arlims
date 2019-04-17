@@ -48,6 +48,8 @@ export class SalmonellaFactsService {
          [ aoacAnalysis ]
          : [ aoacAnalysis, this.makeBAMSampleAnalysis(testData, opId, fdaOrgName) ];
 
+      console.log('Submitting FACTS analyses: ', analyses);
+
       return (
          this.httpClient.post<[CreatedSampleAnalysisMicrobiology]>(
             this.apiUrlsSvc.factsMicrobiologySampleAnalysesUrl(),
@@ -112,9 +114,6 @@ export class SalmonellaFactsService {
          analysisMicFindings: [],
          analysisResultsRemarks: JSON.stringify(structuredRemarks),
       };
-
-      console.log('Remarks: ', structuredRemarks);
-      console.log('Submitting AOAC submission: ', subm);
 
       // Set any remaining fields having conditional presence.
 

@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatDialog, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 
-import {UserReference} from '../../../generated/dto';
+import {TimeChargeStatusCode, UserReference} from '../../../generated/dto';
 import {AppUserTimeCharge} from './app-user-time-charge';
 import {UserTimeChargeDialogComponent} from './time-charge-dialog/user-time-charge-dialog.component';
 import {makeTimeChargeFormGroup, TimeChargeRole} from '../../lab-tests/microbiology/salmonella/test-data';
@@ -32,6 +32,9 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
 
    @Input()
    defaultFirstUserRole: TimeChargeRole | null;
+
+   @Input()
+   defaultFirstUserStatusCode: TimeChargeStatusCode | null;
 
    @Output()
    timeChargeCreate = new EventEmitter<AppUserTimeCharge>();
@@ -112,6 +115,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
       const isFirstUser = this.tableDataSource.data.length === 0;
       const defaultUserShortName = isFirstUser ? this.defaultFirstUserShortName : null;
       const defaultRole = isFirstUser ? this.defaultFirstUserRole : null;
+      const defaultStatus = isFirstUser ? this.defaultFirstUserStatusCode : null;
 
       const dlg = this.dialogSvc.open(UserTimeChargeDialogComponent, {
          width: 'calc(75%)',
@@ -121,7 +125,7 @@ export class TimeChargesComponent implements OnChanges, OnDestroy {
                timeCharge: {
                   role: defaultRole,
                   hours: null,
-                  assignmentStatus: null,
+                  assignmentStatus: defaultStatus,
                   enteredTimestamp: null,
                }
             },
