@@ -47,7 +47,6 @@ import {SalmonellaFactsService} from '../../salmonella-facts.service';
 import {SelectedSampleOpsService} from '../../../../../shared/services/selected-sample-ops.service';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TestDataSaveResult} from '../../../../../shared/client-models/test-data-save-result';
-import {AOAC_BAM_SUBMT, FactsSubmissionProcessResults} from '../../../../../shared/client-models/facts-submission-result-types';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data',
@@ -261,22 +260,23 @@ export class StagedTestDataComponent implements OnInit {
       const factsSubmission$ = this.submitFactsAnalyses();
 
       factsSubmission$.subscribe(
-         (res: FactsSubmissionProcessResults) => {
+         (res: FactsSubmissionProcessResult) => {
             if ( res.preconditionFailures.length > 0 ) // pre-conditions failed, no submission
                this.alertMsgSvc.alertWarning('Cannot Submit FACTS Data', false, res.preconditionFailures);
             else // submission attempted
             {
-               const submResult = res.factsSubmissionResultsByType[AOAC_BAM_SUBMT];
-               if  ( submResult.submissionSucceeded )
+               if  ( res.submissionResult.submissionSucceeded )
                {
-                  this.alertMsgSvc.alertInfo('The test data was successfully submitted to FACTS.');
+                  this.alertMsgSvc.alertInfo(
+                     'The test data was successfully submitted to FACTS.'
+                  );
                }
                else
                {
                   this.alertMsgSvc.alertDanger(
                      'Submission of test data to FACTS failed.',
                      false,
-                     [submResult.failureMessage]
+                     [res.submissionResult.failureMessage]
                   );
                }
             }
@@ -293,7 +293,7 @@ export class StagedTestDataComponent implements OnInit {
 
    // Submit FACTS analyses and update form data with latest submission attempt,
    // without any user interaction.
-   private submitFactsAnalyses(): Observable<FactsSubmissionProcessResults>
+   private submitFactsAnalyses(): Observable<FactsSubmissionProcessResult>
    {
       return this.saveTestData().pipe(flatMap(saveRes => {
 
@@ -302,14 +302,14 @@ export class StagedTestDataComponent implements OnInit {
          if ( !testData )
             return of(({
                preconditionFailures: ['Test data could not be saved prior to submission.'],
-               factsSubmissionResultsByType: {}
+               submissionResult: null
             }));
 
          const preconditionFailures = getFactsSubmissionPreconditionFailures(testData);
          if ( preconditionFailures.length > 0 )
             return of({
                preconditionFailures,
-               factsSubmissionResultsByType: {}
+               submissionResult: null
             });
 
          const submissionTimestamp = moment().format();
@@ -325,8 +325,9 @@ export class StagedTestDataComponent implements OnInit {
                map((createdAnalyses) => {
                   return ({
                      preconditionFailures: [],
-                     factsSubmissionResultsByType: {
-                        [AOAC_BAM_SUBMT]: { submissionTimestamp, submissionSucceeded: true }
+                     submissionResult: {
+                        submissionTimestamp,
+                        submissionSucceeded: true
                      }
                   });
                }),
@@ -343,16 +344,14 @@ export class StagedTestDataComponent implements OnInit {
                      : 'see console for details';
                   return of({
                      preconditionFailures: [],
-                     factsSubmissionResultsByType: {
-                        [AOAC_BAM_SUBMT]: {
+                     submissionResult: {
                            submissionTimestamp,
                            submissionSucceeded: false,
                            failureMessage: msg
-                        }
                      }
                   });
-               }),
-            )
+               }), // catchError
+            ) // pipe
          );
       }));
    }
@@ -529,4 +528,16 @@ function getBamSubmissionPreconditionFailures(testData: TestData): string[]
 
 
 type AfterSaveNavigation = 'nav-none' | 'nav-next-stage' | 'nav-home';
+
+
+interface FactsSubmissionResult {
+   submissionTimestamp: string;
+   submissionSucceeded: boolean;
+   failureMessage?: string | null;
+}
+
+interface FactsSubmissionProcessResult {
+   preconditionFailures: string[];
+   submissionResult: FactsSubmissionResult | null;
+}
 
