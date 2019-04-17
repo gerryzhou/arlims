@@ -116,25 +116,14 @@ export class StageWrapupComponent implements OnChanges {
             };
          });
 
-      const save$ =
+      return (
          this.generalFactsService.submitTimeCharges(this.sampleOp.opId, factsUserTimeCharges)
          .pipe(
             tap(() => {
                this.setTimeChargesLastSavedToFacts(saveStarted);
             })
-         );
-
-      save$.subscribe(
-         () => {
-            this.alertMsgSvc.alertInfo('Work hours were saved to FACTS.');
-         },
-         err => {
-            console.error('Error trying to save work accomplishments to FACTS: ', err);
-            this.alertMsgSvc.alertDanger('Failed to save accomplishment hours to FACTS.');
-         }
+         )
       );
-
-      return save$;
    }
 
    private getTimeChargesLastEdited(): Moment | null

@@ -1,12 +1,10 @@
-Form data review component has type error.
-
-Button backgrounds
+Buttons
+  Set backgrounds and margins, remove mat-button directives if necessary.
 
 Wrapup: After save, exit to samples listing.
   Probably not a good idea because of interaction with hours and FACTS saving on same page.
     Before saving others, it's not the right thing to exit.
     After saving others, there's no point in saving as both save the test first.
-Buttons like "Save" need to have a background color so they look like buttons.
 Add required validators which trigger when user tries to go to next stage.
 
 

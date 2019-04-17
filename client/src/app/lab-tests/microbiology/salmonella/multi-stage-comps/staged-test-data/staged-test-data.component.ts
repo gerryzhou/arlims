@@ -47,6 +47,7 @@ import {SalmonellaFactsService} from '../../salmonella-facts.service';
 import {SelectedSampleOpsService} from '../../../../../shared/services/selected-sample-ops.service';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TestDataSaveResult} from '../../../../../shared/client-models/test-data-save-result';
+import {tap} from 'rxjs/internal/operators/tap';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data',
@@ -307,17 +308,15 @@ export class StagedTestDataComponent implements OnInit {
 
          const preconditionFailures = getFactsSubmissionPreconditionFailures(testData);
 
-         if ( preconditionFailures.length > 0 )
-            return of({
-               preconditionFailures,
-               submissionResult: null
-            });
-         else
-            return this.submitFactsAnalyses(testData);
+         return (
+            preconditionFailures.length === 0 ?
+               this.submitFactsAnalyses(testData)
+               : of({ preconditionFailures, submissionResult: null })
+         );
       }));
    }
 
-   private submitFactsAnalyses(testData)
+   private submitFactsAnalyses(testData): Observable<FactsSubmissionProcessResult>
    {
       const submissionTimestamp = moment().format();
 
@@ -340,31 +339,30 @@ export class StagedTestDataComponent implements OnInit {
             }),
             catchError(errRes => {
                console.error('FACTS submission error: ', errRes);
-               const msgStruct: any = errRes.error && errRes.error.message ?
-                  JSON.parse(errRes.error && errRes.error.message)
-                  : null;
-               const labsDsErrCode = msgStruct[0] && msgStruct[0].errorCode || null;
-               const labsDsErrMsg = msgStruct[0] && msgStruct[0].message || null;
-               const msg = labsDsErrCode && labsDsErrMsg ?
-                  'Validation Failure [' + labsDsErrCode + ']: ' + labsDsErrMsg +
-                  ' [ The browser console may have further details. ]'
-                  : 'see console for details';
-               return of({
-                  preconditionFailures: [],
-                  submissionResult: {
-                     submissionTimestamp,
-                     submissionSucceeded: false,
-                     failureMessage: msg
-                  }
-               });
-            }), // catchError
-         ) // pipe
+               return of(
+                  makeFactsSubmissionProcessErrorResult(errRes, submissionTimestamp)
+               );
+            }),
+         )
       );
    }
 
-   saveTimeChargesToFacts()
+   onSaveTimeChargesToFactsClicked()
    {
-      this.wrapupComp.saveTimeChargesToFacts();
+      this.wrapupComp.saveTimeChargesToFacts()
+      .pipe(flatMap(() =>
+         this.saveTestData())
+      )
+      .subscribe(
+         () => {
+            this.alertMsgSvc.alertInfo('Work hours were saved to FACTS.', true);
+            this.doAfterSaveNavigation('nav-home');
+         },
+         err => {
+            console.error('Error trying to save work accomplishments to FACTS: ', err);
+            this.alertMsgSvc.alertDanger('Failed to save accomplishment hours to FACTS.');
+         }
+      );
    }
 
    hasUnsavedChanges(): boolean
@@ -470,7 +468,7 @@ export class StagedTestDataComponent implements OnInit {
 
    private onTestDataSaveError(err)
    {
-      console.log('Error occurred while trying to save test data, details below:\n', err);
+      console.error('Error occurred while trying to save test data:\n', err);
 
       this.alertMsgSvc.alertDanger(
          'An error occurred while trying to save test data. ' +
@@ -480,8 +478,7 @@ export class StagedTestDataComponent implements OnInit {
 
    private onFactsStatusUpdateError(err)
    {
-      console.log('Error occurred while trying to set FACTS status to in-progress, details below:');
-      console.log(err);
+      console.error('Error occurred while trying to set FACTS status to in-progress, details below:\n', err);
 
       this.alertMsgSvc.alertDanger(
          'An error occurred while trying to set FACTS status to in-progress. ' +
@@ -532,6 +529,29 @@ function getBamSubmissionPreconditionFailures(testData: TestData): string[]
    return failures;
 }
 
+function makeFactsSubmissionProcessErrorResult(errRes: any, submissionTimestamp: string): FactsSubmissionProcessResult
+{
+   const msgStruct: any = errRes.error && errRes.error.message ?
+      JSON.parse(errRes.error && errRes.error.message)
+      : null;
+
+   const labsDsErrCode = msgStruct[0] && msgStruct[0].errorCode || null;
+   const labsDsErrMsg = msgStruct[0] && msgStruct[0].message || null;
+
+   const msg = labsDsErrCode && labsDsErrMsg ?
+      'Validation Failure [' + labsDsErrCode + ']: ' + labsDsErrMsg +
+      ' [ The browser console may have further details. ]'
+      : 'see console for details';
+
+   return {
+      preconditionFailures: [],
+      submissionResult: {
+         submissionTimestamp,
+         submissionSucceeded: false,
+         failureMessage: msg
+      }
+   };
+}
 
 type AfterSaveNavigation = 'nav-none' | 'nav-next-stage' | 'nav-home';
 
