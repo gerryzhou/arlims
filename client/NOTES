@@ -1,3 +1,5 @@
+When adding hours for first user, default to in-progress status.
+
 Buttons
   Set backgrounds and margins, remove mat-button directives if necessary.
 

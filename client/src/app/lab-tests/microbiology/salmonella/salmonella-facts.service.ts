@@ -113,6 +113,9 @@ export class SalmonellaFactsService {
          analysisResultsRemarks: JSON.stringify(structuredRemarks),
       };
 
+      console.log('Remarks: ', structuredRemarks);
+      console.log('Submitting AOAC submission: ', subm);
+
       // Set any remaining fields having conditional presence.
 
       if ( samplingMethod.testUnitsType === 'composite' )
