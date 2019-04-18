@@ -30,7 +30,24 @@ const routes: Routes = [
       path: 'person-inbox',
       component: SamplesListingComponent,
       resolve: { labGroupContents: LabGroupContentsResolver },
-      data: {title: 'Inbox', allowDataChanges: true, statuses: ['S', 'I', 'T', 'M']},
+      data: {
+         title: 'Inbox',
+         contentsScope: 'ANALYST',
+         allowDataChanges: true,
+         statuses: ['S', 'I', 'T', 'M']
+      },
+      canActivate: [AuthenticatedUserGuard],
+   },
+   {
+      path: 'lab-inbox',
+      component: SamplesListingComponent,
+      resolve: { labGroupContents: LabGroupContentsResolver },
+      data: {
+         title: 'Lab Inbox',
+         contentsScope: 'LABADMIN',
+         allowDataChanges: true,
+         statuses: ['P', 'A', 'S', 'I', 'T', 'O']
+      },
       canActivate: [AuthenticatedUserGuard],
    },
    {

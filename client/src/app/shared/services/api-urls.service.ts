@@ -3,7 +3,7 @@ import {Location} from '@angular/common';
 import {HttpParams} from '@angular/common/http';
 import {Moment} from 'moment';
 
-import {LabTestTypeCode} from '../../../generated/dto';
+import {LabGroupContentsScope, LabTestTypeCode} from '../../../generated/dto';
 
 
 @Injectable({providedIn: 'root'})
@@ -21,9 +21,13 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl('/api/user/context');
    }
 
-   labGroupContentsUrl(): string
+   labGroupContentsUrl(contentsScope: LabGroupContentsScope): string
    {
-      return this.location.prepareExternalUrl(`/api/user/lab-group-contents`);
+      const qryParams = new HttpParams().append('scope', contentsScope);
+
+      return this.location.prepareExternalUrl(
+         `/api/user/lab-group-contents` + '?' + qryParams.toString()
+      );
    }
 
    loginUrl()

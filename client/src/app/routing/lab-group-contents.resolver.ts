@@ -4,7 +4,6 @@ import {Observable, from} from 'rxjs';
 import {UserContextService} from '../shared/services';
 import {LabGroupContents} from '../../generated/dto';
 
-
 @Injectable({providedIn: 'root'})
 export class LabGroupContentsResolver implements Resolve<LabGroupContents> {
 
@@ -12,6 +11,14 @@ export class LabGroupContentsResolver implements Resolve<LabGroupContents> {
 
    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LabGroupContents>
    {
-      return from(this.userContextService.getLabGroupContents());
+      const contentsScope = route.data && route.data['contentsScope'];
+
+      switch ( contentsScope )
+      {
+         case 'ANALYST':
+            return from(this.userContextService.getLabGroupContents());
+         case 'LABADMIN':
+            return from(this.userContextService.fetchLabAdminScopedLabGroupContents());
+      }
    }
 }

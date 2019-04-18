@@ -1,13 +1,12 @@
 import {Component, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, from} from 'rxjs';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
 import {arraysEqual} from '../shared/util/data-objects';
 import {
    CreatedTestMetadata,
-   LabGroupContents,
+   LabGroupContents, LabGroupContentsScope,
    LabTestMetadata,
    LabTestType,
    SampleOp
@@ -32,7 +31,12 @@ import {AppInternalUrlsService} from '../shared/services/app-internal-urls.servi
 })
 export class SamplesListingComponent {
 
+   readonly labGroupContentsScope: LabGroupContentsScope;
+
    readonly allowDataChanges: boolean;
+
+   // Contains the router path of this listing, to be navigated to after visiting other views from here.
+   readonly navigationContext: NavigationExtras;
 
    samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
@@ -49,8 +53,8 @@ export class SamplesListingComponent {
 
    hiddenSelectedCount = 0;
 
-   readonly DEFAULT_INCLUDE_STATUSES: SampleOpStatusCode[] = ['S', 'I', 'O'];
-   readonly PREF_INCLUDE_STATUSES = 'include-statuses';
+   readonly DEFAULT_INCLUDE_STATUSES: SampleOpStatusCode[];
+   readonly PREF_INCLUDE_STATUSES: string;
 
    @ViewChild('selectAllNoneCheckbox') selectAllNoneCheckbox;
 
@@ -68,7 +72,18 @@ export class SamplesListingComponent {
        )
    {
       const labGroupContents = <LabGroupContents>this.route.snapshot.data['labGroupContents'];
+      const contentsScope = route.snapshot.data && route.snapshot.data['contentsScope'] || 'ANALYST';
+      this.labGroupContentsScope = contentsScope;
       this.allowDataChanges = route.snapshot.data && route.snapshot.data['allowDataChanges'] || false;
+
+      this.navigationContext = {
+         state: { exitRouterPath: [route.snapshot.routeConfig.path] }
+      };
+
+      this.DEFAULT_INCLUDE_STATUSES =
+         contentsScope === 'ANALYST' ? ['S', 'I', 'T', 'M'] : ['P', 'A', 'S', 'I', 'T', 'O'];
+      this.PREF_INCLUDE_STATUSES = contentsScope.toLowerCase() + '-include-statuses';
+
 
       const statusCodes = new Set(route.snapshot.data && route.snapshot.data['statuses'] || SAMPLE_OP_STATUS_CODES);
       this.sampleOpStatusChoices = SAMPLE_OP_STATUSES.filter(sos => statusCodes.has(sos.code));
@@ -91,7 +106,7 @@ export class SamplesListingComponent {
       this.refreshFromLabGroupContents(labGroupContents, this.expandedSampleOpIds);
    }
 
-   refreshFromLabGroupContents
+   private refreshFromLabGroupContents
       (
          labGroupContents: LabGroupContents,
          topPositionSampleOpIds: Set<number> | null // show these sample ops above others
@@ -268,31 +283,35 @@ export class SamplesListingComponent {
       this.alertMsgSvc.alertDanger('Failed to delete test: ' + error);
    }
 
-   reload(): Observable<void>
+   reload(): Promise<void>
    {
-      const reload$: Observable<void> =
-         from(
+      const labGroupContents$ =
+         this.labGroupContentsScope === 'ANALYST' ?
             this.usrCtxSvc.refreshLabGroupContents()
-            .then(lgc => this.refreshFromLabGroupContents(lgc, null))
-         );
+            : this.usrCtxSvc.fetchLabAdminScopedLabGroupContents();
 
-      reload$.subscribe(
-         () => {},
-         err => this.alertMsgSvc.alertDanger('Failed to load samples ' + (err.message ? ': ' + err.message + '.' : '.'))
-      );
-
-      return reload$;
+       return (
+          labGroupContents$
+         .then(lgc => this.refreshFromLabGroupContents(lgc, null))
+         .catch(err => {
+            this.alertMsgSvc.alertDanger(
+               'Failed to load samples ' + (err.message ? ': ' + err.message + '.' : '.')
+            );
+         })
+       );
    }
 
    onTestStageClicked(e: TestStageClickEvent)
    {
       if ( this.allowDataChanges )
          this.router.navigate(
-            this.appUrlsSvc.testStageDataEntry(e.testTypeCode, e.testId, e.stageName)
+            this.appUrlsSvc.testStageDataEntry(e.testTypeCode, e.testId, e.stageName),
+            this.navigationContext
          );
       else
          this.router.navigate(
-            this.appUrlsSvc.testStageDataView(e.testTypeCode, e.testId, e.stageName)
+            this.appUrlsSvc.testStageDataView(e.testTypeCode, e.testId, e.stageName),
+            this.navigationContext
          );
    }
 
@@ -300,26 +319,35 @@ export class SamplesListingComponent {
    {
       if ( this.allowDataChanges )
          this.router.navigate(
-            this.appUrlsSvc.testDataEntry(e.testTypeCode, e.testId)
+            this.appUrlsSvc.testDataEntry(e.testTypeCode, e.testId),
+            this.navigationContext
          );
       else
          this.router.navigate(
-            this.appUrlsSvc.testDataView(e.testTypeCode, e.testId)
+            this.appUrlsSvc.testDataView(e.testTypeCode, e.testId),
+            this.navigationContext
          );
    }
 
    onTestAttachedFilesClicked(e: TestClickEvent)
    {
       if ( this.allowDataChanges )
-         this.router.navigate(this.appUrlsSvc.testAttachedFilesEditor(e.testId));
+         this.router.navigate(
+            this.appUrlsSvc.testAttachedFilesEditor(e.testId),
+            this.navigationContext
+         );
       else
-         this.router.navigate(this.appUrlsSvc.testAttachedFilesView(e.testId));
+         this.router.navigate(
+            this.appUrlsSvc.testAttachedFilesView(e.testId),
+            this.navigationContext
+         );
    }
 
    onTestReportsClicked(e: TestClickEvent)
    {
       this.router.navigate(
-         this.appUrlsSvc.testReportsListing(e.testTypeCode, e.testId)
+         this.appUrlsSvc.testReportsListing(e.testTypeCode, e.testId),
+         this.navigationContext
       );
    }
 
@@ -335,4 +363,3 @@ class SelectableSample {
       this.selected = false;
    }
 }
-

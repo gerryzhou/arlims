@@ -1,5 +1,7 @@
 TODO
 ====
+Lab inbox
+  Resurrect old lab inbox code from mid Dec.
 
 FactsController
   When analyses are successfully submitted, append submission and results to new Test record json array field.

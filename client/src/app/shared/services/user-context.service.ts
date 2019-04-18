@@ -128,6 +128,7 @@ export class UserContextService {
       this.deferredLabGroupContentsRefreshRequested = true;
    }
 
+   // The lab group contents with ANALYST-scoped contents.
    getLabGroupContents(): Promise<LabGroupContents>
    {
       if ( this.deferredLabGroupContentsRefreshRequested )
@@ -161,7 +162,7 @@ export class UserContextService {
 
    refreshLabGroupContents(): Promise<LabGroupContents>
    {
-      this.refreshLabGroupContentsMembersFrom(this.fetchLabGroupContents());
+      this.refreshLabGroupContentsMembersFrom(this.fetchAnalystScopedLabGroupContents());
 
       return this.labGroupContents$;
    }
@@ -207,10 +208,19 @@ export class UserContextService {
       );
    }
 
-   private fetchLabGroupContents(): Observable<LabGroupContents>
+   private fetchAnalystScopedLabGroupContents(): Observable<LabGroupContents>
    {
       return this.httpClient.get<LabGroupContents>(
-         this.apiUrlsSvc.labGroupContentsUrl()
+         this.apiUrlsSvc.labGroupContentsUrl('ANALYST')
+      );
+   }
+
+   fetchLabAdminScopedLabGroupContents(): Promise<LabGroupContents>
+   {
+      return (
+         this.httpClient.get<LabGroupContents>(
+            this.apiUrlsSvc.labGroupContentsUrl('LABADMIN')
+         ).toPromise()
       );
    }
 

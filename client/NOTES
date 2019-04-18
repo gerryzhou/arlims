@@ -1,23 +1,11 @@
-When adding hours for first user, default to in-progress status.
+
+Can lab group be divorced from factsOrgName (performing org), so can have an ARKL-MICRO lab group?
+  Where is performing org field from LabGroup actually used in the app?
 
 Buttons
   Set backgrounds and margins, remove mat-button directives if necessary.
 
-Wrapup: After save, exit to samples listing.
-  Probably not a good idea because of interaction with hours and FACTS saving on same page.
-    Before saving others, it's not the right thing to exit.
-    After saving others, there's no point in saving as both save the test first.
 Add required validators which trigger when user tries to go to next stage.
-
-
-
-SampleAnalysesMicro FACTS Submissions
-=====================================
-- Add back in stage test data component.
-- Remove performing org from AOAC and BAM data submissions.
-  Leidos will make api change so performing org doesn't have to be submitted.
-- BAM data submission
-  Any pos detection of SLM among isolates should yield a single 'POS' result, else 'NEG'.
 
 PRE-ENR
   Test units change notification is being fired for each field updated when a selection is made, should only fire once after fields are set.
@@ -31,10 +19,6 @@ Tests Search
 
 Improve error message: "Failed to delete test [Object object]"
 
-Add lab inbox page based on sample listing.
-  For lab admins only.
-  Just route to samples listing component but add route data to specify lab inbox is wanted.
-    Modify resolver and samples listing component to load/refresh from the proper source in each case.
 
 SLM test
   Implement actual validation function for each stage, returning list of complaints.
@@ -43,10 +27,6 @@ SLM test
 
 FACTS WRITING PROCESS
 ---------------------
-  Staging
-    - Need to record somewhere what stages of FACTS writing have already been completed so
-      stages aren't repeated or executed without prerequisites.
-
 [Process]
 Problem area = 'MICROID'
 Genus = 'SLML'

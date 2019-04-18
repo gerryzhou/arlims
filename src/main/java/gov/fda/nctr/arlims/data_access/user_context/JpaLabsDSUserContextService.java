@@ -127,8 +127,11 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
     @Transactional
     @Override
-    public LabGroupContents getLabGroupContents(long factsPersonId)
+    public LabGroupContents getLabGroupContents(long factsPersonId, LabGroupContentsScope contentsScope)
     {
+        // TODO: Adjust for contentsScope.
+        log.info("getLabGroupContents() for scope " + contentsScope);
+
         CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
             factsAccessService.getPersonInboxItems(factsPersonId, personInboxStatuses);
 
@@ -156,8 +159,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                     labResources
                 );
         }
-        catch (InterruptedException | ExecutionException e)
-        { throw new RuntimeException(e); }
+        catch (InterruptedException | ExecutionException e) { throw new RuntimeException(e); }
     }
 
     @Transactional

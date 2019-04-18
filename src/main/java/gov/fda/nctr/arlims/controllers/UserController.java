@@ -60,12 +60,13 @@ public class UserController extends ControllerBase
     @GetMapping("lab-group-contents")
     public LabGroupContents getLabGroupContents
         (
+            @RequestParam("scope") LabGroupContentsScope contentsScope,
             Authentication authentication
         )
     {
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
-        return userContextService.getLabGroupContents(currentUser.getFactsPersonId());
+        return userContextService.getLabGroupContents(currentUser.getFactsPersonId(), contentsScope);
     }
 
 

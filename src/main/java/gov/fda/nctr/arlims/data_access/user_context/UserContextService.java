@@ -1,16 +1,13 @@
 package gov.fda.nctr.arlims.data_access.user_context;
 
-import gov.fda.nctr.arlims.models.dto.AppUser;
-import gov.fda.nctr.arlims.models.dto.LabGroupContents;
-import gov.fda.nctr.arlims.models.dto.UserContext;
-import gov.fda.nctr.arlims.models.dto.UserRegistration;
+import gov.fda.nctr.arlims.models.dto.*;
 
 
 public interface UserContextService
 {
     UserContext getUserContext(String username);
 
-    LabGroupContents getLabGroupContents(long factsPersonId);
+    LabGroupContents getLabGroupContents(long factsPersonId, LabGroupContentsScope contentsScope);
 
     AppUser loadUser(String username);
 

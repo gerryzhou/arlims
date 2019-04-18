@@ -2,7 +2,11 @@
    <mat-toolbar-row>
       <nav>
          <button mat-button routerLink="/" [routerLinkActive]="['active-route']" type="button">
-            <mat-icon>home</mat-icon> ALIS
+            <mat-icon>home</mat-icon> Inbox
+         </button>
+         <button mat-button routerLink="/lab-inbox" *ngIf="authenticatedUserIsAdmin$ | async" type="button"
+                 [routerLinkActive]="['active-route']">
+            Lab Inbox
          </button>
          <mat-menu #linksMenu="matMenu">
             <a *ngIf="authenticatedUserIsAdmin$ | async" mat-menu-item routerLink="/register-users">

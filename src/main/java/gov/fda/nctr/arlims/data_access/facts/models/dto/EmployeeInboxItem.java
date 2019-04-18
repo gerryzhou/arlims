@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-// {"sampleTrackingNumber":855957,"leadIndicator":"Y","operationCode":"43","personId":472629,"rvMeaning":"In Progress","sampleAnalysisId":889832,"sampleTrackingSubNumber":0,"statusCode":"I","statusDate":"2018-10-26 00:00:00.000-0400","workDetailsId":8539216,"operationId":8651834,"workRequestId":11657153,"assignedToFirstName":"Tripti","assignedToLastName":"Parajuli","assignedToMiddleName":"T","pacCode":"56008H","pacCodeDesc":"IMPORTED DRUGS (DPS)","cfsanProductDesc":"Bayer Asprin 100 mg","problemAreaFlag":"MIC","lidCode":"M","samplingDistrictOrgId":10020,"samplingDistrictOrgName":"DNEI","workAssignmentDate":"2018-10-26"}
 public class EmployeeInboxItem
 {
     private Long operationId;

@@ -47,7 +47,7 @@ import {SalmonellaFactsService} from '../../salmonella-facts.service';
 import {SelectedSampleOpsService} from '../../../../../shared/services/selected-sample-ops.service';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TestDataSaveResult} from '../../../../../shared/client-models/test-data-save-result';
-import {tap} from 'rxjs/internal/operators/tap';
+import {getNavigationStateItem} from '../../../../../routing/routing-utils';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data',
@@ -72,6 +72,8 @@ export class StagedTestDataComponent implements OnInit {
    // Controls whether a null option is shown for some ui choice components.
    showUnsetAffordances = false;
    allowFreeformEntryForSelectFields = false;
+
+   readonly exitRouterPath: any[];
 
    readonly allowDataChanges: boolean;
 
@@ -130,6 +132,7 @@ export class StagedTestDataComponent implements OnInit {
       )
    {
       const labGroupTestData: LabGroupTestData = activatedRoute.snapshot.data['labGroupTestData'];
+      this.exitRouterPath = getNavigationStateItem(router, 'exitRouterPath') as any[] || appUrlsSvc.home();
       this.allowDataChanges = activatedRoute.snapshot.data && activatedRoute.snapshot.data['allowDataChanges'] || false;
       const testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
       this.testConfig = testConfig;
@@ -356,7 +359,7 @@ export class StagedTestDataComponent implements OnInit {
       .subscribe(
          () => {
             this.alertMsgSvc.alertInfo('Work hours were saved to FACTS.', true);
-            this.doAfterSaveNavigation('nav-home');
+            this.doAfterSaveNavigation('nav-exit');
          },
          err => {
             console.error('Error trying to save work accomplishments to FACTS: ', err);
@@ -428,9 +431,9 @@ export class StagedTestDataComponent implements OnInit {
          case 'nav-next-stage':
             this.testStageStepper.next();
             break;
-         case 'nav-home':
+         case 'nav-exit':
             this.selectedSamplesSvc.setSelectedSampleOps([this.sampleOpTest.sampleOp]);
-            this.router.navigate(this.appUrlsSvc.home());
+            this.router.navigate(this.exitRouterPath);
             break;
       }
    }
@@ -553,7 +556,7 @@ function makeFactsSubmissionProcessErrorResult(errRes: any, submissionTimestamp:
    };
 }
 
-type AfterSaveNavigation = 'nav-none' | 'nav-next-stage' | 'nav-home';
+type AfterSaveNavigation = 'nav-none' | 'nav-next-stage' | 'nav-exit';
 
 
 interface FactsSubmissionResult {
