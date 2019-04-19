@@ -16,7 +16,7 @@ public interface FactsAccessService
 {
     CompletableFuture<List<EmployeeInboxItem>> getPersonInboxItems(long personId, Optional<List<String>> statusCodes);
 
-    CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, Optional<List<String>> statusCodes);
+    CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, List<String> statusCodes);
 
     CompletableFuture<List<SampleTransfer>> getSampleTransfers(long sampleTrackingNumber, Optional<Long> toPersonId);
 

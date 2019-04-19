@@ -114,7 +114,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
 
     @Override
     @Async
-    public CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, Optional<List<String>> statusCodes)
+    public CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, List<String> statusCodes)
     {
         try
         {

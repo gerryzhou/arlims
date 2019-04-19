@@ -65,7 +65,6 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
 
     private static final String UPPER_ALPHANUM ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-
     public LabsDSFactsAccessService
         (
             FactsApiConfig apiConfig,
@@ -141,7 +140,7 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
     public CompletableFuture<List<LabInboxItem>> getLabInboxItems
         (
             String orgName,
-            Optional<List<String>> statusCodes
+            List<String> statusCodes
         )
     {
         Optional<String> minAssignedToStatusDateStr = apiConfig.getLabInboxAssignedStatusAgeCutoffDays() > 0 ?
@@ -159,10 +158,8 @@ public class LabsDSFactsAccessService extends ServiceBase implements FactsAccess
         UriComponentsBuilder uriBldr =
             UriComponentsBuilder.fromHttpUrl(apiConfig.getBaseUrl() + LAB_INBOX_RESOURCE)
             .queryParam("accomplishingOrgName", orgName)
+            .queryParam("statusCodes", String.join(",", statusCodes))
             .queryParam("objectFilters", includeFields);
-
-        if ( statusCodes.isPresent() )
-            uriBldr = uriBldr.queryParam("statusCodes", String.join(",", statusCodes.get()));
 
         if ( minAssignedToStatusDateStr.isPresent() )
             uriBldr = uriBldr.queryParam("statusDateFrom", minAssignedToStatusDateStr.get());

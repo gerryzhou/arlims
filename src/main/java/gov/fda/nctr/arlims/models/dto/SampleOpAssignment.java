@@ -7,6 +7,7 @@ import java.util.Optional;
 public class SampleOpAssignment
 {
     private long factsPersonId;
+    private Optional<String> userShortName;
     private String firstName;
     private String lastName;
     private Optional<String> middleInitial;
@@ -18,6 +19,7 @@ public class SampleOpAssignment
     public SampleOpAssignment
         (
             long factsPersonId,
+            Optional<String> userShortName,
             String firstName,
             String lastName,
             Optional<String> middleInitial,
@@ -26,6 +28,7 @@ public class SampleOpAssignment
         )
     {
         this.factsPersonId = factsPersonId;
+        this.userShortName = userShortName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleInitial = middleInitial;
@@ -34,6 +37,8 @@ public class SampleOpAssignment
     }
 
     public long getFactsPersonId() { return factsPersonId; }
+
+    public Optional<String> getUserShortName() { return userShortName; }
 
     public String getFirstName() { return firstName; }
 
