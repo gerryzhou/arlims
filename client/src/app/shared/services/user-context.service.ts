@@ -8,8 +8,6 @@ import {
    UserContext,
    LabGroupContents,
    AppUser,
-   SampleOp,
-   SampleOpTest,
    LabTestType,
    LabResource,
    LabResourceType,
@@ -30,7 +28,6 @@ export class UserContextService {
 
    // These members are derived from lab group contents and are replaced at every refresh request.
    private labGroupContents$: Promise<LabGroupContents>;
-   private testIdToSampleOpTest$: Promise<Map<number, SampleOpTest>>;
    private testTypeCodeToLabGroupTestConfigJson$: Promise<Map<string, string>>;
    private labResourcesByType$: Promise<Map<string, LabResource[]>>;
    private labUsers$: Promise<UserReference[]>;
@@ -140,11 +137,6 @@ export class UserContextService {
          return this.labGroupContents$;
    }
 
-   getSampleOpTest(testId: number): Promise<SampleOpTest | undefined>
-   {
-      return this.testIdToSampleOpTest$.then(m => m.get(testId));
-   }
-
    getLabGroupTestConfigJson(testTypeCode: string): Promise<string | undefined>
    {
       return this.testTypeCodeToLabGroupTestConfigJson$.then(m => m.get(testTypeCode));
@@ -167,17 +159,11 @@ export class UserContextService {
       return this.labGroupContents$;
    }
 
-
    private refreshLabGroupContentsMembersFrom(contentsSource: Observable<LabGroupContents>)
    {
       const labGroupContents$ = new Subject<LabGroupContents>();
 
       this.labGroupContents$ = labGroupContents$.toPromise();
-
-      this.testIdToSampleOpTest$ =
-         labGroupContents$
-         .pipe(map(lgc => UserContextService.getSampleOpTestsByTestId(lgc.activeSamples)))
-         .toPromise();
 
       this.testTypeCodeToLabGroupTestConfigJson$ =
          labGroupContents$
@@ -222,19 +208,6 @@ export class UserContextService {
             this.apiUrlsSvc.labGroupContentsUrl('LABADMIN')
          ).toPromise()
       );
-   }
-
-   private static getSampleOpTestsByTestId(samples: SampleOp[]): Map<number, SampleOpTest>
-   {
-      const m = new Map<number, SampleOpTest>();
-
-      for (const s of samples) {
-         for (const t of s.tests) {
-            m.set(t.testId, { sampleOp: s, testMetadata: t });
-         }
-      }
-
-      return m;
    }
 
    private static getLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string>

@@ -1,4 +1,8 @@
 
+Maybe rename:
+  test-metadata => test
+  SampleOpTest => SampleOpTestMetadata
+
 Can lab group be divorced from factsOrgName (performing org), so can have an ARKL-MICRO lab group?
   Where is performing org field from LabGroup actually used in the app?
 

@@ -1,14 +1,12 @@
-import {LabTestTypeCode} from '../../../generated/dto';
+import {SampleOpTest} from '../../../generated/dto';
 
 export interface TestStageClickEvent {
-   testId: number;
-   testTypeCode: LabTestTypeCode;
+   sampleOpTest: SampleOpTest;
    stageName: string;
 }
 
 
 export interface TestClickEvent {
-   testId: number;
-   testTypeCode: LabTestTypeCode;
+   sampleOpTest: SampleOpTest;
 }
 

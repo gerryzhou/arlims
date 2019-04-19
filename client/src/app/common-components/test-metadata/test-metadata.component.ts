@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {LabTestMetadata, LabTestType} from '../../../generated/dto';
+import {LabTestMetadata, LabTestType, SampleOp, SampleOpTest} from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
 import {Router} from '@angular/router';
 import {TestClickEvent, TestStageClickEvent} from './events';
@@ -14,6 +14,9 @@ export class TestMetadataComponent implements OnChanges {
 
    @Input()
    test: LabTestMetadata;
+
+   @Input()
+   sampleOp: SampleOp;
 
    @Input()
    allowDataChanges = false;
@@ -55,22 +58,31 @@ export class TestMetadataComponent implements OnChanges {
 
    onTypeClicked()
    {
-      this.testClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode});
+      this.testClick.emit({
+         sampleOpTest: { sampleOp: this.sampleOp, testMetadata: this.test }
+      });
    }
 
    onStageClicked(stageName: string)
    {
-      this.testStageClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode, stageName});
+      this.testStageClick.emit({
+         sampleOpTest: { sampleOp: this.sampleOp, testMetadata: this.test },
+         stageName
+      });
    }
 
    onAttachedFilesClicked()
    {
-      this.attachedFilesClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode});
+      this.attachedFilesClick.emit({
+         sampleOpTest: { sampleOp: this.sampleOp, testMetadata: this.test }
+      });
    }
 
    onReportsClicked()
    {
-      this.reportsClick.emit({testId: this.test.testId, testTypeCode: this.test.testTypeCode});
+      this.reportsClick.emit({
+         sampleOpTest: { sampleOp: this.sampleOp, testMetadata: this.test }
+      });
    }
 
 }

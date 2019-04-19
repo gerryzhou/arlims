@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Observable, throwError, zip} from 'rxjs';
-import {TestsService, UserContextService} from '../shared/services';
-import {SampleOpTest, TestAttachedFileMetadata} from '../../generated/dto';
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {Observable, throwError} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {TestsService} from '../shared/services';
+import {SampleOpTest, TestAttachedFileMetadata} from '../../generated/dto';
+import {getNavigationStateItem} from './routing-utils';
 
 
 @Injectable({providedIn: 'root'})
@@ -12,7 +14,7 @@ export class TestAttachedFilesResolver implements Resolve<TestAttachedFiles> {
    constructor
       (
          private testsService: TestsService,
-         private usrCtxSvc: UserContextService
+         private router: Router
       )
    {}
 
@@ -21,12 +23,11 @@ export class TestAttachedFilesResolver implements Resolve<TestAttachedFiles> {
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
       const attachedFiles$ = this.testsService.getTestAttachedFilesMetadatas(testId);
-      const sampleOpTest$ = this.usrCtxSvc.getSampleOpTest(testId);
 
-      return zip(attachedFiles$, sampleOpTest$).pipe(
-         map(([attachedFiles, sampleOpTest]) => (
-            { attachedFiles, sampleOpTest }
-         ))
+      const sampleOpTest = getNavigationStateItem(this.router, 'sampleOpTest') as SampleOpTest;
+
+      return attachedFiles$.pipe(
+         map(attachedFiles => ({ attachedFiles, sampleOpTest }))
       );
    }
 }

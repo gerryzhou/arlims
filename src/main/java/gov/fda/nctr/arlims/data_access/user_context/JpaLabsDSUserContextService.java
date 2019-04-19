@@ -3,9 +3,9 @@ package gov.fda.nctr.arlims.data_access.user_context;
 import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import static java.util.Collections.*;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
-import gov.fda.nctr.arlims.data_access.facts.models.dto.EmployeeInboxItem;
+import gov.fda.nctr.arlims.data_access.facts.models.dto.InboxItem;
 import gov.fda.nctr.arlims.data_access.raw.jpa.*;
 import gov.fda.nctr.arlims.data_access.raw.jpa.db.*;
 import gov.fda.nctr.arlims.data_access.version_info.AppVersionService;
@@ -51,7 +51,8 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     private final Pattern barPattern = Pattern.compile("\\|");
 
     // TODO: Add 'M' once LABS-DS issue with test data having too many records with M status is resolved.
-    private final Optional<List<String>> personInboxStatuses = Optional.of(Arrays.asList("S","I","T"));
+    private final List<String> personInboxStatuses = Arrays.asList("S","I","T");
+    private final List<String> labInboxStatuses = Arrays.asList("P", "A", "S","I","T", "O");
 
     public JpaLabsDSUserContextService
         (
@@ -87,80 +88,92 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             new ResourceNotFoundException("employee record not found")
         );
 
-        CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
-            factsAccessService.getPersonInboxItems(emp.getFactsPersonId(), personInboxStatuses);
-
-        LabGroup labGroup = emp.getLabGroup();
-
-        List<LabTestType> testTypes = getLabGroupTestTypes(labGroup);
-
-        List<UserReference> users = getLabGroupUsers(labGroup);
-
-        List<LabResource> labResources = getLabGroupResources(labGroup);
-
-        AppUser user = makeUser(emp);
+        AppUser user = makeAppUser(emp);
 
         usersByUsername.put(user.getUsername(), user);
 
-        try
-        {
-            List<SampleOp> userSampleOps = getUserActiveSampleOps(inboxItems$.get(), users);
+        LabGroup labGroup = emp.getLabGroup();
 
-            return
-                new UserContext(
-                    user,
-                    new LabGroupContents(
-                        labGroup.getId(),
-                        labGroup.getName(),
-                        testTypes,
-                        users,
-                        userSampleOps,
-                        labResources
-                    ),
-                    appVersionService.getAppVersion()
-                );
-        }
-        catch (InterruptedException | ExecutionException e)
-        { throw new RuntimeException(e); }
+        LabGroupContents labGroupContents =
+            getLabGroupContents(labGroup, LabGroupContentsScope.ANALYST, emp.getFactsPersonId());
+
+        return new UserContext(user, labGroupContents, appVersionService.getAppVersion());
     }
-
 
     @Transactional
     @Override
-    public LabGroupContents getLabGroupContents(long factsPersonId, LabGroupContentsScope contentsScope)
+    public LabGroupContents getLabGroupContents
+        (
+            long forFactsPersonId,
+            LabGroupContentsScope contentsScope
+        )
     {
-        // TODO: Adjust for contentsScope.
-        log.info("getLabGroupContents() for scope " + contentsScope);
-
-        CompletableFuture<List<EmployeeInboxItem>> inboxItems$ =
-            factsAccessService.getPersonInboxItems(factsPersonId, personInboxStatuses);
-
-        LabGroup labGroup = this.labGroupRepo.findByFactsPersonId(factsPersonId).orElseThrow(() ->
+        LabGroup labGroup = this.labGroupRepo.findByFactsPersonId(forFactsPersonId).orElseThrow(() ->
             new ResourceNotFoundException("employee record not found")
         );
 
+        return getLabGroupContents(labGroup, contentsScope, forFactsPersonId);
+    }
+
+    private LabGroupContents getLabGroupContents
+        (
+            LabGroup labGroup,
+            LabGroupContentsScope contentsScope,
+            long forFactsPersonId
+        )
+    {
         List<LabTestType> testTypes = getLabGroupTestTypes(labGroup);
 
         List<UserReference> users = getLabGroupUsers(labGroup);
 
         List<LabResource> labResources = getLabGroupResources(labGroup);
 
+        List<SampleOp> sampleOps =
+            loadSampleOps(forFactsPersonId, labGroup.getFactsParentOrgName(), contentsScope, users);
+
+        return
+            new LabGroupContents(
+                labGroup.getId(),
+                labGroup.getName(),
+                testTypes,
+                users,
+                sampleOps,
+                labResources
+            );
+    }
+
+    private List<SampleOp> loadSampleOps
+        (
+            long factsPersonId,
+            String labGroupFactsOrgName,
+            LabGroupContentsScope contentsScope,
+            List<UserReference> users
+        )
+    {
         try
         {
-            List<SampleOp> userSampleOps = getUserActiveSampleOps(inboxItems$.get(), users);
+            List<? extends InboxItem> inboxItems;
 
-            return
-                new LabGroupContents(
-                    labGroup.getId(),
-                    labGroup.getName(),
-                    testTypes,
-                    users,
-                    userSampleOps,
-                    labResources
-                );
+            switch ( contentsScope )
+            {
+                case ANALYST:
+                    inboxItems = factsAccessService.getPersonInboxItems(factsPersonId, Optional.of(personInboxStatuses)).get();
+                    break;
+                case LABADMIN:
+                    inboxItems = factsAccessService.getLabInboxItems(labGroupFactsOrgName, labInboxStatuses).get();
+                    break;
+                default:
+                    throw new RuntimeException("Unexpected contents scope value: " + contentsScope);
+            }
+
+            return getSampleOpsForInboxItems(inboxItems, users);
         }
-        catch (InterruptedException | ExecutionException e) { throw new RuntimeException(e); }
+        catch (InterruptedException | ExecutionException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
+
 
     @Transactional
     @Override
@@ -170,7 +183,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             new UsernameNotFoundException("employee record not found for user '" + username + "'")
         );
 
-        AppUser user = makeUser(emp);
+        AppUser user = makeAppUser(emp);
 
         usersByUsername.put(user.getUsername(), user);
 
@@ -265,41 +278,52 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         }
     }
 
-    private List<SampleOp> getUserActiveSampleOps
+    private List<SampleOp> getSampleOpsForInboxItems
         (
-            List<EmployeeInboxItem> inboxItems,
+            List<? extends InboxItem> inboxItems,
             List<UserReference> labGroupUsers
         )
     {
-        // We only want the inbox items that represent sample operations.
-        List<EmployeeInboxItem> sampleOpInboxItems =
-            inboxItems.stream().filter(item -> item.getSampleTrackingNumber() != null).collect(toList());
+        Map<Long, List<InboxItem>> inboxItemsByOpId =
+            inboxItems.stream()
+            .filter(item -> item.getSampleTrackingNumber() != null) // must have sample num
+            .collect(groupingBy(InboxItem::getOperationId));
 
-        List<Long> opIds = sampleOpInboxItems.stream().map(EmployeeInboxItem::getOperationId).collect(toList());
+        List<Long> opIds = new ArrayList<>(inboxItemsByOpId.keySet());
 
-        Map<Long, List<Test>> testsByOpId = opIds.isEmpty() ? emptyMap()
-            : testRepo.findByOpIdIn(opIds).stream().collect(groupingBy(Test::getOpId));
+        Map<Long, List<Test>> testsByOpId =
+            !opIds.isEmpty() ?
+                testRepo.findByOpIdIn(opIds).stream()
+                .collect(groupingBy(Test::getOpId))
+            : emptyMap();
 
-        Map<Long, Integer> fileCountsByTestId = getAttachedFileCountsByTestIdForTestOpIds(opIds);
+        Map<Long, Integer> fileCountsByTestId =
+            getAttachedFileCountsByTestIdForTestOpIds(opIds);
 
         Map<Long, UserReference> usersById =
             labGroupUsers.stream()
-            .collect(Collectors.toMap(UserReference::getEmployeeId, userRef -> userRef));
+            .collect(Collectors.toMap(UserReference::getEmployeeId, Function.identity()));
+
+        Map<Long, UserReference> usersByFactsPersonId =
+            labGroupUsers.stream()
+            .collect(Collectors.toMap(UserReference::getFactsPersonId, Function.identity()));
 
         return
-            sampleOpInboxItems.stream()
-            .map(inboxItem -> {
-                long opId = inboxItem.getOperationId();
+            inboxItemsByOpId.entrySet().stream()
+            .map(opIdInboxItemsPair-> {
+                long opId = opIdInboxItemsPair.getKey();
+
+                List<InboxItem> opInboxItems = opIdInboxItemsPair.getValue();
 
                 List<LabTestMetadata> tests =
                     testsByOpId.getOrDefault(opId, emptyList()).stream()
                     .map(test -> {
                         int numAttachedFiles = fileCountsByTestId.getOrDefault(test.getId(),0);
-                        return makeLabTestMetadata(test, inboxItem, numAttachedFiles, usersById);
+                        return makeLabTestMetadata(test, opInboxItems.get(0), numAttachedFiles, usersById);
                     })
                     .collect(toList());
 
-                return makeSampleOp(inboxItem, tests);
+                return makeSampleOp(opInboxItems, tests, usersByFactsPersonId);
             })
             .collect(toList());
     }
@@ -386,7 +410,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
     private LabTestMetadata makeLabTestMetadata
         (
             Test t,
-            EmployeeInboxItem inboxItem,
+            InboxItem inboxItem,
             int attachedFilesCount,
             Map<Long, UserReference> usersById
         )
@@ -437,38 +461,62 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             );
     }
 
-    private SampleOp makeSampleOp(EmployeeInboxItem inboxItem, List<LabTestMetadata> tests)
+    private SampleOp makeSampleOp
+        (
+            List<InboxItem> singleOpInboxItems,
+            List<LabTestMetadata> tests,
+            Map<Long, UserReference> usersByFactsPersonId
+        )
     {
-        SampleOpAssignment assignment =
+        List<SampleOpAssignment> assignments =
+            singleOpInboxItems.stream()
+            .map(inboxItem -> makeSampleOpAssignment(inboxItem, usersByFactsPersonId))
+            .collect(toList());
+
+        InboxItem firstItem = singleOpInboxItems.get(0);
+
+        return
+            new SampleOp(
+                firstItem.getOperationId(),
+                firstItem.getSampleTrackingNumber(),
+                firstItem.getSampleTrackingSubNumber(),
+                firstItem.getPacCode(),
+                opt(firstItem.getLidCode()),
+                opt(firstItem.getProblemAreaFlag()),
+                firstItem.getCfsanProductDesc(),
+                opt(firstItem.getStatusCode()),
+                opt(firstItem.getStatusDate()),
+                opt(Instant.now()),
+                opt(firstItem.getSubjectText()),
+                opt(tests),
+                opt(assignments)
+            );
+    }
+
+    private SampleOpAssignment makeSampleOpAssignment
+        (
+            InboxItem inboxItem,
+            Map<Long, UserReference> usersByFactsPersonId
+        )
+    {
+        Optional<String> userShortName =
+            Optional.ofNullable(usersByFactsPersonId.get(inboxItem.getPersonId()))
+            .map(UserReference::getShortName);
+
+        return
             new SampleOpAssignment(
                 inboxItem.getPersonId(),
+                userShortName,
                 inboxItem.getAssignedToFirstName(),
                 inboxItem.getAssignedToLastName(),
                 opt(inboxItem.getAssignedToMiddleName()),
                 opt(inboxItem.getLeadIndicator()),
                 inboxItem.getWorkAssignmentDate()
             );
-
-        return
-            new SampleOp(
-                inboxItem.getOperationId(),
-                inboxItem.getSampleTrackingNumber(),
-                inboxItem.getSampleTrackingSubNumber(),
-                inboxItem.getPacCode(),
-                opt(inboxItem.getLidCode()),
-                opt(inboxItem.getProblemAreaFlag()),
-                inboxItem.getCfsanProductDesc(),
-                opt(inboxItem.getStatusCode()),
-                opt(inboxItem.getStatusDate()),
-                opt(Instant.now()),
-                opt(inboxItem.getSubjectText()),
-                opt(tests),
-                opt(singletonList(assignment))
-            );
     }
 
 
-    private AppUser makeUser(Employee emp)
+    private AppUser makeAppUser(Employee emp)
     {
         List<RoleName> roleNames = emp.getRoles().stream().map(Role::getName).collect(toList());
 
@@ -493,3 +541,4 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
 
     private static <T> Optional<T> opt(T t) { return Optional.ofNullable(t); }
 }
+

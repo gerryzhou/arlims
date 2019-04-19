@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-public class EmployeeInboxItem
+public class EmployeeInboxItem implements InboxItem
 {
     private Long operationId;
 

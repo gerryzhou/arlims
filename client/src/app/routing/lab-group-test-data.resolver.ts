@@ -1,9 +1,12 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable, throwError, zip, of, from} from 'rxjs';
-import {flatMap, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
+
 import {AuditLogQueryService, TestsService, UserContextService} from '../shared/services';
 import {LabGroupTestData} from '../shared/client-models/lab-group-test-data';
+import {SampleOpTest} from '../../generated/dto';
+import {getNavigationStateItem} from './routing-utils';
 
 @Injectable({providedIn: 'root'})
 export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
@@ -13,6 +16,7 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
          private testsService: TestsService,
          private usrCtxSvc: UserContextService,
          private auditLogSvc: AuditLogQueryService,
+         private router: Router
       )
    {}
 
@@ -26,15 +30,11 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
       const testId = +route.paramMap.get('testId');
       if (isNaN(testId)) { return throwError('Invalid test id'); }
 
-      const sampleOpTest$ = from(this.usrCtxSvc.getSampleOpTest(testId));
+      const sampleOpTest = getNavigationStateItem(this.router, 'sampleOpTest') as SampleOpTest;
 
-      const testConfig$ = sampleOpTest$.pipe(
-         flatMap(sampleOpTest =>
-            from(this.usrCtxSvc.getLabGroupTestConfigJson(sampleOpTest.testMetadata.testTypeCode)).pipe(
-               map(configJson => configJson ? JSON.parse(configJson) : null)
-            )
-         )
-      );
+      const testConfig$ =
+         from(this.usrCtxSvc.getLabGroupTestConfigJson(sampleOpTest.testMetadata.testTypeCode))
+         .pipe( map(configJson => configJson ? JSON.parse(configJson) : null) );
 
       const includeAuditEntries = !!route.data['includeAuditLogEntries'];
       const auditEntries$ = includeAuditEntries ?
@@ -46,7 +46,7 @@ export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {
             testConfig$,
             this.testsService.getVersionedTestData(testId),
             this.testsService.getTestAttachedFilesMetadatas(testId),
-            sampleOpTest$,
+            of(sampleOpTest),
             this.usrCtxSvc.getLabResourcesByType(),
             this.usrCtxSvc.getLabUsers(),
             auditEntries$,

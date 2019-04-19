@@ -41,17 +41,14 @@
             <div class="facts-status-timestamp">{{displayFactsStatusTimestamp}}</div>
          </div>
 
-         <div class="employee-assignments" *ngIf="showEmployeeAssignments && sampleOp.assignments.length == 1">
-            <!-- NOTE: Currently only the current user's assignment is displayed here.
-                 If the server eventually delivers assignments for other users in
-                 the samples within the lab contents, then add ui support for those
-                 assignments here.
-            -->
-            <div class="employee-assignment-stack" matTooltip="work assignment role and date">
+         <div class="employee-assignments" *ngIf="showEmployeeAssignments">
+            <mat-icon>person_outline</mat-icon>
+            <div class="employee-assignment-stack" *ngFor="let assignment of sampleOp.assignments">
                <div class="employee-assignment-role">
-                  <mat-icon>person_outline</mat-icon> {{sampleOp.assignments[0].leadInd === 'Y' ? 'LEAD' : 'AUX'}}
+                  {{assignment.userShortName || assignment.firstName + ' ' + assignment.lastName}}
+                  <sup *ngIf="assignment.leadInd === 'Y'">*</sup>
                </div>
-               <div>{{sampleOp.assignments[0].workAssignmentDate}}</div>
+               <div>{{assignment.workAssignmentDate}}</div>
             </div>
          </div>
 
@@ -94,6 +91,7 @@
 
             <app-test-metadata
                [test]="test"
+               [sampleOp]="sampleOp"
                [allowDataChanges]="allowDataChanges"
                [labGroupTestTypes]="labGroupTestTypes"
                (testClick)="onTestClicked($event)"

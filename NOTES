@@ -1,12 +1,11 @@
 TODO
 ====
-Lab inbox
-  Resurrect old lab inbox code from mid Dec.
 
 FactsController
   When analyses are successfully submitted, append submission and results to new Test record json array field.
   Set timestamp of (successful) submission as well (existing field).
 
+SampleAnalysisMicrobes should contain identifications from IDENT stage.
 
 Done
 ====
@@ -18,16 +17,6 @@ Done
 Leidos
 ------
 Can requests containing unrecognized fields be rejected?
-
-Find problem with the AOAC submission below.
-It should not be generating a 500, should result in a 4xx if LABS api is returning an error structure.
-13-03-2019 13:18:19.905 [http-nio-8000-exec-9] INFO  g.f.n.a.d.f.LabsDSFactsAccessService.submitMicrobiologySampleAnalysis - Submitting microbiology sample analysis:
-  {"sampleAnalysisMicrobiologyList":[{"operationId":8643036,"accomplishingOrgName":"ARKL","performingOrgName":null,"actionIndicator":"Y","problemCode":"MICROID","genusCode":"SLML","speciesCode":"SLML998","methodSourceCode":"AOAC","methodCode":"T2004.03","methodModificationIndicator":"N","kitTestIndicator":"N","lowestDilutionTestedCode":"1","quantifiedIndicator":"N","subSamplesDetectableFindingsNumber":2,"compositesExaminedNumber":null,"subSamplesUsedCompositeNumber":null,"subSamplesExaminedNumber":5,"analysisResultsRemarksText":"{\"methodRemarks\":null,\"methodDetails\":{\"gramsPerSub\":2}}","analysisMicFindings":[],"analysisMicKitTests":null}]}
-13-03-2019 13:18:20.183 [http-nio-8000-exec-9] INFO  g.f.n.a.d.f.LabsDSFactsAccessService.handleError - LABS-DS api call resulted in error: [{"errorCode":"LABS-RUL-2080","message":"SampleAnalysisMicrobiology[0] : The total number of positive finding records does not match subSamplesDetectableFindingsNumber in Microbiological Analysis. Please correct your data and resubmit."}]
-13-03-2019 13:18:20.186 [http-nio-8000-exec-9] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [/alis] threw exception [Request processing failed; nested exception is org.springframework.web.client.HttpServerErrorException$InternalServerError: 500 Internal Server Error] with root cause
-org.springframework.web.client.HttpServerErrorException$InternalServerError: 500 Internal Server Error
-
-Don't allow multiple tests for a single op id.
 
 Add FACTS person id to api calls as http header.
 

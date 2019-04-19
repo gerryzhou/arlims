@@ -5,9 +5,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
-public class LabInboxItem
+public class LabInboxItem implements InboxItem
 {
     private Long operationId;
 
@@ -25,6 +26,8 @@ public class LabInboxItem
     private String subject;
 
     private String pacCode;
+
+    private String lidCode;
 
     private String problemAreaFlag;
 
@@ -54,6 +57,8 @@ public class LabInboxItem
 
     private String assignedToLastName;
 
+    private String assignedToMiddleName;
+
     private String assignmentStatusCode;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
@@ -61,6 +66,7 @@ public class LabInboxItem
 
     private LocalDate workAssignmentDate;
 
+    private String remarks;
 
     protected LabInboxItem() {}
 
@@ -77,6 +83,8 @@ public class LabInboxItem
     public String getSubject() { return subject; }
 
     public String getPacCode() { return pacCode; }
+
+    public String getLidCode() { return lidCode; }
 
     public String getProblemAreaFlag() { return problemAreaFlag; }
 
@@ -106,6 +114,8 @@ public class LabInboxItem
 
     public String getAssignedToLastName() { return assignedToLastName; }
 
+    public String getAssignedToMiddleName() { return assignedToMiddleName; }
+
     public String getLeadIndicator() { return leadIndicator; }
 
     public String getAssignmentStatusCode() { return assignmentStatusCode; }
@@ -114,6 +124,8 @@ public class LabInboxItem
 
     public LocalDate getWorkAssignmentDate() { return workAssignmentDate; }
 
+    public String getRemarks() { return remarks; }
+
     public boolean hasSameSampleAssignment(LabInboxItem item)
     {
         return
@@ -121,6 +133,13 @@ public class LabInboxItem
             Objects.equals(sampleTrackingSubNumber, item.getSampleTrackingSubNumber()) &&
             Objects.equals(getAssignedToPersonId(), item.getAssignedToPersonId());
     }
+
+
+    @JsonIgnore
+    public String getSubjectText() { return subject; }
+
+    @JsonIgnore
+    public long getPersonId() { return assignedToPersonId; }
 
     @Override
     public String toString()
@@ -133,6 +152,7 @@ public class LabInboxItem
         ", statusDate=" + statusDate +
         ", subject=" + subject +
         ", pacCode='" + pacCode + '\'' +
+        ", lidCode='" + lidCode + '\'' +
         ", problemAreaFlag='" + problemAreaFlag + '\'' +
         ", operationId=" + operationId +
         ", workRequestId=" + workRequestId +

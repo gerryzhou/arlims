@@ -36,7 +36,7 @@ export class SamplesListingComponent {
    readonly allowDataChanges: boolean;
 
    // Contains the router path of this listing, to be navigated to after visiting other views from here.
-   readonly navigationContext: NavigationExtras;
+   readonly exitRouterPath: any[];
 
    samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
@@ -76,9 +76,7 @@ export class SamplesListingComponent {
       this.labGroupContentsScope = contentsScope;
       this.allowDataChanges = route.snapshot.data && route.snapshot.data['allowDataChanges'] || false;
 
-      this.navigationContext = {
-         state: { exitRouterPath: [route.snapshot.routeConfig.path] }
-      };
+      this.exitRouterPath = [route.snapshot.routeConfig.path];
 
       this.DEFAULT_INCLUDE_STATUSES =
          contentsScope === 'ANALYST' ? ['S', 'I', 'T', 'M'] : ['P', 'A', 'S', 'I', 'T', 'O'];
@@ -303,52 +301,79 @@ export class SamplesListingComponent {
 
    onTestStageClicked(e: TestStageClickEvent)
    {
+      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
+      console.log('Navigation extras: ', navData);
+
+      const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
+      const testId = e.sampleOpTest.testMetadata.testId;
+
       if ( this.allowDataChanges )
          this.router.navigate(
-            this.appUrlsSvc.testStageDataEntry(e.testTypeCode, e.testId, e.stageName),
-            this.navigationContext
+            this.appUrlsSvc.testStageDataEntry(testTypeCode, testId, e.stageName),
+            navData
          );
       else
          this.router.navigate(
-            this.appUrlsSvc.testStageDataView(e.testTypeCode, e.testId, e.stageName),
-            this.navigationContext
+            this.appUrlsSvc.testStageDataView(testTypeCode, testId, e.stageName),
+            navData
          );
    }
 
    onTestClicked(e: TestClickEvent)
    {
+      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
+
+      const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
+      const testId = e.sampleOpTest.testMetadata.testId;
+
       if ( this.allowDataChanges )
          this.router.navigate(
-            this.appUrlsSvc.testDataEntry(e.testTypeCode, e.testId),
-            this.navigationContext
+            this.appUrlsSvc.testDataEntry(testTypeCode, testId),
+            navData
          );
       else
          this.router.navigate(
-            this.appUrlsSvc.testDataView(e.testTypeCode, e.testId),
-            this.navigationContext
+            this.appUrlsSvc.testDataView(testTypeCode, testId),
+            navData
          );
    }
 
    onTestAttachedFilesClicked(e: TestClickEvent)
    {
+      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
+
+      const testId = e.sampleOpTest.testMetadata.testId;
+
       if ( this.allowDataChanges )
          this.router.navigate(
-            this.appUrlsSvc.testAttachedFilesEditor(e.testId),
-            this.navigationContext
+            this.appUrlsSvc.testAttachedFilesEditor(testId),
+            navData
          );
       else
          this.router.navigate(
-            this.appUrlsSvc.testAttachedFilesView(e.testId),
-            this.navigationContext
+            this.appUrlsSvc.testAttachedFilesView(testId),
+            navData
          );
    }
 
    onTestReportsClicked(e: TestClickEvent)
    {
+      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
+
+      const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
+      const testId = e.sampleOpTest.testMetadata.testId;
+
       this.router.navigate(
-         this.appUrlsSvc.testReportsListing(e.testTypeCode, e.testId),
-         this.navigationContext
+         this.appUrlsSvc.testReportsListing(testTypeCode, testId),
+         navData
       );
+   }
+
+   private makeNavigationData(stateObj: any): NavigationExtras
+   {
+      const newState = Object.assign({ exitRouterPath: this.exitRouterPath }, stateObj);
+
+      return { state: newState };
    }
 
 }
