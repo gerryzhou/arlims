@@ -124,7 +124,7 @@ export class StagedTestDataComponent implements OnInit {
          private generalFactsService: GeneralFactsService,
          private testsSvc: TestsService,
          private usrCtxSvc: UserContextService,
-         private selectedSamplesSvc: SelectedSampleOpsService,
+         private selSampleOpsSvc: SelectedSampleOpsService,
          private appUrlsSvc: AppInternalUrlsService,
          private router: Router,
          private alertMsgSvc: AlertMessageService,
@@ -432,7 +432,7 @@ export class StagedTestDataComponent implements OnInit {
             this.testStageStepper.next();
             break;
          case 'nav-exit':
-            this.selectedSamplesSvc.setSelectedSampleOps([this.sampleOpTest.sampleOp]);
+            this.selSampleOpsSvc.setSampleOps([this.sampleOpTest.sampleOp]);
             this.router.navigate(this.exitRouterPath);
             break;
       }

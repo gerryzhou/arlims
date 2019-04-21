@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
 
 import {SampleOp} from '../../../generated/dto';
 
@@ -8,33 +7,22 @@ import {SampleOp} from '../../../generated/dto';
 })
 export class SelectedSampleOpsService {
 
-   private readonly sampleOps: BehaviorSubject<SampleOp[]>;
+   private sampleOps: SampleOp[];
 
    constructor()
    {
-      this.sampleOps = new BehaviorSubject<SampleOp[]>([]);
+      this.sampleOps = [];
    }
 
-   setSelectedSampleOps(sampleOps: SampleOp[])
+   setSampleOps(sampleOps: SampleOp[])
    {
-      this.sampleOps.next(sampleOps);
+      this.sampleOps = sampleOps;
    }
 
-   selectedSampleOps(): Observable<SampleOp[]>
+   takeSampleOps(): SampleOp[]
    {
-      return this.sampleOps;
+      const res = this.sampleOps;
+      this.sampleOps = [];
+      return res;
    }
-
-   selectedSampleOpsSnapshot(): SampleOp[]
-   {
-      return this.sampleOps.getValue();
-   }
-
-   takeSelectedSampleOps(): SampleOp[]
-   {
-      const selected = this.sampleOps.getValue();
-      this.setSelectedSampleOps([]);
-      return selected;
-   }
-
 }

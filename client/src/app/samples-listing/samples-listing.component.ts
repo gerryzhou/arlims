@@ -63,7 +63,7 @@ export class SamplesListingComponent {
    constructor
        (
           private usrCtxSvc: UserContextService,
-          private selectedSampleOps: SelectedSampleOpsService,
+          private selSampleOpsSvc: SelectedSampleOpsService,
           private localStorageSvc: LocalStorageService,
           private appUrlsSvc: AppInternalUrlsService,
           private router: Router,
@@ -82,11 +82,10 @@ export class SamplesListingComponent {
          contentsScope === 'ANALYST' ? ['S', 'I', 'T', 'M'] : ['P', 'A', 'S', 'I', 'T', 'O'];
       this.PREF_INCLUDE_STATUSES = contentsScope.toLowerCase() + '-include-statuses';
 
-
       const statusCodes = new Set(route.snapshot.data && route.snapshot.data['statuses'] || SAMPLE_OP_STATUS_CODES);
       this.sampleOpStatusChoices = SAMPLE_OP_STATUSES.filter(sos => statusCodes.has(sos.code));
 
-      const selectedSampleOpIds = selectedSampleOps.takeSelectedSampleOps().map(so => so.opId);
+      const selectedSampleOpIds = selSampleOpsSvc.takeSampleOps().map(so => so.opId);
 
       const prefIncludeStatuses: SampleOpStatusCode[] | null =
          JSON.parse(localStorageSvc.get(this.PREF_INCLUDE_STATUSES));
