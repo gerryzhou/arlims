@@ -21,7 +21,7 @@ import {
    SampleOpStatus,
    SampleOpStatusCode
 } from '../shared/client-models/sample-op-status';
-import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
+import {TestClickEvent, TestStageClickEvent} from '../common-components/test/events';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 
 @Component({

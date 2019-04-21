@@ -6,7 +6,7 @@ import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {AlertMessageService, TestsService, UserContextService} from '../shared/services';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 import {LabTestType, SampleOp, SampleOpTest} from '../../generated/dto';
-import {TestClickEvent, TestStageClickEvent} from '../common-components/test-metadata/events';
+import {TestClickEvent, TestStageClickEvent} from '../common-components/test/events';
 import {emptyTestsSearchQuery, TestsSearchQuery} from './query/tests-search-query';
 
 @Component({

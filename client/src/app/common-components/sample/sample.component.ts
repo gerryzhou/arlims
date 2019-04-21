@@ -8,7 +8,7 @@ import {TestsService} from '../../shared/services';
 import {NewTestInfo} from '../new-test-dialog/new-test-info';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {factsStatusTextFromCode} from '../../shared/client-models/sample-op-status';
-import {TestClickEvent, TestStageClickEvent} from '../test-metadata/events';
+import {TestClickEvent, TestStageClickEvent} from '../test/events';
 
 
 @Component({

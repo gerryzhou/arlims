@@ -5,12 +5,12 @@ import {Router} from '@angular/router';
 import {TestClickEvent, TestStageClickEvent} from './events';
 
 @Component({
-   selector: 'app-test-metadata',
-   templateUrl: './test-metadata.component.html',
-   styleUrls: ['./test-metadata.component.scss'],
+   selector: 'app-test',
+   templateUrl: './test.component.html',
+   styleUrls: ['./test.component.scss'],
    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestMetadataComponent implements OnChanges {
+export class TestComponent implements OnChanges {
 
    @Input()
    test: LabTestMetadata;

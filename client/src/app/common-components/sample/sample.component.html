@@ -89,7 +89,7 @@
                <mat-icon>remove_circle_outline</mat-icon>
             </button>
 
-            <app-test-metadata
+            <app-test
                [test]="test"
                [sampleOp]="sampleOp"
                [allowDataChanges]="allowDataChanges"
@@ -98,7 +98,7 @@
                (testStageClick)="onTestStageClicked($event)"
                (attachedFilesClick)="onAttachedFilesClicked($event)"
                (reportsClick)="onTestReportsClicked($event)">
-            </app-test-metadata>
+            </app-test>
 
          </div>
 

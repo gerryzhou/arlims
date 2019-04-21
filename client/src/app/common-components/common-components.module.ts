@@ -4,7 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
 import {SampleComponent} from './sample/sample.component';
-import {TestMetadataComponent} from './test-metadata/test-metadata.component';
+import {TestComponent} from './test/test.component';
 import {TestStageStatusComponent} from './test-stage-status/test-stage-status.component';
 import {DayNumberPipe} from './day-number.pipe';
 import {PlusMinusPipe} from './plus-minus.pipe';
@@ -34,7 +34,7 @@ import {MaterialUiModule} from '../material-ui.module';
    ],
    declarations: [
       SampleComponent,
-      TestMetadataComponent,
+      TestComponent,
       TestStageStatusComponent,
       DayNumberPipe,
       PlusMinusPipe,
@@ -65,7 +65,7 @@ import {MaterialUiModule} from '../material-ui.module';
    ],
    exports: [
       SampleComponent,
-      TestMetadataComponent,
+      TestComponent,
       TestStageStatusComponent,
       DayNumberPipe,
       PlusMinusPipe,
