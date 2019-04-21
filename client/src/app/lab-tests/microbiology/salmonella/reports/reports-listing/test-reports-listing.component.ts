@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {map} from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
@@ -16,6 +16,7 @@ import {IMP_SLM_VIDAS_PDF_REPORT_NAME, makePdfReportData} from '../pdf-report-da
 })
 export class TestReportsListingComponent
 {
+   labGroupTestData: LabGroupTestData;
    sampleOpTest: SampleOpTest;
    testData: TestData;
    auditLogEntries: AuditLogEntry[] | null;
@@ -23,14 +24,15 @@ export class TestReportsListingComponent
    constructor
       (
          private testsSvc: TestsService,
+         private router: Router,
          private activatedRoute: ActivatedRoute,
       )
    {
-      const labGroupTestData: LabGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
-      this.sampleOpTest = labGroupTestData.sampleOpTest;
-      const verTestData = labGroupTestData.versionedTestData;
+      this.labGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
+      this.sampleOpTest = this.labGroupTestData.sampleOpTest;
+      const verTestData = this.labGroupTestData.versionedTestData;
       this.testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
-      this.auditLogEntries = labGroupTestData.auditLogEntries || null;
+      this.auditLogEntries = this.labGroupTestData.auditLogEntries || null;
    }
 
    generateAndPromptSavePdfReport()
@@ -48,6 +50,21 @@ export class TestReportsListingComponent
          )
          .subscribe();
    }
+
+   // TODO: Decide how to handle passing data to this report (through service or through navigation extras).
+   //       Trying to use navigation extras currently yields error within Angular regarding illegal pushState value.
+   // onFormDataReviewReportClicked()
+   // {
+   //    const navData = this.makeNavigationData({ labGroupTestData: this.labGroupTestData });
+   //
+   //    const testId = this.sampleOpTest.testMetadata.testId;
+   //
+   //    this.router.navigate(
+   //       // TODO: Maybe call injected app internal urls service with test-type to build absolute url.
+   //       ['test-types/micro-slm/reports/form-data-review', testId],
+   //       // navData
+   //    );
+   // }
 
 }
 

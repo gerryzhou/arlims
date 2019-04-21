@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Router} from '@angular/router';
 import {FormGroup} from '@angular/forms';
 
 import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
@@ -10,6 +10,7 @@ import {UserContextService} from '../../../../../shared/services';
 import {AnalyzedAuditLogEntry} from '../../../../../common-components/audit-log-entry/analyzed-audit-log-entry';
 import {makeAttachedFilesByTestPartMap} from '../../../../../shared/util/lab-group-data-utils';
 import {TestUnitsType} from '../../../sampling-methods';
+import {getNavigationStateItem} from '../../../../../routing/routing-utils';
 
 @Component({
    selector: 'app-micro-slm-form-data-review',
@@ -47,10 +48,10 @@ export class FormDataReviewComponent implements OnInit {
 
    constructor
        (
-          private activatedRoute: ActivatedRoute,
+          private router: Router,
        )
    {
-      const labGroupTestData: LabGroupTestData = activatedRoute.snapshot.data['labGroupTestData'];
+      const labGroupTestData = getNavigationStateItem(this.router, 'labGroupTestData') as LabGroupTestData;
 
       const verTestData = labGroupTestData.versionedTestData;
       const testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();

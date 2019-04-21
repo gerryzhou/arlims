@@ -1,3 +1,6 @@
+Using nav extras to hold objects for the next view breaks forward/back buttons.
+  Holding the objects in a service would also.
+  Probably worth it still, alternative of having to cache sample ops somewhere are worse.
 
 Maybe rename:
   test-metadata => test

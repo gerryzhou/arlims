@@ -50,7 +50,6 @@ const routes: Routes = [
    {
       path: 'reports/form-data-review/:testId',
       component: FormDataReviewComponent,
-      resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {
          title: 'Salmonella Test Data Review',
          includeAuditLogEntries: true,
