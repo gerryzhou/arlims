@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {BehaviorSubject, from, Observable} from 'rxjs';
 import {catchError, take} from 'rxjs/operators';
 
-import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AlertMessageService, TestsService, UserContextService} from '../shared/services';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
 import {LabTestType, SampleOp, SampleOpTest} from '../../generated/dto';
@@ -28,7 +28,7 @@ export class TestsSearchComponent {
    readonly defaultQuery: TestsSearchQuery;
 
    // Contains the router path of this listing, to be navigated to after visiting other views from here.
-   readonly exitRouterPath: any[];
+   readonly exitRouterPath: string;
 
    constructor
       (
@@ -43,7 +43,7 @@ export class TestsSearchComponent {
       this.labTestTypes$ = from(userCtxSvc.getLabGroupContents().then(lgc => lgc.supportedTestTypes));
       this.defaultQuery = emptyTestsSearchQuery();
 
-      this.exitRouterPath = [route.snapshot.routeConfig.path];
+      this.exitRouterPath = route.snapshot.routeConfig.path;
    }
 
    doQuery(query: TestsSearchQuery)
@@ -91,60 +91,65 @@ export class TestsSearchComponent {
 
    onTestStageClicked(e: TestStageClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-
       const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      this.router.navigate(
-         this.appUrlsSvc.testStageDataView(testTypeCode, testId, e.stageName),
-         navData
-      );
+      const nav =
+         this.appUrlsSvc.testStageDataView(
+            testTypeCode,
+            testId,
+            e.stageName,
+            'LAB_HISTORY',
+            this.exitRouterPath
+         );
+
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
    onTestClicked(e: TestClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-
       const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      this.router.navigate(
-         this.appUrlsSvc.testDataView(testTypeCode, testId),
-         navData
-      );
+      const nav =
+         this.appUrlsSvc.testDataView(
+            testTypeCode,
+            testId,
+            'LAB_HISTORY',
+            this.exitRouterPath
+         );
+
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
    onTestAttachedFilesClicked(e: TestClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      this.router.navigate(
-         this.appUrlsSvc.testAttachedFilesView(testId),
-         navData
-      );
+      const nav =
+         this.appUrlsSvc.testAttachedFilesView(
+            testId,
+            'LAB_HISTORY',
+            this.exitRouterPath
+         );
+
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
    onTestReportsClicked(e: TestClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-
       const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      this.router.navigate(
-         this.appUrlsSvc.testReportsListing(testTypeCode, testId),
-         navData
-      );
-   }
+      const nav =
+         this.appUrlsSvc.testReportsListing(
+            testTypeCode,
+            testId,
+            'LAB_HISTORY',
+            this.exitRouterPath
+         );
 
-   private makeNavigationData(stateObj: any): NavigationExtras
-   {
-      const newState = Object.assign({ exitRouterPath: this.exitRouterPath }, stateObj);
-
-      return { state: newState };
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
 }

@@ -8,10 +8,12 @@ import {
    UserContext,
    LabGroupContents,
    AppUser,
+   SampleOp,
+   SampleOpTest,
    LabTestType,
    LabResource,
    LabResourceType,
-   UserRegistration, AppVersion, UserReference,
+   UserRegistration, AppVersion, UserReference, LabGroupContentsScope,
 } from '../../../generated/dto';
 import {AppInternalUrlsService} from './app-internal-urls.service';
 import {Router} from '@angular/router';
@@ -27,10 +29,14 @@ export class UserContextService {
    private deferredLabGroupContentsRefreshRequested = false;
 
    // These members are derived from lab group contents and are replaced at every refresh request.
+   // [analyst-scoped data (from person inbox)]
    private labGroupContents$: Promise<LabGroupContents>;
+   private testIdToSampleOpTest$: Promise<Map<number, SampleOpTest>>;
    private testTypeCodeToLabGroupTestConfigJson$: Promise<Map<string, string>>;
    private labResourcesByType$: Promise<Map<string, LabResource[]>>;
    private labUsers$: Promise<UserReference[]>;
+   // [lab-scoped data (from lab inbox)]
+   private labScopedTestIdToSampleOpTest$: Promise<Map<number, SampleOpTest>>;
 
    static readonly BALANCE_RESOURCE_TYPE: LabResourceType = 'BAL';
    static readonly INCUBATOR_RESOURCE_TYPE: LabResourceType = 'INC';
@@ -137,6 +143,24 @@ export class UserContextService {
          return this.labGroupContents$;
    }
 
+   getSampleOpTest
+      (
+         testId: number,
+         scope: LabGroupContentsScope
+      )
+      : Promise<SampleOpTest | undefined>
+   {
+      switch ( scope )
+      {
+         case 'ANALYST':
+            return this.testIdToSampleOpTest$.then(m => m.get(testId));
+         case 'LAB':
+            return this.labScopedTestIdToSampleOpTest$.then(m => m.get(testId));
+         case 'LAB_HISTORY':
+            return Promise.reject('LAB_HISTORY lab group contents scope is not valid here.');
+      }
+   }
+
    getLabGroupTestConfigJson(testTypeCode: string): Promise<string | undefined>
    {
       return this.testTypeCodeToLabGroupTestConfigJson$.then(m => m.get(testTypeCode));
@@ -165,14 +189,19 @@ export class UserContextService {
 
       this.labGroupContents$ = labGroupContents$.toPromise();
 
+      this.testIdToSampleOpTest$ =
+         labGroupContents$
+         .pipe(map(lgc => makeSampleOpTestsByTestId(lgc.activeSamples)))
+         .toPromise();
+
       this.testTypeCodeToLabGroupTestConfigJson$ =
          labGroupContents$
-         .pipe(map(lgc => UserContextService.getLabGroupTestConfigJsonsByTestTypeCode(lgc.supportedTestTypes)))
+         .pipe(map(lgc => makeLabGroupTestConfigJsonsByTestTypeCode(lgc.supportedTestTypes)))
          .toPromise();
 
       this.labResourcesByType$ =
          labGroupContents$
-         .pipe(map(lgc => groupLabResourcesByType(lgc.managedResources)))
+         .pipe(map(lgc => makeLabResourcesByType(lgc.managedResources)))
          .toPromise();
 
       this.labUsers$ =
@@ -201,28 +230,20 @@ export class UserContextService {
       );
    }
 
-   fetchLabAdminScopedLabGroupContents(): Promise<LabGroupContents>
+   fetchLabScopedLabGroupContents(): Promise<LabGroupContents>
    {
-      return (
+      const labGroupContents$ =
          this.httpClient.get<LabGroupContents>(
-            this.apiUrlsSvc.labGroupContentsUrl('LABADMIN')
-         ).toPromise()
-      );
-   }
+            this.apiUrlsSvc.labGroupContentsUrl('LAB')
+         );
 
-   private static getLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string>
-   {
-      const m = new Map<string, string>();
-      for ( const testType of testTypes )
-      {
-         if (testType.configurationJson)
-         {
-            m.set(testType.code, testType.configurationJson);
-         }
-      }
-      return m;
-   }
+      this.labScopedTestIdToSampleOpTest$ =
+         labGroupContents$
+            .pipe(map(lgc => makeSampleOpTestsByTestId(lgc.activeSamples)))
+            .toPromise();
 
+      return labGroupContents$.toPromise();
+   }
 
 }
 
@@ -237,7 +258,7 @@ function extractAuthToken(authHeader: string): string | null
 }
 
 
-function groupLabResourcesByType(managedResources: LabResource[]): Map<string, LabResource[]>
+function makeLabResourcesByType(managedResources: LabResource[]): Map<string, LabResource[]>
 {
    const m = new Map<string, LabResource[]>();
 
@@ -253,3 +274,34 @@ function groupLabResourcesByType(managedResources: LabResource[]): Map<string, L
 
    return m;
 }
+
+function makeSampleOpTestsByTestId(samples: SampleOp[]): Map<number, SampleOpTest>
+{
+   const m = new Map<number, SampleOpTest>();
+
+   for (const s of samples)
+   {
+      for (const t of s.tests)
+      {
+         m.set(t.testId, { sampleOp: s, testMetadata: t });
+      }
+   }
+
+   return m;
+}
+
+function makeLabGroupTestConfigJsonsByTestTypeCode(testTypes: LabTestType[]): Map<string, string>
+{
+   const m = new Map<string, string>();
+
+   for ( const testType of testTypes )
+   {
+      if (testType.configurationJson)
+      {
+         m.set(testType.code, testType.configurationJson);
+      }
+   }
+
+   return m;
+}
+

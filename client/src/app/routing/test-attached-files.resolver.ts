@@ -1,33 +1,37 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
-import {Observable, throwError} from 'rxjs';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {from, Observable, throwError, zip} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {TestsService} from '../shared/services';
-import {SampleOpTest, TestAttachedFileMetadata} from '../../generated/dto';
-import {getNavigationStateItem} from './routing-utils';
-
+import {TestsService, UserContextService} from '../shared/services';
+import {LabGroupContentsScope, SampleOpTest, TestAttachedFileMetadata} from '../../generated/dto';
 
 @Injectable({providedIn: 'root'})
 export class TestAttachedFilesResolver implements Resolve<TestAttachedFiles> {
 
    constructor
       (
+         private usrCtxSvc: UserContextService,
          private testsService: TestsService,
-         private router: Router
       )
    {}
 
    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<TestAttachedFiles> {
       const testId = +route.paramMap.get('testId');
+      const lgcScope = route.queryParams['lgc-scope'] as LabGroupContentsScope | null;
+
       if (isNaN(testId)) { return throwError('Invalid test id'); }
+      if ( !lgcScope ) return throwError('scope is required');
 
       const attachedFiles$ = this.testsService.getTestAttachedFilesMetadatas(testId);
 
-      const sampleOpTest = getNavigationStateItem(this.router, 'sampleOpTest') as SampleOpTest;
+      const sampleOpTest$ = from(this.usrCtxSvc.getSampleOpTest(testId, lgcScope));
 
-      return attachedFiles$.pipe(
-         map(attachedFiles => ({ attachedFiles, sampleOpTest }))
+      return (
+         zip(attachedFiles$, sampleOpTest$)
+         .pipe(
+            map(([attachedFiles, sampleOpTest]) => ({ attachedFiles, sampleOpTest }) )
+         )
       );
    }
 }

@@ -135,6 +135,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             new LabGroupContents(
                 labGroup.getId(),
                 labGroup.getName(),
+                contentsScope,
                 testTypes,
                 users,
                 sampleOps,
@@ -159,7 +160,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                 case ANALYST:
                     inboxItems = factsAccessService.getPersonInboxItems(factsPersonId, Optional.of(personInboxStatuses)).get();
                     break;
-                case LABADMIN:
+                case LAB:
                     inboxItems = factsAccessService.getLabInboxItems(labGroupFactsOrgName, labInboxStatuses).get();
                     break;
                 default:

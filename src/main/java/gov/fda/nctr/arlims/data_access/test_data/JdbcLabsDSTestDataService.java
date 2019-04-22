@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import static java.lang.String.join;
+import static java.util.Collections.singletonList;
+
 import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -431,6 +433,21 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     }
 
     @Override
+    public SampleOpTest getSampleOpTestMetadata(long testId)
+    {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("testId", testId);
+
+        String sql =
+            "select " + TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR + " " +
+            "from test_v where test_id = :testId";
+
+        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper(true);
+
+        return new NamedParameterJdbcTemplate(jdbc).queryForObject(sql, params, rowMapper);
+    }
+
+    @Override
     public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId)
     {
         String sql =
@@ -736,7 +753,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         try
         {
             String mdJson = auditLogSvc.getJsonWriter().writeValueAsString(
-                Collections.singletonList(attachedFileMd)
+                singletonList(attachedFileMd)
             );
 
             auditLogSvc.addEntry(
@@ -821,13 +838,13 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             "select " + TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR + " from test_v\n" +
             (!whereCriteria.isEmpty() ? "where " + join("\nand\n", whereCriteria): "");
 
-        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper();
+        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper(false);
 
         return new NamedParameterJdbcTemplate(jdbc).query(sql, params, rowMapper);
     }
 
     // RowMapper creating SampleOpTests from TEST_V rows, assuming column order specified in TESTV_SAMPLE_OP_TEST_MAPPED_COLS.
-    private RowMapper<SampleOpTest> getTestVSampleOpTestRowMapper()
+    private RowMapper<SampleOpTest> getTestVSampleOpTestRowMapper(boolean includeTestMetadataInSampleOp)
     {
         return (row, rowNum) -> {
             LabTestMetadata tmd =
@@ -859,6 +876,9 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             Optional<String> paf = Optional.ofNullable(row.getString(23));
             Optional<String> subject = Optional.ofNullable(row.getString(24));
 
+            Optional<List<LabTestMetadata>> testMds =
+              includeTestMetadataInSampleOp ? Optional.of(singletonList(tmd)) : Optional.empty();
+
             SampleOp s =
                 new SampleOp(
                     tmd.getOpId(),
@@ -872,7 +892,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
                     Optional.empty(),
                     Optional.empty(), // last refreshed from FACTS not available when sample metadata comes from test record
                     subject,
-                    Optional.empty(), // tests omitted
+                    testMds,
                     Optional.empty()  // assignments omitted
                 );
 

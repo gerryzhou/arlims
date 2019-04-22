@@ -47,7 +47,6 @@ import {SalmonellaFactsService} from '../../salmonella-facts.service';
 import {SelectedSampleOpsService} from '../../../../../shared/services/selected-sample-ops.service';
 import {GeneralFactsService} from '../../../../../shared/services/general-facts.service';
 import {TestDataSaveResult} from '../../../../../shared/client-models/test-data-save-result';
-import {getNavigationStateItem} from '../../../../../routing/routing-utils';
 
 @Component({
    selector: 'app-micro-slm-staged-test-data',
@@ -132,7 +131,8 @@ export class StagedTestDataComponent implements OnInit {
       )
    {
       const labGroupTestData: LabGroupTestData = activatedRoute.snapshot.data['labGroupTestData'];
-      this.exitRouterPath = getNavigationStateItem(router, 'exitRouterPath') as any[] || appUrlsSvc.home();
+      const exitRouterPathParam = activatedRoute.snapshot.queryParams['exitRouterPath'];
+      this.exitRouterPath =  exitRouterPathParam ? [exitRouterPathParam] : appUrlsSvc.home();
       this.allowDataChanges = activatedRoute.snapshot.data && activatedRoute.snapshot.data['allowDataChanges'] || false;
       const testConfig = labGroupTestData.labGroupTestConfig as TestConfig;
       this.testConfig = testConfig;
@@ -527,9 +527,7 @@ function getAOACSubmissionPreconditionFailures(testData: TestData): string[]
 
 function getBamSubmissionPreconditionFailures(testData: TestData): string[]
 {
-   const failures = [];
-   // TODO
-   return failures;
+   return []; // TODO: Check BAM preconditions here.
 }
 
 function makeFactsSubmissionProcessErrorResult(errRes: any, submissionTimestamp: string): FactsSubmissionProcessResult

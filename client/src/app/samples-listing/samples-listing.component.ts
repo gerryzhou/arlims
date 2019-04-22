@@ -36,7 +36,7 @@ export class SamplesListingComponent {
    readonly allowDataChanges: boolean;
 
    // Contains the router path of this listing, to be navigated to after visiting other views from here.
-   readonly exitRouterPath: any[];
+   readonly exitRouterPath: string;
 
    samples: SelectableSample[]; // all sample (-ops) in context, before any filtering or sorting
 
@@ -72,11 +72,14 @@ export class SamplesListingComponent {
        )
    {
       const labGroupContents = <LabGroupContents>this.route.snapshot.data['labGroupContents'];
-      const contentsScope = route.snapshot.data && route.snapshot.data['contentsScope'] || 'ANALYST';
+      const contentsScope = labGroupContents.contentsScope;
       this.labGroupContentsScope = contentsScope;
+      if ( contentsScope === 'LAB_HISTORY' )
+         throw new Error('LAB_HISTORY is not a valid lab group contents scope for the samples listing.');
+
       this.allowDataChanges = route.snapshot.data && route.snapshot.data['allowDataChanges'] || false;
 
-      this.exitRouterPath = [route.snapshot.routeConfig.path];
+      this.exitRouterPath = route.snapshot.routeConfig.path;
 
       this.DEFAULT_INCLUDE_STATUSES =
          contentsScope === 'ANALYST' ? ['S', 'I', 'T', 'M'] : ['P', 'A', 'S', 'I', 'T', 'O'];
@@ -285,7 +288,7 @@ export class SamplesListingComponent {
       const labGroupContents$ =
          this.labGroupContentsScope === 'ANALYST' ?
             this.usrCtxSvc.refreshLabGroupContents()
-            : this.usrCtxSvc.fetchLabAdminScopedLabGroupContents();
+            : this.usrCtxSvc.fetchLabScopedLabGroupContents();
 
        return (
           labGroupContents$
@@ -300,79 +303,47 @@ export class SamplesListingComponent {
 
    onTestStageClicked(e: TestStageClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-      console.log('Navigation extras: ', navData);
-
       const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      if ( this.allowDataChanges )
-         this.router.navigate(
-            this.appUrlsSvc.testStageDataEntry(testTypeCode, testId, e.stageName),
-            navData
-         );
-      else
-         this.router.navigate(
-            this.appUrlsSvc.testStageDataView(testTypeCode, testId, e.stageName),
-            navData
-         );
+      const nav = this.allowDataChanges ?
+         this.appUrlsSvc.testStageDataEntry(testTypeCode, testId, e.stageName, this.labGroupContentsScope, this.exitRouterPath)
+         : this.appUrlsSvc.testStageDataView(testTypeCode, testId, e.stageName, this.labGroupContentsScope, this.exitRouterPath);
+
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
    onTestClicked(e: TestClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-
       const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      if ( this.allowDataChanges )
-         this.router.navigate(
-            this.appUrlsSvc.testDataEntry(testTypeCode, testId),
-            navData
-         );
-      else
-         this.router.navigate(
-            this.appUrlsSvc.testDataView(testTypeCode, testId),
-            navData
-         );
+      const nav = this.allowDataChanges ?
+         this.appUrlsSvc.testDataEntry(testTypeCode, testId, this.labGroupContentsScope, this.exitRouterPath)
+         : this.appUrlsSvc.testDataView(testTypeCode, testId, this.labGroupContentsScope, this.exitRouterPath);
+
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
    onTestAttachedFilesClicked(e: TestClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      if ( this.allowDataChanges )
-         this.router.navigate(
-            this.appUrlsSvc.testAttachedFilesEditor(testId),
-            navData
-         );
-      else
-         this.router.navigate(
-            this.appUrlsSvc.testAttachedFilesView(testId),
-            navData
-         );
+      const nav = this.allowDataChanges ?
+         this.appUrlsSvc.testAttachedFilesEditor(testId, this.labGroupContentsScope, this.exitRouterPath)
+         : this.appUrlsSvc.testAttachedFilesView(testId, this.labGroupContentsScope, this.exitRouterPath);
+
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
    onTestReportsClicked(e: TestClickEvent)
    {
-      const navData = this.makeNavigationData({ sampleOpTest: e.sampleOpTest });
-
       const testTypeCode = e.sampleOpTest.testMetadata.testTypeCode;
       const testId = e.sampleOpTest.testMetadata.testId;
 
-      this.router.navigate(
-         this.appUrlsSvc.testReportsListing(testTypeCode, testId),
-         navData
-      );
-   }
+      const nav = this.appUrlsSvc.testReportsListing(testTypeCode, testId, this.labGroupContentsScope, this.exitRouterPath);
 
-   private makeNavigationData(stateObj: any): NavigationExtras
-   {
-      const newState = Object.assign({ exitRouterPath: this.exitRouterPath }, stateObj);
-
-      return { state: newState };
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
    }
 
 }

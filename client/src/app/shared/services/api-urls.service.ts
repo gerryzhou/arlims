@@ -55,6 +55,12 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/data`);
    }
 
+   testSampleOpTestMetadataUrl(testId: number): string
+   {
+      return this.location.prepareExternalUrl(`/api/tests/${testId}/sample-op-test-md`);
+   }
+
+
    restoreTestSaveDatasUrl(): string
    {
       return this.location.prepareExternalUrl(`/api/tests/restore-save-datas`);

@@ -277,6 +277,12 @@ public class TestController extends ControllerBase
             );
     }
 
+    @GetMapping("{testId:\\d+}/sample-op-test-md")
+    public SampleOpTest getSampleOpTest(@PathVariable long testId)
+    {
+        return testDataService.getSampleOpTestMetadata(testId);
+    }
+
     @GetMapping("{testId:\\d+}/report/{reportName}")
     public ResponseEntity<InputStreamResource> getTestDataReport
         (

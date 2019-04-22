@@ -6,39 +6,44 @@ import java.util.List;
 public class LabGroupContents
 {
     private final long labGroupId;
-    private final String name;
+    private final String labGroupName;
+    private final LabGroupContentsScope contentsScope;
     private final List<LabTestType> supportedTestTypes;
     private final List<UserReference> memberUsers;
-    private final List<SampleOp> userActiveSampleOps;
+    private final List<SampleOp> activeSampleOps;
     private final List<LabResource> managedResources;
 
     public LabGroupContents
         (
             long labGroupId,
-            String name,
+            String labGroupName,
+            LabGroupContentsScope contentsScope,
             List<LabTestType> testTypes,
             List<UserReference> memberUsers,
-            List<SampleOp> userActiveSampleOps,
+            List<SampleOp> activeSampleOps,
             List<LabResource> managedResources
         )
     {
         this.labGroupId = labGroupId;
-        this.name = name;
+        this.labGroupName = labGroupName;
+        this.contentsScope = contentsScope;
         this.supportedTestTypes = testTypes;
         this.memberUsers = memberUsers;
-        this.userActiveSampleOps = userActiveSampleOps;
+        this.activeSampleOps = activeSampleOps;
         this.managedResources = managedResources;
     }
 
     public long getLabGroupId() { return labGroupId; }
 
-    public String getName() { return name; }
+    public String getLabGroupName() { return labGroupName; }
+
+    public LabGroupContentsScope getContentsScope() { return contentsScope; }
 
     public List<LabTestType> getSupportedTestTypes() { return supportedTestTypes; }
 
     public List<UserReference> getMemberUsers() { return memberUsers; }
 
-    public List<SampleOp> getActiveSamples() { return userActiveSampleOps; }
+    public List<SampleOp> getActiveSamples() { return activeSampleOps; }
 
     public List<LabResource> getManagedResources() { return managedResources; }
 }

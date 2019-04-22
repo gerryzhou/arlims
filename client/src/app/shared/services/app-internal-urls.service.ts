@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import {LabTestTypeCode} from '../../../generated/dto';
+import {LabGroupContentsScope, LabTestTypeCode} from '../../../generated/dto';
+import {HttpParams} from '@angular/common/http';
 
 @Injectable({providedIn: 'root'})
 export class AppInternalUrlsService {
@@ -21,44 +22,150 @@ export class AppInternalUrlsService {
       return ['/person-inbox'];
    }
 
-   testAttachedFilesEditor(testId: number): any[]
+   testAttachedFilesEditor
+      (
+         testId: number,
+         labGroupContentsScope: LabGroupContentsScope,
+         exitRouterPath: string
+      )
+      : PathWithParams
    {
-      return ['/test', testId, 'attached-files-editor'];
+      return ({
+         path: ['/test', testId, 'attached-files-editor'],
+         queryParams: {
+            'lgc-scope': labGroupContentsScope,
+            exitRouterPath
+         }
+     });
    }
 
-   testAttachedFilesView(testId: number): any[]
+   testAttachedFilesView
+      (
+         testId: number,
+         labGroupContentsScope: LabGroupContentsScope,
+         exitRouterPath: string
+      )
+      : PathWithParams
    {
-      return ['/test', testId, 'attached-files-view'];
+      return ({
+         path: ['/test', testId, 'attached-files-view'],
+         queryParams: {
+            'lgc-scope': labGroupContentsScope,
+            exitRouterPath
+         }
+      });
    }
 
    // The below are routed to the routers within the modules for each test type.
    // Each test type module should handle routes for the trailing parts of the
    // url below after the "/test-types/<type-code>" prefix.
 
-   testDataEntry(testTypeCode: LabTestTypeCode, testId: number): any[]
+   testDataEntry
+      (
+         testTypeCode: LabTestTypeCode,
+         testId: number,
+         labGroupContentsScope: LabGroupContentsScope,
+         exitRouterPath: string
+      )
+      : PathWithParams
    {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId];
+      return ({
+         path: ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId],
+         queryParams: {
+            'lgc-scope': labGroupContentsScope,
+            exitRouterPath
+         }
+      });
    }
 
-   testDataView(testTypeCode: LabTestTypeCode, testId: number): any[]
+   testDataView
+      (
+         testTypeCode: LabTestTypeCode,
+         testId: number,
+         labGroupContentsScope: LabGroupContentsScope,
+         exitRouterPath: string
+      )
+      : PathWithParams
    {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId];
+      return ({
+         path: ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId],
+         queryParams: {
+            'lgc-scope': labGroupContentsScope,
+            exitRouterPath
+         }
+      });
    }
 
-   testStageDataEntry(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
+   testStageDataEntry
+      (
+         testTypeCode: LabTestTypeCode,
+         testId: number,
+         stageName: string,
+         labGroupContentsScope: LabGroupContentsScope,
+         exitRouterPath: string
+      )
+      : PathWithParams
    {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName];
+      return ({
+         path: ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-entry', testId, 'stage', stageName],
+         queryParams: {
+            'lgc-scope': labGroupContentsScope,
+            exitRouterPath
+         }
+      });
    }
 
-   testStageDataView(testTypeCode: LabTestTypeCode, testId: number, stageName: string)
+   testStageDataView
+      (
+         testTypeCode: LabTestTypeCode,
+         testId: number,
+         stageName: string,
+         labGroupContentsScope: LabGroupContentsScope,
+         exitRouterPath: string
+      )
+      : PathWithParams
    {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId, 'stage', stageName];
+      return ({
+         path: ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'test-data-view', testId, 'stage', stageName],
+         queryParams: {
+            'lgc-scope': labGroupContentsScope,
+            exitRouterPath
+         }
+      });
    }
 
-
-   testReportsListing(testTypeCode: LabTestTypeCode, testId: number): any[]
+   testReportsListing
+      (
+         testTypeCode: LabTestTypeCode,
+         testId: number,
+         labGroupContentsScope: LabGroupContentsScope,
+         exitRouterPath: string
+      )
+      : PathWithParams
    {
-      return ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'reports-listing', testId];
+      return ({
+         path: ['/test-types', lowerCaseDashSeparated(testTypeCode.toString()), 'reports-listing', testId],
+         queryParams: {
+            'lgc-scope': labGroupContentsScope,
+            exitRouterPath
+         }
+      });
+   }
+
+   testReport
+      (
+         testTypeCode: LabTestTypeCode,
+         testId: number,
+         reportName: string,
+         labGroupContentsScope: LabGroupContentsScope
+      )
+      : PathWithParams
+   {
+      const testType = lowerCaseDashSeparated(testTypeCode.toString());
+      return ({
+         path: [`test-types/${testType}/reports/${reportName}`, testId],
+         queryParams: { 'lgc-scope': labGroupContentsScope }
+      });
    }
 }
 
@@ -66,3 +173,9 @@ function lowerCaseDashSeparated(s: string)
 {
    return s.toLowerCase().replace(/_/g, '-');
 }
+
+export interface PathWithParams {
+   path: any[];
+   queryParams: { [paramName: string]: string };
+}
+

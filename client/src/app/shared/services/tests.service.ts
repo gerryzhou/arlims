@@ -210,6 +210,13 @@ export class TestsService {
 
       return this.httpClient.get<SampleOpTest[]>(searchUrl);
    }
+
+   getTestSampleOpTestMetadata(testId: number): Observable<SampleOpTest>
+   {
+      return this.httpClient.get<SampleOpTest>(
+         this.apiUrlsSvc.testSampleOpTestMetadataUrl(testId)
+      );
+   }
 }
 
 export function defaultJsonFieldFormatter(key: string, value: any): any

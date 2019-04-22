@@ -41,6 +41,8 @@ public interface TestDataService
 
     LabTestMetadata getTestMetadata(long testId);
 
+    SampleOpTest getSampleOpTestMetadata(long testId);
+
     List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId);
 
     List<Long> attachFilesToTest(long testId, List<MultipartFile> files, Optional<String> label, int ordering,  Optional<String> testDataPart, AppUser user);

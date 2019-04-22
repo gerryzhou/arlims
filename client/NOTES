@@ -1,10 +1,8 @@
-Using nav extras to hold objects for the next view breaks forward/back buttons.
-  Holding the objects in a service would also.
-  Probably worth it still, alternative of having to cache sample ops somewhere are worse.
+Lab inbox loading is sometimes leaving the wait spinner on until it times out.
+  May be caused by read time out for labs-ds api call on server.
 
-Maybe rename:
-  test-metadata => test
-  SampleOpTest => SampleOpTestMetadata
+[Minor] Reports listing probably should not load lab group test data.
+  Load on demand for pdf report.
 
 Can lab group be divorced from factsOrgName (performing org), so can have an ARKL-MICRO lab group?
   Where is performing org field from LabGroup actually used in the app?

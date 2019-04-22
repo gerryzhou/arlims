@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {map} from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
@@ -8,6 +8,7 @@ import {emptyTestData, TestData} from '../../test-data';
 import {LabGroupTestData} from '../../../../../shared/client-models/lab-group-test-data';
 import {SampleOpTest, AuditLogEntry} from '../../../../../../generated/dto';
 import {IMP_SLM_VIDAS_PDF_REPORT_NAME, makePdfReportData} from '../pdf-report-data';
+import {AppInternalUrlsService} from '../../../../../shared/services/app-internal-urls.service';
 
 @Component({
    selector: 'app-test-reports-listing',
@@ -16,19 +17,25 @@ import {IMP_SLM_VIDAS_PDF_REPORT_NAME, makePdfReportData} from '../pdf-report-da
 })
 export class TestReportsListingComponent
 {
-   labGroupTestData: LabGroupTestData;
-   sampleOpTest: SampleOpTest;
-   testData: TestData;
-   auditLogEntries: AuditLogEntry[] | null;
+   readonly labGroupTestData: LabGroupTestData;
+   readonly exitRouterPath: any[];
+
+   readonly sampleOpTest: SampleOpTest;
+   readonly testData: TestData;
+   readonly auditLogEntries: AuditLogEntry[] | null;
 
    constructor
       (
          private testsSvc: TestsService,
+         private appUrls: AppInternalUrlsService,
          private router: Router,
          private activatedRoute: ActivatedRoute,
+         private appUrlsSvc: AppInternalUrlsService,
       )
    {
-      this.labGroupTestData = this.activatedRoute.snapshot.data['labGroupTestData'];
+      const exitRouterPathParam = activatedRoute.snapshot.queryParams['exitRouterPath'];
+      this.exitRouterPath =  exitRouterPathParam ? [exitRouterPathParam] : appUrlsSvc.home();
+      this.labGroupTestData = activatedRoute.snapshot.data['labGroupTestData'];
       this.sampleOpTest = this.labGroupTestData.sampleOpTest;
       const verTestData = this.labGroupTestData.versionedTestData;
       this.testData = verTestData.testDataJson ? JSON.parse(verTestData.testDataJson) : emptyTestData();
@@ -51,20 +58,14 @@ export class TestReportsListingComponent
          .subscribe();
    }
 
-   // TODO: Decide how to handle passing data to this report (through service or through navigation extras).
-   //       Trying to use navigation extras currently yields error within Angular regarding illegal pushState value.
-   // onFormDataReviewReportClicked()
-   // {
-   //    const navData = this.makeNavigationData({ labGroupTestData: this.labGroupTestData });
-   //
-   //    const testId = this.sampleOpTest.testMetadata.testId;
-   //
-   //    this.router.navigate(
-   //       // TODO: Maybe call injected app internal urls service with test-type to build absolute url.
-   //       ['test-types/micro-slm/reports/form-data-review', testId],
-   //       // navData
-   //    );
-   // }
+   onFormDataReviewReportClicked()
+   {
+      const testId = this.sampleOpTest.testMetadata.testId;
+      const lgcScope = this.labGroupTestData.labGroupContentsScope;
 
+      const nav = this.appUrlsSvc.testReport('MICRO_SLM', testId, 'form-data-review', lgcScope);
+
+      this.router.navigate(nav.path, { queryParams: nav.queryParams });
+   }
 }
 

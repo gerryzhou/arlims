@@ -44,7 +44,7 @@ const routes: Routes = [
       resolve: { labGroupContents: LabGroupContentsResolver },
       data: {
          title: 'Lab Inbox',
-         contentsScope: 'LABADMIN',
+         contentsScope: 'LAB',
          allowDataChanges: true,
          statuses: ['P', 'A', 'S', 'I', 'T', 'O']
       },

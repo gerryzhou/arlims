@@ -11,7 +11,11 @@ const routes: Routes = [
    // Redirect test-specific login url to the global login.
    // This way users starting from this url will have their test module preloaded prior to login
    // for better user experience (avoids confusing pause when test of given type is first clicked).
-   { path: 'login', redirectTo: '/login', pathMatch: 'full' },
+   {
+      path: 'login',
+      redirectTo: '/login',
+      pathMatch: 'full'
+   },
    {
       path: 'test-data-entry/:testId',
       component: StagedTestDataComponent,
@@ -50,6 +54,7 @@ const routes: Routes = [
    {
       path: 'reports/form-data-review/:testId',
       component: FormDataReviewComponent,
+      resolve: { labGroupTestData: LabGroupTestDataResolver },
       data: {
          title: 'Salmonella Test Data Review',
          includeAuditLogEntries: true,
