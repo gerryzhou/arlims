@@ -442,7 +442,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             "select " + TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR + " " +
             "from test_v where test_id = :testId";
 
-        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper(true);
+        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper(false);
 
         return new NamedParameterJdbcTemplate(jdbc).queryForObject(sql, params, rowMapper);
     }

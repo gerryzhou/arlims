@@ -55,7 +55,7 @@
          <div class="expanding-flex-space"></div>
 
          <div *ngIf="showAssociatedItemsSummaryInSampleMetadata" class="nums-associated-items-stack">
-            <span>{{sampleOp.tests.length}} test{{sampleOp.tests.length != 1 ? 's' : ''}}</span>
+            <span *ngIf="sampleOp.tests">{{sampleOp.tests.length}} test{{sampleOp.tests.length != 1 ? 's' : ''}}</span>
          </div>
 
          <div class="refreshed-from-facts-timestamp-stack" *ngIf="refreshedFromFacts != null">
@@ -79,7 +79,7 @@
    <!-- tests and any other associated lab resources area -->
    <div *ngIf="showAssociatedItems">
 
-      <div class="tests">
+      <div class="tests" *ngIf="sampleOp.tests">
 
          <div class="test-area" *ngFor="let test of sampleOp.tests">
 

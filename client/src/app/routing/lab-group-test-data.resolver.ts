@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Observable, throwError, zip, of, from} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
 
 import {AuditLogQueryService, TestsService, UserContextService} from '../shared/services';
 import {LabGroupTestData} from '../shared/client-models/lab-group-test-data';
-import {LabGroupContentsScope, SampleOpTest} from '../../generated/dto';
+import {LabGroupContentsScope} from '../../generated/dto';
 
 @Injectable({providedIn: 'root'})
 export class LabGroupTestDataResolver implements Resolve<LabGroupTestData> {

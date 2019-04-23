@@ -93,7 +93,7 @@ export class SampleComponent implements OnChanges {
 
    ngOnChanges()
    {
-      this.hasAssociatedItems = this.sampleOp.tests.length > 0;
+      this.hasAssociatedItems = this.sampleOp.tests && this.sampleOp.tests.length > 0;
       this.displayFactsStatusTimestamp =
          this.sampleOp.factsStatusTimestamp ? moment(this.sampleOp.factsStatusTimestamp).format('MMM D h:mm a')
          : '';
