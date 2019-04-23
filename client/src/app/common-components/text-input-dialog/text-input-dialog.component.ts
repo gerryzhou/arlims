@@ -2,11 +2,11 @@ import {Component, HostListener, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
-  selector: 'app-simple-input-dialog',
-  templateUrl: './simple-input-dialog.component.html',
-  styleUrls: ['./simple-input-dialog.component.scss']
+  selector: 'app-text-input-dialog',
+  templateUrl: './text-input-dialog.component.html',
+  styleUrls: ['./text-input-dialog.component.scss']
 })
-export class SimpleInputDialogComponent {
+export class TextInputDialogComponent {
 
    title: string;
    message: string;
@@ -15,7 +15,7 @@ export class SimpleInputDialogComponent {
 
    constructor
       (
-         public dialogRef: MatDialogRef<SimpleInputDialogComponent, string>,
+         public dialogRef: MatDialogRef<TextInputDialogComponent, string>,
          @Inject(MAT_DIALOG_DATA) public data: any
       )
    {

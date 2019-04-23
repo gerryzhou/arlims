@@ -14,7 +14,7 @@ import {FieldAssignedResourcesComponent} from './field-assigned-resources/field-
 import {ResourceCodesDialogComponent} from './resource-codes-dialog/resource-codes-dialog.component';
 import {FilesSelectorComponent} from './files-selector/files-selector.component';
 import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component';
-import {SimpleInputDialogComponent} from './simple-input-dialog/simple-input-dialog.component';
+import {TextInputDialogComponent} from './text-input-dialog/text-input-dialog.component';
 import {AuditLogEntryComponent} from './audit-log-entry/audit-log-entry.component';
 import {DataFieldDiffsComponent} from './data-field-diffs/data-field-diffs.component';
 import {TestAttachedFilesComponent} from './test-attached-files/test-attached-files.component';
@@ -44,7 +44,7 @@ import {MaterialUiModule} from '../material-ui.module';
       ResourceCodesDialogComponent,
       FilesSelectorComponent,
       ConfirmDialogComponent,
-      SimpleInputDialogComponent,
+      TextInputDialogComponent,
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
       TestAttachedFilesComponent,
@@ -57,7 +57,7 @@ import {MaterialUiModule} from '../material-ui.module';
       NewTestDialogComponent,
       ResourceCodesDialogComponent,
       ConfirmDialogComponent,
-      SimpleInputDialogComponent,
+      TextInputDialogComponent,
       AttachedFileMetadataDialogComponent,
       UserTimeChargeDialogComponent,
       ItemsSelectionDialogComponent,
@@ -75,7 +75,7 @@ import {MaterialUiModule} from '../material-ui.module';
       ResourceCodesDialogComponent,
       FilesSelectorComponent,
       ConfirmDialogComponent,
-      SimpleInputDialogComponent,
+      TextInputDialogComponent,
       AuditLogEntryComponent,
       DataFieldDiffsComponent,
       TestAttachedFilesComponent,

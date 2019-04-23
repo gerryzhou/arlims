@@ -12,7 +12,7 @@ import {MatDialog} from '@angular/material';
 
 import {makeEmptyIsolateTestSequence, makeIsolateTestSequenceFormGroup, makeIsolateTestSequenceUid} from '../../../test-data';
 import {AppUser} from '../../../../../../../generated/dto';
-import {SimpleInputDialogComponent} from '../../../../../../common-components/simple-input-dialog/simple-input-dialog.component';
+import {TextInputDialogComponent} from '../../../../../../common-components/text-input-dialog/text-input-dialog.component';
 
 @Component({
    selector: 'app-sel-agars-test-suite',
@@ -109,7 +109,7 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
 
    promptAddNewIsolateTestSequence(selAgar: string)
    {
-      const isolateNumDlg = this.dialogSvc.open(SimpleInputDialogComponent,
+      const isolateNumDlg = this.dialogSvc.open(TextInputDialogComponent,
          {
             data: {
                title: 'Create New Isolate',
