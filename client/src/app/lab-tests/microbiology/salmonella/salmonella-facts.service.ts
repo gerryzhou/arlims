@@ -230,20 +230,22 @@ export class SalmonellaFactsService {
 
          const posIdent = containsPositiveIdentification(contTests);
 
-         res.push({
-            actionIndicator: posIdent ? 'Y' : 'N',
-            subNumberCode: testUnitNum,
-            genusCode: 'SLML',
-            speciesCode: 'SLML998',
-            secondaryPafCode: 'SAL',
-            presenceResultIndicator: posIdent ? 'POS' : 'NEG',
-            atypicalReactionCode: 'N',
-            isolatesSentNumber: 1,              // TODO: Where from? Need new field for this?
-            isolatesSentIndicator: 'Y',         // "
-            fdaLabOrgName: fdaOrgName,
-            remarks: 'Test entry from ALIS' // "
-         });
-
+         if ( posIdent )
+         {
+            res.push({
+               actionIndicator: 'Y',
+               subNumberCode: testUnitNum,
+               genusCode: 'SLML',
+               speciesCode: 'SLML998',
+               secondaryPafCode: 'SAL',
+               presenceResultIndicator: 'POS',
+               atypicalReactionCode: 'N',
+               isolatesSentNumber: 1,              // TODO: Where from? Need new field for this?
+               isolatesSentIndicator: 'Y',         // "
+               fdaLabOrgName: fdaOrgName,
+               remarks: 'Test entry from ALIS' // "
+            });
+         }
       }
 
       return res;
