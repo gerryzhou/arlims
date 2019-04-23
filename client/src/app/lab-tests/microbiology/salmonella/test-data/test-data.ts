@@ -388,14 +388,20 @@ export function vidasHoursElapsedFromSampleReceipt(testData: TestData): number |
 
 export function getTestMediumBatchIds(testData: TestData): string[]
 {
-   return [
+   const batchIds = [
       testData.preEnrData.mediumBatchId,
       testData.selEnrData.rvBatchId,
       testData.selEnrData.ttBatchId,
       testData.selEnrData.bgBatchId,
       testData.selEnrData.i2kiBatchId,
       testData.mBrothData.mBrothBatchId,
-   ].filter(batchId => batchId != null);
+   ];
+
+   return (
+      batchIds
+      .filter(batchId => batchId != null && batchId.trim().length > 0)
+      .map(batchId => batchId.trim())
+   );
 }
 
 export function containsPositiveIdentification(contTests: ContinuationTests): boolean
