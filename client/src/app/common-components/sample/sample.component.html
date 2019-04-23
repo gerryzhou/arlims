@@ -4,33 +4,33 @@
 
       <div class="sample-metadata-row">
 
-         <div class="product-name">{{sampleOp.productName}}</div>
-
-         <div class="sample-pac-stack">
-            <div>
-               <span class="field-label">sample: </span>
-               <span class="field-value">
-                  {{sampleOp.sampleTrackingNumber}}-{{sampleOp.sampleTrackingSubNumber}}
-               </span>
-            </div>
-            <div>
-               <span class="field-label">pac: </span>
-               <span class="field-value">{{sampleOp.pac}}</span>
-            </div>
+         <div class="sample-number-box">
+            <span class="field-label">sample</span>
+            <span class="field-value">
+               {{sampleOp.sampleTrackingNumber}}-{{sampleOp.sampleTrackingSubNumber}}
+            </span>
          </div>
 
-         <div class="op-lid-paf-stack">
-            <div>
-               <span class="field-label">op: </span>
-               <span class="field-value">{{sampleOp.opId}}</span>
-            </div>
-            <div class="lid-paf-row">
+         <div class="product-name">{{sampleOp.productName}}</div>
+
+         <div class="op-lid-pac-paf-block">
+            <div class="op-lid-row">
+               <div class="op">
+                  <span class="field-label">op: </span>
+                  <span class="field-value">{{sampleOp.opId}}</span>
+               </div>
                <div class="lid" *ngIf="sampleOp.lid">
                   <span class="field-label">lid: </span>
                   <span class="field-value">{{sampleOp.lid}}</span>
                </div>
-               <div *ngIf="sampleOp.paf">
-                  <span class="field-label">paf: </span>
+            </div>
+            <div class="pac-paf-row">
+               <div class="pac">
+                  <span class="field-label">pac: </span>
+                  <span class="field-value">{{sampleOp.pac}}</span>
+               </div>
+               <div class="paf" *ngIf="sampleOp.paf">
+                  <span class="field-label paf">paf: </span>
                   <span class="field-value">{{sampleOp.paf}}</span>
                </div>
             </div>

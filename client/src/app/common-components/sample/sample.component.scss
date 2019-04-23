@@ -59,30 +59,40 @@
 
 .product-name {
    font-weight: bolder;
-   font-size: 120%;
    width: 20%;
 }
 
-.sample-pac-stack {
+.sample-number-box {
+   display: flex;
+   flex-flow: column nowrap;
+   min-width: 75px;
+   margin-right: 30px;
+   .field-value {
+      font-weight: bolder;
+      font-size: 130%;
+   }
+   .field-label {
+      color: darkgray;
+   }
+}
+
+.op-lid-pac-paf-block {
    display: flex;
    flex-flow: column nowrap;
    justify-content: center;
    align-items: flex-start;
-   min-width: 105px;
+   min-width: 175px;
+}
+.op-lid-row {
+   display: flex;
+   > .op {
+      margin-right: 10px;
+   }
 }
 
-.op-lid-paf-stack {
+.pac-paf-row {
    display: flex;
-   flex-flow: column nowrap;
-   justify-content: center;
-   align-items: flex-start;
-   min-width: 105px;
-}
-
-.lid-paf-row {
-   display: flex;
-
-   > .lid {
+   >.pac {
       margin-right: 10px;
    }
 }
