@@ -35,18 +35,18 @@ export class SalmonellaFactsService {
       (
          testData: TestData,
          opId: number,
-         fdaOrgName: string,
+         factsOrgName: string,
          testConfig: TestConfig
       )
       : Observable<[CreatedSampleAnalysisMicrobiology]>
    {
       const aoacMethodCode = testConfig.aoacMethodCode;
 
-      const aoacAnalysis = this.makeAOACSampleAnalysis(testData, opId, aoacMethodCode, fdaOrgName);
+      const aoacAnalysis = this.makeAOACSampleAnalysis(testData, opId, aoacMethodCode, factsOrgName);
 
       const analyses = aoacAnalysis.subSamplesDetectableFindingsNumber === 0 ?
          [ aoacAnalysis ]
-         : [ aoacAnalysis, this.makeBAMSampleAnalysis(testData, opId, fdaOrgName) ];
+         : [ aoacAnalysis, this.makeBAMSampleAnalysis(testData, opId, factsOrgName) ];
 
       console.log('Submitting FACTS analyses: ', analyses);
 
@@ -63,7 +63,7 @@ export class SalmonellaFactsService {
          testData: TestData,
          opId: number,
          methodCode: string,
-         fdaOrgName: string
+         factsOrgName: string
       )
       : MicrobiologySampleAnalysis
    {
@@ -98,7 +98,7 @@ export class SalmonellaFactsService {
 
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
-         accomplishingOrgName: fdaOrgName,
+         accomplishingOrgName: factsOrgName,
          actionIndicator: positivesCount > 0 ? 'Y' : 'N',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -134,7 +134,7 @@ export class SalmonellaFactsService {
       (
          testData: TestData,
          opId: number,
-         fdaOrgName: string
+         factsOrgName: string
       )
       : MicrobiologySampleAnalysis
    {
@@ -142,13 +142,13 @@ export class SalmonellaFactsService {
 
       const contTestsByTestUnitNum = testData.posContData.testUnitsContinuationTests || {};
       const aoacPositivesCount = countValueOccurrences(testData.vidasData.testUnitDetections, true);
-      const bamFindings = this.makeBAMFindings(contTestsByTestUnitNum, fdaOrgName);
+      const bamFindings = this.makeBAMFindings(contTestsByTestUnitNum, factsOrgName);
 
       const positiveFindingsCount = bamFindings.filter(fdg => fdg.presenceResultIndicator === 'POS').length;
 
       const subm: MicrobiologySampleAnalysis = {
          operationId: opId,
-         accomplishingOrgName: fdaOrgName,
+         accomplishingOrgName: factsOrgName,
          actionIndicator: 'Y',
          problemCode: 'MICROID',
          genusCode: 'SLML',
@@ -218,7 +218,7 @@ export class SalmonellaFactsService {
    private makeBAMFindings
       (
          continuationTestsByTestUnitNum: ContinuationTestssByTestUnitNum,
-         fdaOrgName: string
+         factsOrgName: string
       )
       : MicrobiologyAnalysisFinding[]
    {
@@ -242,7 +242,7 @@ export class SalmonellaFactsService {
                atypicalReactionCode: 'N',
                isolatesSentNumber: 1,              // TODO: Where from? Need new field for this?
                isolatesSentIndicator: 'Y',         // "
-               fdaLabOrgName: fdaOrgName,
+               fdaLabOrgName: factsOrgName,
                remarks: 'Test entry from ALIS' // "
             });
          }

@@ -1,5 +1,9 @@
 TODO
 ====
+Publish clients to dev and test then:
+  alter table resource_group drop column lab_group_parent_org;
+  alter table lab_group drop column facts_parent_org_name;
+
 
 FactsController
   When analyses are successfully submitted, append submission and results to new Test record json array field.

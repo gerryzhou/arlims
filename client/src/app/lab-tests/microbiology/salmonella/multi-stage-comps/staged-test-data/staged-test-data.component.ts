@@ -327,7 +327,7 @@ export class StagedTestDataComponent implements OnInit {
          this.slmFactsService.submitAnalyses(
             testData,
             this.sampleOpTest.sampleOp.opId,
-            this.appUser.factsFdaOrgName,
+            this.appUser.factsOrgName,
             this.testConfig
          )
          .pipe(

@@ -46,7 +46,6 @@ create table LAB_GROUP
   BUILDINGS_AND_ROOMS   VARCHAR2(200 char),
   DESCRIPTION           VARCHAR2(100 char),
   FACTS_ORG_NAME        VARCHAR2(20 char) not null,
-  FACTS_PARENT_ORG_NAME VARCHAR2(20 char) not null,
   NAME                  VARCHAR2(20 char) not null
     constraint UN_LABGRP_NAME
       unique
@@ -270,7 +269,6 @@ create index IX_TSTFILE_TESTDATAPART
 create table resource_group
 (
   name varchar(50),
-  lab_group_parent_org varchar(20) not null,
   description varchar(200),
   constraint pk_rscgrp primary key (name)
 );

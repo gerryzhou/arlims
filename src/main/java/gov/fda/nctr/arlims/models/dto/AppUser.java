@@ -17,8 +17,7 @@ public class AppUser
     private final String shortName;
     private final long labGroupId;
     private String labGroupName;
-    private String labGroupFactsOrgName;
-    private String factsFdaOrgName;
+    private String factsOrgName;
     private final String lastName;
     private final String firstName;
     private final List<RoleName> roles;
@@ -35,8 +34,7 @@ public class AppUser
             String shortName,
             long labGroupId,
             String labGroupName,
-            String labGroupFactsOrgName,
-            String factsFdaOrgName,
+            String factsOrgName,
             String lastName,
             String firstName,
             List<RoleName> roles,
@@ -49,8 +47,7 @@ public class AppUser
         this.shortName = shortName;
         this.labGroupId = labGroupId;
         this.labGroupName = labGroupName;
-        this.labGroupFactsOrgName = labGroupFactsOrgName;
-        this.factsFdaOrgName = factsFdaOrgName;
+        this.factsOrgName = factsOrgName;
         this.lastName = lastName;
         this.firstName = firstName;
         this.roles = roles;
@@ -70,9 +67,7 @@ public class AppUser
 
     public String getLabGroupName() { return labGroupName; }
 
-    public String getLabGroupFactsOrgName() { return labGroupFactsOrgName; }
-
-    public String getFactsFdaOrgName() { return factsFdaOrgName; }
+    public String getFactsOrgName() { return factsOrgName; }
 
     public String getLastName() { return lastName; }
 

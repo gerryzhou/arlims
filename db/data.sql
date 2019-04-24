@@ -1,5 +1,5 @@
-insert into lab_group (name, facts_org_name, facts_parent_org_name, address_street, buildings_and_rooms, address_city, address_state, address_zip, description)
-  values ('ARL-MICRO1', 'ARL-MICRO1', 'ARKL', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
+insert into lab_group (name, facts_org_name, address_street, buildings_and_rooms, address_city, address_state, address_zip, description)
+  values ('ARL-MICRO', 'ARKL', '3900 NCTR Road', 'Building 26', 'Jefferson', 'AR', '72079', 'ARL Labs Microbiology');
 
 insert into employee (facts_person_id, fda_email_account_name, short_name, lab_group_id, last_name, first_name, middle_name, password)
   values (472629, 'stephen.harris', 'SCH', 1, 'Harris', 'Stephen', 'C', '$2a$10$GuY.dmUtyra9IY.UQ8sUqe/sW7c94MSkMiXgYEjrB78R3OyfC2LOK');
@@ -25,8 +25,8 @@ insert into employee_role(emp_id, role_id)
 
 -- Add shared resources for ARKL's ARL-MICRO* lab groups.
 
-insert into resource_group(name, lab_group_parent_org, description)
-  values('ARKL-MICRO-SHARED', 'ARKL', 'Shared lab resources for ARL-MICRO* labs');
+insert into resource_group(name, description)
+  values('ARKL-MICRO-SHARED', 'Shared lab resources for ARL-MICRO* labs');
 
 insert into lab_group_resource_group (lab_group_id, resource_group)
   values(1, 'ARKL-MICRO-SHARED');

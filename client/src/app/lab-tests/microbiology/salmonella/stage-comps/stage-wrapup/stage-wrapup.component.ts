@@ -112,7 +112,7 @@ export class StageWrapupComponent implements OnChanges {
                remarks: '',
                statusCode: tc.assignmentStatus,
                hoursSpentNumber: tc.hours,
-               hoursCreditedOrgName: this.appUser.factsFdaOrgName
+               hoursCreditedOrgName: this.appUser.factsOrgName
             };
          });
 

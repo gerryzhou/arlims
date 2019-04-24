@@ -24,9 +24,6 @@ public class LabGroup
     @Column(nullable = false) @Size(max = 20) @NotBlank
     private String factsOrgName;
 
-    @Column(nullable = false) @Size(max = 20) @NotBlank
-    private String factsParentOrgName;
-
     @Size(max = 200)
     private String addressStreet;
 
@@ -57,7 +54,6 @@ public class LabGroup
         (
             @Size(max = 20)  @NotBlank String name,
             @Size(max = 20)  @NotBlank String factsOrgName,
-            @Size(max = 20)  @NotBlank String factsParentOrgName,
             @Size(max = 200) String addressStreet,
             @Size(max = 200) String buildingsAndRooms,
             @Size(max = 200) String addressCity,
@@ -68,7 +64,6 @@ public class LabGroup
     {
         this.name = name;
         this.factsOrgName = factsOrgName;
-        this.factsParentOrgName = factsParentOrgName;
         this.addressStreet = addressStreet;
         this.buildingsAndRooms = buildingsAndRooms;
         this.addressCity = addressCity;
@@ -85,9 +80,6 @@ public class LabGroup
 
     public String getFactsOrgName() { return factsOrgName; }
     public void setFactsOrgName(String name) { this.factsOrgName = name; }
-
-    public String getFactsParentOrgName() { return factsParentOrgName; }
-    public void setFactsParentOrgName(String name) { this.factsParentOrgName = name; }
 
     public String getAddressStreet() { return addressStreet; }
     public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }

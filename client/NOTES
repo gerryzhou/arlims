@@ -1,24 +1,37 @@
-User Feedback from April 23 Meeting
------------------------------------
+
+DONE
+----
+- Sample layout changes including sample # at left edge.
+- Don't submit negative isolates in BAM submission.
+- Filter out blanks in lot #'s in structured remarks in AOAC submission.
+
+
+User Feedback from April 23-25 Meetings
+---------------------------------------
+- SLM completion: Need support for serology and WGS.
+- Add SX2 method.
 - Isolate numbers are repeating 1,2, not sequentially numbered currently?
-  Probably should not automatically create isolate numbering (as lab/test config item).
+  Just make users create isolates manually for now, entering isolate number for each.
   Numbering systems vary by lab.
-- Newline should go to next field in forms.
+- Newlines/enter key press in form text input should transfer focus to next field in form.
   (keyup.enter)="onEnterKey($event)
   keytab(event){
       const nextEl = event.srcElement.nextElementSibling; // get the sibling element
       if ( nextEl )
          element.focus();
   }
-- Don't send negatives in BAM stage.
+- CR (collection report) Need to fetch CR via new api to generate package.
 - Ash: Add more comments, maybe one per stage.
+  Incorporate into structured remarks under test-comments/test-part key?
 - Need timestamp "out" whenever there's an "in" timestamp.
-- Slant stage: make identification a button next to isolate test seq, instead of being buried in '...' menu.
-  Maybe just list contents of '...' menu next to isolate (maybe only when expanded).
+  In which case a completion timestamp for water bath field should be added.
+- Slant stage: make identification a button next to isolate test seq, instead of
+  being buried in '...' menu. Maybe just list contents of '...' menu next to
+  isolate (maybe only when expanded).
 - Maybe auto-save when change stages.
 - Wrapup: Isolates sent section should be unconditional.
-- Lab group test config: Allow setting field defaults by field json path (or any other identifier which test will interpret).
-- CR api might be needed to generate some reports which would be very helpful.
+- [Maybe] Lab group test config: Allow setting field defaults by field json path (or
+  any other identifier which test will interpret).
 - FYI: Naming standard for isolates: [sample#]-[sub or comp #]-[isolate #].
   Isolate # interpretation is lab-specific, different numbering systems are used, e.g.
   some only assign numbers to positively identified isolates.
@@ -28,9 +41,6 @@ Lab inbox loading is sometimes leaving the wait spinner on until it times out.
 
 [Minor] Reports listing probably should not load lab group test data.
   Load on demand for pdf report.
-
-Can lab group be divorced from factsOrgName (performing org), so can have an ARKL-MICRO lab group?
-  Where is performing org field from LabGroup actually used in the app?
 
 Buttons
   Set backgrounds and margins, remove mat-button directives if necessary.

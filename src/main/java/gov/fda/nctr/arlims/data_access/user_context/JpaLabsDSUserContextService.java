@@ -129,7 +129,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         List<LabResource> labResources = getLabGroupResources(labGroup);
 
         List<SampleOp> sampleOps =
-            loadSampleOps(forFactsPersonId, labGroup.getFactsParentOrgName(), contentsScope, users);
+            loadSampleOps(forFactsPersonId, labGroup.getFactsOrgName(), contentsScope, users);
 
         return
             new LabGroupContents(
@@ -532,7 +532,6 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                 emp.getLabGroupId(),
                 lg.getName(),
                 lg.getFactsOrgName(),
-                lg.getFactsParentOrgName(),
                 emp.getLastName(),
                 emp.getFirstName(),
                 roleNames,
