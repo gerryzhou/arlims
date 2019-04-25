@@ -1,30 +1,20 @@
-
-DONE
-----
-- Sample layout changes including sample # at left edge.
-- Don't submit negative isolates in BAM submission.
-- Filter out blanks in lot #'s in structured remarks in AOAC submission.
-
-
 User Feedback from April 23-25 Meetings
 ---------------------------------------
+
+- Stack RV and TT tests vertically within test unit area in positive continuation stages.
+- Need signoff per stage, separate from save.
+- Need cary-over box sorted by stage completion, or equiv. functionality in lab inbox.
 - SLM completion: Need support for serology and WGS.
+- Need timestamp "out" whenever there's an "in" timestamp.
+  In which case a completion timestamp for water bath field should be added.
+  Anything less than 6 hours. M-Broth, Urea.
+- Maybe separate test audit log as separate report and make optional in pdf report.
+- Vitek identification needs negative control field added which is required for some
+  labs. Whether required controlled by lab group test config.
 - Add SX2 method.
-- Isolate numbers are repeating 1,2, not sequentially numbered currently?
-  Just make users create isolates manually for now, entering isolate number for each.
-  Numbering systems vary by lab.
-- Newlines/enter key press in form text input should transfer focus to next field in form.
-  (keyup.enter)="onEnterKey($event)
-  keytab(event){
-      const nextEl = event.srcElement.nextElementSibling; // get the sibling element
-      if ( nextEl )
-         element.focus();
-  }
 - CR (collection report) Need to fetch CR via new api to generate package.
 - Ash: Add more comments, maybe one per stage.
   Incorporate into structured remarks under test-comments/test-part key?
-- Need timestamp "out" whenever there's an "in" timestamp.
-  In which case a completion timestamp for water bath field should be added.
 - Slant stage: make identification a button next to isolate test seq, instead of
   being buried in '...' menu. Maybe just list contents of '...' menu next to
   isolate (maybe only when expanded).
@@ -35,6 +25,9 @@ User Feedback from April 23-25 Meetings
 - FYI: Naming standard for isolates: [sample#]-[sub or comp #]-[isolate #].
   Isolate # interpretation is lab-specific, different numbering systems are used, e.g.
   some only assign numbers to positively identified isolates.
+
+Where to get spikeKitRemarksText from?
+  Currently from lab config, "7 CFUs on blood agar" for ARL-MICRO lab group.
 
 Lab inbox loading is sometimes leaving the wait spinner on until it times out.
   May be caused by read time out for labs-ds api call on server.

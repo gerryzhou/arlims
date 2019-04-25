@@ -1,9 +1,8 @@
 TODO
 ====
-Publish clients to dev and test then:
-  alter table resource_group drop column lab_group_parent_org;
-  alter table lab_group drop column facts_parent_org_name;
 
+After publish updated client code to dev and test:
+  alter table lab_group drop column facts_parent_org_name;
 
 FactsController
   When analyses are successfully submitted, append submission and results to new Test record json array field.
@@ -16,7 +15,11 @@ Done
 - Record timestamp for user's initial entry of sample received date, use as basis for vidas timeframe in structured submission remarks.
 - Enable combined AOAC and BAM submissions to FACTS.
 - Convert LABS-DS validation errors reported as internal server errors to bad request responses and extract error message in client.
-
+- Add lab inbox.
+- Sample layout changes including sample # at left edge.
+- Don't submit negative isolates in BAM submission.
+- Filter out blanks in lot #'s in structured remarks in AOAC submission.
+- Sort test numbers properly in positive continuation stages.
 
 Leidos
 ------

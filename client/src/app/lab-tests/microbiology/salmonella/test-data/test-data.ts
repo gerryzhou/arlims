@@ -319,10 +319,11 @@ function makeEmptyIsolateTestSequences
 {
    const seqs: IsolateTestSequencesByUid = {};
 
-   for (let i = 1; i <= numIsolates; ++i)
+   for (let i = 0; i < numIsolates; ++i)
    {
-      const uid = makeIsolateTestSequenceUid(i);
-      seqs[uid] = makeEmptyIsolateTestSequence(i);
+      const isolateNum = firstIsolateNum + i;
+      const uid = makeIsolateTestSequenceUid(isolateNum);
+      seqs[uid] = makeEmptyIsolateTestSequence(isolateNum);
    }
 
    return seqs;
