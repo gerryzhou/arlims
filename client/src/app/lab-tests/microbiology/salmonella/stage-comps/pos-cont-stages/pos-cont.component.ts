@@ -57,7 +57,7 @@ export class PosContComponent implements OnChanges {
    @Input()
    appUser: AppUser;
 
-   defaultNumIsolatesPerSelectiveAgarPlate = 2;
+   defaultNumIsolatesPerSelectiveAgarPlate = 0;
 
    // Differences in test numbers represented here vs Vidas positives.
    testUnitNumbersDiff: TestUnitNumbersDiff;
@@ -85,7 +85,7 @@ export class PosContComponent implements OnChanges {
       this.sampleTestUnitsTypeAbrev = this.sampleTestUnitsType === 'subsample' ? 'sub' : 'comp';
 
       this.defaultNumIsolatesPerSelectiveAgarPlate =
-         this.testConfig ? this.testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 2 : 2;
+         this.testConfig && this.testConfig.positiveTestUnitsMinimumIsolatesPerSelectiveAgar || 0;
 
       this.identAttachedFiles = this.attachedFilesByTestPart.get(this.IDENT_ATTACHED_FILES_KEY) || [];
 
