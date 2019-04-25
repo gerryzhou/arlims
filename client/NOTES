@@ -1,7 +1,19 @@
-User Feedback from April 23-25 Meetings
----------------------------------------
+positive continuation stages
+----------------------------
+Rename isolate-slant-stage-view to isolate-slant-stage.
+  Add inputs from editor component.
+  If data changes are allowed, add button to launch editor dialog.
 
-- Stack RV and TT tests vertically within test unit area in positive continuation stages.
+Data entry probably should be done via modal dialog instead of expansion panel.
+  Isolate test seq component should only show isolate slant-stage-view.
+  Isolate slant stage view should be given all the inputs of the editor and whether data changes are allowed.
+    If allowed, prompt with editing dialog when clicked.
+
+TODO
+---------------------------------------
+- Messages should be visible always, either scroll to the message or use a notification dialog.
+- Maybe stack RV and TT tests vertically within test unit area in positive continuation stages.
+  Maybe just make this depend on a css media query.
 - Need signoff per stage, separate from save.
 - Need cary-over box sorted by stage completion, or equiv. functionality in lab inbox.
 - SLM completion: Need support for serology and WGS.
@@ -15,9 +27,6 @@ User Feedback from April 23-25 Meetings
 - CR (collection report) Need to fetch CR via new api to generate package.
 - Ash: Add more comments, maybe one per stage.
   Incorporate into structured remarks under test-comments/test-part key?
-- Slant stage: make identification a button next to isolate test seq, instead of
-  being buried in '...' menu. Maybe just list contents of '...' menu next to
-  isolate (maybe only when expanded).
 - Maybe auto-save when change stages.
 - Wrapup: Isolates sent section should be unconditional.
 - [Maybe] Lab group test config: Allow setting field defaults by field json path (or
