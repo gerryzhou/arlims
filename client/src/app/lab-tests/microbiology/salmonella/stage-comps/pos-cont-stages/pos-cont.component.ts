@@ -179,7 +179,7 @@ export class PosContComponent implements OnChanges {
       return (
          Object.keys(testUnitsFormGroup.controls)
          .map(testUnitNumStr => parseInt(testUnitNumStr))
-         .sort()
+         .sort((n1, n2) => n1 - n2)
       );
    }
 
