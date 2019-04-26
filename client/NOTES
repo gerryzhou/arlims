@@ -15,10 +15,9 @@ TODO
   labs. Whether required controlled by lab group test config.
 - Add SX2 method.
 - CR (collection report) Need to fetch CR via new api to generate package.
-- Ash: Add more comments, maybe one per stage.
+- Add more comments, maybe one per stage.
   Incorporate into structured remarks under test-comments/test-part key?
-- Maybe auto-save when change stages.
-- Wrapup: Isolates sent section should be unconditional.
+- Wrapup stage: Isolates sent section should be unconditional.
 - [Maybe] Lab group test config: Allow setting field defaults by field json path (or
   any other identifier which test will interpret).
 - FYI: Naming standard for isolates: [sample#]-[sub or comp #]-[isolate #].

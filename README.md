@@ -1,3 +1,19 @@
+# Build
+
+For java 11 runtime via jdk 11+ compiler tools:
+```
+mvn clean package
+```
+
+For java 8 runtime via jdk 11+ compiler tools:
+```
+mvn -Djava.release=8 clean package
+```
+
+The above commands produce a distribution for the server in
+```target/alis-dist.tgz``` which includes a service definition,
+publication script, etc.
+
 # Running the app in development
 
 Front end resources and backend services are served via separate servers for development.
@@ -20,7 +36,7 @@ accessed in the browser at `localhost:4200`.
 
 ## Running from jar in development
 
-    mvn clean package
+    mvn clean package # or specify java version: mvn -Djava.release=11 clean package
     # Get the application properties from somewhere, to provide db connect info etc.
     cp ~/Programming/etc/test-configs/alis/application-dev.properties target/application.properties
     cd target
@@ -69,4 +85,14 @@ Windows from mangling the path.)
 In this case the application would be accessed at
     
     http://localhost:8080/alis-proto
+
+# Updating Dependencies
+View updatable Maven plugins:
+```
+mvn versions:display-plugin-updates
+```
+View updatable dependencies:
+```
+mvn versions:display-dependency-updates
+```
 

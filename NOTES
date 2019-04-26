@@ -1,10 +1,8 @@
 TODO
 ====
+Investigate
+  Redis vs Postgres for backend
 
-Commit
-------
-Edit slant stage data via model dialog instead of expansion panel.
-Show selective agars which contain no isolates to allow for creating isolates in them.
 
 After publish updated client code to dev and test:
   alter table lab_group drop column facts_parent_org_name;
