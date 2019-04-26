@@ -10,9 +10,14 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material';
 
-import {makeEmptyIsolateTestSequence, makeIsolateTestSequenceFormGroup, makeIsolateTestSequenceUid} from '../../../test-data';
+import {
+   IsolateTestSequence,
+   makeIsolateTestSequenceFormGroup,
+   makeIsolateTestSequenceUid
+} from '../../../test-data';
 import {AppUser} from '../../../../../../../generated/dto';
-import {TextInputDialogComponent} from '../../../../../../common-components/text-input-dialog/text-input-dialog.component';
+import {IsolateSlantStageEditDialogInputData} from '../isolate-slant-stage-edit-dialog/isolate-slant-stage-edit-dialog-input-data';
+import {IsolateSlantStageEditDialogComponent} from '../isolate-slant-stage-edit-dialog/isolate-slant-stage-edit-dialog.component';
 
 @Component({
    selector: 'app-sel-agars-test-suite',
@@ -101,40 +106,41 @@ export class SelAgarsTestSuiteComponent implements OnChanges, OnDestroy {
       fg.removeControl(testSeqUid);
    }
 
-   onIsolateTestSequenceFailureDeclared(selAgar: string, isolateTestSeqUid: string)
-   {
-      const isolateNum = +this.form.get([selAgar, isolateTestSeqUid, 'isolateNumber']).value;
-      this.addNewIsolateTestSequence(selAgar, isolateNum);
-   }
-
    promptAddNewIsolateTestSequence(selAgar: string)
    {
-      const isolateNumDlg = this.dialogSvc.open(TextInputDialogComponent,
-         {
-            data: {
-               title: 'Create New Isolate',
-               message: 'Enter an isolate number for the new isolate',
-               acceptRegex: '^ *[1-9][0-9]* *$'
-            },
-            disableClose: false
-         }
-      );
+      const inputData: IsolateSlantStageEditDialogInputData = {
+         editableIsolateNumber: true,
+         isolateTestSequence: null,
+         includeOxidase: this.includeOxidase,
+         testUnitDescription: this.testUnitDescription,
+         medium: this.medium,
+         selectiveAgarDisplayName: selAgar.toUpperCase(),
+         showUnsetAffordances: this.showUnsetAffordances,
+      };
 
-      isolateNumDlg.afterClosed().subscribe(isolateNumStr => {
-         const isolateNum = parseInt(isolateNumStr);
-         if ( isolateNum )
-            this.addNewIsolateTestSequence(selAgar, isolateNum);
+      const dlg = this.dialogSvc.open(IsolateSlantStageEditDialogComponent, {
+         data: inputData
+      });
+
+      dlg.afterClosed().subscribe((newIsolateTestSeq: IsolateTestSequence) => {
+         if ( newIsolateTestSeq )
+         {
+            this.addIsolateTestSequence(selAgar, newIsolateTestSeq );
+         }
       });
    }
 
-   addNewIsolateTestSequence(selAgar: string, isolateNum: number)
+   addIsolateTestSequence
+      (
+         selAgar: string,
+         testSeq: IsolateTestSequence
+      )
    {
       const fg = this.form.get(selAgar) as FormGroup;
 
-      const uid = makeIsolateTestSequenceUid(isolateNum, fg.controls);
-      const emptyTestSeq = makeEmptyIsolateTestSequence(isolateNum);
+      const uid = makeIsolateTestSequenceUid(testSeq.isolateNumber, fg.controls);
 
-      fg.addControl(uid, makeIsolateTestSequenceFormGroup(this.formBuilder, emptyTestSeq));
+      fg.addControl(uid, makeIsolateTestSequenceFormGroup(this.formBuilder, testSeq));
    }
 
    private refreshDisplayOrderedIsolateTestSeqUids()

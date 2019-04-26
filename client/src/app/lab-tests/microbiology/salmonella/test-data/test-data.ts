@@ -349,7 +349,7 @@ export function makeIsolateTestSequenceUid
    return uid;
 }
 
-export function makeEmptyIsolateTestSequence(isolateNum: number): IsolateTestSequence
+export function makeEmptyIsolateTestSequence(isolateNum: number|null): IsolateTestSequence
 {
    return {
       isolateNumber: isolateNum,

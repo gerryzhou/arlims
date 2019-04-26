@@ -1,13 +1,3 @@
-positive continuation stages
-----------------------------
-Rename isolate-slant-stage-view to isolate-slant-stage.
-  Add inputs from editor component.
-  If data changes are allowed, add button to launch editor dialog.
-
-Data entry probably should be done via modal dialog instead of expansion panel.
-  Isolate test seq component should only show isolate slant-stage-view.
-  Isolate slant stage view should be given all the inputs of the editor and whether data changes are allowed.
-    If allowed, prompt with editing dialog when clicked.
 
 TODO
 ---------------------------------------

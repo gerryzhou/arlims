@@ -39,7 +39,26 @@ app-isolate-identification-view {
 }
 
 .ident-required-indicator {
+   display: flex;
+   align-items: center;
    margin: 0 10px;
+   color: green;
+   border: 1px dashed lightgray;
+   mat-icon.hidden {
+      visibility: hidden;
+   }
+}
+
+.menu-item {
+   display: flex;
+   align-items: center;
+}
+
+.greened {
+   color: green;
+}
+.greyed {
+   color: darkgray;
 }
 
 button.remove mat-icon {

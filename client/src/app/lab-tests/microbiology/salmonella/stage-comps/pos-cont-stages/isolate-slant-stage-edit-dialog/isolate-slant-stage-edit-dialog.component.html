@@ -1,0 +1,83 @@
+<h2 mat-dialog-title>{{isolateDescription}}</h2>
+
+<mat-dialog-content [formGroup]="form">
+
+   <div class="isolate-number-area" *ngIf="editableIsolateNumber">
+      <mat-form-field>
+         <input matInput type="number" min="0" placeholder="Isolate number"
+                formControlName="isolateNumber">
+      </mat-form-field>
+   </div>
+
+   <div class="sections-row">
+
+      <div class="field-column">
+         <div class="section-label" matTooltip="colony appearance">App</div>
+         <mat-button-toggle-group formControlName="colonyAppearance"
+                                  matTooltip="colony appearance" vertical>
+            <mat-button-toggle [value]="'T'">T</mat-button-toggle>
+            <mat-button-toggle [value]="'NT'">NT</mat-button-toggle>
+            <mat-button-toggle [value]="'AT'">AT</mat-button-toggle>
+            <mat-button-toggle [value]="'NG'">NG</mat-button-toggle>
+            <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">
+               unset
+            </mat-button-toggle>
+         </mat-button-toggle-group>
+      </div>
+
+      <div class="field-column">
+         <div class="section-label">TSI</div>
+         <app-isolate-slant-tube-editor
+            [form]="form.get('tsiTubeTest')"
+            [tubeType]="'TSI'"
+            [isolateDescription]="isolateDescription"
+            [showUnsetAffordances]="showUnsetAffordances">
+         </app-isolate-slant-tube-editor>
+      </div>
+
+      <div class="field-column">
+         <div class="section-label">LIA</div>
+         <app-isolate-slant-tube-editor
+            [form]="form.get('liaTubeTest')"
+            [tubeType]="'LIA'"
+            [isolateDescription]="isolateDescription"
+            [showUnsetAffordances]="showUnsetAffordances">
+         </app-isolate-slant-tube-editor>
+      </div>
+
+      <div class="field-column">
+         <div class="section-label" matTooltip="urea">Ur</div>
+         <mat-button-toggle-group formControlName="ureaDetection"
+                                  matTooltip="urea" vertical>
+            <mat-button-toggle [value]="true">+</mat-button-toggle>
+            <mat-button-toggle [value]="false">&minus;</mat-button-toggle>
+            <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">
+               unset
+            </mat-button-toggle>
+         </mat-button-toggle-group>
+      </div>
+
+      <div class="field-column" *ngIf="includeOxidase">
+         <div class="section-label" matTooltip="oxidase">Ox</div>
+         <mat-button-toggle-group formControlName="oxidaseDetection"
+                                  matTooltip="oxidase" vertical>
+            <mat-button-toggle [value]="true">+</mat-button-toggle>
+            <mat-button-toggle [value]="false">&minus;</mat-button-toggle>
+            <mat-button-toggle *ngIf="showUnsetAffordances" class="unset" [value]="null">
+               unset
+            </mat-button-toggle>
+         </mat-button-toggle-group>
+      </div>
+
+   </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+   <button mat-button mat-dialog-close type="button">Cancel</button>
+   <button mat-button color="primary"
+           [disabled]="!form.get('isolateNumber').value"
+           (click)="acceptAndCloseIfValid()">
+      OK
+   </button>
+</mat-dialog-actions>

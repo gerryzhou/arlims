@@ -22,7 +22,7 @@ import {SelAgarsTestSuiteComponent} from './stage-comps/pos-cont-stages/sel-agar
 import {IsolateTestSeqComponent} from './stage-comps/pos-cont-stages/isolate-test-seq/isolate-test-seq.component';
 import {IsolateTestsFailureDialogComponent} from './stage-comps/pos-cont-stages/isolate-test-seq/isolate-tests-failure-dialog/isolate-tests-failure-dialog.component';
 import {IsolateSlantStageViewComponent} from './stage-comps/pos-cont-stages/isolate-slant-stage-view/isolate-slant-stage-view.component';
-import {IsolateSlantStageEditorComponent} from './stage-comps/pos-cont-stages/isolate-slant-stage-editor/isolate-slant-stage-editor.component';
+import {IsolateSlantStageEditDialogComponent} from './stage-comps/pos-cont-stages/isolate-slant-stage-edit-dialog/isolate-slant-stage-edit-dialog.component';
 import {IsolateSlantTubeViewComponent} from './stage-comps/pos-cont-stages/isolate-slant-tube-view/isolate-slant-tube-view.component';
 import {IsolateSlantTubeEditorComponent} from './stage-comps/pos-cont-stages/isolate-slant-tube-editor/isolate-slant-tube-editor.component';
 import {IsolateIdentificationViewComponent} from './stage-comps/pos-cont-stages/isolate-identification-view/isolate-identification-view.component';
@@ -55,7 +55,7 @@ import {MaterialUiModule} from '../../../material-ui.module';
       IsolateTestSeqComponent,
       IsolateTestsFailureDialogComponent,
       IsolateSlantStageViewComponent,
-      IsolateSlantStageEditorComponent,
+      IsolateSlantStageEditDialogComponent,
       IsolateSlantTubeViewComponent,
       IsolateSlantTubeEditorComponent,
       IsolateIdentificationViewComponent,
@@ -67,6 +67,7 @@ import {MaterialUiModule} from '../../../material-ui.module';
    ],
    entryComponents: [
       IsolateTestsFailureDialogComponent,
+      IsolateSlantStageEditDialogComponent,
    ],
    exports: []
 })

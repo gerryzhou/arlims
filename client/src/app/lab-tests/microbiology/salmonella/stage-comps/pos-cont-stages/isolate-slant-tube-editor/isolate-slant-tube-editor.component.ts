@@ -12,9 +12,6 @@ export class IsolateSlantTubeEditorComponent implements OnChanges {
    form: FormGroup;
 
    @Input()
-   allowDataChanges: boolean;
-
-   @Input()
    tubeType: string; // uppercase form of tube type, e.g. 'TSI' or 'LIA'.
 
    @Input()
@@ -32,10 +29,5 @@ export class IsolateSlantTubeEditorComponent implements OnChanges {
    {
       this.slantValues = this.tubeType === 'TSI' ? ['K', 'A'] : ['K', 'A', 'R'];
       this.buttValues = ['K', 'A'];
-
-      if ( this.allowDataChanges && this.form.disabled )
-         this.form.enable();
-      else if ( !this.allowDataChanges && !this.form.disabled )
-         this.form.disable();
    }
 }
