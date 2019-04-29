@@ -1,17 +1,3 @@
-TODO
-====
-Investigate
-  Redis vs Postgres for backend
-
-
-After publish updated client code to dev and test:
-  alter table lab_group drop column facts_parent_org_name;
-
-FactsController
-  When analyses are successfully submitted, append submission and results to new Test record json array field.
-  Set timestamp of (successful) submission as well (existing field).
-
-SampleAnalysisMicrobes should contain identifications from IDENT stage.
 
 Done
 ====
@@ -27,6 +13,15 @@ Done
 - Don't auto-create isolate test sequence of same number after isolate failure is declared.
 - In slant stage replace expansion panel with modal dialog for editing of data, and
   change the icons related to the isolates identification-required state.
+- Change tooling / build system for jdk 11.
+  Need jdk 11 to be installed on server.
+    https://developers.redhat.com/openjdk-install
+
+FactsController
+  When analyses are successfully submitted, append submission and results to new Test record json array field.
+  Set timestamp of (successful) submission as well (existing field).
+
+SampleAnalysisMicrobes should contain identifications from IDENT stage.
 
 Leidos
 ------
