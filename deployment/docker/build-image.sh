@@ -12,9 +12,8 @@ die () {
 }
 
 [[ "$#" -eq 1 ]] || die "Expected argument: <application jar file>."
+[[ -f  "$1" ]] || die "Application jar file not found."
 APP_JAR="$1"
-[ -f  "$APP_JAR" ] || die "Application jar file not found."
-
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 PROJECT_DIR=$(realpath "$SCRIPT_DIR"/../..)
