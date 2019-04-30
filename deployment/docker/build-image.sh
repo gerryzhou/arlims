@@ -1,5 +1,8 @@
 #!/bin/sh
-# sudo ./build-image.sh
+
+# Build alis-web Docker image for given application jar file.
+# Example:
+# sudo ./build-image.sh ../../target/alis.jar
 
 set -e
 
@@ -8,20 +11,17 @@ die () {
     exit 1
 }
 
-[[ "$#" -eq 0 ]] || die "expected no arguments>"
+[[ "$#" -eq 1 ]] || die "Expected argument: <application jar file>."
+APP_JAR="$1"
+[ -f  "$APP_JAR" ] || die "Application jar file not found."
+
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-PROJECT_DIR="$SCRIPT_DIR"/../..
+PROJECT_DIR=$(realpath "$SCRIPT_DIR"/../..)
 
+echo Building Docker image with project directory: "$PROJECT_DIR"
 
-cd "$PROJECT_DIR"
-echo project directory: "$PROJECT_DIR"
+cp "$APP_JAR" "$PROJECT_DIR"/deployment/docker/context/build-artifacts/alis.jar
 
-echo TODO RE-ENABLE mvn clean package
+sudo docker build -t alis-web:latest "$SCRIPT_DIR"/context
 
-cp target/alis.jar deployment/dist-contents/logback-spring.xml \
-  deployment/docker/context/build-artifacts/
-
-cd "$SCRIPT_DIR"
-
-docker build -t alis-web:latest context
