@@ -1,11 +1,12 @@
 # Build
 
-For java 11 runtime via jdk 11+ compiler tools:
+Java 11+ and Maven 3.5+ should be installed.
+To build for java 11 runtime via jdk 11+ compiler tools:
 ```
 mvn clean package
 ```
 
-For java 8 runtime via jdk 11+ compiler tools:
+To build for java 8 runtime via jdk 11+ compiler tools:
 ```
 mvn -Djava.release=8 clean package
 ```
