@@ -16,4 +16,6 @@ RUN chown -R alis.alis "${APP_IO_DIR}"
 USER alis
 WORKDIR "${ALIS_HOME}"
 
+EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "alis.jar"]

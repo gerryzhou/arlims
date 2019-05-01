@@ -22,4 +22,5 @@ docker run \
   -v alis-web-io:/var/alis \
   -e TZ \
   --env-file "$ENVFILE" \
+  -p 80:8080 \
   alis-web:latest
