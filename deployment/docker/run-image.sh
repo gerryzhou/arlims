@@ -18,6 +18,7 @@ ENVFILE="$1"
 export TZ=UTC
 
 docker run \
+  --rm \
   --name alis-web \
   -v alis-web-io:/var/alis \
   -e TZ \
