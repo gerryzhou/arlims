@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Example:
-# sudo ./run-image.sh /home/sharris/Programming/envs/alis/test.application.properties
+# sudo ./run-image.sh ~/Programming/envs/alis/test.application.properties
 
 set -e
 
