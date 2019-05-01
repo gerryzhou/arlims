@@ -1,21 +1,8 @@
 
 Done
 ====
-- Record timestamp for user's initial entry of sample received date, use as basis for vidas timeframe in structured submission remarks.
-- Enable combined AOAC and BAM submissions to FACTS.
-- Convert LABS-DS validation errors reported as internal server errors to bad request responses and extract error message in client.
-- Add lab inbox.
-- Sample layout changes including sample # at left edge.
-- Don't submit negative isolates in BAM submission.
-- Filter out blanks in lot #'s in structured remarks in AOAC submission.
-- Sort test numbers properly in positive continuation stages.
-- Edit slant stage data via model dialog instead of expansion panel.
-- Don't auto-create isolate test sequence of same number after isolate failure is declared.
-- In slant stage replace expansion panel with modal dialog for editing of data, and
-  change the icons related to the isolates identification-required state.
-- Change tooling / build system for jdk 11.
-  Need jdk 11 to be installed on server.
-    https://developers.redhat.com/openjdk-install
+Support Docker deployment.
+
 
 FactsController
   When analyses are successfully submitted, append submission and results to new Test record json array field.

@@ -12,7 +12,7 @@ die () {
 
 [[ "$#" -eq 1 ]] || die "Expected argument: <application properties environment file>."
 ENVFILE="$1"
-[ -f  "$ENVFILE" ] || die "Application properties environment file not found."
+[[ -f  "$ENVFILE" ]] || die "Application properties environment file not found."
 
 # The Oracle jdbc driver needs timezone to be defined.
 export TZ=UTC
