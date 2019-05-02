@@ -17,11 +17,12 @@ ENVFILE="$1"
 # The Oracle jdbc driver needs timezone to be defined.
 export TZ=UTC
 
-docker run \
+# sudo docker run \
+podman run \
   --rm \
   --name alis-web \
   -v alis-web-io:/var/alis \
   -e TZ \
   --env-file "$ENVFILE" \
-  -p 80:8080 \
-  alis-web:latest
+  -p 8080:8080 \
+  localhost/alis-web:latest

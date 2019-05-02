@@ -22,5 +22,5 @@ echo Building Docker image with project directory: "$PROJECT_DIR"
 
 cp "$APP_JAR" "$PROJECT_DIR"/deployment/docker/context/build-artifacts/alis.jar
 
-sudo docker build -t alis-web:latest "$SCRIPT_DIR"/context
+podman build -t alis-web:latest "$SCRIPT_DIR"/context
 
