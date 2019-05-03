@@ -8,7 +8,7 @@
    </formats>
    <fileSets>
       <fileSet>
-         <directory>${basedir}/deployment/dist-contents</directory>
+         <directory>${basedir}/deployment/system-service/dist-contents</directory>
          <outputDirectory>alis</outputDirectory>
          <includes>
             <include>**</include>

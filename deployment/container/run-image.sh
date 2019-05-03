@@ -19,7 +19,6 @@ export TZ=UTC
 
 # sudo docker run \
 podman run \
-  --rm \
   --name alis-web \
   -v alis-web-io:/var/alis \
   -e TZ \

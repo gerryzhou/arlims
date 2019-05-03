@@ -20,7 +20,7 @@ PROJECT_DIR=$(realpath "$SCRIPT_DIR"/../..)
 
 echo Building Docker image with project directory: "$PROJECT_DIR"
 
-cp "$APP_JAR" "$PROJECT_DIR"/deployment/docker/context/build-artifacts/alis.jar
+cp "$APP_JAR" "$PROJECT_DIR"/deployment/container/context/build-artifacts/alis.jar
 
 podman build -t alis-web:latest "$SCRIPT_DIR"/context
 
