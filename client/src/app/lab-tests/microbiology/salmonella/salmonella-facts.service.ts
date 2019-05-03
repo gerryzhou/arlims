@@ -244,6 +244,7 @@ export class SalmonellaFactsService {
                isolatesSentIndicator: 'Y',         // "
                fdaLabOrgName: factsOrgName,
                remarks: 'Test entry from ALIS' // "
+               // TODO: include sampleAnalysisMicrobes here, from isolates?
             });
          }
       }
