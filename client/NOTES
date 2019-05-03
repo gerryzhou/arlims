@@ -1,6 +1,8 @@
 
+
 TODO
 ---------------------------------------
+- Add margin between assigned employees.
 - Add search over dropdowns that might have 10 or more items.
 - Messages should be visible always, either scroll to the message or use a notification dialog.
 - Maybe stack RV and TT tests vertically within test unit area in positive continuation stages.
