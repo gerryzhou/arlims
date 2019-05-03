@@ -1,3 +1,50 @@
+LID:
+  Should be present in lab inbox.
+
+Lab inbox not showing for John.
+
+Add "carry-over" flag and local table and maybe carry-over table.
+  list of op-ids -> inbox items
+
+
+In BAM submission, support isolate level data via sampleAnalysisMicrobes:
+"analysisMicFindings": [
+    {
+        "actionIndicator": "Y",
+        "genusCode": "SLML",
+        "isolatesSentIndicator": "Y",
+        "isolatesSentNumber" : 1,
+        "presenceResultIndicator": "POS",
+        "speciesCode": "SLML998",
+        "subNumberCode": "1",
+        "fdaLabOrganizationName": "ARKL" ,
+        "remarksText": "test",
+        "secondaryPafCode": "SAL",
+        "sampleAnalysisMicrobes": [{
+            "groupCode": "GZ999",
+            "identificationRemarksText": "test",
+            "modifiedBy": 463639
+        }]
+    },
+    {
+        "actionIndicator": "Y",
+        "genusCode": "SLML",
+        "isolatesSentIndicator": "Y",
+        "presenceResultIndicator": "POS",
+        "speciesCode": "SLML998",
+        "subNumberCode": "132",
+        "fdaLabOrganizationName": "",
+        "remarksText": "test",
+        "secondaryPafCode": "GSA",
+        "levelQualifierIndicator": "EST",
+        "levelCountNumber":25.01,
+        "levelUnitCode": "Z",
+        "sampleAnalysisMicrobes": [ {
+            "groupCode": "GS015",
+            "identificationRemarksText": "TEST"
+        }]
+    }
+}]
 
 
 TODO
