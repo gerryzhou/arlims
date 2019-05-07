@@ -14,9 +14,6 @@ Remove unnecessary id fields.
 Review db writes done via JPA.
   Only employeeRepo.save(emp) in JpaLabsDSUserContextService.
 
-Try letting jpa/hibernate create postgres schema objects and examine them.
-    JdbcLabsDSTestDataService: Need to use lowercase identifiers for Postgres in a few places, see TODOs.
-      org.postgresql.util.PSQLException: ERROR: column "ID" does not exist
 
 Done
 ====
