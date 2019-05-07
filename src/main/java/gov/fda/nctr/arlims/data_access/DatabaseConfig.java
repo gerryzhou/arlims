@@ -35,19 +35,25 @@ public class DatabaseConfig
     @Value("${arlims.db.primary.password:#{null}}")
     private String password;
 
+    public enum DatabaseUnqoatedIdentifierStorage {
+        UPPERCASE,
+        LOWERCASE,
+        MIXED
+    }
+
     @Bean @Primary
     public DataSource primaryDataSource()
     {
         if ( primaryJndiName != null )
         {
-            log.info("Using JNDI name " + primaryJndiName + " for primary datasource.");
+            log.info("Using JNDI name " + primaryJndiName + " for primary data source.");
 
             JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
             return dsLookup.getDataSource(primaryJndiName);
         }
         else
         {
-            log.info("No JNDI name configured for primary datasource, using individual connection properties instead.");
+            log.info("No JNDI name configured for primary data source, using individual connection properties instead.");
 
             if ( driverClassName == null || url == null || username == null || password == null )
                 throw new RuntimeException("One or more of the required prod database connection properties were not found.");
@@ -61,4 +67,26 @@ public class DatabaseConfig
                 .build();
         }
     }
+
+    public DatabaseUnqoatedIdentifierStorage getPrimaryDatabaseUnquotedIdentifierStorage()
+    {
+        if ( driverClassName.startsWith("org.postgresql.") )
+            return DatabaseUnqoatedIdentifierStorage.LOWERCASE;
+        else if ( driverClassName.startsWith("oracle.") )
+            return DatabaseUnqoatedIdentifierStorage.UPPERCASE;
+        else
+            throw new RuntimeException("TODO: Database unquoted identifier setting needs to be configured.");
+    }
+
+    public String normalizePrimaryDatabaseIdentifier(String ident)
+    {
+        switch ( getPrimaryDatabaseUnquotedIdentifierStorage() )
+        {
+            case LOWERCASE: return ident.toLowerCase();
+            case UPPERCASE: return ident.toUpperCase();
+            default: return ident;
+        }
+    }
+
+
 }

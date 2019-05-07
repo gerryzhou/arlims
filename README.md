@@ -1,19 +1,63 @@
-# Build
+# Production Build and Deployment
 
 Java 11+ and Maven 3.5+ should be installed.
-To build for java 11 runtime via jdk 11+ compiler tools:
+
+To build with defaults:
 ```
 mvn clean package
 ```
+The defaults are: PostgreSQL database, Java 11 runtime environment, and
+the app mounted at servlet context '/alis' under the server root.
 
-To build for java 8 runtime via jdk 11+ compiler tools:
+To build instead for java 8 runtime, set environment variable
+```java.release``` to ```8``` (Java 11+ jdk still required on developer's 
+machine to build).
+
+To build for Oracle database, activate Maven profile ```oracle-jdbc```.
+
+To mount the app at another context, set environment variable
+```CONTEXT_NAME``` to the desired context.
 ```
-mvn -Djava.release=8 clean package
+mvn -DCONTEXT_NAME=alis-test -Djava.release=8 -P oracle-jdbc clean package
 ```
 
 The above commands produce a distribution for the server in
-```target/alis-dist.tgz``` which includes a service definition,
-publication script, etc.
+```target/alis-dist.tgz``` which includes a Systemd service definition,
+publication script, a template ```application.properties``` file, etc.
+Usually only the ```application.properties``` file needs to be customized
+to adapt the app for the server's environment. Pay particular attention to items marked
+\[CUSTOMIZE\]. Put the ```application.propperties``` next to the application
+jar file ```alis.jar``` on the server. Contents of this distribution are
+located at ```deployment/system-service``` under the project root directory.
+
+Scripts to build for the app's usual environments can be found in
+```deployment/build-scripts```.
+
+## Running in a standalone/embedded Tomcat container
+The  distribution produced above is intented to be run directly via java:
+```
+    java -jar alis.jar
+```
+    
+and then accessed at ```http://<server>:8080/<context-name>``` with the
+default context name being ```alis```.
+
+The above application start command is incorporated into the provided
+Systemd unit file. See ```SERVER_SETUP.md``` for details about installing 
+the application.  If the servlet context at which the app is to be mounted
+was customized in the build step, then set property
+```server.servlet.contextpath``` in ```application.properties```
+accordingly.
+
+## Docker / Podman Build and Deployment
+Additionally, after building as above, a Docker / Podman (OCI) image can
+be built and run via scripts provided in ```deployment/containter```. The 
+```application.properties``` in ```system-service/dist-contents``` also
+contains notes marked \[DOCKER\] as guidance to adjust properties for
+container deployment. The ```run-image.sh``` script expects such a
+customized ```application.properties``` to be provided as a command line
+argument.
+
 
 # Running the app in development
 
@@ -23,8 +67,17 @@ Front end resources and backend services are served via separate servers for dev
 ```
 mvn spring-boot:run
 ```
+for a Postgres database,
+or
+```
+mvn -P oracle-jdbc spring-boot:run
+```
+if using an Oracle database. The above run with Spring profile ```dev```
+active. Connection properties for either should be setup in file 
+```~/.spring-boot-devtools.properties```, see ```DEV_SETUP.md``` for
+details.
 
-Runs with context name "alis", http://localhost:8080/alis/api/...
+Runs with context name "/alis", http://localhost:8080/alis/api/...
 
 ## Start frontend app, terminal 2
 ```
@@ -37,57 +90,13 @@ accessed in the browser at `localhost:4200`.
 
 ## Running from jar in development
 
-    mvn clean package # or specify java version: mvn -Djava.release=11 clean package
+    mvn clean package
     # Get the application properties from somewhere, to provide db connect info etc.
     cp ~/Programming/etc/test-configs/alis/application-dev.properties target/application.properties
     cd target
     java -jar alis.jar
 
-
-# Building and deploying for production
-
-## Building a complete production package
-
-Build production jar file with default context name of "alis":
-
-    mvn clean package
-    
-This will produces a package target/alis-dist.tgz with everything
-needed for transfer to a server.
-
-## Running in a standalone/embedded Tomcat container
-
-After the tgz package produced above is unzipped, the `application.properties`
-file in the `alis` directory from the package should be customized for the server
-environment. The entries marked ADJUST at least should be customized. The app
-can then be run from the `alis` directory via
-
-    java -jar alis.jar
-    
-and accessed at
- 
-    http://localhost:8080/alis
-
-The above command can be incorporated into a Systemd config file to start the
-application automatically as a service on system boot.
-
-To run under a different context in an embedded Tomcat container, the app must
-be built with the custom context specified:
-    
-    mvn -DCONTEXT_NAME=alis-proto clean package
-
-and then run with the server.servlet.contextpath property specified:
-    
-    java -jar alis-proto.jar --server.servlet.contextpath=//alis-proto
-    
-(The extra extra '/' in "//alis-proto" is to prevent some Bash environments on
-Windows from mangling the path.)
-
-In this case the application would be accessed at
-    
-    http://localhost:8080/alis-proto
-
-# Updating Dependencies
+# Updating Maven Dependencies
 View updatable Maven plugins:
 ```
 mvn versions:display-plugin-updates

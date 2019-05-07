@@ -20,6 +20,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import gov.fda.nctr.arlims.data_access.DatabaseConfig;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.models.dto.AuditLogEntry;
 
@@ -27,12 +28,19 @@ import gov.fda.nctr.arlims.models.dto.AuditLogEntry;
 @Service
 public class JdbcAuditLogService extends ServiceBase implements AuditLogService
 {
+    private final DatabaseConfig databaseConfig;
+
     private final JdbcTemplate jdbc;
 
     private final ObjectWriter jsonWriter;
 
-    public JdbcAuditLogService(JdbcTemplate jdbcTemplate)
+    public JdbcAuditLogService
+        (
+            DatabaseConfig databaseConfig,
+            JdbcTemplate jdbcTemplate
+        )
     {
+        this.databaseConfig = databaseConfig;
         this.jdbc = jdbcTemplate;
         this.jsonWriter = makeJsonWriter();
     }
@@ -60,7 +68,8 @@ public class JdbcAuditLogService extends ServiceBase implements AuditLogService
             "values(?,?,?,?,?,?,?,?,?,?)";
 
         PreparedStatementCreator psc = conn -> {
-            final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
+            String idCol = databaseConfig.normalizePrimaryDatabaseIdentifier("id");
+            final PreparedStatement ps = conn.prepareStatement(sql, new String[] {idCol});
             ps.setTimestamp(1, new Timestamp(timestamp.toEpochMilli()));
             ps.setLong(2, labGroupId);
             ps.setObject(3, testId.orElse(null), java.sql.Types.INTEGER);

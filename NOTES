@@ -1,10 +1,32 @@
 TODO
 ====
+Create Postgres specific ddl scripts, adjust field types.
+  text -> jsonb for json fields
+  timestamp -> timestamp with timezone
+  etc
 
+Create a separate branch for db cleanup with Postgres modifications.
+  Commit a version to master which still works with existing Oracle dbs.
+
+Remove unnecessary id fields.
+  Probably will have to complete the removal of JPA from project first.
+
+Review db writes done via JPA.
+  Only employeeRepo.save(emp) in JpaLabsDSUserContextService.
+
+Try letting jpa/hibernate create postgres schema objects and examine them.
+    JdbcLabsDSTestDataService: Need to use lowercase identifiers for Postgres in a few places, see TODOs.
+      org.postgresql.util.PSQLException: ERROR: column "ID" does not exist
 
 Done
 ====
 Add support for Docker deployment.
+Add support for PostgreSQL database.
+Update build system and build/deployment notes to allow controlling:
+  deployment to docker or system service
+  target database
+  Java runtime version
+  mount point under server base url (application "context" in Tomcat/JEE)
 
 
 FactsController

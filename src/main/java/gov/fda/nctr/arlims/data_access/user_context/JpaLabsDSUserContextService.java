@@ -391,7 +391,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         String sql =
             "select r.resource_group, r.code, r.resource_type, r.description " +
             "from lab_group_resource_group lgrg " +
-            "join \"RESOURCE\" r on r.resource_group = lgrg.resource_group " +
+            "join \"resource\" r on r.resource_group = lgrg.resource_group " +
             "where lgrg.lab_group_id = :lgid";
 
 

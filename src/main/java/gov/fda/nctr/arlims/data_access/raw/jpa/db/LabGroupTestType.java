@@ -3,6 +3,8 @@ package gov.fda.nctr.arlims.data_access.raw.jpa.db;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
+
 
 /// Registers a test type as applicable for a lab group, optionally with customization of configuration options for the test type.
 @Entity
@@ -28,7 +30,7 @@ public class LabGroupTestType
     @JoinColumn(name = "TEST_TYPE_ID", nullable = false, foreignKey = @ForeignKey(name="FK_LGRPTSTT_LABTESTTYPE")) @NotNull
     private TestType testType;
 
-    @Lob @Basic(fetch = FetchType.LAZY)
+    @Lob @Type(type = "org.hibernate.type.TextType") @Basic(fetch = FetchType.LAZY)
     private String testConfigurationJson;
 
     @Column(length=4000)

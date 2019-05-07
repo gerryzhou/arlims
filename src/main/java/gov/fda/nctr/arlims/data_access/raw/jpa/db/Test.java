@@ -6,6 +6,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
+
 
 @Entity
 @Table(
@@ -69,7 +71,7 @@ public class Test
     @Size(max = 200)
     private String note;
 
-    @Lob @Basic(fetch = FetchType.LAZY)
+    @Lob @Type(type = "org.hibernate.type.TextType") @Basic(fetch = FetchType.LAZY)
     private String testDataJson;
 
     @Column(name = "TEST_DATA_MD5", length=32, nullable=false)

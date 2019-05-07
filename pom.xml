@@ -138,19 +138,6 @@
         <type>jar</type>
       </dependency>
 
-      <!-- Local dependencies -->
-
-      <!--
-         Oracle driver may need to be downloaded and manually installed in the maven repo:
-            mvn install:install-file -Dfile=ojdbc8.jar -Dpackaging=jar -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=12.2.0.1
-      -->
-      <dependency>
-         <groupId>com.oracle</groupId>
-         <artifactId>ojdbc8</artifactId>
-         <version>12.2.0.1</version>
-         <type>jar</type>
-      </dependency>
-
    </dependencies>
 
 
@@ -400,6 +387,21 @@
          <properties>
             <prod.context.name>${CONTEXT_NAME}</prod.context.name>
          </properties>
+      </profile>
+      <profile>
+         <id>oracle-jdbc</id>
+         <dependencies>
+            <!-- Oracle jdbc driver dependency from local Maven repo.
+              Download Oracle jdcbc driver and install in local Maven repository:
+                  mvn install:install-file -Dfile=ojdbc8.jar -Dpackaging=jar -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=12.2.0.1
+            -->
+            <dependency>
+               <groupId>com.oracle</groupId>
+               <artifactId>ojdbc8</artifactId>
+               <version>12.2.0.1</version>
+               <type>jar</type>
+            </dependency>
+         </dependencies>
       </profile>
    </profiles>
 

@@ -5,6 +5,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
+
 
 @Entity
 @Table(
@@ -41,7 +43,7 @@ public class TestFile
     @Column(nullable = false)
     private Instant uploaded;
 
-    @Lob() @Basic(fetch = FetchType.LAZY) @NotNull
+    @Lob() @Type(type = "org.hibernate.type.TextType") @Basic(fetch = FetchType.LAZY) @NotNull
     private byte[] data;
 
     protected TestFile() {}

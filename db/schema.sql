@@ -273,7 +273,7 @@ create table resource_group
   constraint pk_rscgrp primary key (name)
 );
 
-create table "RESOURCE"
+create table "resource"
 (
   resource_group varchar(50) constraint fk_rscgrp references resource_group,
   code varchar(50),
@@ -282,6 +282,8 @@ create table "RESOURCE"
   constraint pk_resource primary key (resource_group, code)
 )
 ;
+
+create view "RESOURCE" as select * from "resource";
 
 create table lab_group_resource_group
 (

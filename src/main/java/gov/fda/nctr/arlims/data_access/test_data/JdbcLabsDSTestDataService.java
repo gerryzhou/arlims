@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import static java.lang.String.join;
 import static java.util.Collections.singletonList;
 
@@ -31,19 +30,19 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import gov.fda.nctr.arlims.data_access.DatabaseConfig;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
-import gov.fda.nctr.arlims.data_access.facts.FactsAccessService;
 import gov.fda.nctr.arlims.models.dto.*;
 
 
 @Service
 public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataService
 {
-    private final JdbcTemplate jdbc;
-    private final FactsAccessService factsAccessService;
     private final AuditLogService auditLogSvc;
+    private final DatabaseConfig databaseConfig;
+    private final JdbcTemplate jdbc;
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
 
@@ -79,15 +78,14 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
 
     public JdbcLabsDSTestDataService
         (
-            JdbcTemplate jdbcTemplate,
-            FactsAccessService factsAccessService,
-            AuditLogService auditLogSvc
+            AuditLogService auditLogSvc,
+            DatabaseConfig databaseConfig,
+            JdbcTemplate jdbcTemplate
         )
     {
-        this.jdbc = jdbcTemplate;
-        this.factsAccessService = factsAccessService;
         this.auditLogSvc = auditLogSvc;
-
+        this.databaseConfig = databaseConfig;
+        this.jdbc = jdbcTemplate;
     }
 
     @Transactional
@@ -126,7 +124,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             ")";
 
         PreparedStatementCreator psc = conn -> {
-            final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
+            String idCol = databaseConfig.normalizePrimaryDatabaseIdentifier("id");
+            final PreparedStatement ps = conn.prepareStatement(sql, new String[] {idCol});
             ps.setLong(1, sampleOpId);
             ps.setString(2, testTypeCode.toString());
             ps.setLong(3, user.getEmployeeId());
@@ -450,6 +449,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     @Override
     public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId)
     {
+        // TODO: lenfth(tf.data) is failing here for Postgres, because tf.data is an oid.
         String sql =
             "select tf.id, tf.label, ordering, tf.test_data_part, tf.name, length(tf.data), tf.uploaded " +
             "from test_file tf " +
@@ -519,7 +519,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
                 InputStream is = file.getInputStream();
 
                 PreparedStatementCreator psc = conn -> {
-                    final PreparedStatement ps = conn.prepareStatement(sql, new String[] {"ID"});
+                    String idCol = databaseConfig.normalizePrimaryDatabaseIdentifier("id");
+                    final PreparedStatement ps = conn.prepareStatement(sql, new String[] {idCol});
                     ps.setLong(1, testId);
                     ps.setString(2, label.orElse(null));
                     ps.setInt(3, ordering);
@@ -791,7 +792,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         Map<String,Object> testRow = includeTestRow ?
             jdbc.queryForMap("select * from test where id = ?", testId)
             : new HashMap<>();
-        String testTypeCode = (String)contextRow.get("TEST_TYPE_CODE");
+        String testTypeCode = (String)contextRow.get(databaseConfig.normalizePrimaryDatabaseIdentifier("test_type_code"));
 
         return new TestAuditInfo(testTypeCode, testRow, contextRow);
     }
@@ -935,7 +936,6 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             throw new RuntimeException(jpe);
         }
     }
-
 
     private static class TestAuditInfo
     {

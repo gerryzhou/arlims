@@ -5,6 +5,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
+
 
 @Entity
 @Table(
@@ -42,13 +44,14 @@ public class AuditEntry
     @Column(name = "OBJECT_TYPE") @Size(max = 50) @NotNull
     private String objectType;
 
-    @Lob @Column(name = "OBJECT_CONTEXT_METADATA_JSON") // e.g. sample and test metadata
+    @Lob @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "OBJECT_CONTEXT_METADATA_JSON") // e.g. sample and test metadata
     private String objectContextMetadataJson;
 
-    @Lob @Column(name = "OBJECT_FROM_VALUE_JSON")
+    @Lob @Type(type = "org.hibernate.type.TextType") @Column(name = "OBJECT_FROM_VALUE_JSON")
     private String objectFromValueJson;
 
-    @Lob @Column(name = "OBJECT_TO_VALUE_JSON")
+    @Lob @Type(type = "org.hibernate.type.TextType") @Column(name = "OBJECT_TO_VALUE_JSON")
     private String objectToValueJson;
 
     protected AuditEntry() {}
