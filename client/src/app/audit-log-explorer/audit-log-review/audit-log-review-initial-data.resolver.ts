@@ -25,7 +25,7 @@ export class AuditLogReviewInitialDataResolver implements Resolve<AuditLogReview
          toMoment: null,
          testId: null,
          username: null,
-         includeChangeDetailData: false,
+         includeChangeDetailData: true,
          includeUnchangedSaves: true
       };
 
