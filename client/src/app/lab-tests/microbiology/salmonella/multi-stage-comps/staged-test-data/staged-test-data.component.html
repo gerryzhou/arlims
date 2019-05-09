@@ -109,7 +109,7 @@
       </mat-step>
    </mat-horizontal-stepper>
 
-   <div class="facts-submission" *ngIf="currentStage === 'WRAPUP'">
+   <div class="facts-submission" *ngIf="currentStage === 'WRAPUP' && allowDataChanges">
       <h1>FACTS Submission</h1>
       <div class="facts-submission-buttons">
          <button class="facts-save-btn" mat-button type="button"
