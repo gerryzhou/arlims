@@ -74,7 +74,7 @@ export class SalmonellaFactsService {
 
       const spiking = vidasData.spikeDetection != null;
       const spikeSpecies = spiking ? testData.preEnrData.spikeSpeciesText : null;
-      const kitRemarks = spiking ? testData.preEnrData.spikeKitRemarks: null;
+      const kitRemarks = spiking ? testData.preEnrData.spikeKitRemarks : null;
       const analysisMicKitTests = !spiking ? null :
          this.makeSpikingKitTests(
             testData.vidasData.spikeDetection,
