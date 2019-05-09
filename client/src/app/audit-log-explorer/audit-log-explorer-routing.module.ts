@@ -8,7 +8,7 @@ const routes: Routes = [
    {
       path: 'review',
       component: AuditLogReviewComponent,
-      resolve: { initialData: AuditLogReviewInitialDataResolver},
+      resolve: { initialData: AuditLogReviewInitialDataResolver },
       data: {title: 'Review Audit Log'},
    },
 ];

@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import static java.util.Collections.*;
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import javax.transaction.Transactional;
@@ -158,7 +159,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             switch ( contentsScope )
             {
                 case ANALYST:
-                    inboxItems = factsAccessService.getPersonInboxItems(factsPersonId, Optional.of(personInboxStatuses)).get();
+                    inboxItems = factsAccessService.getPersonInboxItems(factsPersonId, opt(personInboxStatuses)).get();
                     break;
                 case LAB:
                     inboxItems = factsAccessService.getLabInboxItems(labGroupFactsOrgName, labInboxStatuses).get();
@@ -263,14 +264,14 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             this.dataChangeAuditingSvc.addEntry(
                 Instant.now(),
                 creatingUser.getLabGroupId(),
-                Optional.empty(),
+                empty(),
                 creatingUser.getEmployeeId(),
                 creatingUser.getUsername(),
                 "create",
                 "user",
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(jsonWriter.writeValueAsString(logReg))
+                empty(),
+                empty(),
+                opt(jsonWriter.writeValueAsString(logReg))
             );
         }
         catch(JsonProcessingException jpe)
@@ -362,8 +363,8 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                     lgtt.getTestType().getCode(),
                     lgtt.getTestType().getName(),
                     lgtt.getTestType().getShortName(),
-                    opt(lgtt.getTestType().getDescription()),
-                    opt(lgtt.getTestConfigurationJson()),
+                    optn(lgtt.getTestType().getDescription()),
+                    optn(lgtt.getTestConfigurationJson()),
                     parseReportNames(lgtt.getReportNamesBarSeparated())
                 )
             )
@@ -417,23 +418,23 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
         )
     {
         String createdByUserShortName =
-            opt(usersById.get(t.getCreatedByEmpId()))
+            optn(usersById.get(t.getCreatedByEmpId()))
             .map(UserReference::getShortName)
             .orElse("NA");
 
         String lastSavedByUserShortName =
-            opt(usersById.get(t.getLastSavedByEmpId()))
+            optn(usersById.get(t.getLastSavedByEmpId()))
             .map(UserReference::getShortName)
             .orElse("NA");
 
         Optional<String> reviewedByUserShortName =
-            opt(t.getReviewedByEmpId())
-            .flatMap(empId -> opt(usersById.get(empId)))
+            optn(t.getReviewedByEmpId())
+            .flatMap(empId -> optn(usersById.get(empId)))
             .map(UserReference::getShortName);
 
         Optional<String> savedToFactsByUserShortName =
-            opt(t.getSavedToFactsByEmpId())
-            .flatMap(empId -> opt(usersById.get(empId)))
+            optn(t.getSavedToFactsByEmpId())
+            .flatMap(empId -> optn(usersById.get(empId)))
             .map(UserReference::getShortName);
 
         return
@@ -452,12 +453,12 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                 t.getLastSaved(),
                 lastSavedByUserShortName,
                 attachedFilesCount,
-                opt(t.getBeginDate()),
-                opt(t.getNote()),
-                opt(t.getStageStatusesJson()),
-                opt(t.getReviewed()),
+                optn(t.getBeginDate()),
+                optn(t.getNote()),
+                optn(t.getStageStatusesJson()),
+                optn(t.getReviewed()),
                 reviewedByUserShortName,
-                opt(t.getSavedToFacts()),
+                optn(t.getSavedToFacts()),
                 savedToFactsByUserShortName
             );
     }
@@ -482,15 +483,15 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                 firstItem.getSampleTrackingNumber(),
                 firstItem.getSampleTrackingSubNumber(),
                 firstItem.getPacCode(),
-                opt(firstItem.getLidCode()),
-                opt(firstItem.getProblemAreaFlag()),
+                optn(firstItem.getLidCode()),
+                optn(firstItem.getProblemAreaFlag()),
                 firstItem.getCfsanProductDesc(),
-                opt(firstItem.getStatusCode()),
-                opt(firstItem.getStatusDate()),
-                opt(Instant.now()),
-                opt(firstItem.getSubjectText()),
-                opt(tests),
-                opt(assignments)
+                optn(firstItem.getStatusCode()),
+                optn(firstItem.getStatusDate()),
+                optn(Instant.now()),
+                optn(firstItem.getSubjectText()),
+                optn(tests),
+                optn(assignments)
             );
     }
 
@@ -510,8 +511,8 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
                 userShortName,
                 inboxItem.getAssignedToFirstName(),
                 inboxItem.getAssignedToLastName(),
-                opt(inboxItem.getAssignedToMiddleName()),
-                opt(inboxItem.getLeadIndicator()),
+                optn(inboxItem.getAssignedToMiddleName()),
+                optn(inboxItem.getLeadIndicator()),
                 inboxItem.getWorkAssignmentDate()
             );
     }
@@ -539,6 +540,7 @@ public class JpaLabsDSUserContextService extends ServiceBase implements UserCont
             );
     }
 
-    private static <T> Optional<T> opt(T t) { return Optional.ofNullable(t); }
+    private static <T> Optional<T> optn(T t) { return Optional.ofNullable(t); }
+    private static <T> Optional<T> opt(T t) { return Optional.of(t); }
 }
 
