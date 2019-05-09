@@ -1,28 +1,40 @@
 TODO
 ====
-Create Postgres specific ddl scripts, adjust field types.
-  text -> jsonb for json fields
-  timestamp -> timestamp with timezone
-  etc
+Make general text search work for Postgres and Oracle.
+Implement more precise test search
+  Add TestController method to fetch list of test type search scopes for the lab group's test types.
+  Client
+    User selects one or more search scopes (TestTypeSearchScope) from select list.
+    User enters one value and indicates whether result tests must include all or include any.
+    Client creates TestSearch with field conditions list constructed by applying the value to each field.
 
-Create a separate branch for db cleanup with Postgres modifications.
-  Commit a version to master which still works with existing Oracle dbs.
+  https://www.postgresql.org/docs/9.4/datatype-json.html
 
-Remove unnecessary id fields.
-  Probably will have to complete the removal of JPA from project first.
 
-Review db writes done via JPA.
-  Only employeeRepo.save(emp) in JpaLabsDSUserContextService.
+Make RHEL8 demo with laptop with Postgres and app running in containers via Podman.
 
+database design
+  Try remove unnecessary id fields.
+
+Commit
+======
+
+
+Specify jvm heap size in app startup commands in service unit file and container image.
+
+Disable the FACTS submission buttons in wrapup stage when changes are disallowed.
 
 Done
 ====
 Add support for Docker deployment.
-Add support for PostgreSQL database.
+Add support for PostgreSQL database
+  lob and json handling
+  full text search of test data
+  backend support for precise test-specific searches of specific fields within test data
 Update build system and build/deployment notes to allow controlling:
-  deployment to docker or system service
-  target database
-  Java runtime version
+  deployment to docker container or systemd system service
+  target database, Postgres or Oracle
+  deployment to Java 8 or 11
   mount point under server base url (application "context" in Tomcat/JEE)
 
 

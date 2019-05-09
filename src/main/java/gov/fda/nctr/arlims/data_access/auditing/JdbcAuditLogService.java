@@ -65,7 +65,7 @@ public class JdbcAuditLogService extends ServiceBase implements AuditLogService
             "insert into audit_entry\n" +
             "(timestamp, lab_group_id, test_id, acting_emp_id, acting_username, action, object_type," +
              "object_context_metadata_json, object_from_value_json, object_to_value_json)\n" +
-            "values(?,?,?,?,?,?,?,?,?,?)";
+            "values(?,?,?,?,?,?,?,make_json(?),make_json(?),make_json(?))";
 
         PreparedStatementCreator psc = conn -> {
             String idCol = databaseConfig.normalizePrimaryDatabaseIdentifier("id");

@@ -73,7 +73,14 @@ insert into "resource"(resource_group, code, resource_type, description)
   values('ARKL-MICRO-SHARED', 'V4-5122707', 'VID', null);
 insert into "resource"(resource_group, code, resource_type, description)
   values('ARKL-MICRO-SHARED', 'V5-5099389', 'VID', null);
-
+insert into "resource" (resource_group, code, resource_type, description)
+  values('ARKL-MICRO-SHARED', '5099365', 'INC', null);
+insert into "resource" (resource_group, code, resource_type, description)
+  values ('ARKL-MICRO-SHARED', '5099360', 'INC', null);
+insert into "resource" (resource_group, code, resource_type, description)
+  values ('ARKL-MICRO-SHARED', '5099361', 'INC', null);
+insert into "resource" (resource_group, code, resource_type, description)
+  values ('ARKL-MICRO-SHARED', '5099391', 'INC', null);
 
 insert into test_type(code, short_name, name)
   values('MICRO_SLM', 'SALMONELLA', 'Salmonella');
@@ -82,7 +89,7 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
   values(
     1,
     1,
-    '{' ||
+    make_json('{' ||
       '"samplingMethodChoices": [' ||
         '{' ||
         '"name": "25gx15S-1C-3375mlBr",' ||
@@ -101,9 +108,26 @@ insert into lab_group_test_type (lab_group_id, test_type_id, test_configuration_
         '"testUnitsType": "composite"' ||
         '}' ||
       '],' ||
+      '"aoacMethodCode":"T2004.03",' ||
       '"spikeSpeciesText": "S. cerro",' ||
       '"spikeKitRemarksText": "7 CFUs on blood agar"' ||
-    '}',
+    '}'),
     'imp_slm_vidas.pdf'
   );
+
+insert into test_type_search_scope (test_type_id, scope_name, scope_descr, search_fields)
+  values(1, 'media', 'search media lot identifiers',
+    make_json(
+        '[' ||
+            '{"keyPath": ["preEnrData", "mediumBatchId"], "fieldType": "STR"}' ||
+           ',{"keyPath": ["selEnrData", "rvBatchId"],     "fieldType": "STR"}' ||
+           ',{"keyPath": ["selEnrData", "ttBatchId"],     "fieldType": "STR"}' ||
+           ',{"keyPath": ["selEnrData", "bgBatchId"],     "fieldType": "STR"}' ||
+           ',{"keyPath": ["selEnrData", "i2kiBatchId"],   "fieldType": "STR"}' ||
+           ',{"keyPath": ["mBrothData", "mBrothBatchId"], "fieldType": "STR"}' ||
+        ']'
+    )
+  );
+
+
 

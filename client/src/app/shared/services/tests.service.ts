@@ -200,7 +200,7 @@ export class TestsService {
       : Observable<SampleOpTest[]>
    {
       const searchUrl =
-         this.apiUrlsSvc.testsSearchUrl(
+         this.apiUrlsSvc.fullTextTestSearchUrl(
             searchText,
             fromTimestamp,
             toTimestamp,

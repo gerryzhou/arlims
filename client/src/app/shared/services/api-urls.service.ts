@@ -91,7 +91,7 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/tests/${testId}/report/${encodeURIComponent(reportName)}`);
    }
 
-   testsSearchUrl
+   fullTextTestSearchUrl
       (
          textSearch: string | null,
          fromTimestamp: Moment | null,
@@ -115,7 +115,7 @@ export class ApiUrlsService {
          qryParams = qryParams.append('ltt', JSON.stringify(includeTestTypeCodes));
 
 
-      return this.location.prepareExternalUrl(`/api/tests/search?${qryParams.toString()}`);
+      return this.location.prepareExternalUrl(`/api/test-search/full-text?${qryParams.toString()}`);
    }
 
    auditLogEntriesQueryUrl

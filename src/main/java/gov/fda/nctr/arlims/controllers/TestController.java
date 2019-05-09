@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
-import gov.fda.nctr.arlims.data_access.test_data.TestAttachedFileContents;
+import gov.fda.nctr.arlims.data_access.test_data.AttachedFileBasicMetadata;
 import gov.fda.nctr.arlims.data_access.test_data.TestDataService;
 import gov.fda.nctr.arlims.reports.TestDataReportService;
 import gov.fda.nctr.arlims.security.AppUserAuthentication;
@@ -215,20 +215,27 @@ public class TestController extends ControllerBase
     }
 
     @GetMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}")
-    public ResponseEntity<InputStreamResource>  getTestAttachedFileContents
+    public void getTestAttachedFileContents
         (
             @PathVariable long attachedFileId,
-            @PathVariable long testId
+            @PathVariable long testId,
+            HttpServletResponse response
         )
     {
-        TestAttachedFileContents tafc = testDataService.getTestAttachedFileContents(attachedFileId, testId);
+        AttachedFileBasicMetadata fmd = testDataService.getTestAttachedFileBasicMetadata(attachedFileId, testId);
 
-        return
-            ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION,
-            "attachment;filename=" + tafc.getFileName())
-            .contentLength(tafc.getContentsLength())
-            .body(new InputStreamResource(tafc.getContentsStream()));
+        response.setStatus(200);
+        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, fmd.getFileName());
+        response.setContentLengthLong(fmd.getContentsLength());
+
+        try
+        {
+            testDataService.writeTestAttachedFileContentsToStream(attachedFileId, testId, response.getOutputStream());
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     @DeleteMapping("{testId:\\d+}/attached-files/{attachedFileId:\\d+}")
@@ -242,39 +249,6 @@ public class TestController extends ControllerBase
         AppUser currentUser = ((AppUserAuthentication)authentication).getAppUser();
 
         testDataService.deleteTestAttachedFile(testId, attachedFileId, currentUser);
-    }
-
-    @GetMapping("search")
-    public List<SampleOpTest> findTests
-        (
-            @RequestParam(value="tq",  required=false) Optional<String>  searchText,
-            @RequestParam(value="fts", required=false) Optional<Instant> fromTimestamp,
-            @RequestParam(value="tts", required=false) Optional<Instant> toTimestamp,
-            @RequestParam(value="tsp", required=false) Optional<String>  timestampProperty,
-            @RequestParam(value="ltt", required=false) Optional<String>  labTestTypeCodesJson
-        )
-    {
-        Optional<List<String>> labTestTypeCodes = labTestTypeCodesJson.map(this::parseJsonStringArray);
-
-        timestampProperty.ifPresent(tsProp -> {
-            if ( !tsProp.equals("created")  &&
-                 !tsProp.equals("last_saved") &&
-                 !tsProp.equals("begin_date") &&
-                 !tsProp.equals("reviewed") &&
-                 !tsProp.equals("saved_to_facts") )
-                throw new IllegalArgumentException("Invalid timestamp property in tests search.");
-        });
-
-        Optional<String> prepdTextQuery = searchText.map(this::prepareTextQuery);
-
-        return
-            testDataService.findTests(
-                prepdTextQuery,
-                fromTimestamp,
-                toTimestamp,
-                timestampProperty,
-                labTestTypeCodes
-            );
     }
 
     @GetMapping("{testId:\\d+}/sample-op-test-md")
@@ -321,37 +295,5 @@ public class TestController extends ControllerBase
             .body(new InputStreamResource(Files.newInputStream(report.getReportFile())));
     }
 
-    private String prepareTextQuery(String textQuery)
-    {
-        // (Could do something more sophisticated here which would allow use of some text query operators.)
-        return "{" + textQuery.replace('{', ' ').replace('}', ' ') + "}";
-    }
-
-    private List<String> parseJsonStringArray(String codesJson)
-    {
-        try
-        {
-            CollectionType collType = jsonSerializer.getTypeFactory().constructCollectionType(List.class, String.class);
-
-            return jsonSerializer.readValue(codesJson, collType);
-        }
-        catch(IOException ioe)
-        {
-            throw new BadRequestException("invalid json string array");
-        }
-    }
-
-    @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public String handleBadRequestException
-    (
-        BadRequestException e,
-        WebRequest request,
-        HttpServletResponse response
-    )
-    {
-        return e.getMessage();
-    }
 }
 

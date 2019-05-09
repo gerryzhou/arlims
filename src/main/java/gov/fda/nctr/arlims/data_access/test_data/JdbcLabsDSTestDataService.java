@@ -3,6 +3,7 @@ package gov.fda.nctr.arlims.data_access.test_data;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -12,20 +13,19 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
+
 import static java.lang.String.join;
 import static java.util.Collections.singletonList;
-
 import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
+import org.apache.commons.io.IOUtils;
+import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.lob.DefaultLobHandler;
+import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +35,7 @@ import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.data_access.auditing.AuditLogService;
 import gov.fda.nctr.arlims.data_access.auditing.AttachedFileDescription;
 import gov.fda.nctr.arlims.models.dto.*;
+import static gov.fda.nctr.arlims.data_access.test_data.TestVSampleOpTestRowMapper.TESTV_SAMPLE_OP_TEST_MAPPED_COLS;
 
 
 @Service
@@ -45,34 +46,6 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     private final JdbcTemplate jdbc;
 
     private static final String EMPTY_STRING_MD5 = "D41D8CD98F00B204E9800998ECF8427E";
-
-    private static final List<String> TESTV_SAMPLE_OP_TEST_MAPPED_COLS =
-        Arrays.asList(
-            "TEST_ID",
-            "OP_ID",
-            "SAMPLE_TRACKING_NUM",
-            "SAMPLE_TRACKING_SUB_NUM",
-            "PAC",
-            "PRODUCT_NAME",
-            "TYPE_CODE",
-            "TYPE_NAME",
-            "TYPE_SHORT_NAME",
-            "CREATED",
-            "CREATED_BY_EMP",
-            "LAST_SAVED",
-            "LAST_SAVED_BY_EMP",
-            "ATTACHED_FILES_COUNT",
-            "BEGIN_DATE",
-            "NOTE",
-            "STAGE_STATUSES_JSON",
-            "REVIEWED",
-            "REVIEWED_BY_EMP",
-            "SAVED_TO_FACTS",
-            "SAVED_TO_FACTS_BY_EMP",
-            "LID",
-            "PAF",
-            "SUBJECT"
-        );
 
     private static final String TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR = join(",", TESTV_SAMPLE_OP_TEST_MAPPED_COLS);
 
@@ -245,7 +218,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
 
         String sql =
             "update test\n" +
-            "set test_data_json = ?, stage_statuses_json = ?, last_saved = ?, " +
+            "set test_data_json = make_json(?), stage_statuses_json = make_json(?), last_saved = ?, " +
                 "last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
             "where id = ? and test_data_md5 = ?";
 
@@ -284,7 +257,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
 
         String sql =
             "update test\n" +
-            "set test_data_json = ?, stage_statuses_json = ?, last_saved = ?, last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
+            "set test_data_json = make_json(?), stage_statuses_json = ?, last_saved = ?, last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
             "where id = ?";
 
         int updateCount =
@@ -441,7 +414,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
             "select " + TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR + " " +
             "from test_v where test_id = :testId";
 
-        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper(false);
+        RowMapper<SampleOpTest> rowMapper = new TestVSampleOpTestRowMapper(false);
 
         return new NamedParameterJdbcTemplate(jdbc).queryForObject(sql, params, rowMapper);
     }
@@ -449,9 +422,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     @Override
     public List<TestAttachedFileMetadata> getTestAttachedFileMetadatas(long testId)
     {
-        // TODO: lenfth(tf.data) is failing here for Postgres, because tf.data is an oid.
         String sql =
-            "select tf.id, tf.label, ordering, tf.test_data_part, tf.name, length(tf.data), tf.uploaded " +
+            "select tf.id, tf.label, ordering, tf.test_data_part, tf.name, blob_size(tf.data), tf.uploaded " +
             "from test_file tf " +
             "where tf.test_id = ? " +
             "order by tf.ordering";
@@ -474,7 +446,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     private TestAttachedFileMetadata getTestAttachedFileMetadata(long testId, long attachedFileId)
     {
         String sql =
-            "select tf.id, tf.label, tf.ordering, tf.test_data_part, tf.name, length(tf.data), tf.uploaded " +
+            "select tf.id, tf.label, tf.ordering, tf.test_data_part, tf.name, blob_size(tf.data), tf.uploaded " +
             "from test_file tf " +
             "where tf.id = ?";
 
@@ -493,8 +465,8 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         return jdbc.queryForObject(sql, rowMapper, attachedFileId);
     }
 
-    @Override
     @Transactional
+    @Override
     public List<Long> attachFilesToTest
         (
             long testId,
@@ -527,7 +499,7 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
                     ps.setString(4, testDataPart.orElse(null));
                     ps.setString(5, file.getOriginalFilename());
                     ps.setTimestamp(6, now);
-                    DefaultLobHandler lobHandler = new DefaultLobHandler();
+                    LobHandler lobHandler = databaseConfig.makePrimaryDatabaseLobHandler();
                     lobHandler.getLobCreator().setBlobAsBinaryStream(ps, 7, is, -1);
                     return ps;
                 };
@@ -699,22 +671,44 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     }
 
     @Override
-    public TestAttachedFileContents getTestAttachedFileContents
+    public AttachedFileBasicMetadata getTestAttachedFileBasicMetadata
         (
             long attachedFileId,
             long testId
         )
     {
-        String sql = "select name, length(data), data from test_file where id = ? and test_id = ?";
+        String sql = "select name, blob_size(data) from test_file where id = ? and test_id = ?";
 
-        RowMapper<TestAttachedFileContents> rowMapper = (row, rowNum) ->
-            new TestAttachedFileContents(
-                row.getString(1),
-                row.getLong(2),
-                row.getBinaryStream(3)
-            );
+        RowMapper<AttachedFileBasicMetadata> rowMapper = (rs, rowNum) ->
+            new AttachedFileBasicMetadata(rs.getString(1), rs.getLong(2));
 
         return jdbc.queryForObject(sql, rowMapper, attachedFileId, testId);
+    }
+
+    @Transactional
+    @Override
+    public void writeTestAttachedFileContentsToStream
+        (
+            long attachedFileId,
+            long testId,
+            OutputStream os
+        )
+    {
+        String sql = "select data from test_file where id = ? and test_id = ?";
+
+        Object[] paramVals = new Object[]{attachedFileId, testId};
+
+        jdbc.query(sql, paramVals, rs -> {
+            try ( InputStream is = databaseConfig.makePrimaryDatabaseLobHandler().getBlobAsBinaryStream(rs, 1) )
+            {
+                IOUtils.copyLarge(is, os);
+                os.flush();
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        });
     }
 
     @Transactional
@@ -797,109 +791,6 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
         return new TestAuditInfo(testTypeCode, testRow, contextRow);
     }
 
-    @Override
-    public List<SampleOpTest> findTests
-        (
-            Optional<String> searchText,
-            Optional<Instant> fromTimestamp,
-            Optional<Instant> toTimestamp,
-            Optional<String> testTimestampProperty,
-            Optional<List<String>> labTestTypeCodes
-        )
-    {
-        List<String> whereCriteria = new ArrayList<>();
-        MapSqlParameterSource params = new MapSqlParameterSource();
-
-        searchText.ifPresent(textQuery -> {
-            whereCriteria.add("contains(test_data_json, :textQuery) > 0");
-            params.addValue("textQuery", textQuery);
-        });
-
-        String tsProp = testTimestampProperty.orElse("created");
-        fromTimestamp.ifPresent(fts -> {
-            whereCriteria.add(tsProp + " >= :fts");
-            params.addValue("fts", new java.sql.Timestamp(fts.toEpochMilli()));
-        });
-        toTimestamp.ifPresent(tts -> {
-            whereCriteria.add(tsProp + " <= :tts");
-            params.addValue("tts", new java.sql.Timestamp(tts.toEpochMilli()));
-        });
-
-        labTestTypeCodes.ifPresent(codes -> {
-            if ( codes.isEmpty() )
-                whereCriteria.add("type_code is null");
-            else
-            {
-                whereCriteria.add("type_code in (:typeCodes)");
-                params.addValue("typeCodes", codes);
-            }
-        });
-
-        String sql =
-            "select " + TESTV_SAMPLE_OP_TEST_MAPPED_COLS_STR + " from test_v\n" +
-            (!whereCriteria.isEmpty() ? "where " + join("\nand\n", whereCriteria): "");
-
-        RowMapper<SampleOpTest> rowMapper = getTestVSampleOpTestRowMapper(false);
-
-        return new NamedParameterJdbcTemplate(jdbc).query(sql, params, rowMapper);
-    }
-
-    // RowMapper creating SampleOpTests from TEST_V rows, assuming column order specified in TESTV_SAMPLE_OP_TEST_MAPPED_COLS.
-    private RowMapper<SampleOpTest> getTestVSampleOpTestRowMapper(boolean includeTestMetadataInSampleOp)
-    {
-        return (row, rowNum) -> {
-            LabTestMetadata tmd =
-                new LabTestMetadata(
-                    row.getLong(1),
-                    row.getLong(2),
-                    row.getLong(3),
-                    row.getLong(4),
-                    row.getString(5),
-                    row.getString(6),
-                    LabTestTypeCode.valueOf(row.getString(7)),
-                    row.getString(8),
-                    row.getString(9),
-                    row.getTimestamp(10).toInstant(),
-                    row.getString(11),
-                    row.getTimestamp(12).toInstant(),
-                    row.getString(13),
-                    row.getInt(14),
-                    Optional.ofNullable(row.getString(15)).map(LocalDate::parse),
-                    Optional.ofNullable(row.getString(16)),
-                    Optional.ofNullable(row.getString(17)),
-                    Optional.ofNullable(row.getTimestamp(18)).map(Timestamp::toInstant),
-                    Optional.ofNullable(row.getString(19)), // reviewed by emp
-                    Optional.ofNullable(row.getTimestamp(20)).map(Timestamp::toInstant),
-                    Optional.ofNullable(row.getString(21)) // saved to facts by emp
-                );
-
-            Optional<String> lid = Optional.ofNullable(row.getString(22));
-            Optional<String> paf = Optional.ofNullable(row.getString(23));
-            Optional<String> subject = Optional.ofNullable(row.getString(24));
-
-            Optional<List<LabTestMetadata>> testMds =
-              includeTestMetadataInSampleOp ? Optional.of(singletonList(tmd)) : Optional.empty();
-
-            SampleOp s =
-                new SampleOp(
-                    tmd.getOpId(),
-                    tmd.getSampleTrackingNumber(),
-                    tmd.getSampleTrackingSubNumber(),
-                    tmd.getPac(),
-                    lid,
-                    paf,
-                    tmd.getProductName(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(), // last refreshed from FACTS not available when sample metadata comes from test record
-                    subject,
-                    testMds,
-                    Optional.empty()  // assignments omitted
-                );
-
-            return new SampleOpTest(s, tmd);
-        };
-    }
 
     private static String md5(byte[] data)
     {

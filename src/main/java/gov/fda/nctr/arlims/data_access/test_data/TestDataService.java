@@ -1,6 +1,6 @@
 package gov.fda.nctr.arlims.data_access.test_data;
 
-import java.time.Instant;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,16 +49,9 @@ public interface TestDataService
 
     void updateTestAttachedFileMetadata(long testId, long attachedFileId, Optional<String> label, int ordering, Optional<String> testDataPart, String name, AppUser user);
 
-    TestAttachedFileContents getTestAttachedFileContents(long attachedFileId, long testId);
+    AttachedFileBasicMetadata getTestAttachedFileBasicMetadata(long attachedFileId, long testId);
+
+    void writeTestAttachedFileContentsToStream(long attachedFileId, long testId, OutputStream os);
 
     void deleteTestAttachedFile(long testId, long attachedFileId, AppUser user);
-
-    List<SampleOpTest> findTests
-        (
-            Optional<String> searchText,
-            Optional<Instant> fromTimestamp,
-            Optional<Instant> toTimestamp,
-            Optional<String> timestampProperty,
-            Optional<List<String>> labTestTypeCodes
-        );
 }
