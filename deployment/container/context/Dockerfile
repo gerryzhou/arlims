@@ -19,4 +19,4 @@ WORKDIR "$ALIS_HOME"
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "alis.jar"]
+ENTRYPOINT ["java", "-Xms2g", "-Xmx2g", "-jar", "alis.jar"]
