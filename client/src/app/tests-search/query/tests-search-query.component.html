@@ -43,9 +43,21 @@
 
       <div class="criteria-group">
          <mat-form-field>
-            <mat-select formControlName="testTypeCode" placeholder="test type">
+            <mat-select formControlName="testTypeCode" placeholder="test type" (valueChange)="onTestTypeChanged($event)">
                <mat-option [value]="null"></mat-option>
                <mat-option *ngFor="let tt of labTestTypes" [value]="tt.code">{{tt.name}}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+
+      <div class="criteria-group">
+         <mat-form-field>
+            <mat-select formControlName="testTypeSearchScopeName"
+                        [placeholder]="form.get('testTypeSearchScopeName').value ? 'search scope' : 'search scope - full text'">
+               <mat-option [value]="null"><b>full text</b></mat-option>
+               <mat-option *ngFor="let ss of searchScopesForSelectedTestType" [value]="ss.scopeName">
+                  <b>{{ss.scopeName}}</b> - {{ss.scopeDescription}}
+               </mat-option>
             </mat-select>
          </mat-form-field>
       </div>

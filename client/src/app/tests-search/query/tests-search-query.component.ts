@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, OnChanges, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 
-import {LabTestType} from '../../../generated/dto';
+import {LabTestType, TestTypeSearchScope} from '../../../generated/dto';
 import {emptyTestsSearchQuery, TestsSearchQuery} from './tests-search-query';
 
 @Component({
@@ -13,6 +13,9 @@ import {emptyTestsSearchQuery, TestsSearchQuery} from './tests-search-query';
 export class TestsSearchQueryComponent implements OnChanges {
 
    @Input()
+   testTypeSearchScopes: TestTypeSearchScope[];
+
+   @Input()
    initialQuery: TestsSearchQuery;
 
    @Input()
@@ -20,6 +23,8 @@ export class TestsSearchQueryComponent implements OnChanges {
 
    @Output()
    readonly queryClick = new EventEmitter<TestsSearchQuery>();
+
+   searchScopesForSelectedTestType: TestTypeSearchScope[] = [];
 
    form: FormGroup;
 
@@ -36,6 +41,7 @@ export class TestsSearchQueryComponent implements OnChanges {
              toTimestamp: new FormControl(this.initialQuery.toTimestamp),
              timestampPropertyName: new FormControl(this.initialQuery.timestampPropertyName),
              testTypeCode: new FormControl(this.initialQuery.testTypeCode),
+             testTypeSearchScopeName: new FormControl(this.initialQuery.testTypeSearchScopeName),
           });
       else
          this.form.setValue(this.initialQuery);
@@ -49,5 +55,11 @@ export class TestsSearchQueryComponent implements OnChanges {
    clearSearch()
    {
       this.form.setValue(emptyTestsSearchQuery());
+   }
+
+   onTestTypeChanged(testTypeCode: string)
+   {
+      this.searchScopesForSelectedTestType = this.testTypeSearchScopes.filter(ttss => ttss.testTypeCode === testTypeCode);
+      this.form.get('testTypeSearchScopeName').setValue(null);
    }
 }

@@ -1,15 +1,7 @@
 TODO
 ====
-Make general text search work for Postgres and Oracle.
-Implement more precise test search
-  Add TestController method to fetch list of test type search scopes for the lab group's test types.
-  Client
-    User selects one or more search scopes (TestTypeSearchScope) from select list.
-    User enters one value and indicates whether result tests must include all or include any.
-    Client creates TestSearch with field conditions list constructed by applying the value to each field.
-
-  https://www.postgresql.org/docs/9.4/datatype-json.html
-
+Add Postgres index for json searches over test.test_data_json.
+Add alternate test search scope for SLM as example.
 
 Make RHEL8 demo with laptop with Postgres and app running in containers via Podman.
 
@@ -18,19 +10,16 @@ database design
 
 Commit
 ======
+Implement more precise test search for Postgres with ui support.
 
-
-Specify jvm heap size in app startup commands in service unit file and container image.
-
-Disable the FACTS submission buttons in wrapup stage when changes are disallowed.
 
 Done
 ====
 Add support for Docker deployment.
 Add support for PostgreSQL database
-  lob and json handling
-  full text search of test data
-  backend support for precise test-specific searches of specific fields within test data
+  - lob and json handling
+  - full text search of test data
+  - backend support for precise test-specific searches of specific fields within test data
 Update build system and build/deployment notes to allow controlling:
   deployment to docker container or systemd system service
   target database, Postgres or Oracle

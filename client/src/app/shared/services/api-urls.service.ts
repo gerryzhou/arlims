@@ -118,6 +118,35 @@ export class ApiUrlsService {
       return this.location.prepareExternalUrl(`/api/test-search/full-text?${qryParams.toString()}`);
    }
 
+   typeSpecificScopedTestSearchUrl
+      (
+         testTypeCode: LabTestTypeCode,
+         searchScopeName: string,
+         searchValue: string | null,
+         fromTimestamp: Moment | null,
+         toTimestamp: Moment | null,
+         timestampProperty: string | null
+      )
+      : string
+   {
+      let qryParams = new HttpParams();
+      if ( searchValue )
+         qryParams = qryParams.append('sv', searchValue);
+      if ( fromTimestamp )
+         qryParams = qryParams.append('fts', fromTimestamp.toISOString());
+      if ( toTimestamp )
+         qryParams = qryParams.append('tts', toTimestamp.toISOString());
+      if ( (fromTimestamp || toTimestamp) && timestampProperty )
+         qryParams = qryParams.append('tsp', timestampProperty);
+
+      return this.location.prepareExternalUrl(`/api/test-search/scoped/${testTypeCode}/${searchScopeName}?${qryParams.toString()}`);
+   }
+
+   availableTestSearchCapabilitiesUrl(): string
+   {
+      return this.location.prepareExternalUrl(`/api/test-search/test-type-search-scopes`);
+   }
+
    auditLogEntriesQueryUrl
       (
          fromMoment: Moment | null,

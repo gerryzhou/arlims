@@ -13,6 +13,7 @@ import {AuthenticatedUserGuard} from './authenticated-user-guard';
 import {AdminUserGuard} from './admin-user-guard';
 import {RegistrationComponent} from '../registration/registration.component';
 import {TestsSearchComponent} from '../tests-search/tests-search.component';
+import {TestsSearchContextResolver} from './tests-search-context-resolver.service';
 
 const routes: Routes = [
    {
@@ -53,6 +54,7 @@ const routes: Routes = [
    {
       path: 'tests-search',
       component: TestsSearchComponent,
+      resolve: { testsSearchContext: TestsSearchContextResolver },
       data: {title: 'Tests Search'},
       canActivate: [AuthenticatedUserGuard],
    },

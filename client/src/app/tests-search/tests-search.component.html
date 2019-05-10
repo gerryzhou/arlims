@@ -2,6 +2,7 @@
 
    <app-tests-search-query
       [initialQuery]="defaultQuery"
+      [testTypeSearchScopes]="searchContext.testTypeSearchScopes"
       [labTestTypes]="labTestTypes$ | async"
       (queryClick)="doQuery($event)">
    </app-tests-search-query>

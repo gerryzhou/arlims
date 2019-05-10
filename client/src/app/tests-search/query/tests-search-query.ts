@@ -14,6 +14,8 @@ export interface TestsSearchQuery {
    timestampPropertyName: TestTimestampProperty;
 
    testTypeCode: LabTestTypeCode | null;
+
+   testTypeSearchScopeName: string | null;
 }
 
 export function emptyTestsSearchQuery(): TestsSearchQuery
@@ -24,5 +26,6 @@ export function emptyTestsSearchQuery(): TestsSearchQuery
       toTimestamp: null,
       timestampPropertyName: 'created',
       testTypeCode: null,
+      testTypeSearchScopeName: null,
    };
 }

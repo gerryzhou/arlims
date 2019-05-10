@@ -5,9 +5,10 @@ import {catchError, take} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AlertMessageService, TestsService, UserContextService} from '../shared/services';
 import {AppInternalUrlsService} from '../shared/services/app-internal-urls.service';
-import {LabTestType, SampleOp, SampleOpTest} from '../../generated/dto';
+import {LabTestType, SampleOp, SampleOpTest, TestTypeSearchScope} from '../../generated/dto';
 import {TestClickEvent, TestStageClickEvent} from '../common-components/test/events';
 import {emptyTestsSearchQuery, TestsSearchQuery} from './query/tests-search-query';
+import {TestsSearchContext} from './tests-search-context';
 
 @Component({
    selector: 'app-tests-search',
@@ -27,6 +28,8 @@ export class TestsSearchComponent {
 
    readonly defaultQuery: TestsSearchQuery;
 
+   readonly searchContext: TestsSearchContext;
+
    // Contains the router path of this listing, to be navigated to after visiting other views from here.
    readonly exitRouterPath: string;
 
@@ -40,21 +43,25 @@ export class TestsSearchComponent {
          private route: ActivatedRoute
       )
    {
+      this.searchContext = <TestsSearchContext>this.route.snapshot.data['testsSearchContext'];
       this.labTestTypes$ = from(userCtxSvc.getLabGroupContents().then(lgc => lgc.supportedTestTypes));
       this.defaultQuery = emptyTestsSearchQuery();
 
       this.exitRouterPath = route.snapshot.routeConfig.path;
    }
 
-   doQuery(query: TestsSearchQuery)
+   doQuery(q: TestsSearchQuery)
    {
-      this.testsSvc.findTests(
-         query.searchText,
-         query.fromTimestamp,
-         query.toTimestamp,
-         query.timestampPropertyName,
-         query.testTypeCode ? [query.testTypeCode] : null,
-      )
+      const [text, fromTs, toTs, tsProp, tt]  = [q.searchText, q.fromTimestamp, q.toTimestamp, q.timestampPropertyName, q.testTypeCode];
+
+      const searchScope: TestTypeSearchScope | null =
+         this.searchContext.testTypeSearchScopes.find(ss => ss.scopeName === q.testTypeSearchScopeName);
+
+      const results$: Observable<SampleOpTest[]> =
+         searchScope ? this.testsSvc.findTestsByTypeSpecificScopedSearch(searchScope, text, fromTs, toTs, tsProp)
+            : this.testsSvc.findTestsByFullTextSearch(text, fromTs, toTs, tsProp, tt && [tt]);
+
+      results$
       .pipe(
          catchError(err => {
             console.log(err);

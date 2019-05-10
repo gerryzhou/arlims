@@ -11,11 +11,12 @@ import {
    LabTestTypeCode,
    OptimisticDataUpdateResult, SampleOp,
    SampleOpTest,
-   TestAttachedFileMetadata,
+   TestAttachedFileMetadata, TestTypeSearchScope,
    VersionedTestData
 } from '../../../generated/dto';
 import {TestStageStatus} from '../../lab-tests/test-stages';
 import {TestDataSaveResult} from '../client-models/test-data-save-result';
+import {TestTimestampProperty} from '../client-models/test-timestamp-properties';
 
 @Injectable({
   providedIn: 'root'
@@ -189,26 +190,41 @@ export class TestsService {
       return this.httpClient.post(reportUrl, testData, {responseType: 'blob'});
    }
 
-   findTests
+   findTestsByFullTextSearch
       (
          searchText: string | null,
-         fromTimestamp: Moment | null,
-         toTimestamp: Moment | null,
-         timestampProperty: string | null,
+         from: Moment | null,
+         to: Moment | null,
+         tsProperty: TestTimestampProperty | null,
          includeTestTypeCodes: LabTestTypeCode[] | null
       )
       : Observable<SampleOpTest[]>
    {
-      const searchUrl =
-         this.apiUrlsSvc.fullTextTestSearchUrl(
-            searchText,
-            fromTimestamp,
-            toTimestamp,
-            timestampProperty,
-            includeTestTypeCodes
-         );
+      return this.httpClient.get<SampleOpTest[]>(
+         this.apiUrlsSvc.fullTextTestSearchUrl(searchText, from, to, tsProperty, includeTestTypeCodes)
+      );
+   }
 
-      return this.httpClient.get<SampleOpTest[]>(searchUrl);
+   findTestsByTypeSpecificScopedSearch
+      (
+         scope: TestTypeSearchScope,
+         searchValue: string,
+         from: Moment | null,
+         to: Moment | null,
+         tsProperty: TestTimestampProperty
+       )
+   {
+      return this.httpClient.get<SampleOpTest[]>(
+        this.apiUrlsSvc.typeSpecificScopedTestSearchUrl(scope.testTypeCode, scope.scopeName, searchValue, from, to, tsProperty)
+      );
+   }
+
+   // Test search capabilities for the current user / lab group.
+   getAvailableTestSearchCapabilities(): Observable<TestTypeSearchScope[]>
+   {
+      return this.httpClient.get<TestTypeSearchScope[]>(
+        this.apiUrlsSvc.availableTestSearchCapabilitiesUrl()
+      );
    }
 
    getTestSampleOpTestMetadata(testId: number): Observable<SampleOpTest>
@@ -217,6 +233,7 @@ export class TestsService {
          this.apiUrlsSvc.testSampleOpTestMetadataUrl(testId)
       );
    }
+
 }
 
 export function defaultJsonFieldFormatter(key: string, value: any): any

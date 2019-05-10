@@ -2,7 +2,6 @@ package gov.fda.nctr.arlims.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -12,17 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 
-import gov.fda.nctr.arlims.exceptions.BadRequestException;
 import gov.fda.nctr.arlims.exceptions.ResourceNotFoundException;
 import gov.fda.nctr.arlims.models.dto.*;
 import gov.fda.nctr.arlims.data_access.test_data.AttachedFileBasicMetadata;
