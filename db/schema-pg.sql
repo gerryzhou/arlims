@@ -217,6 +217,8 @@ create index ix_tst_savedtofactsempid
 create index ix_tst_testdatamd5
     on test (test_data_md5);
 
+create index ix_test_tstdtajson ON test using gin (test_data_json jsonb_path_ops);
+
 create table test_file
 (
     id             serial    not null
