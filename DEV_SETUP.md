@@ -2,6 +2,8 @@ Java 11+ and Maven 3.5+ should be installed on the developer's build machine.
 If multiple Java runtimes/jdk's are installed, for the sake of Maven it's
 helpful to set JAVA_HOME to the Java 11 jdk directory.
 
+Nodejs should be installed for running the app in development with live reload capability.
+
 Add development database and api information in ~/.spring-boot-devtools.properties:
 ```
 arlims.db.primary.driverClassName=oracle.jdbc.OracleDriver
