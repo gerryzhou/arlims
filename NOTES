@@ -2,6 +2,7 @@ TODO
 ====
 Add Postgres index for json searches over test.test_data_json.
 Add alternate test search scope for SLM as example.
+Try writing single json query to load user context data.
 
 Make RHEL8 demo with laptop with Postgres and app running in containers via Podman.
 

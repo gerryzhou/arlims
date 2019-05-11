@@ -1,8 +1,3 @@
-test-search-query
-  Change emitted event representation to include test type search scope if one was selected.
-  TypeScopedTestSearch
-    searchText
-
 
 
 LID:
