@@ -217,7 +217,13 @@ create index ix_tst_savedtofactsempid
 create index ix_tst_testdatamd5
     on test (test_data_md5);
 
+-- json path index on test_data_json
 create index ix_test_tstdtajson ON test using gin (test_data_json jsonb_path_ops);
+
+-- Create full text search configuration and index on test data json.
+create text search configuration test_data_text_search_config (copy=simple);
+create index test_testdatajson_text_ix on test using gin (to_tsvector('test_data_text_search_config', test_data_json));
+
 
 create table test_file
 (
@@ -283,53 +289,169 @@ create table resource
         primary key (resource_group, code)
 );
 
-create view "RESOURCE"(resource_group, code, resource_type, description) as
-select resource.resource_group,
-       resource.code,
-       resource.resource_type,
-       resource.description
+create view "RESOURCE" as
+select
+   resource_group,
+   code,
+   resource_type,
+   description
 from resource;
 
 
-
-create or replace view test_v as
-  select
-    t.id test_id,
-    t.op_id,
-    t.sample_tracking_num,
-    t.sample_tracking_sub_num,
-    t.pac,
-    t.product_name,
-    tt.code type_code,
-    tt.name type_name,
-    tt.short_name type_short_name,
-    t.created created,
-    ce.short_name created_by_emp,
-    t.last_saved last_saved,
-    se.short_name last_saved_by_emp,
-    (select count(*) from test_file tf where tf.test_id = t.id) attached_files_count,
-    TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date,
-    t.note,
-    t.stage_statuses_json,
-    t.reviewed,
-    re.short_name reviewed_by_emp,
-    t.saved_to_facts,
-    fe.short_name saved_to_facts_by_emp,
-    t.lid,
-    t.paf,
-    t.subject,
-    t.test_data_json
-  from test t
-  join test_type tt on t.test_type_id = tt.id
-  join employee ce on ce.id = t.created_by_emp_id
-  join employee se on se.id = t.last_saved_by_emp_id
-  left join employee re on re.id = t.reviewed_by_emp_id
-  left join employee fe on fe.id = t.last_saved_by_emp_id
+create view test_v as
+select
+   t.id test_id,
+   t.op_id,
+   t.sample_tracking_num,
+   t.sample_tracking_sub_num,
+   t.pac,
+   t.product_name,
+   tt.code type_code,
+   tt.name type_name,
+   tt.short_name type_short_name,
+   t.created created,
+   ce.short_name created_by_emp,
+   t.last_saved last_saved,
+   se.short_name last_saved_by_emp,
+   (select count(*) from test_file tf where tf.test_id = t.id) attached_files_count,
+   TO_CHAR(t.begin_date, 'YYYY-MM-DD') begin_date,
+   t.note,
+   t.stage_statuses_json,
+   t.reviewed,
+   re.short_name reviewed_by_emp,
+   t.saved_to_facts,
+   fe.short_name saved_to_facts_by_emp,
+   t.lid,
+   t.paf,
+   t.subject,
+   t.test_data_json
+from test t
+join test_type tt on t.test_type_id = tt.id
+join employee ce on ce.id = t.created_by_emp_id
+join employee se on se.id = t.last_saved_by_emp_id
+left join employee re on re.id = t.reviewed_by_emp_id
+left join employee fe on fe.id = t.last_saved_by_emp_id
 ;
 
--- Create full text search configuration and index on test data json.
-create text search configuration test_data_text_search_config (copy=simple);
-create index test_testdatajson_text_ix on test using gin (to_tsvector('test_data_text_search_config', test_data_json));
+create view employee_v as
+select
+   e.id employee_id,
+   e.lab_group_id,
+   lg.name lab_group_name,
+   lg.facts_org_name lab_group_facts_org_name,
+   e.facts_person_id,
+   e.fda_email_account_name,
+   e.short_name,
+   e.first_name,
+   e.last_name,
+   e.middle_name,
+   (select array_agg(r.name) from role r
+    where exists(select 1 from employee_role er where er.emp_id = e.id)) roles
+from employee e
+join lab_group lg on e.lab_group_id = lg.id
+;
+
+create view employee_reference_v as
+select
+    e.id employee_id,
+    e.lab_group_id,
+    e.facts_person_id,
+    e.fda_email_account_name,
+    e.short_name
+from employee e
+;
+
+create view employee_reference_jv as
+select
+   employee_id,
+   lab_group_id,
+   jsonb_build_object(
+      'employee_id', employee_id,
+      'facts_person_id', facts_person_id,
+      'fda_email_account_name', fda_email_account_name,
+      'short_name', short_name
+   ) json
+from employee_reference_v
+;
+
+create view lab_group_test_type_v as
+select
+   lgtt.lab_group_id,
+   lgtt.test_configuration_json,
+   lgtt.report_names_bar_sep,
+   tt.id test_type_id,
+   tt.code test_type_code,
+   tt.name test_type_name,
+   tt.short_name test_type_short_name,
+   tt.description test_type_description
+from lab_group_test_type lgtt
+join test_type tt on lgtt.test_type_id = tt.id
+;
+
+create view lab_group_test_type_jv as
+select
+   lab_group_id,
+   test_type_id,
+   jsonb_build_object(
+     'test_configuration_json', test_configuration_json,
+     'report_names_bar_sep', report_names_bar_sep,
+     'test_type_id', test_type_id,
+     'test_type_code', test_type_code,
+     'test_type_name', test_type_name,
+     'test_type_short_name', test_type_short_name,
+     'test_type_description', test_type_description
+   ) json
+from lab_group_test_type_v
+;
+
+create view lab_group_resource_v as
+select distinct
+   lgrg.lab_group_id,
+   r.resource_type,
+   r.code,
+   r.description,
+   r.resource_group
+from lab_group_resource_group lgrg
+join resource r on r.resource_group = lgrg.resource_group
+;
+
+create view lab_group_resource_jv as
+select
+   lab_group_id,
+   jsonb_build_object(
+      'resource_type',  resource_type,
+      'code',           code,
+      'description',    description,
+      'resource_group', resource_group
+   ) json
+from lab_group_resource_v
+;
+
+create view employee_lab_group_context_v as
+select
+   e.employee_id,
+   e.lab_group_id,
+   e.lab_group_name,
+   e.facts_person_id,
+   e.fda_email_account_name,
+   e.short_name,
+   e.first_name,
+   e.last_name,
+   e.middle_name,
+   e.lab_group_facts_org_name,
+   e.roles employee_roles,
+   (select jsonb_agg(lgtt.json)
+    from lab_group_test_type_jv lgtt
+    where lgtt.lab_group_id = e.lab_group_id) lab_group_test_types,
+   (select jsonb_agg(ur.json)
+    from employee_reference_jv ur
+    where ur.lab_group_id = e.lab_group_id) lab_group_employees,
+   (select jsonb_agg(lgr.json)
+    from lab_group_resource_jv lgr
+    where lgr.lab_group_id = e.lab_group_id) lab_group_resources
+from employee_v e
+;
+
 
 create or replace function blob_size(oid) returns integer
 as $$
@@ -353,14 +475,3 @@ create or replace function make_json(str text) returns jsonb
 as $$
     select str::jsonb;
 $$ language 'sql';
-
-
-/*
-create or replace function json_text(json_data jsonb) returns text
-as $$
-select json_data::text;
-$$ language 'sql';
-*/
-
-
-

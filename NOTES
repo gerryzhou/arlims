@@ -1,17 +1,16 @@
 TODO
 ====
-Add Postgres index for json searches over test.test_data_json.
+Try to replace JpaLabsDSUserContextService with one that loads via single sql/json query.
 Add alternate test search scope for SLM as example.
-Try writing single json query to load user context data.
-
-Make RHEL8 demo with laptop with Postgres and app running in containers via Podman.
+Build and run as container, tweak env file.
+  Avoid using script.
 
 database design
   Try remove unnecessary id fields.
 
 Commit
 ======
-Implement more precise test search for Postgres with ui support.
+
 
 
 Done
