@@ -1,4 +1,3 @@
-
 -- Filter and extract objects and fields from json test data.
 select
   test_data_json #> '{selEnrData}' as sel_enr,
@@ -7,7 +6,7 @@ select
   test_data_json #> '{vidasData, testUnitDetections}' as vidas_detections
 from test
 where
-  -- only include tests that have a Vidas positive.
+  -- Only include tests that have a Vidas positive and a balance matching a certain regex.
   test_data_json @> '{"vidasData": {"testUnitDetections": [true]}}' and
   test_data_json #>> '{preEnrData, balanceId}' ~ 'ARL.*'
 ;

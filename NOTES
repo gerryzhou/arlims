@@ -1,9 +1,8 @@
 TODO
 ====
+AWS
+
 Try to replace JpaLabsDSUserContextService with one that loads via single sql/json query.
-Add alternate test search scope for SLM as example.
-Build and run as container, tweak env file.
-  Avoid using script.
 
 database design
   Try remove unnecessary id fields.
@@ -12,20 +11,20 @@ Commit
 ======
 
 
-
 Done
 ====
 Add support for Docker deployment.
 Add support for PostgreSQL database
   - lob and json handling
+    Needs Oracle 12.2+ for parity.
   - full text search of test data
-  - backend support for precise test-specific searches of specific fields within test data
+  - Precise test-specific searches of specific fields within test data.
+    Configured in db via single record, user selects search by name in ui (defaults to full-text search).
+    Example: media/lot # searches
 Update build system and build/deployment notes to allow controlling:
   deployment to docker container or systemd system service
   target database, Postgres or Oracle
   deployment to Java 8 or 11
-  mount point under server base url (application "context" in Tomcat/JEE)
-
 
 FactsController
   When analyses are successfully submitted, append submission and results to new Test record json array field.
@@ -35,8 +34,6 @@ SampleAnalysisMicrobes should contain identifications from IDENT stage.
 
 Leidos
 ------
-Can requests containing unrecognized fields be rejected?
-
 Add FACTS person id to api calls as http header.
 
 

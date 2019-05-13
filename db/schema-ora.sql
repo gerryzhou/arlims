@@ -324,7 +324,7 @@ left join employee re on re.id = t.reviewed_by_emp_id
 left join employee fe on fe.id = t.last_saved_by_emp_id
 ;
 
--- TODO: Create and try these views.
+-- TODO: Create and try these views (needs 12.2).
 
 create view employee_v as
 select
