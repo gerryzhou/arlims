@@ -403,6 +403,42 @@
             </dependency>
          </dependencies>
       </profile>
+      <!-- Build a container image if on Linux. Jib (pure Java) plugin is avoided for now, because want
+           guaranteed equivalence with command line tools, and image needs to be put in Podman local
+           repository. -->
+      <profile>
+         <id>oci-image</id>
+         <activation>
+           <os>
+             <family>unix</family>
+             <name>Linux</name>
+           </os>
+         </activation>
+         <build>
+            <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                  <execution>
+                    <phase>package</phase>
+                    <goals>
+                       <goal>exec</goal>
+                    </goals>
+                    <configuration>
+                      <executable>${project.basedir}/deployment/container/build-image.sh</executable>
+                      <workingDirectory>${project.basedir}</workingDirectory>
+                      <arguments>
+                         <argument>${project.basedir}/target/alis.jar</argument>
+                      </arguments>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
+              </plugins>
+         </build>
+      </profile>
    </profiles>
 
 </project>
