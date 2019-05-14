@@ -1,11 +1,15 @@
 package gov.fda.nctr.arlims.data_access.test_data;
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
+import static gov.fda.nctr.arlims.models.dto.scoped_test_search.TestSearchFieldType.BOOL;
+import static gov.fda.nctr.arlims.models.dto.scoped_test_search.TestSearchFieldType.STR;
 import static java.lang.String.join;
 
+import org.postgresql.util.PGobject;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,17 +19,18 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.fda.nctr.arlims.data_access.DatabaseConfig;
+import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.models.dto.LabTestTypeCode;
 import gov.fda.nctr.arlims.models.dto.SampleOpTest;
 import gov.fda.nctr.arlims.models.dto.scoped_test_search.TestSearchField;
-import gov.fda.nctr.arlims.models.dto.scoped_test_search.TestSearchFieldType;
 import gov.fda.nctr.arlims.models.dto.scoped_test_search.TestTypeSearchScope;
 import static gov.fda.nctr.arlims.data_access.test_data.TestVSampleOpTestRowMapper.TESTV_SAMPLE_OP_TEST_MAPPED_COLS;
-import static java.util.Collections.emptyMap;
+import static gov.fda.nctr.arlims.data_access.DatabaseConfig.DatabaseType;
+import static gov.fda.nctr.arlims.data_access.DatabaseConfig.DatabaseType.*;
 
 
 @Service
-public class JdbcTestSearchService implements TestSearchService
+public class JdbcTestSearchService extends ServiceBase implements TestSearchService
 {
     private final DatabaseConfig databaseConfig;
     private final JdbcTemplate jdbc;
@@ -59,14 +64,14 @@ public class JdbcTestSearchService implements TestSearchService
 
         searchText.ifPresent(textQuery -> {
             SearchCondition cond = makeFullTextSearchCondition(textQuery);
-            whereCriteria.add(cond.whereClauseCondition);
+            whereCriteria.add(cond.condition);
             params.addValues(cond.paramValues);
         });
 
         String tsProp = testTimestampProperty.orElse("created");
 
         getTestTimestampCondition(tsProp, fromTimestamp, toTimestamp).ifPresent(cond -> {
-            whereCriteria.add(cond.whereClauseCondition);
+            whereCriteria.add(cond.condition);
             params.addValues(cond.paramValues);
         });
 
@@ -125,12 +130,12 @@ public class JdbcTestSearchService implements TestSearchService
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         SearchCondition ssCond = makeScopedSearchCondition(searchScope, searchValue);
-        whereCriteria.add(ssCond.whereClauseCondition);
+        whereCriteria.add(ssCond.condition);
         params.addValues(ssCond.paramValues);
 
         String tsProp = timestampProperty.orElse("created");
         getTestTimestampCondition(tsProp, fromTimestamp, toTimestamp).ifPresent(cond -> {
-            whereCriteria.add(cond.whereClauseCondition);
+            whereCriteria.add(cond.condition);
             params.addValues(cond.paramValues);
         });
 
@@ -140,53 +145,83 @@ public class JdbcTestSearchService implements TestSearchService
     private SearchCondition makeScopedSearchCondition
         (
             TestTypeSearchScope searchScope,
-            String searchValueString
+            String searchString
         )
     {
-        switch ( databaseConfig.getPrimaryDatabaseType() )
-        {
-            case POSTGRESQL:
-            {
-                String fieldCondsStr =
-                    searchScope.getSearchFields().stream()
-                    .map(sf -> makeScopedSearchFieldCond(sf, searchValueString))
-                    .collect(Collectors.joining(" or "));
+        List<TestSearchField> searchFields = searchScope.getSearchFields();
 
-                return new SearchCondition(fieldCondsStr, emptyMap());
-            }
-            case ORACLE:
-            {
-                // TODO: Implement scoped searches for Oracle.
-                throw new RuntimeException("Oracle scoped searches are not yet supported.");
-            }
-            default:
-                throw new RuntimeException("Database type not recognized for scoped test search query construction.");
+        DatabaseType dbType = databaseConfig.getPrimaryDatabaseType();
+
+        List<String> conds = new ArrayList<>();
+        Map<String,Object> params = new HashMap<>();
+
+        for (int i = 0; i < searchFields.size(); ++i)
+        {
+            TestSearchField sf = searchFields.get(i);
+            String paramNameBase = "sf" + (i+1);
+
+            SearchCondition tsc =
+                dbType == POSTGRESQL ? pgScopedSearchFieldCond(sf, searchString, paramNameBase)
+              : dbType == ORACLE     ? oraScopedSearchFieldCond(sf, searchString, paramNameBase)
+              : error("Unsupported database type for scoped test search.");
+
+            conds.add(tsc.condition);
+            params.putAll(tsc.paramValues);
         }
+
+        return new SearchCondition(String.join(" or ", conds), params);
     }
 
-    private String makeScopedSearchFieldCond(TestSearchField field, String searchString)
+    private SearchCondition pgScopedSearchFieldCond(TestSearchField field, String searchString, String paramNamesBase)
     {
         StringBuilder keyPathOpenings = new StringBuilder();
         StringBuilder revClosings = new StringBuilder();
 
         for (String key: field.getKeyPath())
         {
-            if ( key.equals("[]") )
-            {
-                keyPathOpenings.append('[');
-                revClosings.append(']');
-            }
-            else
-            {
-                keyPathOpenings.append("{\"").append(key).append("\":");
-                revClosings.append('}');
-            }
+            keyPathOpenings.append("{\"").append(key).append("\":");
+            revClosings.append('}');
         }
 
-        String val = field.getFieldType() == TestSearchFieldType.STR ? "\"" + searchString + "\"" : searchString;
+        String escapedSearchString = searchString.replaceAll("\"", "\\\\\""); // regex processor sees \\" in replacement, meaning \"
 
-        return "test_data_json @> '" + keyPathOpenings + " " + val + revClosings.reverse().toString() + "'";
+        String searchVal = field.getFieldType() == STR ? "\"" + escapedSearchString + "\"" : escapedSearchString;
+        String rhsJson = keyPathOpenings + " " + searchVal + revClosings.reverse().toString();
+
+        try
+        {
+            Map<String,Object> paramVals = new HashMap<>();
+            PGobject jsonPgObj = new PGobject();
+            jsonPgObj.setType("jsonb");
+            jsonPgObj.setValue(rhsJson);
+            paramVals.put(paramNamesBase, jsonPgObj);
+
+            return new SearchCondition("test_data_json @> :" + paramNamesBase, paramVals);
+        }
+        catch(SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
+
+    private SearchCondition oraScopedSearchFieldCond(TestSearchField field, String searchString, String paramNameBase)
+    {
+        String jsonPath = "$" + String.join(".", field.getKeyPath());
+
+        Object val = field.getFieldType() == STR || field.getFieldType() == BOOL ? searchString : new BigDecimal(searchString);
+
+        String pathParamName = paramNameBase + "p";
+        String valParamName = paramNameBase + "v";
+
+        String cond = "json_value(test_data_json, :" + pathParamName + ") = :" + valParamName;
+
+        Map<String,Object> paramVals = new HashMap<>();
+        paramVals.put(pathParamName, jsonPath);
+        paramVals.put(valParamName, val);
+
+        return new SearchCondition(cond, paramVals);
+    }
+
 
     public TestTypeSearchScope getTestTypeSearchScope(LabTestTypeCode testTypeCode, String scopeName)
     {
@@ -280,22 +315,26 @@ public class JdbcTestSearchService implements TestSearchService
         return new NamedParameterJdbcTemplate(jdbc).query(sql, params, rowMapper);
     }
 
+    private <T> T error(String msg)
+    {
+        throw new RuntimeException(msg);
+    }
 }
 
 class SearchCondition
 {
-    String whereClauseCondition;
+    String condition;
     Map<String,Object> paramValues;
 
-    SearchCondition(String whereClauseCondition, Map<String,Object> paramValues)
+    SearchCondition(String condition, Map<String,Object> paramValues)
     {
-        this.whereClauseCondition = whereClauseCondition;
+        this.condition = condition;
         this.paramValues = paramValues;
     }
 
-    SearchCondition(String whereClauseCondition, String paramName, Object paramValue)
+    SearchCondition(String condition, String paramName, Object paramValue)
     {
-        this.whereClauseCondition = whereClauseCondition;
+        this.condition = condition;
         paramValues = new HashMap<>();
         paramValues.put(paramName, paramValue);
     }

@@ -1,11 +1,14 @@
 TODO
 ====
-AWS
-
-Try to replace JpaLabsDSUserContextService with one that loads via single sql/json query.
+Implement scoped searches of test data json for Oracle.
+  Add supporting index.
 
 database design
   Try remove unnecessary id fields.
+
+AWS
+
+Try to replace JpaLabsDSUserContextService with one that loads via single sql/json query.
 
 Commit
 ======
