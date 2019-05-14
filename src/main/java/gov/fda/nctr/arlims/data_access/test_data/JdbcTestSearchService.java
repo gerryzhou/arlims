@@ -206,18 +206,16 @@ public class JdbcTestSearchService extends ServiceBase implements TestSearchServ
 
     private SearchCondition oraScopedSearchFieldCond(TestSearchField field, String searchString, String paramNameBase)
     {
-        String jsonPath = "$" + String.join(".", field.getKeyPath());
+        String jsonPath =
+            "$." + String.join(".", field.getKeyPath())
+            .replaceAll("'", "''");
 
         Object val = field.getFieldType() == STR || field.getFieldType() == BOOL ? searchString : new BigDecimal(searchString);
 
-        String pathParamName = paramNameBase + "p";
-        String valParamName = paramNameBase + "v";
-
-        String cond = "json_value(test_data_json, :" + pathParamName + ") = :" + valParamName;
+        String cond = "json_value(test_data_json, '" + jsonPath + "') = :" + paramNameBase;
 
         Map<String,Object> paramVals = new HashMap<>();
-        paramVals.put(pathParamName, jsonPath);
-        paramVals.put(valParamName, val);
+        paramVals.put(paramNameBase, val);
 
         return new SearchCondition(cond, paramVals);
     }
