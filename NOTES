@@ -1,8 +1,5 @@
 TODO
 ====
-Implement scoped searches of test data json for Oracle.
-  Add supporting index.
-
 database design
   Try remove unnecessary id fields.
 
