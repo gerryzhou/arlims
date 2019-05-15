@@ -15,10 +15,7 @@ import gov.fda.nctr.arlims.models.dto.RoleName;
 )
 public class Role
 {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(length = 20) @Enumerated(EnumType.STRING) @NotNull
+    @Id @Column(length = 20) @Enumerated(EnumType.STRING)
     private RoleName name;
 
     @Size(max = 200)
@@ -35,9 +32,6 @@ public class Role
         this.name = name;
         this.description = description;
     }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public RoleName getName() { return name; }
     public void setName(RoleName name) { this.name = name; }

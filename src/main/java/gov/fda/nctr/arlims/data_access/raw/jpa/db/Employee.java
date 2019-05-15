@@ -52,10 +52,9 @@ public class Employee
     @JoinTable(
         name = "EMPLOYEE_ROLE",
         joinColumns = @JoinColumn(name = "EMP_ID", foreignKey = @ForeignKey(name="FK_EMPROLE_EMP")),
-        inverseJoinColumns = @JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name="FK_EMPROLE_ROLE")),
+        inverseJoinColumns = @JoinColumn(name = "ROLE_NAME", foreignKey = @ForeignKey(name="FK_EMPROLE_ROLE")),
         indexes = {
-            @Index(name = "IX_EMPROLE_EMPID", columnList = "EMP_ID"),
-            @Index(name = "IX_EMPROLE_ROLEID", columnList = "ROLE_ID"),
+            @Index(name = "IX_EMPROLE_ROLENAME", columnList = "ROLE_NAME"),
         }
     )
     private Set<Role> roles;

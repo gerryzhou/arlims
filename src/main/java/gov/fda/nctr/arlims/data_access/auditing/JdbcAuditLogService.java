@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import gov.fda.nctr.arlims.data_access.DatabaseConfig;
 import gov.fda.nctr.arlims.data_access.ServiceBase;
 import gov.fda.nctr.arlims.models.dto.AuditLogEntry;
+import static gov.fda.nctr.arlims.data_access.DatabaseConfig.DatabaseType.POSTGRESQL;
 
 
 @Service
@@ -61,11 +62,13 @@ public class JdbcAuditLogService extends ServiceBase implements AuditLogService
             Optional<String> objectToValueJson
         )
     {
+        String jsonPosParam = databaseConfig.getPrimaryDatabaseType() == POSTGRESQL ? "?::jsonb" : "?";
+
         String sql =
             "insert into audit_entry\n" +
             "(timestamp, lab_group_id, test_id, acting_emp_id, acting_username, action, object_type," +
              "object_context_metadata_json, object_from_value_json, object_to_value_json)\n" +
-            "values(?,?,?,?,?,?,?,make_json(?),make_json(?),make_json(?))";
+            "values(?,?,?,?,?,?,?,"+jsonPosParam+","+jsonPosParam+","+jsonPosParam+")";
 
         PreparedStatementCreator psc = conn -> {
             String idCol = databaseConfig.normalizePrimaryDatabaseIdentifier("id");

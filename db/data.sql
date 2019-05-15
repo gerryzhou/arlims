@@ -10,18 +10,18 @@ insert into employee (facts_person_id, fda_email_account_name, short_name, lab_g
 
 
 insert into role(name, description)
-  values('USER', 'regular user');
+  values('ANALYST', 'lab analyst');
 insert into role(name, description)
   values('ADMIN', 'administrator');
 
-insert into employee_role(emp_id, role_id)
-  values(1,1);
-insert into employee_role(emp_id, role_id)
-  values(1,2);
-insert into employee_role(emp_id, role_id)
-  values(2,1);
-insert into employee_role(emp_id, role_id)
-  values(2,2);
+insert into employee_role(emp_id, role_name)
+  values(1,'ANALYST');
+insert into employee_role(emp_id, role_name)
+  values(1,'ADMIN');
+insert into employee_role(emp_id, role_name)
+  values(2,'ANALYST');
+insert into employee_role(emp_id, role_name)
+  values(2,'ADMIN');
 
 -- Add shared resources for ARKL's ARL-MICRO* lab groups.
 

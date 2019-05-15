@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
+import static gov.fda.nctr.arlims.data_access.DatabaseConfig.DatabaseType.POSTGRESQL;
 import static java.lang.String.join;
 import static java.util.Collections.singletonList;
 import javax.transaction.Transactional;
@@ -216,10 +217,15 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
 
         String md5 = md5OfUtf8Bytes(testDataJson);
 
+        String jsonPosParam = databaseConfig.getPrimaryDatabaseType() == POSTGRESQL ? "?::jsonb" : "?";
+
         String sql =
-            "update test\n" +
-            "set test_data_json = make_json(?), stage_statuses_json = make_json(?), last_saved = ?, " +
-                "last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
+            "update test " +
+            "set test_data_json = " + jsonPosParam + "," +
+                "stage_statuses_json = " + jsonPosParam + "," +
+                "last_saved = ?, " +
+                "last_saved_by_emp_id = ?," +
+                "test_data_md5 = ? " +
             "where id = ? and test_data_md5 = ?";
 
         int updateCount =
@@ -255,9 +261,15 @@ public class JdbcLabsDSTestDataService extends ServiceBase implements TestDataSe
     {
         String newMd5 = md5OfUtf8Bytes(testDataJson);
 
+        String jsonPosParam = databaseConfig.getPrimaryDatabaseType() == POSTGRESQL ? "?::jsonb" : "?";
+
         String sql =
-            "update test\n" +
-            "set test_data_json = make_json(?), stage_statuses_json = ?, last_saved = ?, last_saved_by_emp_id = ?, test_data_md5 = ?\n" +
+            "update test " +
+            "set test_data_json = " + jsonPosParam + "," +
+                "stage_statuses_json = ?," +
+                "last_saved = ?," +
+                "last_saved_by_emp_id = ?," +
+                "test_data_md5 = ? " +
             "where id = ?";
 
         int updateCount =

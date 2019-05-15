@@ -75,12 +75,9 @@ create index ix_emp_labgroupid
 
 create table role
 (
-    id          serial   not null -- TODO: Remove id, promote name to pk.
+    name        varchar(20) not null
         constraint role_pkey
             primary key,
-    name        varchar(20) not null
-        constraint un_role_name
-            unique,
     description varchar(200)
 );
 
@@ -89,22 +86,20 @@ create table employee_role
     emp_id  int not null
         constraint fk_emprole_emp
             references employee,
-    role_id int not null
+    role_name varchar(20) not null
         constraint fk_emprole_role
             references role,
     constraint employee_role_pkey
-        primary key (emp_id, role_id)
+        primary key (emp_id, role_name)
 );
 
-create index ix_emprole_empid
-    on employee_role (emp_id);
 
-create index ix_emprole_roleid
-    on employee_role (role_id);
+create index ix_emprole_rolename
+    on employee_role (role_name);
 
 create table test_type
 (
-    id          serial   not null -- TODO: Remove id, promote short_name to pk (rename  name => full_name, short_name => name).
+    id          serial   not null
         constraint test_type_pkey
             primary key,
     name        varchar(80) not null
@@ -121,23 +116,19 @@ create table test_type
 
 create table lab_group_test_type
 (
-    id                      serial not null -- TODO: Remove id, promote lab_group_id, test_type_id pair to pk.
-        constraint lab_group_test_type_pkey
-            primary key,
     lab_group_id            int    not null
         constraint fk_lgrptstt_labgroup
             references lab_group,
     test_type_id            int    not null
         constraint fk_lgrptstt_testtype
             references test_type,
-    report_names_bar_sep    varchar(4000),
     test_configuration_json jsonb,
-    constraint un_lgrptstt_tsttidlgrpid
-        unique (test_type_id, lab_group_id)
+    report_names_bar_sep    varchar(4000),
+    constraint pk_lgrptstt_pk primary key (lab_group_id, test_type_id)
 );
 
-create index ix_lgrptstt_lgrpid
-    on lab_group_test_type (lab_group_id);
+create index ix_lgrptstt_tsttid
+    on lab_group_test_type (test_type_id);
 
 create table test
 (
@@ -471,7 +462,8 @@ begin
 end;
 $$ language 'plpgsql';
 
-create or replace function make_json(str text) returns jsonb
+-- For use in data.sql.
+create replace function make_json(str text) returns jsonb
 as $$
     select str::jsonb;
 $$ language 'sql';

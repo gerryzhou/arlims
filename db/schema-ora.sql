@@ -78,12 +78,10 @@ create index IX_EMP_LABGROUPID
 
 create table ROLE
 (
-  ID          NUMBER(19) generated as identity
-    primary key,
-  DESCRIPTION VARCHAR2(200 char),
-  NAME        VARCHAR2(20 char) not null
-    constraint UN_ROLE_NAME
-      unique
+  name        varchar(20) not null
+      constraint role_pkey
+      primary key,
+  DESCRIPTION VARCHAR2(200 char)
 )
 ;
 
@@ -92,17 +90,14 @@ create table EMPLOYEE_ROLE
   EMP_ID  NUMBER(19) not null
     constraint FK_EMPROLE_EMP
       references EMPLOYEE,
-  ROLE_ID NUMBER(19) not null
+  ROLE_NAME NUMBER(19) not null
     constraint FK_EMPROLE_ROLE
       references ROLE,
-  primary key (EMP_ID, ROLE_ID)
+  primary key (EMP_ID, ROLE_NAME)
 )
 ;
-create index IX_EMPROLE_EMPID
-  on EMPLOYEE_ROLE (EMP_ID)
-;
-create index IX_EMPROLE_ROLEID
-  on EMPLOYEE_ROLE (ROLE_ID)
+create index IX_EMPROLE_ROLENAME
+  on EMPLOYEE_ROLE (ROLE_NAME)
 ;
 
 create table TEST_TYPE
@@ -124,23 +119,22 @@ create table TEST_TYPE
 
 create table LAB_GROUP_TEST_TYPE
 (
-  ID                      NUMBER(19) generated as identity
-    primary key,
-  REPORT_NAMES_BAR_SEP    VARCHAR2(4000 char),
-  TEST_CONFIGURATION_JSON CLOB,
   LAB_GROUP_ID            NUMBER(19) not null
-    constraint FK_LGRPTSTT_LABGROUP
-      references LAB_GROUP,
+      constraint FK_LGRPTSTT_LABGROUP
+        references LAB_GROUP,
   TEST_TYPE_ID            NUMBER(19) not null
-    constraint FK_LGRPTSTT_LABTESTTYPE
-      references TEST_TYPE,
-  constraint UN_LGRPTSTT_TSTTIDLGRPID
-    unique (TEST_TYPE_ID, LAB_GROUP_ID),
+      constraint FK_LGRPTSTT_LABTESTTYPE
+        references TEST_TYPE,
+  TEST_CONFIGURATION_JSON CLOB,
+      constraint UN_LGRPTSTT_TSTTIDLGRPID
+        unique (TEST_TYPE_ID, LAB_GROUP_ID),
+  REPORT_NAMES_BAR_SEP    VARCHAR2(4000 char),
+  constraint pk_lgrptstt_pk primary key (lab_group_id, test_type_id),
   constraint ck_lgrptstt_tstoptsjson_isjson check (test_configuration_json is json format json strict)
 )
 ;
-create index IX_LGRPTSTT_LGRPID
-  on LAB_GROUP_TEST_TYPE (LAB_GROUP_ID)
+create index IX_LGRPTSTT_TSTTID
+  on LAB_GROUP_TEST_TYPE (TEST_TYPE_ID)
 ;
 
 
