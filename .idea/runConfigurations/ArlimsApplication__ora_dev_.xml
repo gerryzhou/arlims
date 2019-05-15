@@ -3,7 +3,7 @@
     <module name="arlims" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="gov.fda.nctr.arlims.ArlimsApplication" />
     <option name="ACTIVE_PROFILES" value="dev" />
-    <option name="WORKING_DIRECTORY" value="file://dev-env-props/ora-dev" />
+    <option name="WORKING_DIRECTORY" value="file://dev-config/env-props/ora-dev" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <method v="2">
       <option name="Make" enabled="true" />
