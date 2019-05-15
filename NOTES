@@ -1,15 +1,5 @@
 TODO
 ====
-Oracle error while saving test data:
-  oracle.jdbc.OracleDatabaseException: ORA-01461: can bind a LONG value only for insert into a LONG column
-  at gov.fda.nctr.arlims.data_access.test_data.JdbcLabsDSTestDataService.saveTestData(JdbcLabsDSTestDataService.java:226)
-
-Remove unnecessary id fields.
-  Make plan to update test db.
-
-
-Package the envs directory into encrypted zip, save it somewhere accessible by all developer machines, maybe just in version control.
-
 AWS
 
 Try to replace JpaLabsDSUserContextService with one that loads via single sql/json query.
