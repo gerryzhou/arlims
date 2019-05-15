@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ArlimsApplication [pg-dev]  fake-labsds" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="arlims" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="gov.fda.nctr.arlims.ArlimsApplication" />
+    <option name="ACTIVE_PROFILES" value="dev,fake-labsds" />
+    <option name="WORKING_DIRECTORY" value="file://dev-env-props/pg-dev" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
