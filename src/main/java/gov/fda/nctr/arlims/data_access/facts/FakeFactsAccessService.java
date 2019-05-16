@@ -41,6 +41,8 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
     @Async
     public CompletableFuture<List<EmployeeInboxItem>> getPersonInboxItems(long personId, Optional<List<String>> statusCodes)
     {
+        log.info("Retrieving (fake) person inbox items.");
+
         try
         {
             List<EmployeeInboxItem> items = Arrays.asList(jsonObjectMapper.readValue(
@@ -116,6 +118,8 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
     @Async
     public CompletableFuture<List<LabInboxItem>> getLabInboxItems(String orgName, List<String> statusCodes)
     {
+        log.info("Retrieving (fake) lab inbox items.");
+
         try
         {
             List<LabInboxItem> items = Arrays.asList(jsonObjectMapper.readValue(
@@ -128,7 +132,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"lidCode\": null,\n" +
                 "\"splitInd\": null,\n" +
                 "\"problemAreaFlag\": \"ELE\",\n" +
-                "\"requestDate\": \"2015-12-10 00:00:00.000-0500\",\n" +
+                "\"requestDate\": \"2015-12-10\",\n" +
                 "\"responsibleFirmCode\": \"O\",\n" +
                 "\"rvMeaning\": \"In Progress\",\n" +
                 "\"sampleAnalysisId\": 875826,\n" +
@@ -159,7 +163,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"lidCode\": null,\n" +
                 "\"splitInd\": null,\n" +
                 "\"problemAreaFlag\": \"ELE\",\n" +
-                "\"requestDate\": \"2015-12-09 00:00:00.000-0500\",\n" +
+                "\"requestDate\": \"2015-12-09\",\n" +
                 "\"responsibleFirmCode\": \"O\",\n" +
                 "\"rvMeaning\": \"In Progress\",\n" +
                 "\"sampleAnalysisId\": 875825,\n" +
@@ -190,7 +194,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"lidCode\": null,\n" +
                 "\"splitInd\": null,\n" +
                 "\"problemAreaFlag\": \"ELE\",\n" +
-                "\"requestDate\": \"2015-12-09 00:00:00.000-0500\",\n" +
+                "\"requestDate\": \"2015-12-09\",\n" +
                 "\"responsibleFirmCode\": \"O\",\n" +
                 "\"rvMeaning\": \"In Progress\",\n" +
                 "\"sampleAnalysisId\": 875825,\n" +
@@ -221,7 +225,7 @@ public class FakeFactsAccessService extends ServiceBase implements FactsAccessSe
                 "\"lidCode\": null,\n" +
                 "\"splitInd\": null,\n" +
                 "\"problemAreaFlag\": \"ELE\",\n" +
-                "\"requestDate\": \"2015-11-08 00:00:00.000-0500\",\n" +
+                "\"requestDate\": \"2015-11-08\",\n" +
                 "\"responsibleFirmCode\": \"O\",\n" +
                 "\"rvMeaning\": \"Pending\",\n" +
                 "\"sampleAnalysisId\": 865824,\n" +
