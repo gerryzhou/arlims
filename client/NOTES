@@ -1,9 +1,6 @@
 
-
 LID:
   Should be present in lab inbox.
-
-Lab inbox not showing for John.
 
 Add "carry-over" flag and local table and maybe carry-over table.
   list of op-ids -> inbox items
