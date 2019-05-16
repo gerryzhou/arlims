@@ -264,12 +264,12 @@ public class JdbcTestSearchService extends ServiceBase implements TestSearchServ
         Map<String,Object> paramVals = new HashMap<>();
 
         fromTimestamp.ifPresent(fts -> {
-            whereCond.append(tsProp + " >= :fts");
+            whereCond.append(tsProp).append(" >= :fts");
             paramVals.put("fts", new java.sql.Timestamp(fts.toEpochMilli()));
         });
 
         toTimestamp.ifPresent(tts -> {
-            whereCond.append((whereCond.length() > 0 ? " and " : "") + tsProp + " <= :tts");
+            whereCond.append(whereCond.length() > 0 ? " and " : "").append(tsProp).append(" <= :tts");
             paramVals.put("tts", new java.sql.Timestamp(tts.toEpochMilli()));
         });
 
