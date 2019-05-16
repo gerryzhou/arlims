@@ -232,17 +232,13 @@ export class UserContextService {
 
    fetchLabScopedLabGroupContents(): Promise<LabGroupContents>
    {
-      const labGroupContents$ =
-         this.httpClient.get<LabGroupContents>(
-            this.apiUrlsSvc.labGroupContentsUrl('LAB')
-         );
+      const url = this.apiUrlsSvc.labGroupContentsUrl('LAB');
 
-      this.labScopedTestIdToSampleOpTest$ =
-         labGroupContents$
-            .pipe(map(lgc => makeSampleOpTestsByTestId(lgc.activeSamples)))
-            .toPromise();
+      const labGroupContents$ = this.httpClient.get<LabGroupContents>(url).toPromise();
 
-      return labGroupContents$.toPromise();
+      this.labScopedTestIdToSampleOpTest$ = labGroupContents$.then(lgc => makeSampleOpTestsByTestId(lgc.activeSamples));
+
+      return labGroupContents$;
    }
 
 }
